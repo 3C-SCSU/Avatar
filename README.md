@@ -31,22 +31,28 @@
 <br />
 <div align="center">
   <a href="https://github.com/github_username/repo_name">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="https://avatars.githubusercontent.com/u/114175379?v=4" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">project_title</h3>
+<h3 align="center">Avatar</h3>
 
   <p align="center">
-    project_description
+    Machine Learning application of brainwaves in order to remotely pilot a drone. 
     <br />
-    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/3C-SCSU/Avatar"><strong>Explore the docs »</strong></a>
     <br />
     <br />
+    <a href="https://github.com/3C-SCSU/Avatar/wiki"><strong>Get help in the Wiki »</strong></a>
+    <br />
+    <br />
+    
+    <!--
     <a href="https://github.com/github_username/repo_name">View Demo</a>
     ·
     <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
     ·
     <a href="https://github.com/github_username/repo_name/issues">Request Feature</a>
+    -->
   </p>
 </div>
 
