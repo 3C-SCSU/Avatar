@@ -176,16 +176,17 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Read Brainwaves using OpenBCI software
+- [x] Read Brainwaves using OpenBCI software
 	- [ ] Configure workstation Chromebooks for compatibility with BCI dongle
-- [ ] Encrypted File Transfer from workstation to VPS 
+- [x] Encrypted File Transfer from workstation to VPS 
 - [ ] Automated file shuffling
-- [ ] Containerize VPS applications 
+- [x] Containerize VPS applications 
 - [ ] Implement K8s
-- [ ] Connect data and Spark with Delta Lake
+- [x] Connect Spark with GCP bucket
+- [ ] Configure Spark with Delta Lake
 - [ ] Create Application to Control Drone
 	- [ ] GUI
-	- [ ] Drone Control
+	- [x] Drone Control
 	- [ ] Headset Data transferring
 	- [ ] Connect with ML Predictions
 
@@ -300,5 +301,4 @@ Project Link: [https://github.com/3C-SCSU/Avatar](https://github.com/3C-SCSU/Ava
 [Bootstrap-url]: https://getbootstrap.com
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
 [JQuery-url]: https://jquery.com 
-
 
