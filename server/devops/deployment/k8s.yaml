@@ -7,8 +7,8 @@ kind: Pod
 metadata:
   creationTimestamp: "2023-02-13T21:02:17Z"
   labels:
-    app: 475Team4-pod
-  name: 475Team4-pod
+    app: 3C-SCSU-pod
+  name: 3C-SCSU-pod
 spec:
   containers:
     - args:
