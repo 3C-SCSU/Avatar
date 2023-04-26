@@ -7,14 +7,7 @@ import random
 # from djitellopy import Tello
 # tello = Tello()
 
-# Define the layout for the Starting Page
-layout1 = [
-            [sg.Button('Brainwave Reading', size=(20,3)), 
-            sg.Button('Transfer Data', size=(20,3)),
-            sg.Button('Manual Drone Control', size=(20,3))]         
-          ]
-
-def get_drone_action(action):
+def get_drone_action(action): ##receives action from a GUI button, executes a corresponding Tello-Drone class move action, then returns "Done"
 
     if action == 'backward':
         #tello.move_back(30)
@@ -26,8 +19,8 @@ def get_drone_action(action):
         #tello.move_forward(30)
         print('tello.move_forward(30)')
     elif action == 'land':
-        #tello.land(30)
-        print('tello.land(30)')
+        #tello.land
+        print('tello.land')
     elif action == 'left':
         #tello.move_left(30)
         print('tello.move_left(30)')
@@ -53,6 +46,58 @@ def get_drone_action(action):
     #TODO Remove sleep
     time.sleep(2)
     return("Done")
+
+def drone_holding_pattern(): 
+    print("Hold forward - tello.move(forward(5)")
+    #tello.move_forward(5)
+    time.sleep(2)
+    print("Hold backward - tello.move(backward(5)")
+    #tello.move_backward(5)    
+
+    in_pattern = False
+    return (in_pattern) #let calling Window know if it needs to restart Holding Pattern
+def use_brainflow(): 
+    print("I'm in use brainflow")
+    #Create BCI object
+    #bci = bciConnection()
+
+    #data = bci.read_from_board()
+    #bci.send_data_to_server(data)
+
+def holding_pattern_window():
+    holding_pattern_layout = [
+                                [sg.Text('Holding Pattern Log')],
+                                # [sg.Output(s=(45,10))],  
+
+                                [sg.Button('Start Holding Pattern'), sg.Button('Stop Holding Pattern')], 
+                             ]
+    holding_pattern_window = sg.Window("Holding Pattern", holding_pattern_layout, size=(500, 500), element_justification='c')
+    
+    should_hold = False
+    in_pattern = False
+    resume_hold = False
+    
+    while True: 
+        event, values = holding_pattern_window.read()
+        if event in (sg.WIN_CLOSED, 'Quit'):
+            break
+        elif event == "Start Holding Pattern": 
+            should_hold = True 
+            if should_hold and not in_pattern:
+                in_pattern = drone_holding_pattern() 
+            print("Should hold")
+        elif event == "Stop Holding Pattern": 
+            if resume_hold:
+               resume_hold = False
+               holding_pattern_window['Start Holding Pattern'].click() 
+            else:
+                should_hold = False
+                print("!should hold")
+        
+        if should_hold and not in_pattern:
+            holding_pattern_window['Stop Holding Pattern'].click()
+            resume_hold = True
+    holding_pattern_window.close()
 
 def brainwave_prediction_window():
     #Layout
@@ -97,9 +142,9 @@ def brainwave_prediction_window():
     window1.un_hide()
     brainwave_prediction_window.close() 
 
-def manual_drone_control(window, items): 
+def manual_drone_control(items): 
 
-    # Define the layout for the Manual Drone Control Page
+    #Define the layout for the Manual Drone Control Page
 
     #Column layouts for centering"Done.")
     top_center = [[sg.Button('Up', size=(8,2), image_filename="./images/up.png")]]
@@ -122,15 +167,18 @@ def manual_drone_control(window, items):
     manual_drone_control_window = sg.Window('Manual Drone Control', manual_drone_control_layout, size=(1200, 800), element_justification='c')
 
     first_iteration = True
+    
     while True:
         event, values = manual_drone_control_window.read()
+
         if(first_iteration):
             items.insert(0, "---------- NEW LOG ----------")
             manual_drone_control_window['LOG'].update(values=items)
             first_iteration=False
+
         if event == sg.WIN_CLOSED:
             manual_drone_control_window.close()
-            window.un_hide()
+            window1.un_hide()
             break
         elif event == 'Up':
             # Code for moving the drone up
@@ -202,17 +250,31 @@ def manual_drone_control(window, items):
         elif event == 'Connect':
             # Code for Connect
             items.insert(0, "Connect button pressed")
+
             manual_drone_control_window['LOG'].update(values=items)
             #tello.connect()
             time.sleep(2)
             items.insert(0, "Done.")
             manual_drone_control_window['LOG'].update(values=items)
             #TODO check on connect feedback and if more response is needed here
+    
+
+    # items.insert(0, "---------- END LOG ----------")
     window1.un_hide
     manual_drone_control_window.close()
 
+
+
+# Define the layout for the Starting Page
+layout1 = [
+            [sg.Button('Brainwave Reading', size=(20,3)), 
+            sg.Button('Transfer Data', size=(20,3)),
+            sg.Button('Manual Drone Control', size=(20,3)),   
+            sg.Button('Holding Pattern', size=(20,3))]          
+          ]
+
 # Define the layout for the Brainwave Reading Page
-layout3 = [[sg.Button(image_filename="./images/brain.png")]]
+#layout3 = [[sg.Button(image_filename="./images/brain.png")]]
 
 # Define the layout for the Transfer Data Page
 layout4 = [[sg.Button(image_filename="./images/upload.png")]]
@@ -220,8 +282,10 @@ layout4 = [[sg.Button(image_filename="./images/upload.png")]]
 # Create the windows
 window1 = sg.Window('Start Page', layout1, size=(1200, 800))
 #window2 = sg.Window('Manual Drone Control', layout2, size=(1200, 800), element_justification='c')
-window3 = sg.Window('Brainwave Reading', layout3, size=(1200, 800), element_justification='c')
+#window3 = sg.Window('Brainwave Reading', layout3, size=(1200, 800), element_justification='c')
 window4 = sg.Window('Transfer Data', layout4, size=(1200, 800), element_justification='c')
+
+
 
 items = []
 
@@ -238,7 +302,8 @@ while True:
         window4.read()
     elif event1 == 'Manual Drone Control':
         window1.hide()
-        manual_drone_control(window1, items)
-        # Event loop for the second window
+        manual_drone_control(items)
+    elif event1 == 'Holding Pattern':
+        holding_pattern_window()
 
 
