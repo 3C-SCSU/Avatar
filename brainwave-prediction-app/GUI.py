@@ -1,6 +1,7 @@
 import PySimpleGUI as sg
 import time
 import random
+from client.brainflow1 import bciConnection 
 
 #TODO enable imports
 #tello imports
@@ -59,8 +60,9 @@ def drone_holding_pattern():
 def use_brainflow(): 
     print("I'm in use brainflow")
     #Create BCI object
-    #bci = bciConnection()
-
+    bci = bciConnection()
+    server_response = bci.bciConnectionController()
+    return server_response
     #data = bci.read_from_board()
     #bci.send_data_to_server(data)
 
@@ -124,20 +126,24 @@ def brainwave_prediction_window():
     action_index = 0
 
     while True: 
+
         event, values = brainwave_prediction_window.read() 
         if event in (sg.WIN_CLOSED, 'Quit'):
             break
         elif event == "Read my mind...":
-            count+=1           
+            prediction_response = use_brainflow()
+            count = prediction_response['prediction_count']
+            prediction_label = prediction_response['prediction_label']
+            # count+=1           
             brainwave_prediction_window["-COUNT-"].update(count)
-            brainwave_prediction_window["-PREDICTION-"].update(predictions_list[count%len(predictions_list)])
-            action_index = predictions_list[count%len(predictions_list)]
-            action_index = predictions_list.index(action_index)
+            brainwave_prediction_window["-PREDICTION-"].update(prediction_label)
+            # action_index = predictions_list[count%len(predictions_list)]
+            # action_index = predictions_list.index(action_index)
 
         elif event == "Not what I was thinking...":
             print("you pushed NOT")
         elif event == "Execute":
-            execute = get_drone_action(predictions_list[action_index])
+            execute = get_drone_action(prediction_label)
             print(execute)
     window1.un_hide()
     brainwave_prediction_window.close() 

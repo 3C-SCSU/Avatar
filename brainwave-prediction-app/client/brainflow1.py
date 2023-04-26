@@ -38,7 +38,7 @@ class bciConnection():
         data_json = df.to_json()
 
         # Define the API endpoint URL
-        url = 'http://35.206.70.248:5000/eegrandomforestprediction'
+        url = 'http://127.0.0.1:5000/eegrandomforestprediction'
 
         # Set the request headers
         headers = {'Content-Type': 'application/json'}
@@ -64,12 +64,14 @@ class bciConnection():
 
             if server_response.status_code == 200:  # if a prediction is returned
                 print(server_response.json())
+                return server_response.json()
                 # return prediction
             else:  # there was in error in getting a thought prediction response
                 # return error
-                print("nay")
+                print(server_response.status_code)
         except Exception as e:
             print(e)
+            print(server_response.status_code)
             print("Error Occured during EEG data collection or transmission")
 
         # demo for data serialization using brainflow API, we recommend to use it instead pandas.to_csv()
