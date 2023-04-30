@@ -3,8 +3,8 @@ import time
 import random
 from client.brainflow1 import bciConnection 
 
-from client.gui_windows.manual_drone_control_window import manual_drone_control_window
-from client.gui_windows.brainwave_prediction_window import brainwave_prediction_window
+from gui_windows.manual_drone_control_window import manual_drone_control_window
+from gui_windows.brainwave_prediction_window import brainwave_prediction_window
 
 #TODO enable imports
 #tello imports
