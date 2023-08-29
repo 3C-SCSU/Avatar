@@ -301,4 +301,3 @@ Project Link: [https://github.com/3C-SCSU/Avatar](https://github.com/3C-SCSU/Ava
 [Bootstrap-url]: https://getbootstrap.com
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
 [JQuery-url]: https://jquery.com 
-
