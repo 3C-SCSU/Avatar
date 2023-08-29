@@ -1,4 +1,5 @@
 
+
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a name="readme-top"></a>
 <!--
@@ -124,7 +125,7 @@ Brainwave collection is considered human subject donation, and this project is c
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This section will be updated further as the project progresses. 
+There several components to the software. The *server* directory handles operations needed for storing data and generating ML models. The *brainwave-prediction-app* directory is operations to complete a live reading, receive a prediction, and then pilot the drone. 
 
 ### Prerequisites
 <h4> Equipment</h4>
@@ -141,14 +142,7 @@ This is an example of how to list things you need to use the software and how to
   npm install npm@latest -g
   ```
 
-### Installation
-
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/3C-SCSU/Avatar.git
-   ```
-3. Install NPM packages
+2. Install NPM packages
    ```sh
    npm install
    ```
@@ -156,13 +150,54 @@ This is an example of how to list things you need to use the software and how to
    ```js
    const API_KEY = 'ENTER YOUR API';
    ```
+***************END OF UPDATE INSTALLATION INFORMATION    --->
+### Installation
+<!-- 
+TODO: Update this section with a walkthrough on sparse checkout
+-->
+ Clone the repo  (use sparse checkout if only wanting to run the client app for live demos)
+   ```sh
+   git clone https://github.com/3C-SCSU/Avatar.git
+   ```
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-***************END OF UPDATE INSTALLATION INFORMATION    --->
+
 
 <!-- USAGE EXAMPLES -->
 ## Usage
+### How to run a live demo
+#### Steps:
+
+1.  On the VPS, install and launch the [server.py](https://github.com/3C-SCSU/Avatar/blob/main/brainwave-prediction-app/server/server.py) file. It can be run from the command line with the command: 
+	   ```sh
+	  python server.py
+	  ```
+2.  Using the OpenBCI software, test the connections on the headset for the person wearing it. Adjust as necessary. Try and make all connections “Not Railed”
+    
+3.  Locally, launch the [GUI](https://github.com/3C-SCSU/Avatar/blob/main/brainwave-prediction-app/GUI.py) application using either an IDE play button or from terminal
+	   ```sh
+	  python GUI.py
+	  ```
+   * Note the relative pathing to the images folder and launch with both a terminal and local files appropriately pathed
+   * If you receive a module error it can be installed using pip  i.e. 
+	   ```sh
+	  pip3 install <module name>
+	  ```
+4.  In the GUI select Brainwave Reading
+    
+5.  Future implementations - select between Manual Control or AutoPilot
+    
+6.  Connect the computer to the Drone’s wifi and press the Connect button in the GUI to connect to the drone.
+    
+7.  Give the person wearing the headset a 5 second countdown and instructions on which drone action to think about.
+    
+8.  Press Read my Mind to automatically initiate a 10 second reading. This triggers the [brainflow1.py](https://github.com/3C-SCSU/Avatar/blob/main/brainwave-prediction-app/client/brainflow1.py) file and sends the data to the server.py endpoint. The results of the prediction will automatically be displayed in the output table of the GUI. (The endpoint IP may need to be manually configured until environment variables are set up to handle this operation) 
+    
+9.  If the prediction is correct, press the Execute button to have the drone perform the action. If the prediction is wrong, override the drone action by typing an alternative in the text input box and press Not what I was thinking…
+    
+10.  At any time, press “Keep Drone Alive” to attempt to maintain the drone’s hovering while it waits for a prediction command. (Note: This isn’t working well and will need to be improved)
 
 This section will be updated further as the project progresses.
 
@@ -183,12 +218,12 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 - [x] Containerize VPS applications 
 - [ ] Implement K8s
 - [x] Connect Spark with GCP bucket
-- [ ] Configure Spark with Delta Lake
-- [ ] Create Application to Control Drone
-	- [ ] GUI
+- [x] Configure Spark with Delta Lake
+- [x] Create Application to Control Drone
+	- [x] GUI
 	- [x] Drone Control
-	- [ ] Headset Data transferring
-	- [ ] Connect with ML Predictions
+	- [x] Headset Data transferring
+	- [x] Connect with ML Predictions
 
 See the [open issues](https://github.com/3C-SCSU/Avatar/issues) for a full list of proposed features (and known issues). 
 
