@@ -125,7 +125,7 @@ Brainwave collection is considered human subject donation, and this project is c
 <!-- GETTING STARTED -->
 ## Getting Started
 
-There several components to the software. The *server* directory handles operations needed for storing data and generating ML models. The *brainwave-prediction-app* directory is operations to complete a live reading, receive a prediction, and then pilot the drone. 
+There are several components to the software. The *server* directory handles operations needed for storing data and generating ML models. The *brainwave-prediction-app* directory handles operations to complete a live reading and receival of a prediction, and finally using the prediction to pilot the drone. 
 
 ### Prerequisites
 <h4> Equipment</h4>
