@@ -1,10 +1,15 @@
 import PySimpleGUI as sg
+from signal_module import signalling_system as sgsys
 
 
 def brainwave_prediction_window(window1, get_drone_action, use_brainflow):
     # Layout
     flight_log = []  # array to hold flight log info
     predictions_log = []  # array to hold info for table
+
+    signal_system = sgsys(get_drone_action, "keep alive") # The signal system class
+    keep_alive_toggle  = False # mimics the drone's keep alive toggle
+    
     predictions_headings = [
         'Predictions Count', 'Server Predictions', 'Prediction Label']  # table headings
     response_headings = ['Count', 'Label']
@@ -105,7 +110,18 @@ def brainwave_prediction_window(window1, get_drone_action, use_brainflow):
             flight_log.insert(0, "Done.")
             brainwave_prediction_window['LOG'].update(values=flight_log)
         elif event == 'Keep Drone Alive':
-            get_drone_action('keep alive')
+            # Checks if toggle is turned on
+            if keep_alive_toggle:
+                print("Keep Alive Toggle turned off")
+                # Turns it off
+                keep_alive_toggle = False
+                # Stop signalling
+                signal_system.stop()
+            # Vice versa
+            else:
+                print("Keep Alive Toggle turned on")
+                keep_alive_toggle = True
+                signal_system.start()
 
     window1.un_hide()
     brainwave_prediction_window.close()
