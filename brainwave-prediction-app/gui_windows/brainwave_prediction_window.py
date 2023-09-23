@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-from signal_module import signalling_system as sgsys
+from .signal_module import signalling_system as sgsys
 
 
 def brainwave_prediction_window(window1, get_drone_action, use_brainflow):
