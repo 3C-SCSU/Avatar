@@ -27,8 +27,8 @@ class signalling_system:
     def trigger(self):
         # While Drone is active (user has not turned it off manually).
         while self.state:
-            # Wait for 8 seconds
-            time.sleep(8)
+            # Wait for 2 seconds
+            time.sleep(2)
 
            # Check the state before sending the signal
             if self.state:
