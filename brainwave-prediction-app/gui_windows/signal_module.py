@@ -9,7 +9,7 @@ class signalling_system:
     Attributes:
         state (bool): Mimics the drone state.
         callback (function): External function the signalling_system use to update drone.
-        message (str): The message the signalling_system sends to the drone
+        signal (str): The message the signalling_system sends to the drone
         generator_thread (threading.Thread): The thread responsible for generating signal.
 
     Methods:
@@ -18,10 +18,10 @@ class signalling_system:
         stop(): Stops the signalling thread.
     """
 
-    def __init__(self, callback, message):
+    def __init__(self, callback, signal):
         self.state = False
         self.callback = callback
-        self.signal = message
+        self.signal = signal
         self.generator_thread = threading.Thread(target=self.trigger)
 
     def trigger(self):
