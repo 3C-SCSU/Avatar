@@ -4,7 +4,7 @@ import threading
 
 class signalling_system:
     """
-    This class intends to send the drone a non-movement signal every 10 seconds
+    This class intends to send the drone a non-movement signal every 2 seconds
 
     Attributes:
         state (bool): Mimics the drone state.
