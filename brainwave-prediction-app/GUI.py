@@ -71,19 +71,6 @@ def get_drone_action(action):
     # time.sleep(2)
     return ("Done")
 
-
-def drone_holding_pattern():
-    print("Hold forward - tello.move(forward(5)")
-    tello.move_forward(5)
-    time.sleep(2)
-    print("Hold backward - tello.move(backward(5)")
-    tello.move_backward(5)
-
-    in_pattern = False
-    # let calling Window know if it needs to restart Holding Pattern
-    return (in_pattern)
-
-
 def use_brainflow():
     # Create BCI object
     bci = bciConnection()
