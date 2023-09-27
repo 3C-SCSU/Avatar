@@ -56,7 +56,7 @@ def get_drone_action(action):
     elif action == 'flip':
         tello.flip_back()
         print("tello.flip('b')")
-    elif action == 'keep alive':
+    elif action == 'holding pattern':
         bat = tello.query_battery()
         print(bat)
     elif action == 'stream':
