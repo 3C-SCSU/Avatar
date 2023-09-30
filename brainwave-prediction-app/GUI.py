@@ -3,9 +3,11 @@ import time
 import random
 import cv2
 from client.brainflow1 import bciConnection
-
 from gui_windows.manual_drone_control_window import manual_drone_control_window
 from gui_windows.brainwave_prediction_window import brainwave_prediction_window
+
+from file_transfer.sftp import fileTransfer
+
 
 # TODO enable imports
 # tello imports
@@ -132,19 +134,45 @@ def holding_pattern_window():
 # Define the layout for the Starting Page
 layout1 = [
     [sg.Button('Brainwave Reading', size=(20, 3)),
-     sg.Button('Transfer Data', size=(20, 3), disabled=True),
+     sg.Button('Transfer Data', size=(20, 3), disabled=False),
      sg.Button('Manual Drone Control', size=(20, 3)),
      sg.Button('Holding Pattern', size=(20, 3), disabled=True)]
 ]
 
-# Define the layout for the Transfer Data Page
-layout4 = [[sg.Button(
-    image_filename="/Users/williamdoyle/Documents/GitHub/Avatar/brainwave-prediction-app/images")]]
 
 # Create the windows
 window1 = sg.Window('Start Page', layout1, size=(1200, 800), finalize=True)
-window4 = sg.Window('Transfer Data', layout4, size=(
-    1200, 800), element_justification='c')
+
+
+# Transfer Window Screen
+def transfer_window():
+    # Define the layout of the transfer window
+    transfer_window_layout = [
+        [sg.Text("Insert a file")],
+        [sg.InputText(),
+         sg.FileBrowse("Browser File")],
+        [sg.Button('Transfer Data'), sg.Exit()],
+
+    ]
+ # Create a window with the defined layout
+    transfer_window = sg.Window(
+        "Transfer Data", transfer_window_layout, size=(1200, 800), element_justification='c')
+
+    while True:
+        # Read events and values from the window
+        event, values = transfer_window.read()
+
+        # Check if the window is closed or if the Exit button is clicked
+        if event in (sg.WIN_CLOSED, 'Exit'):
+            break
+
+        # Check if the Transfer Data button is clicked
+        if event == 'Transfer Data':
+            # If button is clicked send the transfer data to the 'file_transfer' file
+            print(values)
+            fileTransfer.transfer(None, None, values[0])
+    window1.un_hide()
+    transfer_window.close()
 
 
 items = []
@@ -159,7 +187,7 @@ while True:
         brainwave_prediction_window(window1, get_drone_action, use_brainflow)
     elif event1 == 'Transfer Data':
         window1.hide()
-        window4.read()
+        transfer_window()
     elif event1 == 'Manual Drone Control':
         window1.hide()
         manual_drone_control_window(items, get_drone_action, window1)
