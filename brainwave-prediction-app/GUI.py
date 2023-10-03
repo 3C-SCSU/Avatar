@@ -147,7 +147,7 @@ while True:
         brainwave_prediction_window(window1, get_drone_action, use_brainflow)
     elif event1 == 'Transfer Data':
         window1.hide()
-        transfer_files_window ()
+        transfer_files_window (window1)
     elif event1 == 'Manual Drone Control':
         window1.hide()
         manual_drone_control_window(items, get_drone_action, window1)
