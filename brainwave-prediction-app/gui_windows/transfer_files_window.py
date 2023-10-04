@@ -1,9 +1,12 @@
 import PySimpleGUI as sg
 import os
-import subprocess  # To run the sftp.py script
+import configparser
 import sys
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "..", "file-transfer"))
 from sftp import fileTransfer
+
+config = configparser.ConfigParser()
+config.optionxform = str
 
 def transfer_files_window(window1):
     # Layout for the transfer files window
@@ -21,7 +24,7 @@ def transfer_files_window(window1):
         [sg.InputText(key="-SOURCE-", enable_events=True), sg.FolderBrowse()],
         [sg.Text("Target Directory:")],
         [sg.InputText(key="-TARGET-", enable_events=True, default_text="/home/")],
-        [sg.Button("Upload"), sg.Button("Cancel")]
+        [sg.Button("Save Config"), sg.Button("Load Config"), sg.Button("Upload"), sg.Button("Cancel")]
     ]
 
     transfer_files_window = sg.Window("Transfer Files", layout)
@@ -53,6 +56,42 @@ def transfer_files_window(window1):
                     sg.popup_error("Please select both source and target directories!")
             except Exception as e:
                 sg.popup_error(f"Error during upload (check your login info): {str(e)}")
+
+        elif event == "Save Config":
+            selected_file = sg.popup_get_file(message="Save config file", save_as=True, no_window=True, default_extension="ini", file_types=(("ini", ".ini"),))
+            config['data'] = {
+                "-HOST-": values["-HOST-"],
+                "-USERNAME-": values["-USERNAME-"],
+                "-PRIVATE_KEY-": values["-PRIVATE_KEY-"],
+                "-IGNORE_HOST_KEY-": values["-IGNORE_HOST_KEY-"],
+                "-SOURCE-": values["-SOURCE-"],
+                "-TARGET-": values["-TARGET-"],
+            }          
+
+            with open(selected_file, 'w') as configfile:
+                config.write(configfile)
+
+        elif event == "Load Config":
+            selected_file = sg.popup_get_file(message="Save config file", no_window=True, file_types=(("ini", ".ini"),))
+            
+            oldData = {
+                "-HOST-": values["-HOST-"],
+                "-USERNAME-": values["-USERNAME-"],
+                "-PRIVATE_KEY-": values["-PRIVATE_KEY-"],
+                "-IGNORE_HOST_KEY-": values["-IGNORE_HOST_KEY-"],
+                "-SOURCE-": values["-SOURCE-"],
+                "-TARGET-": values["-TARGET-"],
+            }   
+
+            try:
+                config.read(selected_file)
+                for key, value in config['data'].items():
+                    transfer_files_window[key].update(value=value)
+
+            except Exception as e:
+                sg.popup_error(f"Config file error: {str(e)}")
+                for key, value in oldData.items():
+                    transfer_files_window[key].update(value=value)
 
     window1.un_hide()
     transfer_files_window.close() 
