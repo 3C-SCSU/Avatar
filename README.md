@@ -217,9 +217,7 @@ If you've made changes to your fork and want to contribute them back to the orig
 
 Make sure your fork is up to date: (follow instructions above)<br>
 
-Before you create a pull request, it's a good idea to ensure that your fork is up-to-date with the original repository. If it's not, follow the steps mentioned in the previous message to merge the latest changes from the original repository into your fork.<br>
-
-<br>Push your changes to your fork:<br>
+Push your changes to your fork:<br>
 
 If you've made local changes, push them to your forked repository on GitHub:<br>
 ```sh
