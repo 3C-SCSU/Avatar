@@ -151,7 +151,7 @@ This is an example of how to list things you need to use the software and how to
    const API_KEY = 'ENTER YOUR API';
    ```
 ***************END OF UPDATE INSTALLATION INFORMATION    --->
-### Installation
+### Installation for Cloning ( Not Recommended )
 <!-- 
 TODO: Update this section with a walkthrough on sparse checkout
 -->
@@ -159,8 +159,86 @@ TODO: Update this section with a walkthrough on sparse checkout
    ```sh
    git clone https://github.com/3C-SCSU/Avatar.git
    ```
+### Installation for Forking ( Recommended )
+#### Forking
+**1. Navigate to the Fork Button:**
+At the top right corner of the repository page, you'll see a "Fork" button.
+**2. Click the Fork Button:**
+Click on the "Fork" button. GitHub will then create a copy of the repository in your account. All you have to do is name it something along the lines of Avatar-YourName-Forked
+**3. Wait:**
+Give it a moment. Depending on the size of the repository, it may take a few seconds to a minute. Once the process completes, you'll be redirected to the forked repository in your GitHub account.
+**4. Clone the Forked Repository:**
+Get the link to your newly forked repository and use the following cmd.
+```sh
+git clone <your-forked-url>
+```
+**5. Configure upstream:**
+Upstream configuration allows you to pull changes from the main repository into your forked one.
+Navigate to your forked repository on your local machine, and then use the following command to list the currently configured remotes:
+```sh
+git remote -v
+```
 
+If you haven't added the upstream repository, you can add it with:
+```sh
+git remote add upstream https://github.com/3C-SCSU/Avatar
+```
 
+Fetch the changes from the upstream repository:
+```sh
+git fetch upstream
+```
+This will download all the changes from the upstream repository but won't merge them yet.
+
+Switch to your fork's main branch (or whichever branch you want to merge the changes into):
+```sh
+git checkout main
+```
+ (whatever branch you want typically main or your own branch)
+
+Merge the changes from the upstream repository into your local branch:
+```sh
+git merge upstream/main
+```
+Again, replace main with the appropriate branch name if different.
+
+Resolve any merge conflicts:
+
+If there are any conflicts between your fork and the original repository, you'll need to resolve them manually. After resolving the conflicts, you would stage the changes with git add <filename> and then commit the changes with git commit.
+
+Push the merged changes to your fork on GitHub:
+```sh
+git push origin main
+```
+
+Replace main with your branch name if different.
+### How to do a Pull Request
+If you've made changes to your fork and want to contribute them back to the original repository, you would do so by creating a pull request. Here's how to create a pull request (often abbreviated as PR) from your fork to the original repository:
+
+Make sure your fork is up to date: (follow instructions above)
+
+Before you create a pull request, it's a good idea to ensure that your fork is up-to-date with the original repository. If it's not, follow the steps mentioned in the previous message to merge the latest changes from the original repository into your fork.
+
+Push your changes to your fork:
+
+If you've made local changes, push them to your forked repository on GitHub:
+```sh
+git push origin <your-branch-name>
+```
+Replace <your-branch-name> with the name of your branch. Probably is main or your name.
+
+Open a pull request via GitHub:
+
+**Navigate to the main page of your forked repository on GitHub.
+Just above the file list, click on the “New pull request” button.
+You'll be brought to the original repository's pull request page with a comparison between the original repo and your fork. By default, GitHub will try to compare the original repository's default branch (like main or master) to your fork's default branch.
+If that's not the branch you want to base your pull request on, use the branch dropdown menu to select the branch from your fork you'd like to propose changes from.
+Review the changes to ensure they are what you expect.
+Once you've reviewed the comparison and are ready, click on the “Create pull request” button.
+Fill out the pull request form by giving it a meaningful title and a description of the changes you made. This will help the maintainers of the original repo understand the purpose of your PR.
+Finally, click the “Create pull request” button.** 
+
+After these steps, your forked repository should be updated with the latest changes from the original repository.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
