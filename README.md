@@ -161,13 +161,13 @@ TODO: Update this section with a walkthrough on sparse checkout
    ```
 ### Installation for Forking ( Recommended )
 #### Forking
-**1. Navigate to the Fork Button:**
+**1. Navigate to the Fork Button:**<br>
 At the top right corner of the repository page, you'll see a "Fork" button.
-**2. Click the Fork Button:**
+**2. Click the Fork Button:**<br>
 Click on the "Fork" button. GitHub will then create a copy of the repository in your account. All you have to do is name it something along the lines of Avatar-YourName-Forked
-**3. Wait:**
+**3. Wait:**<br>
 Give it a moment. Depending on the size of the repository, it may take a few seconds to a minute. Once the process completes, you'll be redirected to the forked repository in your GitHub account.
-**4. Clone the Forked Repository:**
+**4. Clone the Forked Repository:**<br>
 Get the link to your newly forked repository and use the following cmd.
 ```sh
 git clone <your-forked-url>
