@@ -5,8 +5,8 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "..", "file-transfer"))
 from sftp import fileTransfer
 
-config = configparser.ConfigParser()
-config.optionxform = str
+config = configparser.ConfigParser() # Used for saving and loading login data for the target
+config.optionxform = str # Make the saved keys case-sensitive
 
 def transfer_files_window(window1):
     # Layout for the transfer files window
@@ -34,12 +34,10 @@ def transfer_files_window(window1):
 
         if event in (sg.WIN_CLOSED, 'Quit') or event == "Cancel":
             break
+
         elif event == "Upload":
-            svrcon = None
-            source_dir = None
-            target_dir = None
-            
             try:
+                # Attempt to open a server connection
                 svrcon = fileTransfer(values["-HOST-"], values["-USERNAME-"], values["-PRIVATE_KEY-"], values["-PRIVATE_KEY_PASS-"], values["-IGNORE_HOST_KEY-"])
                 source_dir = values["-SOURCE-"]
                 target_dir = values["-TARGET-"]
@@ -47,7 +45,7 @@ def transfer_files_window(window1):
                 # Check if both source and target directories are provided
                 if source_dir and target_dir:
                     try:
-                        # Run the sftp.py script
+                        # Attempt to transfer the files
                         svrcon.transfer(str(source_dir), (target_dir))
                         sg.popup("File Upload Completed!")
                     except Exception as e:
@@ -58,7 +56,10 @@ def transfer_files_window(window1):
                 sg.popup_error(f"Error during upload (check your login info): {str(e)}")
 
         elif event == "Save Config":
+            # Manually open a file dialog
             selected_file = sg.popup_get_file(message="Save config file", save_as=True, no_window=True, default_extension="ini", file_types=(("ini", ".ini"),))
+
+            # The login data that will be saved
             config['data'] = {
                 "-HOST-": values["-HOST-"],
                 "-USERNAME-": values["-USERNAME-"],
@@ -68,12 +69,15 @@ def transfer_files_window(window1):
                 "-TARGET-": values["-TARGET-"],
             }          
 
+            # Write the data to disk at the selected location
             with open(selected_file, 'w') as configfile:
                 config.write(configfile)
 
         elif event == "Load Config":
+            # Manually open a file dialog
             selected_file = sg.popup_get_file(message="Save config file", no_window=True, file_types=(("ini", ".ini"),))
             
+            # The original login data
             oldData = {
                 "-HOST-": values["-HOST-"],
                 "-USERNAME-": values["-USERNAME-"],
@@ -84,14 +88,17 @@ def transfer_files_window(window1):
             }   
 
             try:
+                # Attempt to read the selected file
                 config.read(selected_file)
+                # Use the loaded data to set the values
                 for key, value in config['data'].items():
                     transfer_files_window[key].update(value=value)
 
             except Exception as e:
-                sg.popup_error(f"Config file error: {str(e)}")
+                # Reset the values back to the original values
                 for key, value in oldData.items():
                     transfer_files_window[key].update(value=value)
+                sg.popup_error(f"Config file error: {str(e)}")
 
     window1.un_hide()
     transfer_files_window.close() 
