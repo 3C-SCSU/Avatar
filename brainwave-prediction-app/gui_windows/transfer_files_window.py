@@ -24,7 +24,7 @@ def transfer_files_window(window1):
         [sg.InputText(key="-SOURCE-", enable_events=True), sg.FolderBrowse()],
         [sg.Text("Target Directory:")],
         [sg.InputText(key="-TARGET-", enable_events=True, default_text="/home/")],
-        [sg.Button("Save Config"), sg.Button("Load Config"), sg.Button("Upload"), sg.Button("Cancel")]
+        [sg.Button("Save Config"), sg.Button("Load Config"), sg.Button("Clear Config"), sg.Button("Upload"), sg.Button("Cancel")]
     ]
 
     transfer_files_window = sg.Window("Transfer Files", layout)
@@ -51,7 +51,7 @@ def transfer_files_window(window1):
                     except Exception as e:
                         sg.popup_error(f"Error during upload: {str(e)}")
                 else:
-                    sg.popup_error("Please select both source and target directories!")
+                    sg.popup_error("Please ensure that all fields have been filled!")
             except Exception as e:
                 sg.popup_error(f"Error during upload (check your login info): {str(e)}")
 
@@ -70,8 +70,9 @@ def transfer_files_window(window1):
             }          
 
             # Write the data to disk at the selected location
-            with open(selected_file, 'w') as configfile:
-                config.write(configfile)
+            if selected_file:
+                with open(selected_file, 'w') as configfile:
+                    config.write(configfile)
 
         elif event == "Load Config":
             # Manually open a file dialog
@@ -88,17 +89,27 @@ def transfer_files_window(window1):
             }   
 
             try:
-                # Attempt to read the selected file
-                config.read(selected_file)
-                # Use the loaded data to set the values
-                for key, value in config['data'].items():
-                    transfer_files_window[key].update(value=value)
+                if selected_file:
+                    # Attempt to read the selected file
+                    config.read(selected_file)
+                    # Use the loaded data to set the values
+                    for key, value in config['data'].items():
+                        transfer_files_window[key].update(value=value)
 
             except Exception as e:
                 # Reset the values back to the original values
                 for key, value in oldData.items():
                     transfer_files_window[key].update(value=value)
                 sg.popup_error(f"Config file error: {str(e)}")
+
+        elif event == "Clear Config":
+            transfer_files_window["-HOST-"].update(value="")
+            transfer_files_window["-USERNAME-"].update(value="")
+            transfer_files_window["-PRIVATE_KEY-"].update(value="")
+            transfer_files_window["-PRIVATE_KEY_PASS-"].update(value="")
+            transfer_files_window["-IGNORE_HOST_KEY-"].update(value=True)
+            transfer_files_window["-SOURCE-"].update(value="")
+            transfer_files_window["-TARGET-"].update(value="")
 
     window1.un_hide()
     transfer_files_window.close() 
