@@ -184,7 +184,7 @@ git remote -v
 git remote add upstream https://github.com/3C-SCSU/Avatar
 ```
 
-<br>Fetch the changes from the upstream repository:<br>
+Fetch the changes from the upstream repository:<br>
 ```sh
 git fetch upstream
 ```
