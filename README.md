@@ -179,7 +179,7 @@ Navigate to your forked repository on your local machine, and then use the follo
 git remote -v
 ```
 
-<br>If you haven't added the upstream repository, you can add it with:<br>
+If you haven't added the upstream repository, you can add it with:<br>
 ```sh
 git remote add upstream https://github.com/3C-SCSU/Avatar
 ```
@@ -188,7 +188,7 @@ Fetch the changes from the upstream repository:<br>
 ```sh
 git fetch upstream
 ```
-<br>This will download all the changes from the upstream repository but won't merge them yet.<br>
+This will download all the changes from the upstream repository but won't merge them yet.<br>
 
 Switch to your fork's main branch (or whichever branch you want to merge the changes into):<br>
 ```sh
