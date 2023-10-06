@@ -1,14 +1,27 @@
 html body{
     background-color: rgb(25,25,25);
 }
-.container{
+.container-fluid{
     background-color: rgb(25,25,25);
+    padding: 0px;
+    margin: 0px;
+    align-items: center;
 }
-.container h1{
-    font-size: 30px;
+.container-fluid h3{
+    color: rgb(255,255,255);
+    font-size: 35px;
+}
+.custom-container{
+    margin-top: 2.5%;
+}
+.custom-container h1{
+    padding: 25px;
+    
+    font-size: 75px;
     color: rgb(255,255,255);
 }
-.container h3{
-    color: rgb(255,255,255);
-    font-size: 20px;
+.logo{
+    padding: 10px;
+    height: 190px;
+    position: absolute;
 }
