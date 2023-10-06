@@ -1,0 +1,14 @@
+html body{
+    background-color: rgb(25,25,25);
+}
+.container{
+    background-color: rgb(25,25,25);
+}
+.container h1{
+    font-size: 30px;
+    color: rgb(255,255,255);
+}
+.container h3{
+    color: rgb(255,255,255);
+    font-size: 20px;
+}
