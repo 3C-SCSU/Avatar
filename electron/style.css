@@ -32,13 +32,30 @@ html body {
     padding: 25px;
     height: 190px;
     width: 100%;
-    margin-top:  20%;
+    margin-top: 27.5%;
     background-color: #2D3A66;
+    transition: all 0.3s ease;
+    flex-direction: column;
+}
+.btn button{
     opacity: 65%;
+}
+.btn-img:hover{
+    background-color: #6d0303;
+    transition: all 0.3s ease;
 }
 .btn-img img {
     max-height: 125px; 
     max-width: 100%; 
+}
+h3{
+    color: white;
+}
+.btn-img h3.brainD{
+    margin-top: 15px;
+}
+.btn-img img.brainDImg{
+    margin-top: 15px;
 }
 .btn-primary {
 	background-color: #303e6e;
