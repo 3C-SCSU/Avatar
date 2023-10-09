@@ -1,27 +1,45 @@
-html body{
-    background-color: rgb(25,25,25);
+html body {
+	background-color: rgb(25, 25, 25);
 }
-.container-fluid{
-    background-color: rgb(25,25,25);
-    padding: 0px;
-    margin: 0px;
-    align-items: center;
+.container-fluid {
+	background-color: rgb(25, 25, 25);
+	padding: 0px;
+	margin: 0px;
+	align-items: center;
 }
-.container-fluid h3{
-    color: rgb(255,255,255);
-    font-size: 35px;
+.container-fluid h3 {
+	color: rgb(255, 255, 255);
+	font-size: 35px;
 }
-.custom-container{
-    margin-top: 2.5%;
+.custom-container {
+	margin-top: 2.5%;
 }
-.custom-container h1{
+.custom-container h1 {
+	padding: 25px;
+	font-size: 75px;
+	color: rgb(255, 255, 255);
+}
+.logo {
+	padding: 10px;
+	height: 190px;
+	position: absolute;
+}
+
+.btn-img {
+	display: flex;
+	align-items: center;
+	justify-content: center;
     padding: 25px;
-    
-    font-size: 75px;
-    color: rgb(255,255,255);
-}
-.logo{
-    padding: 10px;
     height: 190px;
-    position: absolute;
+    width: 100%;
+    margin-top:  20%;
+    background-color: #2D3A66;
+    opacity: 65%;
+}
+.btn-img img {
+    max-height: 125px; 
+    max-width: 100%; 
+}
+.btn-primary {
+	background-color: #303e6e;
 }
