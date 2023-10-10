@@ -1,3 +1,4 @@
+/* Authors: Brendan Chermack, Abby Sininger, and Eion Ness */
 const { app, BrowserWindow } = require('electron');
 const createWindow = () => {
 	const win = new BrowserWindow({
