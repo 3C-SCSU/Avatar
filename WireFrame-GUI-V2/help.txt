@@ -1,0 +1,1 @@
+This folder contains UI design documents for a crossplatform mobile app and web app
