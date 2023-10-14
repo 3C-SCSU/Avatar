@@ -1,13 +1,14 @@
 import pysftp
 import sys
+from decouple import config
 
 #this file is expected to be modifed once for every single chromebook in our BCI lab
 class fileTransfer:
     def __init__(self):
-        self.host = ''  # change
-        self.username = ''  # change
-        self.private_key = ''  # change
-        self.private_key_pass = ''  # change
+        self.host = config('HOST', default='')
+        self.username = config('USERNAME', default='')
+        self.private_key = config('PRIVATE_KEY_PATH', default='')
+        self.private_key_pass = config('PRIVATE_KEY_PASS', default='')
         self.port = 22
         self.serverconn = self.connect()
 
