@@ -3,8 +3,6 @@ README.md
 
 
 # Environments
-**/.env
-.env
 .venv
 env/
 venv/
