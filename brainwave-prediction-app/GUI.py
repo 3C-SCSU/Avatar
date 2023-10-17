@@ -116,22 +116,40 @@ def holding_pattern_window():
     holding_pattern_window.close()
 
 
+def data_transfer_window():
+    while True:
+        event, values = window4.read()
+        if event in (sg.WIN_CLOSED, 'Exit'):
+            break
+        elif event == 'Transfer':
+            file_path = values['-FILE-']
+            if file_path:
+                # File should link to tranfer script
+                with open(file_path) as f:
+                    break
+            else:
+                sg.popup('No file was selected.')
+    window4.hide()
+    window1.un_hide()
+    
 # Define the layout for the Starting Page
 layout1 = [
     [sg.Button('Brainwave Reading', size=(20, 3)),
-     sg.Button('Transfer Data', size=(20, 3), disabled=True),
+     sg.Button('Transfer Data', size=(20, 3), disabled=False),
      sg.Button('Manual Drone Control', size=(20, 3)),
      sg.Button('Holding Pattern', size=(20, 3), disabled=True)]
 ]
 
 # Define the layout for the Transfer Data Page
-layout4 = [[sg.Button(
-    image_filename="/Users/williamdoyle/Documents/GitHub/Avatar/brainwave-prediction-app/images")]]
-
+layout4 = [
+    [sg.Text('Select a file to open')],
+    [sg.InputText(), sg.FileBrowse(key='-FILE-')],
+    [sg.Button('Transfer'), sg.Button('Exit')]
+]
 # Create the windows
 window1 = sg.Window('Start Page', layout1, size=(1200, 800), finalize=True)
 window4 = sg.Window('Transfer Data', layout4, size=(
-    1200, 800), element_justification='c')
+    600,200 ), element_justification='c')
 
 
 items = []
@@ -146,7 +164,8 @@ while True:
         brainwave_prediction_window(window1, get_drone_action, use_brainflow)
     elif event1 == 'Transfer Data':
         window1.hide()
-        window4.read()
+        window4.un_hide()
+        data_transfer_window()
     elif event1 == 'Manual Drone Control':
         window1.hide()
         manual_drone_control_window(items, get_drone_action, window1)
