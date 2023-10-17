@@ -1,18 +1,31 @@
 import PySimpleGUI as sg
 
 def transfer_data_window():
-    layout = [
-        [sg.Text("Host:"), sg.Input(s=15)],
-        [sg.Text("Username:"), sg.Input(s=15)],
-        [sg.Text("Private Key:"), sg.FileBrowse(), sg.Text("")],
-        [sg.Text("Password:"), sg.Input(s=15, password_char='*')],
-        [sg.HSep()],
-        [sg.FileBrowse("Select Files"), sg.Text("")],
-        [sg.VPush()],
-        [sg.Button("Send"), sg.Button("Cancel")],
+    login_field_layout_left = [
+        [sg.Text("Host:")],
+        [sg.Text("Username:")],
+        [sg.Text("Private Key:")],
+        [sg.Text("Password:")],
     ]
 
-    window = sg.Window("Transfer Data", layout, size=(300, 400), element_justification='c')
+    login_field_layout_right = [
+        [sg.Input(s=25)],
+        [sg.Input(s=25)],
+        [sg.FileBrowse(), sg.Text("")],
+        [sg.Input(s=25, password_char='*')],
+    ]
+
+    login_field_layout = [
+        [sg.Col(login_field_layout_left), sg.VPush(), sg.Col(login_field_layout_right)],
+    ]
+
+    layout = [
+        [sg.Frame("Login", login_field_layout)],
+        [sg.Text("No Folder Selected")],
+        [sg.FileBrowse("Select Folder"), sg.Push(), sg.Button("Send"), sg.Button("Cancel")],
+    ]
+
+    window = sg.Window("Transfer Data", layout, size=(350, 200), element_justification='c')
 
     while True:
         event, values = window.read()
