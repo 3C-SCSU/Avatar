@@ -16,7 +16,7 @@ def transfer_data_window():
     ]
 
     login_layout = [
-        [sg.Col(login_layout_left), sg.VPush(), sg.Col(login_layout_right)],
+        [sg.Col(login_layout_left), sg.Push(), sg.Col(login_layout_right)],
     ]
 
     layout = [
