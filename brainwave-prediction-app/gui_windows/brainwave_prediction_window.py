@@ -1,4 +1,5 @@
 import PySimpleGUI as sg
+from .signal_module import signalling_system as sgsys
 
 class Brainwaves:
 
@@ -6,9 +7,64 @@ class Brainwaves:
     # Layout
     flight_log = []  # array to hold flight log info
     predictions_log = []  # array to hold info for table
+
+    signal_system = sgsys(get_drone_action, "holding pattern") # The signal system class
+    keep_alive_toggle  = False # mimics the drone's keep alive toggle
+    
     predictions_headings = [
         'Predictions Count', 'Server Predictions', 'Prediction Label']  # table headings
     response_headings = ['Count', 'Label']
+<<<<<<< HEAD
+=======
+    top_left = [
+        [sg.Radio('Manual Control', 'pilot', default=True, size=(-20, 1)),
+         sg.Radio('Autopilot', 'pilot',  size=(12, 1))],
+        [sg.Button('Read my mind...', size=(40, 5),
+                   image_filename="brainwave-prediction-app/images/brain.png")],
+        # [sg.Text(key="-COUNT-"), sg.Text(key="-PREDICTION-")],
+        [sg.Text("The model says ...")],
+        [sg.Table(values=[], headings=response_headings,  auto_size_columns=False, def_col_width=15, justification='center',
+                  num_rows=1, key='-SERVER_TABLE-', row_height=25, tooltip="Server Response Table", hide_vertical_scroll=True,)],
+
+        [sg.Button('Not what I was thinking...', size=(14, 3)),
+         sg.Button('Execute', size=(14, 3)), sg.Push()],
+        [sg.Input(key='-drone_input-'),
+         sg.Button('holding pattern')]
+    ]
+    bottom_left = [
+        [sg.Text('Flight Log')], [sg.Listbox(
+            values=flight_log, size=(30, 6), key='LOG')],
+    ]
+    bottom_right = [
+        [sg.Text('Console Log')],
+        [sg.Output(s=(45, 10))]
+    ]
+
+    brainwave_prediction_layout = [
+
+        [sg.Column(top_left, pad=((150, 0), (0, 0))), sg.Push(), sg.Table(
+            values=[],
+            headings=predictions_headings,
+            max_col_width=35,
+            auto_size_columns=True,
+            justification='center',
+            num_rows=10,
+            key='-TABLE-',
+            row_height=35,
+            tooltip='Predictions Table'
+        )
+        ],
+        [sg.Column(bottom_left), sg.Push(),
+         sg.Column(bottom_right)],
+        [sg.Button('Connect', size=(8, 2),
+                   image_filename="brainwave-prediction-app/images/connect.png"), sg.Push(),],
+
+    ]
+
+    brainwave_prediction_window = sg.Window("Brainwave Prediction", brainwave_prediction_layout, size=(
+        1200, 800), element_justification='c', finalize=True)
+
+>>>>>>> 135a27b8b8ced51867371eb5b266e2f13d851591
     count = 0
     predictions_list = ['backward', 'down', 'forward',
                         'land', 'left', 'right', 'takeoff', 'up']
@@ -128,9 +184,26 @@ class Brainwaves:
             window1['LOG'].update(values=flight_log)
             get_drone_action('connect')
             flight_log.insert(0, "Done.")
+<<<<<<< HEAD
             window1['LOG'].update(values=flight_log)
         elif event == 'Keep Drone Alive':
             get_drone_action('keep alive')
+=======
+            brainwave_prediction_window['LOG'].update(values=flight_log)
+        elif event == 'holding pattern':
+            # Checks if toggle is turned on
+            if keep_alive_toggle:
+                print("Keep Alive Toggle turned off")
+                # Turns it off
+                keep_alive_toggle = False
+                # Stop signalling
+                signal_system.stop()
+            # Vice versa
+            else:
+                print("Keep Alive Toggle turned on")
+                keep_alive_toggle = True
+                signal_system.start()
+>>>>>>> 135a27b8b8ced51867371eb5b266e2f13d851591
 
         return
 
