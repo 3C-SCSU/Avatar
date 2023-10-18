@@ -175,7 +175,8 @@ layout4 = [[sg.Button(
     image_filename="/Users/williamdoyle/Documents/GitHub/Avatar/brainwave-prediction-app/images")]]
 
 # Create the windows
-window1 = sg.Window('Start Page', layout1, size=(1200, 800),element_justification='c',finalize=True)
+window1 = sg.Window('Start Page', layout1, size=(1600,1600),element_justification='c',resizable=True,finalize=True)
+window1.Maximize()
 window4 = sg.Window('Transfer Data', layout4, size=(
     1200, 800), element_justification='c')
 
