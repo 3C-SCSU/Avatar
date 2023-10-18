@@ -4,6 +4,7 @@ import random
 import cv2
 from client.brainflow1 import bciConnection
 
+
 from gui_windows.manual_drone_control_window import Drone_Control
 from gui_windows.brainwave_prediction_window import Brainwaves
 
@@ -140,20 +141,21 @@ def holding_pattern_window():
 #We'll need a tab group, tabs for the individual items (so 4)
 #And a way of linking the content to each tab.
 
+
+#added tabs for the tabgroup
 brainwaveObj = Brainwaves(get_drone_action)
 brainwave_tab = brainwaveObj.brainwave_prediction_window(get_drone_action, use_brainflow)
 
 t2Test = sg.Text('Disabled for now',text_color='Red')
 transferTab = [[t2Test]]
 
-items = []
 DroneControlObj = Drone_Control()
-manDroneCtrlTab = DroneControlObj.manual_drone_control_window(items, get_drone_action)
+manDroneCtrlTab = DroneControlObj.manual_drone_control_window(get_drone_action)
 
 t4Test = sg.Text('Disabled for now',text_color='Red')
 holdPatTab = [[t4Test]]
 
-
+#new layout designed
 layout1 = [[sg.TabGroup([[
     brainwave_tab,
     sg.Tab('Transfer Data', transferTab, key='Transfer Data'),
@@ -177,8 +179,8 @@ window1 = sg.Window('Start Page', layout1, size=(1200, 800),element_justificatio
 window4 = sg.Window('Transfer Data', layout4, size=(
     1200, 800), element_justification='c')
 
-
 # Event loop for the first window
+#changed what the buttons do to tabs
 while True:
     event1, values1 = window1.read()
     activeTab = window1['layout1'].Get()
@@ -191,7 +193,7 @@ while True:
         #window4.read()
     elif activeTab == 'Manual Drone Control':
         #window1.hide()
-        DroneControlObj.buttonLoopDrone(items, get_drone_action, window1)
+        DroneControlObj.buttonLoopDrone(get_drone_action, window1, event1, values1)
     #elif activeTab == 'Holding Pattern':
         #holding_pattern_window()
 
