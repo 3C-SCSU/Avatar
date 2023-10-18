@@ -46,4 +46,14 @@
     margin-right: 10px;
   }
 
-  
+  /*style for the button section space them out */
+  .button-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+
+    
+  }.button-section button {
+    margin-right: 10px;
+}

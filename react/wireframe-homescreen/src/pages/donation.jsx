@@ -83,11 +83,11 @@ const Donation = () => {
             I consent to donate my brainwaves.
           </label>
         </div>
-        <div>
-                  <button type="submit">Submit</button>
-        <Link to="/">
-          <button>Back</button>
-        </Link>
+        <div className="button-section">
+          <button type="submit">Submit</button>
+          <Link to="/">
+            <button>Back</button>
+          </Link>
         </div>
 
       </form>

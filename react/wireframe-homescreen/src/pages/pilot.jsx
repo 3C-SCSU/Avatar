@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 const Piloting = () => {
   return (
     <div>
-      <h1>Brainwave Donation</h1>
+      <h1>Brainwave Piloting</h1>
     </div>
   );
 }
