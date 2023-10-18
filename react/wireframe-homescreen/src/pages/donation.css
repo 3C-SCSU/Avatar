@@ -1,0 +1,49 @@
+/* Style for the Donation Form Container */
+.donation-form {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 150px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    background-color: #75FEFE;
+  }
+  
+  .donation-form h1 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  /* Style for Form */
+  .donation-form-page {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Style for Form Groups */
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  /* Style for Input Fields */
+  .form-group input[type="text"],
+  .form-group input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 16px;
+  }
+  
+  /* Style for Checkbox Label */
+  .form-group input[type="checkbox"] {
+    margin-right: 10px;
+  }
+
+  
