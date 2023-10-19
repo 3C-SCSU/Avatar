@@ -1,0 +1,35 @@
+/* FILEPATH: /c:/Users/bebid/Desktop/School/SCSU/Fall_2023/CSCI312/Midterm/CSCI312_Team3_Avatar/react/wireframe-homescreen/src/pages/home.css */
+
+/* Style the main container */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+
+}
+
+/* Style the heading */
+h1 {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    
+}
+
+/* Style the button */
+.button- {
+    padding: 1rem 2rem;
+    font-size: 2rem;
+    background-color: #0077FF;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    
+}
+
+/* Style the button on hover */
+button:hover {
+    background-color: #1867df;
+}
