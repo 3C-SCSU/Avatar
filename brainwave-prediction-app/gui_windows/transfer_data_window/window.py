@@ -41,15 +41,19 @@ def transfer_data_window():
         if event in [sg.WIN_CLOSED, "Cancel"]:
             break
         if event == "Send":
-            conn = fileTransfer(
-                values["host"],
-                values["username"],
-                values["private_key"],
-                values["private_key_pass"])
-
-            try:
-                conn.transfer(values["Source Folder"], values["destination_folder"])
-            except Exception as err:
-                pass
+            for value in ["host", "username", "private_key", "private_key_pass", "Source Folder", "destination_folder"]:
+                if values.get(value) in ["", None]:
+                    break
+            else:
+                try:
+                    conn = fileTransfer(
+                        values["host"],
+                        values["username"],
+                        values["private_key"],
+                        values["private_key_pass"])
+                    conn.transfer(values["Source Folder"], values["destination_folder"])
+                    sg.popup("File transfer complete")
+                except Exception as err:
+                    sg.popup_error("Failed to transfer files")
 
     window.close()
