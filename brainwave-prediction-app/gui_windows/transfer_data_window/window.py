@@ -10,10 +10,10 @@ def transfer_data_window():
     ]
 
     login_layout_right = [
-        [sg.Input(s=25)],
-        [sg.Input(s=25)],
-        [sg.Text(""), sg.FileBrowse()],
-        [sg.Input(s=25, password_char='*')],
+        [sg.Input(s=25, key="host")],
+        [sg.Input(s=25, key="username")],
+        [sg.FileBrowse(key="private_key")],
+        [sg.Input(s=25, password_char='*', key="private_key_pass")],
     ]
 
     login_layout = [
@@ -25,9 +25,9 @@ def transfer_data_window():
     layout = [
         [sg.Frame("Login", login_layout)],
         [sg.VPush()],
+        [sg.Text("Source Folder:"), sg.Push(), sg.Text(key='source_folder')],
         [sg.Text("Destination Folder:"), sg.Push(), sg.Input(s=25, key="destination_folder")],
-        [sg.Text(key='folder_text')],
-        [sg.FolderBrowse("Source Folder", target='folder_text'),
+        [sg.FolderBrowse("Source Folder", target='source_folder'),
          sg.Push(),
          sg.Button("Send"),
          sg.Button("Cancel")],
@@ -41,6 +41,15 @@ def transfer_data_window():
         if event in [sg.WIN_CLOSED, "Cancel"]:
             break
         if event == "Send":
-            pass
+            conn = fileTransfer(
+                values["host"],
+                values["username"],
+                values["private_key"],
+                values["private_key_pass"])
+
+            try:
+                conn.transfer(values["Source Folder"], values["destination_folder"])
+            except Exception as err:
+                pass
 
     window.close()
