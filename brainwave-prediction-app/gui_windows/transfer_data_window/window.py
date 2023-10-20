@@ -1,4 +1,5 @@
 import PySimpleGUI as sg
+from .sftp import fileTransfer
 
 def transfer_data_window():
     login_layout_left = [
@@ -23,19 +24,23 @@ def transfer_data_window():
 
     layout = [
         [sg.Frame("Login", login_layout)],
-        [sg.Text(key='folder')],
-        [sg.FolderBrowse(target='folder'),
+        [sg.VPush()],
+        [sg.Text("Destination Folder:"), sg.Push(), sg.Input(s=25, key="destination_folder")],
+        [sg.Text(key='folder_text')],
+        [sg.FolderBrowse("Source Folder", target='folder_text'),
          sg.Push(),
          sg.Button("Send"),
          sg.Button("Cancel")],
     ]
 
-    window = sg.Window("Transfer Data", layout, size=(350, 200), element_justification='c')
+    window = sg.Window("Transfer Data", layout, size=(350, 250), element_justification='c')
 
     while True:
         event, values = window.read()
 
         if event in [sg.WIN_CLOSED, "Cancel"]:
             break
+        if event == "Send":
+            pass
 
     window.close()

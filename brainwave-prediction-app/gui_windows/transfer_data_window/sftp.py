@@ -3,12 +3,12 @@ import sys
 
 #this file is expected to be modifed once for every single chromebook in our BCI lab
 class fileTransfer:
-    def __init__(self):
-        self.host = ''  # change
-        self.username = ''  # change
-        self.private_key = ''  # change
-        self.private_key_pass = ''  # change
-        self.port = 22
+    def __init__(self, host, username, private_key, private_key_pass, port=22):
+        self.host = host
+        self.username = username
+        self.private_key = private_key
+        self.private_key_pass = private_key_pass
+        self.port = port
         self.serverconn = self.connect()
 
     def connect(self):
