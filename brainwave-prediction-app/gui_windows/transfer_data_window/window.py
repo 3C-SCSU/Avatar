@@ -12,7 +12,7 @@ def transfer_data_window():
     login_layout_right = [
         [sg.Input(s=25, key="host")],
         [sg.Input(s=25, key="username")],
-        [sg.FileBrowse(key="private_key")],
+        [sg.Input(s=13, key="private_key"), sg.FileBrowse(target="private_key")],
         [sg.Input(s=25, password_char='*', key="private_key_pass")],
     ]
 
@@ -25,9 +25,9 @@ def transfer_data_window():
     layout = [
         [sg.Frame("Login", login_layout)],
         [sg.VPush()],
-        [sg.Text("Source Folder:"), sg.Push(), sg.Text(key='source_folder')],
+        [sg.Text("Source Folder:"), sg.Push(), sg.Input(s=25, key='source_folder')],
         [sg.Text("Destination Folder:"), sg.Push(), sg.Input(s=25, key="destination_folder")],
-        [sg.FolderBrowse("Source Folder", target='source_folder'),
+        [sg.FolderBrowse("Select Source Folder", target='source_folder'),
          sg.Push(),
          sg.Button("Send"),
          sg.Button("Cancel")],
@@ -41,7 +41,7 @@ def transfer_data_window():
         if event in [sg.WIN_CLOSED, "Cancel"]:
             break
         if event == "Send":
-            for value in ["host", "username", "private_key", "private_key_pass", "Source Folder", "destination_folder"]:
+            for value in ["host", "username", "private_key", "private_key_pass", "source_folder", "destination_folder"]:
                 if values.get(value) in ["", None]:
                     break
             else:
@@ -51,7 +51,7 @@ def transfer_data_window():
                         values["username"],
                         values["private_key"],
                         values["private_key_pass"])
-                    conn.transfer(values["Source Folder"], values["destination_folder"])
+                    conn.transfer(values["source_folder"], values["destination_folder"])
                     sg.popup("File transfer complete")
                 except Exception as err:
                     sg.popup_error("Failed to transfer files")
