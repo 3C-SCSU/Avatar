@@ -1,4 +1,4 @@
-HOSTNAME=your_hostname_or_ip
+HOST=your_hostname_or_ip
 USERNAME=your_username
 PRIVATE_KEY_PATH=path/to/your/private/key
 PRIVATE_KEY_PASS=your_private_key_pass
