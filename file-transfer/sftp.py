@@ -3,24 +3,31 @@ import sys
 
 #this file is expected to be modifed once for every single chromebook in our BCI lab
 class fileTransfer:
-    def __init__(self):
-        self.host = ''  # change
-        self.username = ''  # change
-        self.private_key = ''  # change
-        self.private_key_pass = ''  # change
+    def __init__(self, host='', username='', private_key='', private_key_pass='', ignore_host_key=False):
+        self.host = host  # change
+        self.username = username  # change
+        self.private_key = private_key  # change
+        self.private_key_pass = private_key_pass  # change
         self.port = 22
-        self.serverconn = self.connect()
+        self.serverconn = self.connect(ignore_host_key)
 
-    def connect(self):
+    def connect(self, ignore_host_key):
         """Connects to the sftp server and returns the sftp connection object"""
         try:
+            cnopts = None
+
+            if ignore_host_key:
+                cnopts = pysftp.CnOpts()
+                cnopts.hostkeys = None
+
             # Get the sftp connection object
             serverconn = pysftp.Connection(
                 host=self.host,
                 username=self.username,
                 private_key=self.private_key,  # make secret
                 private_key_pass=self.private_key_pass,  # make secret
-                port=self.port
+                port=self.port,
+                cnopts=cnopts
             )
             if (serverconn):
                 print("Connected to host...")
