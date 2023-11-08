@@ -1,61 +1,89 @@
-import pysftp
-import sys
+import sys 
+import os
+from typing import List
+from paramiko import AutoAddPolicy, SSHClient
+from paramiko.auth_handler import AuthenticationException, SSHException
+from scp import SCPClient, SCPException
 
 #this file is expected to be modifed once for every single chromebook in our BCI lab
 class fileTransfer:
-    def __init__(self, host='', username='', private_key='', private_key_pass='', ignore_host_key=False):
+    def __init__(self, host: str, username: str, private_key: str):
         self.host = host  # change
         self.username = username  # change
         self.private_key = private_key  # change
-        self.private_key_pass = private_key_pass  # change
-        self.port = 22
-        self.serverconn = self.connect(ignore_host_key)
+        self.server_conn = self.connect
 
-    def connect(self, ignore_host_key):
-        """Connects to the sftp server and returns the sftp connection object"""
+    @property
+    def connection(self):
+        """Open SSH connection to remote host."""
         try:
-            cnopts = None
-
-            if ignore_host_key:
-                cnopts = pysftp.CnOpts()
-                cnopts.hostkeys = None
-
-            # Get the sftp connection object
-            serverconn = pysftp.Connection(
-                host=self.host,
+            client = SSHClient()
+            client.set_missing_host_key_policy(AutoAddPolicy())
+            client.connect(
+                hostname=self.host,
                 username=self.username,
-                private_key=self.private_key,  # make secret
-                private_key_pass=self.private_key_pass,  # make secret
-                port=self.port,
-                cnopts=cnopts
+                key_filename=self.private_key
             )
-            if (serverconn):
-                print("Connected to host...")
-        except Exception as err:
-            print(err)
-            raise Exception(err)
-
-        finally:
-            return serverconn
-
-    def transfer(self, src, target):
-        """Recursivily places files in the target dir, copies everything inside of src dir"""
-        try:
-            print(f"Transfering files to {self.host} ...")
-            self.serverconn.put_r(str(src), str(target))
-            print("Files Successfully Transfered!")
+            return client
+        except AuthenticationException as e:
             print(
-                f"Src files placed in Dir: {self.serverconn.listdir(target)}")
+                f"AuthenticationException occurred; make sure you are providing your private key? {e}"
+            )
+        except Exception as e:
+            print(f"Unexpected error occurred while connecting to host: {e}")
+    
+    def progress(self, filename, size, sent):
+        sys.stdout.write("{}'s progress: {:.2f}%   \r".format(filename, float(sent)/float(size)*100)) 
+    
+    @property
+    def connect(self) -> SCPClient:
+        conn = self.connection
+        return SCPClient(conn.get_transport(), progress=self.progress)
+    
+    def bulk_upload(self, local_path, remote_path: str):
+        """
+        Upload multiple files to a remote directory.
 
-        except Exception as err:
-            raise Exception(err)
+        :param List[str] filepaths: List of local files to be uploaded.
+        """
+        try:
+            self.connect.put(local_path, remote_path=remote_path, recursive=True)
+            print(
+                f"Finished uploading files from {local_path} to {remote_path} on {self.host}"
+            )
+        except SCPException as e:
+            print(f"SCPException during bulk upload: {e}")
+        except Exception as e:
+            print(f"Unexpected exception during bulk upload: {e}")
 
+    def fetch_local_files(self, local_file_dir: str) -> List[str]:
+        """
+        Generate list of file paths.
+        :param str local_file_dir: Local filepath of assets to SCP to host.
+        :returns: List[str]
+        """
+        local_files = os.walk(local_file_dir)
+        files = []
+        for root, _ , filenames in local_files:
+            for filename in filenames:
+                files.append(os.path.join(root, filename))
+
+        print(f"Files to be transferred: ", files)
+        return files 
+
+    def disconnect(self):
+        """Close SSH & SCP connection."""
+        if self.connect:
+            self.connect.close()
+        if self.server_conn:
+            self.server_conn.close()
 
 def main():
-    svrcon = fileTransfer()
-    src = sys.argv[1]
-    target = sys.argv[2]
-    svrcon.transfer(str(src), (target))
+    pass
+    # svrcon = fileTransfer()
+    # src = sys.argv[1]
+    # target = sys.argv[2]
+    # svrcon.transfer(str(src), str(target))
 
 
 if __name__ == '__main__':

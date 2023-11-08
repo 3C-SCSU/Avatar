@@ -1,0 +1,12 @@
+flask
+pandas
+numpy
+PySimpleGUI
+djitellopy
+requests
+brainflow
+paramiko
+scp
+# pysftp==0.2.9
+# tensorflow==2.12.0
+# tensorflow_decision_forests==1.3.0

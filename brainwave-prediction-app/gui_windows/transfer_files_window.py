@@ -38,16 +38,19 @@ def transfer_files_window(window1):
         elif event == "Upload":
             try:
                 # Attempt to open a server connection
-                svrcon = fileTransfer(values["-HOST-"], values["-USERNAME-"], values["-PRIVATE_KEY-"], values["-PRIVATE_KEY_PASS-"], values["-IGNORE_HOST_KEY-"])
+                svrcon = fileTransfer(values["-HOST-"], values["-USERNAME-"], values["-PRIVATE_KEY-"])
+                if svrcon:
+                    print("Connected to host: ", values["-HOST-"])
                 source_dir = values["-SOURCE-"]
                 target_dir = values["-TARGET-"]
 
-                # Check if both source and target directories are provided
+                # Check if both source and target directories are provided, content present in source
                 if source_dir and target_dir:
                     try:
                         # Attempt to transfer the files
-                        svrcon.transfer(str(source_dir), (target_dir))
+                        svrcon.bulk_upload(source_dir, target_dir)
                         sg.popup("File Upload Completed!")
+                        svrcon.disconnect()
                     except Exception as e:
                         sg.popup_error(f"Error during upload: {str(e)}")
                 else:
@@ -64,7 +67,6 @@ def transfer_files_window(window1):
                 "-HOST-": values["-HOST-"],
                 "-USERNAME-": values["-USERNAME-"],
                 "-PRIVATE_KEY-": values["-PRIVATE_KEY-"],
-                "-IGNORE_HOST_KEY-": values["-IGNORE_HOST_KEY-"],
                 "-SOURCE-": values["-SOURCE-"],
                 "-TARGET-": values["-TARGET-"],
             }          
@@ -83,7 +85,6 @@ def transfer_files_window(window1):
                 "-HOST-": values["-HOST-"],
                 "-USERNAME-": values["-USERNAME-"],
                 "-PRIVATE_KEY-": values["-PRIVATE_KEY-"],
-                "-IGNORE_HOST_KEY-": values["-IGNORE_HOST_KEY-"],
                 "-SOURCE-": values["-SOURCE-"],
                 "-TARGET-": values["-TARGET-"],
             }   
