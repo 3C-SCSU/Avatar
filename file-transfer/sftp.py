@@ -9,10 +9,11 @@ class fileTransfer:
         self.private_key = ''  # change
         self.private_key_pass = ''  # change
         self.port = 22
-        self.serverconn = self.connect()
+        self.serverconn = None  # Removes autoconnect
 
     def connect(self):
         """Connects to the sftp server and returns the sftp connection object"""
+        serverconn = None  # Set to None initially to address reference before assignment error
         try:
             # Get the sftp connection object
             serverconn = pysftp.Connection(
