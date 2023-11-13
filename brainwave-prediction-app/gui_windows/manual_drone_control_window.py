@@ -7,33 +7,33 @@ def manual_drone_control_window(items, get_drone_action, window1):
 
     # Column layouts for centering"Done.")
     top_center = [
-        [sg.Button('Up', size=(8, 2), image_filename="brainwave-prediction-app/images/up.png")]]
+        [sg.Button('Up', size=(8, 2), image_filename="../brainwave-prediction-app/images/up.png")]]
     top_right = [[sg.Text('Flight Log')], [sg.Listbox(
         values=[], size=(30, 6), key='LOG')]]
     bottom_center = [
-        [sg.Button('Down', size=(8, 2), image_filename="brainwave-prediction-app/images/down.png")]]
+        [sg.Button('Down', size=(8, 2), image_filename="../brainwave-prediction-app/images/down.png")]]
 
     manual_drone_control_layout = [
-        [sg.Button('Home', size=(8, 2), image_filename="brainwave-prediction-app/images/home.png"), sg.Push(),
+        [sg.Button('Home', size=(8, 2), image_filename="../brainwave-prediction-app/images/home.png"), sg.Push(),
          sg.Column(top_center, pad=((55, 0), (0, 0))), sg.Push(), sg.Column(top_right), ],
         [sg.Push(), sg.Push(), sg.Button('Forward', size=(8, 2),
-                                         image_filename="brainwave-prediction-app/images/forward.png"), sg.Push(), sg.Push(),],
+                                         image_filename="../brainwave-prediction-app/images/forward.png"), sg.Push(), sg.Push(),],
 
-        [sg.Button('Turn Left', size=(8, 2), image_filename="brainwave-prediction-app/images/turnLeft.png"),
+        [sg.Button('Turn Left', size=(8, 2), image_filename="../brainwave-prediction-app/images/turnLeft.png"),
          sg.Button('Left', size=(8, 2),
-                   image_filename="brainwave-prediction-app/images/left.png"),
+                   image_filename="../brainwave-prediction-app/images/left.png"),
          sg.Button(
-             'Stream', image_filename="brainwave-prediction-app/images/drone.png"),
+             'Stream', image_filename="../brainwave-prediction-app/images/drone.png"),
          sg.Button('Right', size=(8, 2),
-                   image_filename="brainwave-prediction-app/images/right.png"),
-         sg.Button('Turn Right', size=(8, 2), image_filename="brainwave-prediction-app/images/turnRight.png")],
+                   image_filename="../brainwave-prediction-app/images/right.png"),
+         sg.Button('Turn Right', size=(8, 2), image_filename="../brainwave-prediction-app/images/turnRight.png")],
 
         [sg.Button('Back', size=(8, 2),
-                   image_filename="brainwave-prediction-app/images/back.png")],
-        [sg.Button('Connect', size=(8, 2), image_filename="brainwave-prediction-app/images/connect.png"), sg.Push(), sg.Push(), sg.Column(bottom_center, pad=((55, 0), (0, 0))), sg.Push(), sg.Button('Takeoff', size=(8, 2), image_filename="brainwave-prediction-app/images/takeoff.png"), sg.Button('Land', size=(8, 2), image_filename="brainwave-prediction-app/images/land.png")]]
+                   image_filename="../brainwave-prediction-app/images/back.png")],
+        [sg.Button('Connect', size=(8, 2), image_filename="../brainwave-prediction-app/images/connect.png"), sg.Push(), sg.Push(), sg.Column(bottom_center, pad=((55, 0), (0, 0))), sg.Push(), sg.Button('Takeoff', size=(8, 2), image_filename="../brainwave-prediction-app/images/takeoff.png"), sg.Button('Land', size=(8, 2), image_filename="../brainwave-prediction-app/images/land.png")]]
 
     manual_drone_control_window = sg.Window(
-        'Manual Drone Control', manual_drone_control_layout, size=(1600, 1600), element_justification='c')
+        'Manual Drone Control', manual_drone_control_layout, size=(1200, 800), element_justification='c')
 
     first_iteration = True
 
