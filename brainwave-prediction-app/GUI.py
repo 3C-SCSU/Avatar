@@ -6,6 +6,7 @@ from client.brainflow1 import bciConnection
 
 from gui_windows.manual_drone_control_window import manual_drone_control_window
 from gui_windows.brainwave_prediction_window import brainwave_prediction_window
+from gui_windows.transfer_files_window import transfer_files_window
 
 # TODO enable imports
 # tello imports
@@ -71,6 +72,17 @@ def get_drone_action(action):
     # time.sleep(2)
     return ("Done")
 
+def drone_holding_pattern():
+    print("Hold forward - tello.move(forward(5)")
+    tello.move_forward(5)
+    time.sleep(2)
+    print("Hold backward - tello.move(backward(5)")
+    tello.move_backward(5)
+    in_pattern = False
+    # let calling Window know if it needs to restart Holding Pattern
+    return (in_pattern)
+
+
 def use_brainflow():
     # Create BCI object
     bci = bciConnection()
@@ -119,14 +131,14 @@ def holding_pattern_window():
 # Define the layout for the Starting Page
 layout1 = [
     [sg.Button('Brainwave Reading', size=(20, 3)),
-     sg.Button('Transfer Data', size=(20, 3), disabled=True),
+     sg.Button('Transfer Data', size=(20, 3)),
      sg.Button('Manual Drone Control', size=(20, 3)),
      sg.Button('Holding Pattern', size=(20, 3), disabled=True)]
 ]
 
 # Define the layout for the Transfer Data Page
 layout4 = [[sg.Button(
-    image_filename="/Users/williamdoyle/Documents/GitHub/Avatar/brainwave-prediction-app/images")]]
+    image_filename="brainwave-prediction-app/images/brain.png")]]
 
 # Create the windows
 window1 = sg.Window('Start Page', layout1, size=(1200, 800), finalize=True)
@@ -146,7 +158,7 @@ while True:
         brainwave_prediction_window(window1, get_drone_action, use_brainflow)
     elif event1 == 'Transfer Data':
         window1.hide()
-        window4.read()
+        transfer_files_window (window1)
     elif event1 == 'Manual Drone Control':
         window1.hide()
         manual_drone_control_window(items, get_drone_action, window1)
