@@ -11,7 +11,7 @@ config.optionxform = str # Make the saved keys case-sensitive
 class TransferData:
     def transfer_files_window(self):
         # Layout for the transfer files window
-        layout = [
+        column_to_be_centered = [
             [sg.Text("Target IP:")],
             [sg.InputText(key="-HOST-", enable_events=True)],
             [sg.Text("Target Username")],
@@ -27,7 +27,10 @@ class TransferData:
             [sg.InputText(key="-TARGET-", enable_events=True, default_text="/home/")],
             [sg.Button("Save Config"), sg.Button("Load Config"), sg.Button("Clear Config"), sg.Button("Upload")]
         ]
-
+        layout = [[sg.VPush()],
+          [sg.Push(), sg.Column(column_to_be_centered), sg.Push()],
+          [sg.VPush()]]
+        
         tab = sg.Tab('Transfer Data', layout, key='Transfer Data')
         return tab
     
