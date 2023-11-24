@@ -8,34 +8,31 @@ from sftp import fileTransfer
 config = configparser.ConfigParser() # Used for saving and loading login data for the target
 config.optionxform = str # Make the saved keys case-sensitive
 
-def transfer_files_window(window1):
-    # Layout for the transfer files window
-    layout = [
-        [sg.Text("Target IP:")],
-        [sg.InputText(key="-HOST-", enable_events=True)],
-        [sg.Text("Target Username")],
-        [sg.InputText(key="-USERNAME-", enable_events=True)],
-        [sg.Text("Target Password")],
-        [sg.InputText(key="-PRIVATE_KEY_PASS-", enable_events=True, password_char='*')],
-        [sg.Text("Private Key Directory:")],
-        [sg.InputText(key="-PRIVATE_KEY-", enable_events=True), sg.FileBrowse()],
-        [sg.Checkbox("Ignore Host Key", key="-IGNORE_HOST_KEY-", default=True)],
-        [sg.Text("Source Directory:")],
-        [sg.InputText(key="-SOURCE-", enable_events=True), sg.FolderBrowse()],
-        [sg.Text("Target Directory:")],
-        [sg.InputText(key="-TARGET-", enable_events=True, default_text="/home/")],
-        [sg.Button("Save Config"), sg.Button("Load Config"), sg.Button("Clear Config"), sg.Button("Upload"), sg.Button("Cancel")]
-    ]
+class TransferData:
+    def transfer_files_window(self):
+        # Layout for the transfer files window
+        layout = [
+            [sg.Text("Target IP:")],
+            [sg.InputText(key="-HOST-", enable_events=True)],
+            [sg.Text("Target Username")],
+            [sg.InputText(key="-USERNAME-", enable_events=True)],
+            [sg.Text("Target Password")],
+            [sg.InputText(key="-PRIVATE_KEY_PASS-", enable_events=True, password_char='*')],
+            [sg.Text("Private Key Directory:")],
+            [sg.InputText(key="-PRIVATE_KEY-", enable_events=True), sg.FileBrowse()],
+            [sg.Checkbox("Ignore Host Key", key="-IGNORE_HOST_KEY-", default=True)],
+            [sg.Text("Source Directory:")],
+            [sg.InputText(key="-SOURCE-", enable_events=True), sg.FolderBrowse()],
+            [sg.Text("Target Directory:")],
+            [sg.InputText(key="-TARGET-", enable_events=True, default_text="/home/")],
+            [sg.Button("Save Config"), sg.Button("Load Config"), sg.Button("Clear Config"), sg.Button("Upload")]
+        ]
 
-    transfer_files_window = sg.Window("Transfer Files", layout)
-
-    while True:
-        event, values = transfer_files_window.read()
-
-        if event in (sg.WIN_CLOSED, 'Quit') or event == "Cancel":
-            break
-
-        elif event == "Upload":
+        tab = sg.Tab('Transfer Data', layout, key='Transfer Data')
+        return tab
+    
+    def buttonLoop (self, window1, event, values):
+        if event == "Upload":
             try:
                 # Attempt to open a server connection
                 svrcon = fileTransfer(values["-HOST-"], values["-USERNAME-"], values["-PRIVATE_KEY-"], values["-PRIVATE_KEY_PASS-"], values["-IGNORE_HOST_KEY-"])
@@ -94,22 +91,21 @@ def transfer_files_window(window1):
                     config.read(selected_file)
                     # Use the loaded data to set the values
                     for key, value in config['data'].items():
-                        transfer_files_window[key].update(value=value)
+                        window1[key].update(value=value)
 
             except Exception as e:
                 # Reset the values back to the original values
                 for key, value in oldData.items():
-                    transfer_files_window[key].update(value=value)
+                    window1[key].update(value=value)
                 sg.popup_error(f"Config file error: {str(e)}")
 
         elif event == "Clear Config":
-            transfer_files_window["-HOST-"].update(value="")
-            transfer_files_window["-USERNAME-"].update(value="")
-            transfer_files_window["-PRIVATE_KEY-"].update(value="")
-            transfer_files_window["-PRIVATE_KEY_PASS-"].update(value="")
-            transfer_files_window["-IGNORE_HOST_KEY-"].update(value=True)
-            transfer_files_window["-SOURCE-"].update(value="")
-            transfer_files_window["-TARGET-"].update(value="")
+            window1["-HOST-"].update(value="")
+            window1["-USERNAME-"].update(value="")
+            window1["-PRIVATE_KEY-"].update(value="")
+            window1["-PRIVATE_KEY_PASS-"].update(value="")
+            window1["-IGNORE_HOST_KEY-"].update(value=True)
+            window1["-SOURCE-"].update(value="")
+            window1["-TARGET-"].update(value="")
 
-    window1.un_hide()
-    transfer_files_window.close() 
+        return
