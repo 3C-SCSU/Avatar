@@ -4,8 +4,10 @@ import random
 import cv2
 from client.brainflow1 import bciConnection
 
-from gui_windows.manual_drone_control_window import manual_drone_control_window
-from gui_windows.brainwave_prediction_window import brainwave_prediction_window
+
+from gui_windows.manual_drone_control_window import Drone_Control
+from gui_windows.brainwave_prediction_window import Brainwaves
+
 
 # TODO enable imports
 # tello imports
@@ -56,7 +58,7 @@ def get_drone_action(action):
     elif action == 'flip':
         tello.flip_back()
         print("tello.flip('b')")
-    elif action == 'holding pattern':
+    elif action == 'keep alive':
         bat = tello.query_battery()
         print(bat)
     elif action == 'stream':
@@ -70,6 +72,19 @@ def get_drone_action(action):
     # TODO Remove sleep
     # time.sleep(2)
     return ("Done")
+
+
+def drone_holding_pattern():
+    print("Hold forward - tello.move(forward(5)")
+    tello.move_forward(5)
+    time.sleep(2)
+    print("Hold backward - tello.move(backward(5)")
+    tello.move_backward(5)
+
+    in_pattern = False
+    # let calling Window know if it needs to restart Holding Pattern
+    return (in_pattern)
+
 
 def use_brainflow():
     # Create BCI object
@@ -117,7 +132,38 @@ def holding_pattern_window():
 
 
 # Define the layout for the Starting Page
-layout1 = [
+
+#COMMENTS FOR ISSUE 39: THESE ARE THE BUTTONS THAT NEED TO CHANGE (start here) ---------
+#LAYOUT1 = PySimpleGui is called as 'sg'
+#Syntax for the button is sg.Button('text of button', size = (characters wide, characters tall)
+#.read() = save values as a tuple (event, values)
+#An event is pressing a button or closing the window. 
+#We'll need a tab group, tabs for the individual items (so 4)
+#And a way of linking the content to each tab.
+
+
+#added tabs for the tabgroup
+brainwaveObj = Brainwaves(get_drone_action)
+brainwave_tab = brainwaveObj.brainwave_prediction_window(get_drone_action, use_brainflow)
+
+t2Test = sg.Text('Disabled for now',text_color='Red')
+transferTab = [[t2Test]]
+
+DroneControlObj = Drone_Control()
+manDroneCtrlTab = DroneControlObj.manual_drone_control_window(get_drone_action)
+
+t4Test = sg.Text('Disabled for now',text_color='Red')
+holdPatTab = [[t4Test]]
+
+#new layout designed
+layout1 = [[sg.TabGroup([[
+    brainwave_tab,
+    sg.Tab('Transfer Data', transferTab, key='Transfer Data'),
+    manDroneCtrlTab,
+    sg.Tab('Holding Pattern', holdPatTab,key='Holding Pattern')]],
+    key='layout1',enable_events=True)]]
+
+OLDlayout1 = [
     [sg.Button('Brainwave Reading', size=(20, 3)),
      sg.Button('Transfer Data', size=(20, 3), disabled=True),
      sg.Button('Manual Drone Control', size=(20, 3)),
@@ -129,26 +175,26 @@ layout4 = [[sg.Button(
     image_filename="/Users/williamdoyle/Documents/GitHub/Avatar/brainwave-prediction-app/images")]]
 
 # Create the windows
-window1 = sg.Window('Start Page', layout1, size=(1200, 800), finalize=True)
+window1 = sg.Window('Start Page', layout1, size=(1600,1600),element_justification='c',resizable=True,finalize=True)
+window1.Maximize()
 window4 = sg.Window('Transfer Data', layout4, size=(
     1200, 800), element_justification='c')
 
-
-items = []
-
 # Event loop for the first window
+#changed what the buttons do to tabs
 while True:
     event1, values1 = window1.read()
+    activeTab = window1['layout1'].Get()
     if event1 == sg.WIN_CLOSED:
         break
-    elif event1 == 'Brainwave Reading':
-        window1.hide()
-        brainwave_prediction_window(window1, get_drone_action, use_brainflow)
-    elif event1 == 'Transfer Data':
-        window1.hide()
-        window4.read()
-    elif event1 == 'Manual Drone Control':
-        window1.hide()
-        manual_drone_control_window(items, get_drone_action, window1)
-    elif event1 == 'Holding Pattern':
-        holding_pattern_window()
+    elif activeTab == 'Brainwave Reading':
+        brainwaveObj.buttonLoop(window1, event1, values1, get_drone_action, use_brainflow)
+    #elif activeTab == 'Transfer Data':
+        #window1.hide()
+        #window4.read()
+    elif activeTab == 'Manual Drone Control':
+        #window1.hide()
+        DroneControlObj.buttonLoopDrone(get_drone_action, window1, event1, values1)
+    #elif activeTab == 'Holding Pattern':
+        #holding_pattern_window()
+
