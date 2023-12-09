@@ -35,7 +35,7 @@ def get_drone_action(action):
         tello.move_forward(30)
         print('tello.move_forward(30)')
     elif action == 'land':
-        tello.land
+        tello.land()
         print('tello.land')
     elif action == 'left':
         tello.move_left(30)
