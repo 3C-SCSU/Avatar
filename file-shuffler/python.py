@@ -33,5 +33,5 @@ def main(directory):
             print(f"Finished processing category: {category}")
 
 if __name__ == "__main__":
-    main("/home/brady/main")
+    main("./")
 
