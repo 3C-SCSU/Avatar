@@ -1,0 +1,6 @@
+- Run "cd ~"
+- Make a new folder called "main" and place all the scripts into it
+- Place the brainwave readings folder into this folder as well
+- Rename the brainwave readings folder to "data"
+- Run either "bash auto30sec.sh" (for 30 sec automation) or "bash auto1week.sh" (for 1 week automation)
+- If you want to shuffle the data manually, run "bash run.sh" instead
