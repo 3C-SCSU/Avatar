@@ -35,7 +35,7 @@ def get_drone_action(action):
         tello.move_forward(30)
         print('tello.move_forward(30)')
     elif action == 'land':
-        tello.land
+        tello.land()
         print('tello.land')
     elif action == 'left':
         tello.move_left(30)
@@ -130,9 +130,6 @@ def holding_pattern_window():
             resume_hold = True
     holding_pattern_window.close()
 
-
-# Define the layout for the Starting Page
-
 #COMMENTS FOR ISSUE 39: THESE ARE THE BUTTONS THAT NEED TO CHANGE (start here) ---------
 #LAYOUT1 = PySimpleGui is called as 'sg'
 #Syntax for the button is sg.Button('text of button', size = (characters wide, characters tall)
@@ -140,7 +137,6 @@ def holding_pattern_window():
 #An event is pressing a button or closing the window. 
 #We'll need a tab group, tabs for the individual items (so 4)
 #And a way of linking the content to each tab.
-
 
 #added tabs for the tabgroup
 brainwaveObj = Brainwaves(get_drone_action)
@@ -172,7 +168,7 @@ window1.Maximize()
 while True:
     event1, values1 = window1.read()
     activeTab = window1['layout1'].Get()
-
+    
     if event1 == sg.WIN_CLOSED:
         break
     elif activeTab == 'Brainwave Reading':

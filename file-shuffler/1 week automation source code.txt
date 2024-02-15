@@ -1,0 +1,1 @@
+59 23 * * MON /home/brady/main/run.sh
