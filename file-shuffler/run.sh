@@ -8,16 +8,3 @@ echo "Finished running python script"
 echo "Running bash script"
 bash bash.sh
 echo "Finished running bash script"
-
-
-
-
-
-
-
-
-
-
-
-
-
