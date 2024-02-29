@@ -17,33 +17,33 @@ class Drone_Control:
         # Column layouts for centering"Done.")
         # NEW CHANGES: Added expand_x and expand_y parameters so elements scale with the window, should scale, but buttons are misaligned. 
         top_center = [
-            [sg.Button('Up', size=(8, 2), expand_x=True, expand_y=True, image_filename="brainwave-prediction-app/images/up.png")]]
+            [sg.Button('Up', size=(8, 2), expand_x=True, expand_y=True, image_filename="./images/up.png")]]
         top_right = [[sg.Text('Flight Log')], [sg.Listbox(
             values=[], size=(40, 5), key='LOG')]]
         bottom_center = [
-            [sg.Button('Down', size=(8, 2), expand_x=True, expand_y=True, image_filename="brainwave-prediction-app/images/down.png")]]
+            [sg.Button('Down', size=(8, 2), expand_x=True, expand_y=True, image_filename="./images/down.png")]]
 
         manual_drone_control_layout = [
-            [sg.Button('Home', size=(8, 2), image_filename="brainwave-prediction-app/images/home.png"),
+            [sg.Button('Home', size=(8, 2), image_filename="./images/home.png"),
             sg.Column(top_center, expand_x=True, expand_y=True, pad=((0, 0), (0, 0))), sg.Column(top_right)],
             #[sg.Push(), sg.Push(), sg.Button('Forward', size=(8, 2),  expand_x=True, expand_y=True,
-                                            #image_filename="brainwave-prediction-app/images/forward.png"), sg.Push(), sg.Push(),],
+                                            #image_filename="./images/forward.png"), sg.Push(), sg.Push(),],
 
             [sg.Button('Forward', size=(8, 2),  expand_x=True, expand_y=True,
-                                            image_filename="brainwave-prediction-app/images/forward.png")],
+                                            image_filename="./images/forward.png")],
 
-            [sg.Button('Turn Left', size=(8, 2), expand_x=True, expand_y=True,image_filename="brainwave-prediction-app/images/turnLeft.png"),
+            [sg.Button('Turn Left', size=(8, 2), expand_x=True, expand_y=True,image_filename="./images/turnLeft.png"),
             sg.Button('Left', size=(8, 2), expand_x=True, expand_y=True,
-                    image_filename="brainwave-prediction-app/images/left.png"),
+                    image_filename="./images/left.png"),
             sg.Button(
-                'Stream', expand_x=True, expand_y=True, image_filename="brainwave-prediction-app/images/drone.png"),
+                'Stream', expand_x=True, expand_y=True, image_filename="./images/drone.png"),
             sg.Button('Right', size=(8, 2), expand_x=True, expand_y=True,
-                    image_filename="brainwave-prediction-app/images/right.png"),
-            sg.Button('Turn Right', size=(8, 2), expand_x=True, expand_y=True, image_filename="brainwave-prediction-app/images/turnRight.png")],
+                    image_filename="./images/right.png"),
+            sg.Button('Turn Right', size=(8, 2), expand_x=True, expand_y=True, image_filename="./images/turnRight.png")],
 
             [sg.Button('Back', size=(8, 2), expand_x=True, expand_y=True,
-                    image_filename="brainwave-prediction-app/images/back.png")],
-            [sg.Button('Connect1', size=(8, 2), image_filename="brainwave-prediction-app/images/connect.png"), sg.Column(bottom_center, expand_x=True, expand_y=True, pad=((0, 0), (0, 0))),sg.Button('Takeoff', size=(8, 2), image_filename="brainwave-prediction-app/images/takeoff.png"), sg.Button('Land', size=(8, 2), image_filename="brainwave-prediction-app/images/land.png")]]
+                    image_filename="./images/back.png")],
+            [sg.Button('Connect1', size=(8, 2), image_filename="./images/connect.png"), sg.Column(bottom_center, expand_x=True, expand_y=True, pad=((0, 0), (0, 0))),sg.Button('Takeoff', size=(8, 2), image_filename="./images/takeoff.png"), sg.Button('Land', size=(8, 2), image_filename="./images/land.png")]]
 
 
         tab = sg.Tab('Manual Drone Control', manual_drone_control_layout, key='Manual Drone Control')
