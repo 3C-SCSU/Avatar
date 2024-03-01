@@ -256,10 +256,9 @@ After these steps, your forked repository should be updated with the latest chan
 	   ```sh
 	  python GUI.py
 	  ```
-   * Note the relative pathing to the images folder and launch with both a terminal and local files appropriately pathed
    * If you receive a module error it can be installed using pip  i.e. 
 	   ```sh
-	  pip3 install <module name>
+	  pip install -r requirements.txt
 	  ```
 4.  In the GUI select Brainwave Reading
     
