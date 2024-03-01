@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 import sys
-from .signal_module import signalling_system as sgsys
+from signal_module import signalling_system as sgsys
 
 #changed script design to class object for variable retention in tabs
 class Brainwaves:
@@ -30,7 +30,7 @@ class Brainwaves:
             [sg.Radio('Manual Control', 'pilot', default=True, size=(-20, 1)),
             sg.Radio('Autopilot', 'pilot',  size=(12, 1))],
             [sg.Button('Read my mind...', size=(40, 5),
-                    image_filename="brainwave-prediction-app/images/brain.png")],
+                    image_filename="./images/brain.png")],
             # [sg.Text(key="-COUNT-"), sg.Text(key="-PREDICTION-")],
             [sg.Text("The model says ...")],
             [sg.Table(values=[], headings=self.response_headings,  auto_size_columns=False, def_col_width=15, justification='center',
@@ -67,7 +67,7 @@ class Brainwaves:
             [sg.Column(bottom_left), sg.Push(),
             sg.Column(bottom_right)],
             [sg.Button('Connect', size=(8, 2),
-                    image_filename="brainwave-prediction-app/images/connect.png"), sg.Push(),],
+                    image_filename="./images/connect.png"), sg.Push(),],
 
         ]
 
