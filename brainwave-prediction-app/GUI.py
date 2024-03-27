@@ -2,6 +2,8 @@ import PySimpleGUI as sg
 import time
 import random
 import cv2
+import linecache
+import sys
 from client.brainflow1 import bciConnection
 
 from gui_windows.manual_drone_control_window import Drone_Control
@@ -163,7 +165,6 @@ window1 = sg.Window('Start Page', layout1, size=(1200,800),element_justification
 # window1.Maximize()
 
 # Event loop for the first window
-#changed what the buttons do to tabs
 while True:
     event1, values1 = window1.read()
     activeTab = window1['layout1'].Get()
@@ -181,5 +182,13 @@ while True:
         #elif activeTab == 'Holding Pattern':
             #holding_pattern_window()
     except Exception as e:
-        print (type(e), e)
-        sg.popup_error(type(e), e)
+        exc_type, exc_obj, tb = sys.exc_info()
+        f = tb.tb_frame
+        lineno = tb.tb_lineno
+        filename = f.f_code.co_filename
+        linecache.checkcache (filename)
+        line = linecache.getline(filename, lineno, f.f_globals)
+        errorstr = 'EXCEPTION IN ({},\nLINE {}\n"{}"):\n\n{} {}'.format(filename, lineno, line.strip(), type(e), exc_obj)
+
+        print (type(e), exc_obj)
+        sg.popup_error(errorstr)
