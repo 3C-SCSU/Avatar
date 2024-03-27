@@ -4,7 +4,6 @@ import random
 import cv2
 from client.brainflow1 import bciConnection
 
-
 from gui_windows.manual_drone_control_window import Drone_Control
 from gui_windows.brainwave_prediction_window import Brainwaves
 from gui_windows.transfer_files_window import TransferData
@@ -160,8 +159,8 @@ layout1 = [[sg.TabGroup([[
     key='layout1',enable_events=True)]]
 
 # Create the windows
-window1 = sg.Window('Start Page', layout1, size=(1600,1600),element_justification='c',resizable=True,finalize=True)
-window1.Maximize()
+window1 = sg.Window('Start Page', layout1, size=(1200,800),element_justification='c',resizable=True,finalize=True)
+# window1.Maximize()
 
 # Event loop for the first window
 #changed what the buttons do to tabs
@@ -169,14 +168,17 @@ while True:
     event1, values1 = window1.read()
     activeTab = window1['layout1'].Get()
     
-    if event1 == sg.WIN_CLOSED:
-        break
-    elif activeTab == 'Brainwave Reading':
-        brainwaveObj.buttonLoop(window1, event1, values1, get_drone_action, use_brainflow)
-    elif activeTab == 'Transfer Data':
-        transferDataObj.buttonLoop (window1, event1, values1)
-    elif activeTab == 'Manual Drone Control':
-        #window1.hide()
-        DroneControlObj.buttonLoopDrone(get_drone_action, window1, event1, values1)
-    #elif activeTab == 'Holding Pattern':
-        #holding_pattern_window()
+    try:
+        if event1 == sg.WIN_CLOSED:
+            break
+        elif activeTab == 'Brainwave Reading':
+            brainwaveObj.buttonLoop(window1, event1, values1, get_drone_action, use_brainflow)
+        elif activeTab == 'Transfer Data':
+            transferDataObj.buttonLoop (window1, event1, values1)
+        elif activeTab == 'Manual Drone Control':
+            #window1.hide()
+            DroneControlObj.buttonLoopDrone(get_drone_action, window1, event1, values1)
+        #elif activeTab == 'Holding Pattern':
+            #holding_pattern_window()
+    except Exception as e:
+        print (type(e), e)
