@@ -182,3 +182,4 @@ while True:
             #holding_pattern_window()
     except Exception as e:
         print (type(e), e)
+        sg.popup_error(type(e), e)
