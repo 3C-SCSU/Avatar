@@ -69,6 +69,8 @@ def get_drone_action(action):
             print("truu")
             img = frame_read.frame
             cv2.imshow("drone", img)
+    else:
+        print ("No action supplied!")
 
     # TODO Remove sleep
     # time.sleep(2)
