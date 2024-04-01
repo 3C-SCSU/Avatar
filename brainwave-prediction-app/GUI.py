@@ -2,8 +2,9 @@ import PySimpleGUI as sg
 import time
 import random
 import cv2
+import linecache
+import sys
 from client.brainflow1 import bciConnection
-
 
 from gui_windows.manual_drone_control_window import Drone_Control
 from gui_windows.brainwave_prediction_window import Brainwaves
@@ -68,6 +69,8 @@ def get_drone_action(action):
             print("truu")
             img = frame_read.frame
             cv2.imshow("drone", img)
+    else:
+        print ("No action supplied!")
 
     # TODO Remove sleep
     # time.sleep(2)
@@ -160,23 +163,34 @@ layout1 = [[sg.TabGroup([[
     key='layout1',enable_events=True)]]
 
 # Create the windows
-window1 = sg.Window('Start Page', layout1, size=(1600,1600),element_justification='c',resizable=True,finalize=True)
-window1.Maximize()
+window1 = sg.Window('Start Page', layout1, size=(1200,800),element_justification='c',resizable=True,finalize=True)
+# window1.Maximize()
 
 # Event loop for the first window
-#changed what the buttons do to tabs
 while True:
     event1, values1 = window1.read()
     activeTab = window1['layout1'].Get()
     
-    if event1 == sg.WIN_CLOSED:
-        break
-    elif activeTab == 'Brainwave Reading':
-        brainwaveObj.buttonLoop(window1, event1, values1, get_drone_action, use_brainflow)
-    elif activeTab == 'Transfer Data':
-        transferDataObj.buttonLoop (window1, event1, values1)
-    elif activeTab == 'Manual Drone Control':
-        #window1.hide()
-        DroneControlObj.buttonLoopDrone(get_drone_action, window1, event1, values1)
-    #elif activeTab == 'Holding Pattern':
-        #holding_pattern_window()
+    try:
+        if event1 == sg.WIN_CLOSED:
+            break
+        elif activeTab == 'Brainwave Reading':
+            brainwaveObj.buttonLoop(window1, event1, values1, get_drone_action, use_brainflow)
+        elif activeTab == 'Transfer Data':
+            transferDataObj.buttonLoop (window1, event1, values1)
+        elif activeTab == 'Manual Drone Control':
+            #window1.hide()
+            DroneControlObj.buttonLoopDrone(get_drone_action, window1, event1, values1)
+        #elif activeTab == 'Holding Pattern':
+            #holding_pattern_window()
+    except Exception as e:
+        exc_type, exc_obj, tb = sys.exc_info()
+        f = tb.tb_frame
+        lineno = tb.tb_lineno
+        filename = f.f_code.co_filename
+        linecache.checkcache (filename)
+        line = linecache.getline(filename, lineno, f.f_globals)
+        errorstr = 'EXCEPTION IN ({},\nLINE {}\n"{}"):\n\n{} {}'.format(filename, lineno, line.strip(), type(e), exc_obj)
+
+        print (type(e), exc_obj)
+        sg.popup_error(errorstr)
