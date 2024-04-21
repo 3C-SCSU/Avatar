@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTabWidget, QWidget, QVBoxLayout, QDesktopWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTabWidget, QWidget, QVBoxLayout, QHBoxLayout, QDesktopWidget, QRadioButton
 from PyQt5.QtCore import Qt
 
 class MainWindow(QMainWindow):
@@ -24,6 +24,24 @@ class MainWindow(QMainWindow):
         tab1 = QWidget()
         tab1.layout = QVBoxLayout(tab1)
         tab1.setLayout(tab1.layout)
+
+        # Create radio button group wrapper widget
+        radio_wrapper = QWidget()
+        radio_wrapper_layout = QVBoxLayout(radio_wrapper)
+
+        # Create radio button group
+        radio_group = QRadioButton("Synthetic Data")
+        radio_live = QRadioButton("Live Data")
+        radio_live.setChecked(True)  # Set the default
+
+        # Add radio buttons to the wrapper layout
+        # This allows radio buttons to be formatted as a group
+        radio_wrapper_layout.addWidget(radio_group)
+        radio_wrapper_layout.addWidget(radio_live)
+
+        # Add the radio button group wrapper widget to the tab layout
+        tab1.layout.addWidget(radio_wrapper)
+        tab1.layout.addStretch(1)  # Add stretchable space to push the buttons to the top left corner
 
         tab2 = QWidget()
         tab2.layout = QVBoxLayout(tab2)
