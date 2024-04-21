@@ -1,6 +1,11 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTabWidget, QWidget, QVBoxLayout, QDesktopWidget
 from PyQt5.QtCore import Qt
+import importlib
+
+# The folder path has hyphens, so we have to load the pages with importlib
+transfer_files_module = importlib.import_module("brainwave-prediction-app.gui_windows.transfer_files_window3")
+TransferFilesWindow = transfer_files_module.TransferFilesWindow
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -29,9 +34,9 @@ class MainWindow(QMainWindow):
         tab2.layout = QVBoxLayout(tab2)
         tab2.setLayout(tab2.layout)
 
-        tab3 = QWidget()
-        tab3.layout = QVBoxLayout(tab3)
-        tab3.setLayout(tab3.layout)
+        tab3 = TransferFilesWindow()
+        # tab3.layout = QVBoxLayout(tab3)
+        # tab3.setLayout(tab3.layout)
 
         # Set light purple background color for tab pages
         tab1.setStyleSheet("background-color: #808080;")
@@ -41,6 +46,8 @@ class MainWindow(QMainWindow):
         # Add tabs to the tab widget
         tabWidget.addTab(tab1, "Brainwave Reading")
         tabWidget.addTab(tab2, "Manual Drone Control")
+        print (type(tab2))
+        print (type(tab3))
         tabWidget.addTab(tab3, "Transfer Data")
 
         # Add the tab widget to the main layout
