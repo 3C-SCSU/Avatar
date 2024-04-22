@@ -11,14 +11,14 @@
 # app = QApplication(sys.argv)
 
 # # # The folder path has hyphens, so we have to load the pages with importlib
-# transfer_files_module = importlib.import_module("brainwave-prediction-app.gui_windows.transfer_files_window3")
-# TransferFilesWindow = transfer_files_module.TransferFilesWindow
+# transfer_files_module = importlib.import_module("brainwave-prediction-app.gui_windows.brainwave_prediction_window3")
+# Brainwaves = transfer_files_module.Brainwaves
 
 # class Application(QMainWindow):  
 #     def __init__(self):
 #         super(Application, self).__init__()
 
-#         self.ui = TransferFilesWindow()  
+#         self.ui = Brainwaves()  
 #         self.setCentralWidget(self.ui)
 
 # if __name__ == "__main__":
@@ -40,6 +40,9 @@ import importlib
 transfer_files_module = importlib.import_module("brainwave-prediction-app.gui_windows.transfer_files_window3")
 TransferFilesWindow = transfer_files_module.TransferFilesWindow
 
+transfer_files_module = importlib.import_module("brainwave-prediction-app.gui_windows.brainwave_prediction_window3")
+Brainwaves = transfer_files_module.Brainwaves
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -59,7 +62,7 @@ class MainWindow(QMainWindow):
         tabWidget.setStyleSheet("QTabWidget::tab-bar { alignment: left; } QTabWidget { background-color: #E6E6FA; }")
 
         # Create tab widgets
-        tab1 = QWidget()
+        tab1 = Brainwaves()
         tab1.layout = QVBoxLayout(tab1)
         tab1.setLayout(tab1.layout)
 
@@ -72,7 +75,7 @@ class MainWindow(QMainWindow):
         tab3.setLayout(tab3.layout)
 
         # Set light purple background color for tab pages
-        tab1.setStyleSheet("background-color: #808080;")
+        # tab1.setStyleSheet("background-color: #808080;")
         tab2.setStyleSheet("background-color: #808080;")
         # tab3.setStyleSheet("background-color: #808080;")
 
