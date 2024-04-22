@@ -1,6 +1,6 @@
-from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QApplication, QWidget, QFileDialog, QErrorMessage, QMessageBox
-from PySide6.QtCore import QFile, QIODevice
+from PyQt5 import uic
+from PyQt5.QtWidgets import QApplication, QWidget, QFileDialog, QErrorMessage, QMessageBox
+from PyQt5.QtCore import QFile, QIODevice
 
 import sys
 import os
@@ -8,36 +8,24 @@ import configparser
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "..", "file-transfer"))
 from sftp import fileTransfer
 
-# Load the UI file
-app = QApplication(sys.argv)
-
 class TransferFilesWindow(QWidget):
-    def __init__(self, parent=None):
-        super().__init__()
+    def __init__(self):
+        super(TransferFilesWindow, self).__init__()
 
-        self.loadUi() # Loads the UI file containing the window
-
-        # Save ref to the config parser object
+        self.loadUi()
         self.config = configparser.ConfigParser()
         self.config.optionxform = str
-
-        self.initUi() # Sets up the callbacks for the buttons
+        self.initUi()
 
     def loadUi(self):
         ui_file_name = os.path.join("./", "brainwave-prediction-app", "gui_windows", "transfer_files_window3.ui")
-        ui_file = QFile(ui_file_name)
-        if not ui_file.open(QIODevice.ReadOnly):
-            print(f"Cannot open {ui_file_name}: {ui_file.errorString()}")
-            sys.exit(-1)
-        loader = QUiLoader()
-        self.widget = loader.load(ui_file)
-        ui_file.close()
+        self.widget = uic.loadUi(ui_file_name, self)  # Passing self as the parent
         if not self.widget:
             print(loader.errorString())
             sys.exit(-1)
-        # self.setCentralWidget(self.widget)
 
     def initUi(self):
+        # Ensure callbacks are connected to methods of the TransferFilesWindow instance
         self.widget.save_config_button.clicked.connect(self.save_config)
         self.widget.load_config_button.clicked.connect(self.load_config)
         self.widget.clear_config_button.clicked.connect(self.clear_config)
