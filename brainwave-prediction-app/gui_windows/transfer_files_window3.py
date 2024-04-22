@@ -25,7 +25,6 @@ class TransferFilesWindow(QWidget):
             sys.exit(-1)
 
     def initUi(self):
-        # Ensure callbacks are connected to methods of the TransferFilesWindow instance
         self.widget.save_config_button.clicked.connect(self.save_config)
         self.widget.load_config_button.clicked.connect(self.load_config)
         self.widget.clear_config_button.clicked.connect(self.clear_config)
