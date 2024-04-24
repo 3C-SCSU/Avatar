@@ -1,9 +1,9 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTabWidget, QWidget, QVBoxLayout, QDesktopWidget
-from PyQt5.QtCore import Qt
-import importlib
 import cv2
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTabWidget, QWidget, QDesktopWidget, QVBoxLayout
+from PyQt5.QtCore import Qt
 from djitellopy import Tello
+import importlib
 
 # The folder path has hyphens, so we have to load the pages with importlib
 manual_drone_control_module = importlib.import_module("brainwave-prediction-app3.gui_windows3.manual_drone_control_window3")
@@ -11,7 +11,6 @@ ManDroneCont_Tab = manual_drone_control_module.ManDroneCont_Tab
 
 transfer_files_module = importlib.import_module("brainwave-prediction-app3.gui_windows3.transfer_files_window3")
 TransferFilesWindow = transfer_files_module.TransferFilesWindow
-
 
 tello = Tello()
 
@@ -68,6 +67,7 @@ def get_drone_action(action):
     # time.sleep(2)
     return ("Done")
 
+#Creates the Window
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -83,14 +83,23 @@ class MainWindow(QMainWindow):
         # Create a tab widget
         self.tabWidget = QTabWidget()
 
-        # Set light purple background color for the tab widget
-        tabWidget.setStyleSheet("QTabWidget::tab-bar { alignment: left; } QTabWidget { background-color: #E6E6FA; }")
+        # Set blue background color for the tab widget
+        self.tabWidget.setStyleSheet("""
+                QTabWidget::pane {
+                    background-color: #64778D;
+                    border: none;
+                }
+                QTabBar {
+                    background-color: white;
+                }
+                                """)
 
         # Create tab widgets
         tab1 = QWidget()
         tab1.layout = QVBoxLayout(tab1)
         tab1.setLayout(tab1.layout)
 
+        #Manual Control Tab
         tab2 = ManDroneCont_Tab()
         tab2.button_pressed.connect(get_drone_action)
         tab2.goHome.connect(self.go_home)
@@ -98,11 +107,6 @@ class MainWindow(QMainWindow):
         tab3 = TransferFilesWindow()
         tab3.layout = QVBoxLayout(tab3)
         tab3.setLayout(tab3.layout)
-
-        # Set light purple background color for tab pages
-        tab1.setStyleSheet("background-color: #808080;")
-        tab2.setStyleSheet("background-color: #808080;")
-        # tab3.setStyleSheet("background-color: #808080;")
 
         # Add tabs to the tab widget
         self.tabWidget.addTab(tab1, "Brainwave Reading")
@@ -116,17 +120,21 @@ class MainWindow(QMainWindow):
         central_widget = QWidget()
         central_widget.setLayout(main_layout)
         self.setCentralWidget(central_widget)
+
+        # Resize the window to about 2/3 of the screen size
+        self.resize(int(screen_width * 2 / 3), int(screen_height * 2 / 3))
+
         self.setWindowTitle("Avatar Project")
 
     #for when they click Home
     def go_home(self):
         self.tabWidget.setCurrentIndex(0)
-        # Resize the window to about 2/3 of the screen size
-        self.resize(int(screen_width * 2 / 3), int(screen_height * 2 / 3))
-
+        
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+
     window = MainWindow()
     window.show()
+
     sys.exit(app.exec_())

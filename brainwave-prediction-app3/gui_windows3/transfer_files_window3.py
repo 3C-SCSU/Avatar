@@ -18,7 +18,7 @@ class TransferFilesWindow(QWidget):
         self.initUi()
 
     def loadUi(self):
-        ui_file_name = os.path.join("./", "brainwave-prediction-app", "gui_windows", "transfer_files_window3.ui")
+        ui_file_name = os.path.join("./", "brainwave-prediction-app3", "gui_windows3", "transfer_files_window3.ui")
         self.widget = uic.loadUi(ui_file_name, self)  # Passing self as the parent
         if not self.widget:
             print(loader.errorString())
