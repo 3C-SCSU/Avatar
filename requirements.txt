@@ -3,3 +3,4 @@ Avatar
 djitellopy
 opencv-python
 brainflow
+PyQt5
