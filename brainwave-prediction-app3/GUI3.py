@@ -3,12 +3,13 @@ import cv2
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTabWidget, QWidget, QDesktopWidget, QVBoxLayout
 from PyQt5.QtCore import Qt
 from gui_windows3.manual_drone_control_window3 import ManDroneCont_Tab
+from gui_windows3.transfer_files_window import TransferDataTab
 from djitellopy import Tello
 
 tello = Tello()
 
-def get_drone_action(action):
 
+def get_drone_action(action):
     if action == 'Connect':
         tello.connect()
         print("tello.connect()")
@@ -60,7 +61,8 @@ def get_drone_action(action):
     # time.sleep(2)
     return ("Done")
 
-#Creates the Window
+
+# Creates the Window
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -82,9 +84,6 @@ class MainWindow(QMainWindow):
                     background-color: #64778D;
                     border: none;
                 }
-                QTabBar {
-                    background-color: white;
-                }
                                 """)
 
         # Create tab widgets
@@ -92,14 +91,13 @@ class MainWindow(QMainWindow):
         tab1.layout = QVBoxLayout(tab1)
         tab1.setLayout(tab1.layout)
 
-        #Manual Control Tab
+        # Manual Control Tab
         tab2 = ManDroneCont_Tab()
         tab2.button_pressed.connect(get_drone_action)
         tab2.goHome.connect(self.go_home)
 
-        tab3 = QWidget()
-        tab3.layout = QVBoxLayout(tab3)
-        tab3.setLayout(tab3.layout)
+        # Transfer Data Tab
+        tab3 = TransferDataTab()
 
         # Add tabs to the tab widget
         self.tabWidget.addTab(tab1, "Brainwave Reading")
@@ -119,10 +117,10 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("Avatar Project")
 
-    #for when they click Home
+    # for when they click Home
     def go_home(self):
         self.tabWidget.setCurrentIndex(0)
-        
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
