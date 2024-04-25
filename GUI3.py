@@ -12,6 +12,9 @@ ManDroneCont_Tab = manual_drone_control_module.ManDroneCont_Tab
 transfer_files_module = importlib.import_module("brainwave-prediction-app3.gui_windows3.transfer_files_window3")
 TransferFilesWindow = transfer_files_module.TransferFilesWindow
 
+brainwave_prediction_module = importlib.import_module("brainwave-prediction-app3.gui_windows3.brainwave_reading_window3")
+Brainwaves = brainwave_prediction_module.Brainwaves
+
 tello = Tello()
 
 def get_drone_action(action):
@@ -95,7 +98,7 @@ class MainWindow(QMainWindow):
                                 """)
 
         # Create tab widgets
-        tab1 = QWidget()
+        tab1 = Brainwaves()
         tab1.layout = QVBoxLayout(tab1)
         tab1.setLayout(tab1.layout)
 
