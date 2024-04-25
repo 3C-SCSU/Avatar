@@ -2,8 +2,15 @@ import sys
 import cv2
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTabWidget, QWidget, QDesktopWidget, QVBoxLayout
 from PyQt5.QtCore import Qt
-from gui_windows3.manual_drone_control_window3 import ManDroneCont_Tab
 from djitellopy import Tello
+import importlib
+
+# The folder path has hyphens, so we have to load the pages with importlib
+manual_drone_control_module = importlib.import_module("brainwave-prediction-app3.gui_windows3.manual_drone_control_window3")
+ManDroneCont_Tab = manual_drone_control_module.ManDroneCont_Tab
+
+transfer_files_module = importlib.import_module("brainwave-prediction-app3.gui_windows3.transfer_files_window3")
+TransferFilesWindow = transfer_files_module.TransferFilesWindow
 
 tello = Tello()
 
@@ -97,7 +104,7 @@ class MainWindow(QMainWindow):
         tab2.button_pressed.connect(get_drone_action)
         tab2.goHome.connect(self.go_home)
 
-        tab3 = QWidget()
+        tab3 = TransferFilesWindow()
         tab3.layout = QVBoxLayout(tab3)
         tab3.setLayout(tab3.layout)
 
