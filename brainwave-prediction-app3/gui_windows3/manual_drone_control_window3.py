@@ -19,7 +19,7 @@ class ManDroneCont_Tab(QWidget):
                 else:
                         button.setMinimumSize(QSize(150, 150))
                 button.clicked.connect(lambda: self.button_pressed.emit(name))
-                button.setStyleSheet(f"background-image: url(images3/{name}.png);")
+                button.setStyleSheet(f"background-image: url(brainwave-prediction-app3/images3/{name}.png);")
                 return button
 
         def initUI(self):
@@ -64,7 +64,7 @@ class ManDroneCont_Tab(QWidget):
                 self.home = QPushButton("Home", self.top)
                 self.home.setFixedSize(QSize(150, 150))
                 self.home.clicked.connect(self.goHome.emit)
-                self.home.setStyleSheet(f"background-image: url(images3/Home.png);")
+                self.home.setStyleSheet(f"background-image: url(brainwave-prediction-app3/images3/Home.png);")
                 self.top_H.addWidget(self.home)
                 #Up
                 self.up = self.makeButton("Up",self.top,False)
