@@ -93,29 +93,20 @@ class Brainwaves(QWidget):
         self.flight_log.insert(0, prediction_label)
         self.log_list.clear()
         self.log_list.addItems(self.flight_log)
-        self.get_drone_action(prediction_label)
         print("Executing action...")
 
     def connect(self):
         self.flight_log.insert(0, "Connect button pressed")
         self.console_log.appendPlainText("Connect button pressed")
-        self.get_drone_action('connect')
         self.flight_log.insert(0, "Done.")
         self.console_log.appendPlainText("Done.")
 
     def keep_alive(self):
         self.console_log.appendPlainText("Keeping drone alive...")
-        self.get_drone_action('keep alive')
-
-def get_drone_action(action):
-    # Placeholder implementation of get_drone_action
-    print("Drone action:", action)
-    # You can replace this print statement with the actual logic to control the drone
 
 def main():
     app = QApplication(sys.argv)
     window = Brainwaves()
-    window.get_drone_action = get_drone_action
     window.show()
     sys.exit(app.exec_())
 
