@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QGroupBox, QRadioButton, QPushButton, QLabel, QTableWidget, QTableWidgetItem, QListWidget, QTextEdit
 
+
 class Brainwaves(QWidget):
 
     signal_system = None
@@ -59,7 +60,7 @@ class Brainwaves(QWidget):
         execute_button = QPushButton("Execute")
         execute_button.clicked.connect(self.execute_action)
         connect_button = QPushButton("Connect")
-        connect_button.clicked.connect(self.drone_connect)  # Connect to drone method
+        connect_button.clicked.connect(self.connect)
         keep_alive_button = QPushButton("Keep Drone Alive")
         keep_alive_button.clicked.connect(self.keep_alive)
         button_layout.addWidget(execute_button)
@@ -77,8 +78,7 @@ class Brainwaves(QWidget):
 
     def read_mind(self):
         if self.signal_system:
-            # Placeholder implementation
-            prediction_response = {"prediction_count": 0, "prediction_label": "Placeholder"}
+            prediction_response = self.signal_system.use_brainflow()
             self.count = prediction_response['prediction_count']
             prediction_label = prediction_response['prediction_label']
 
@@ -96,27 +96,26 @@ class Brainwaves(QWidget):
         self.get_drone_action(prediction_label)
         print("Executing action...")
 
-    def drone_connect(self):  # Renamed the method
-        # Log the connection event
+    def connect(self):
         self.flight_log.insert(0, "Connect button pressed")
         self.console_log.appendPlainText("Connect button pressed")
-
-        # Connect to the drone
-        if self.signal_system:
-            self.get_drone_action('Connect')
-            self.flight_log.insert(0, "Done.")
-            self.console_log.appendPlainText("Done.")
-        else:
-            print("Signal system not initialized.")
+        self.get_drone_action('connect')
+        self.flight_log.insert(0, "Done.")
+        self.console_log.appendPlainText("Done.")
 
     def keep_alive(self):
-        # Placeholder for keep_alive method
-        pass
+        self.console_log.appendPlainText("Keeping drone alive...")
+        self.get_drone_action('keep alive')
 
+def get_drone_action(action):
+    # Placeholder implementation of get_drone_action
+    print("Drone action:", action)
+    # You can replace this print statement with the actual logic to control the drone
 
 def main():
     app = QApplication(sys.argv)
     window = Brainwaves()
+    window.get_drone_action = get_drone_action
     window.show()
     sys.exit(app.exec_())
 
