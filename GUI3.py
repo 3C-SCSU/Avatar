@@ -6,6 +6,9 @@ from djitellopy import Tello
 import importlib
 
 # The folder path has hyphens, so we have to load the pages with importlib
+brainwave_reading_module = importlib.import_module("brainwave-prediction-app3.gui_windows3.brainwave_reading_window3")
+BrainwaveReading_Tab = brainwave_reading_module.BrainwaveReading_Tab
+
 manual_drone_control_module = importlib.import_module("brainwave-prediction-app3.gui_windows3.manual_drone_control_window3")
 ManDroneCont_Tab = manual_drone_control_module.ManDroneCont_Tab
 
@@ -95,9 +98,11 @@ class MainWindow(QMainWindow):
                                 """)
 
         # Create tab widgets
-        tab1 = QWidget()
-        tab1.layout = QVBoxLayout(tab1)
-        tab1.setLayout(tab1.layout)
+        # tab1 = QWidget()
+        # tab1.layout = QVBoxLayout(tab1)
+        # tab1.setLayout(tab1.layout)
+
+        tab1 = BrainwaveReading_Tab()
 
         #Manual Control Tab
         tab2 = ManDroneCont_Tab()
@@ -105,8 +110,6 @@ class MainWindow(QMainWindow):
         tab2.goHome.connect(self.go_home)
 
         tab3 = TransferFilesWindow()
-        tab3.layout = QVBoxLayout(tab3)
-        tab3.setLayout(tab3.layout)
 
         # Add tabs to the tab widget
         self.tabWidget.addTab(tab1, "Brainwave Reading")
