@@ -56,13 +56,16 @@ class BrainwaveReading_Tab(QWidget):
                 label = QLabel("The model says:")
                 table1 = QTableWidget(0,2)
                 table1.setHorizontalHeaderLabels(["Count","Label"])
+                table1.horizontalHeader().setStretchLastSection(True) #stretch columns to fill all the space
+                for i in range(table1.columnCount() - 1):
+                        table1.horizontalHeader().setSectionResizeMode(i, 1)
                 
                 buttons = QWidget()
                 hbox = QHBoxLayout(buttons)
                 notButton = makeButton("Not what I was thinking",padding=25)
                 executeButton = makeButton("Execute",padding=25)
-                hbox.addWidget(notButton)
-                hbox.addWidget(executeButton)
+                hbox.addWidget(notButton,1)
+                hbox.addWidget(executeButton,1)
 
                 keepDroneAlive = QWidget()
                 hbox = QHBoxLayout(keepDroneAlive)
@@ -103,6 +106,10 @@ class BrainwaveReading_Tab(QWidget):
                 predictionTable = QTableWidget(0,3)
                 predictionTable.setHorizontalHeaderLabels(["Predictions Count","Server Predictions","Prediction Label"])
                 predictionTable.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+                predictionTable.setMinimumWidth(600)
+                predictionTable.horizontalHeader().setStretchLastSection(True) #stretch columns to fill all the space
+                for i in range(predictionTable.columnCount() - 1):
+                        predictionTable.horizontalHeader().setSectionResizeMode(i, 1)
 
                 #TODO Populate the predictions table with data
                 def loaddata(self):
@@ -124,6 +131,7 @@ class BrainwaveReading_Tab(QWidget):
                 gridLayout.addWidget(flightLog,1,0)
                 gridLayout.addWidget(consoleLog,1,1)
                 gridLayout.addWidget(connectButton, 2,0)
+
 
                 self.setLayout(gridLayout)
 

@@ -98,10 +98,6 @@ class MainWindow(QMainWindow):
                                 """)
 
         # Create tab widgets
-        # tab1 = QWidget()
-        # tab1.layout = QVBoxLayout(tab1)
-        # tab1.setLayout(tab1.layout)
-
         tab1 = BrainwaveReading_Tab()
 
         #Manual Control Tab
