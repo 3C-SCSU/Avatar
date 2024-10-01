@@ -12,10 +12,13 @@ ManDroneCont_Tab = manual_drone_control_module.ManDroneCont_Tab
 transfer_files_module = importlib.import_module("brainwave-prediction-app3.gui_windows3.transfer_files_window3")
 TransferFilesWindow = transfer_files_module.TransferFilesWindow
 
+# Import the new BrainwaveReading_Tab class
+from brainwave_reading_tab import BrainwaveReading_Tab
+
+# Ensure QMainWindow is imported
 tello = Tello()
 
 def get_drone_action(action):
-
     if action == 'Connect':
         tello.connect()
         print("tello.connect()")
@@ -63,11 +66,9 @@ def get_drone_action(action):
             img = frame_read.frame
             cv2.imshow("drone", img)
 
-    # TODO Remove sleep
-    # time.sleep(2)
     return ("Done")
 
-#Creates the Window
+# Creates the Main Window
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -95,21 +96,22 @@ class MainWindow(QMainWindow):
                                 """)
 
         # Create tab widgets
-        tab1 = QWidget()
-        tab1.layout = QVBoxLayout(tab1)
-        tab1.setLayout(tab1.layout)
+        # Brainwave Reading Tab
+        brainwave_tab = BrainwaveReading_Tab(get_drone_action, self.use_brainflow)
+        brainwave_tab.button_pressed.connect(self.handle_brainwave_action)
 
-        #Manual Control Tab
+        # Manual Control Tab
         tab2 = ManDroneCont_Tab()
         tab2.button_pressed.connect(get_drone_action)
         tab2.goHome.connect(self.go_home)
 
+        # Transfer Data Tab
         tab3 = TransferFilesWindow()
         tab3.layout = QVBoxLayout(tab3)
         tab3.setLayout(tab3.layout)
 
         # Add tabs to the tab widget
-        self.tabWidget.addTab(tab1, "Brainwave Reading")
+        self.tabWidget.addTab(brainwave_tab, "Brainwave Reading")
         self.tabWidget.addTab(tab2, "Manual Drone Control")
         self.tabWidget.addTab(tab3, "Transfer Data")
 
@@ -126,10 +128,29 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("Avatar Project")
 
-    #for when they click Home
+    # Slot to handle Brainwave Tab actions
+    def handle_brainwave_action(self, action):
+        if action == 'read_mind':
+            # Handle starting brainwave reading (e.g., initiate brainflow connection)
+            self.use_brainflow()
+            print("Brainwave Reading Started")
+        elif action == 'not_thinking':
+            # Handle "Not what I was thinking" action
+            print("Not what I was thinking triggered")
+        elif action == 'execute':
+            # Handle the execute action
+            print("Executing prediction")
+        elif action == 'keep_drone_alive':
+            self.get_drone_action('keep alive')
+
+    # Placeholder function for brainwave connection
+    def use_brainflow(self):
+        print("Connecting to brainwave device...")
+        # Add your brainwave connection code here
+
+    # Slot to go to the Home tab
     def go_home(self):
         self.tabWidget.setCurrentIndex(0)
-        
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
