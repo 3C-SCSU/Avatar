@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QTableWidget, QTableWidgetItem, QListWidget, QLineEdit, QTextEdit, QRadioButton, QGroupBox, QSizePolicy
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHeaderView, QHBoxLayout, QLabel, QPushButton, QTableWidget, QTableWidgetItem, QListWidget, QLineEdit, QTextEdit, QRadioButton, QGroupBox, QSizePolicy
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QPixmap, QIcon
+from PyQt5.QtGui import QPixmap, QIcon, QColor
 
 class BrainwaveReading_Tab(QWidget):
     button_pressed = pyqtSignal(str)
@@ -45,6 +45,7 @@ class BrainwaveReading_Tab(QWidget):
         read_mind_button.setIcon(QIcon(pixmap))  # Set icon as brain image
         read_mind_button.setFixedSize(160, 40)
         read_mind_button.setStyleSheet("background-color: #1b3a4b; color: white; border-radius: 5px;")
+        read_mind_button.setToolTip("Click to read your mind") # Set tooltip for the read my mind button
         read_mind_button.clicked.connect(self.read_mind)
 
         brainwave_button_layout.addWidget(brainwave_image, alignment=Qt.AlignCenter)
@@ -53,14 +54,19 @@ class BrainwaveReading_Tab(QWidget):
         # Model Prediction Section
         model_says_label = QLabel("The model says ...")
         model_says_label.setAlignment(Qt.AlignLeft)
-        model_says_label.setStyleSheet("color: white;")
+        model_says_label.setStyleSheet("color: white; font-size: 14px;")
+        model_says_label.setFixedHeight(20) #set the height of the label widget to render as table heading
 
         # Server Response Table
         self.server_table = QTableWidget(1, 2)
         self.server_table.setHorizontalHeaderLabels(['Count', 'Label'])
         self.server_table.setFixedHeight(200)
         self.server_table.setFixedWidth(400)
-        self.server_table.setStyleSheet("background-color: #1b3a4b; color: white; border: 1px solid white;")
+        self.server_table.setStyleSheet("background-color: #1b3a4b; border: 1px solid white;  gridline-color: white;") # add gridline-color to set the white borders inside the table
+        self.server_table.verticalHeader().setVisible(False) # hide default row headers index
+
+        header_server_table = self.server_table.horizontalHeader()
+        header_server_table.setSectionResizeMode(QHeaderView.Stretch) # stretch the header to fill up the specified space
 
         # Model Prediction Section Layout with Reduced Gap
         model_prediction_layout = QVBoxLayout()
@@ -72,6 +78,7 @@ class BrainwaveReading_Tab(QWidget):
         button_layout = QHBoxLayout()
         not_thinking_button = QPushButton("Not what I was thinking...")
         execute_button = QPushButton("Execute")
+        execute_button.setToolTip('Click to execute action') # Set tooltip for execute button
 
         not_thinking_button.setFixedSize(180, 40)
         not_thinking_button.setStyleSheet("background-color: #1b3a4b; color: white; border-radius: 5px;")
@@ -89,6 +96,7 @@ class BrainwaveReading_Tab(QWidget):
         empty_input = QLineEdit()
         empty_input.setPlaceholderText("Manual Command (Optional)")
         empty_input.setFixedWidth(300)
+        empty_input.setFixedHeight(40) # set height of the field to match with button
         empty_input.setStyleSheet("background-color: #1b3a4b; color: white; border: 1px solid white;")
 
         keep_drone_alive_button = QPushButton("Keep Drone Alive")
@@ -101,7 +109,8 @@ class BrainwaveReading_Tab(QWidget):
 
         # Flight Log Section
         flight_log_label = QLabel("Flight Log")
-        flight_log_label.setStyleSheet("color: white;")
+        flight_log_label.setStyleSheet("color: white; font-size: 14px; margin-top: 14px;") # add margin-top to align with right layout console log
+        flight_log_label.setFixedHeight(40) # add fixed height for label so it will render as heading
         self.flight_log_list = QListWidget()
         self.flight_log_list.setFixedSize(250, 150)
         self.flight_log_list.setStyleSheet("background-color: #1b3a4b; color: white; border: 1px solid white;")
@@ -111,6 +120,7 @@ class BrainwaveReading_Tab(QWidget):
         connect_pixmap = QPixmap("brainwave-prediction-app/images/connect.png")  # Set connect image
         connect_button.setIcon(QIcon(connect_pixmap))
         connect_button.setFixedSize(150, 50)
+        connect_button.setToolTip('Click to connect to the drone') # tooltip for connect button
         connect_button.setStyleSheet("background-color: #1b3a4b; color: white; border-radius: 5px;")
         connect_button.clicked.connect(self.connect_drone)
 
@@ -130,14 +140,19 @@ class BrainwaveReading_Tab(QWidget):
         # Predictions Table
         self.predictions_table = QTableWidget(0, 3)
         self.predictions_table.setHorizontalHeaderLabels(['Predictions Count', 'Server Predictions', 'Prediction Label'])
-        self.predictions_table.setFixedSize(800, 600)
-        self.predictions_table.setStyleSheet("background-color: #1b3a4b; color: white; border: 1px solid white;")
+        self.predictions_table.setFixedSize(800, 542) # Set to 542 height to match with the contents on left layout
+        self.predictions_table.setStyleSheet("background-color: #1b3a4b; border: 1px solid white;  gridline-color: white;")
 
+        # Use QHeaderView to stretch the headers to fill up the fixed width set for the table
+        header_predictions_table = self.predictions_table.horizontalHeader() 
+        header_predictions_table.setSectionResizeMode(QHeaderView.Stretch)
+        
         # Console Log
         console_log_layout = QVBoxLayout()
         console_log_label = QLabel("Console Log")
         console_log_label.setAlignment(Qt.AlignRight)
-        console_log_label.setStyleSheet("color: white;")
+        console_log_label.setStyleSheet("color: white; font-size: 14px; margin-top: 14px;") # Set margin top to align with flight log label on left layout
+        console_log_label.setFixedHeight(40) # Set fixed height for label to render as heading above the console log
         self.console_log = QTextEdit()
         self.console_log.setFixedSize(400, 200)
         self.console_log.setStyleSheet("background-color: #1b3a4b; color: white; border: 1px solid white;")
@@ -165,9 +180,21 @@ class BrainwaveReading_Tab(QWidget):
         self.prediction_label = prediction_response['prediction_label']
         count = prediction_response['prediction_count']
 
+        # Adding items with center alignment
+        count_item = QTableWidgetItem(str(count))
+        label_item = QTableWidgetItem(self.prediction_label)
+
+        # Set text alignment to center
+        count_item.setTextAlignment(Qt.AlignCenter)
+        label_item.setTextAlignment(Qt.AlignCenter)
+        
+        # Set text color to white
+        count_item.setForeground(QColor(255, 255, 255))  
+        label_item.setForeground(QColor(255, 255, 255))  
+
         # Update the server table with the new data
-        self.server_table.setItem(0, 0, QTableWidgetItem(str(count)))
-        self.server_table.setItem(0, 1, QTableWidgetItem(self.prediction_label))
+        self.server_table.setItem(0, 0, count_item)
+        self.server_table.setItem(0, 1, label_item)
 
     def not_thinking(self):
         """Handle 'Not what I was thinking' button."""
@@ -181,7 +208,13 @@ class BrainwaveReading_Tab(QWidget):
         self.predictions_table.setRowCount(len(self.predictions_log))
         for i, record in enumerate(self.predictions_log):
             for j, data in enumerate(record):
-                self.predictions_table.setItem(i, j, QTableWidgetItem(str(data)))
+                item = QTableWidgetItem(str(data))
+                 # Set text alignment to center
+                item.setTextAlignment(Qt.AlignCenter)
+                # Set text color to white
+                item.setForeground(QColor(255, 255, 255))  
+                # Set the item in the predictions table
+                self.predictions_table.setItem(i, j, item)
 
     def execute_prediction(self):
         """Handle 'Execute' button."""
