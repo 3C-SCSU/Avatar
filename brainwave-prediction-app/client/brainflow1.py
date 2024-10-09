@@ -6,16 +6,56 @@ from brainflow.board_shim import BoardShim, BrainFlowInputParams, LogLevels, Boa
 from brainflow.data_filter import DataFilter
 from enum import Enum
 
+
 class DataMode(Enum):
+    """
+    Enum representing the mode of data used in the BCI application
+
+    This enum defines two modes of data: synthetic and live. 
+    It is used to specify the source of data that the application will use
+    for processing and analysis
+
+    Members:
+        SYNTHETIC: Represents synthetic data, typically used for testing
+                   and simulation purposes
+        LIVE:      Represents live data, sourced directly from the BCI headset
+    """
+
     SYNTHETIC = "Synthetic"
     LIVE = "Live"
 
 
 class bciConnection():
 
+    """
+    A singleton class for managing connections to Brain-Computer Interface (BCI) devices
+
+    This class provides functionality to establish a connection to a BCI device,
+    either in live mode or synthetic mode. It ensures that only one instance of the 
+    connection is created throughout the application (singleton pattern)
+
+    Attributes:
+        __params (BrainFlowInputParams): Configuration parameters for the BCI connection
+        __serial_port (str): The serial port used to connect to the BCI device
+        __mode (DataMode): The mode of operation, either synthetic or live data
+    """
+
     __instance = None
 
     def __init__(self, serial_port : str = "/dev/cu.usbserial-D200PMA1", mode: DataMode = DataMode.SYNTHETIC):
+        """
+        Initializes a new instance of the bciConnection class
+
+        Parameters:
+            serial_port (str): The serial port for connecting to the BCI device. 
+                               Defaults to "/dev/cu.usbserial-D200PMA1"
+            mode (DataMode): The mode of operation for the connection.
+                             Defaults to DataMode.SYNTHETIC
+
+        Raises:
+            Exception: If an instance of bciConnection already exists
+        """
+
         if bciConnection.__instance != None:
             raise Exception("This should be a singleton class")
         
@@ -25,16 +65,40 @@ class bciConnection():
         self.__mode = mode
 
     @staticmethod
-    def get_instance(serial_port : str = "/dev/cu.usbserial-D200PMA1",  mode: DataMode = DataMode.SYNTHETIC):
+    def get_instance(serial_port : str = "/dev/cu.usbserial-D200PMA1",  mode: DataMode = DataMode.SYNTHETIC) -> "bciConnection":
+        """
+        Retrieves the singleton instance of the bciConnection class
+
+        If an instance does not already exist, a new instance is created 
+        with the specified serial port and mode
+
+        Parameters:
+            serial_port (str): The serial port for connecting to the BCI device
+            mode (DataMode): The mode of operation for the connection
+
+        Returns:
+            bciConnection: The singleton instance of the class
+        """
+
         if bciConnection.__instance == None:
             return bciConnection(serial_port, mode)
         return bciConnection.__instance
 
-    def set_mode(self, mode: DataMode):
+    def set_mode(self, mode: DataMode) -> None:
+        """
+        Sets the mode of operation for the BCI connection
+
+        Parameters:
+            mode (DataMode): The mode to set (either synthetic or live)
+
+        Returns:
+            None
+        """
+
         self.__mode = mode
 
     def read_from_board(self):
-
+        # Set the configuration based on the mode
         if self.__mode == DataMode.LIVE:
             self.__params.serial_port = self.__serial_port
             board = BoardShim(BoardIds.CYTON_BOARD.value, self.__params)
