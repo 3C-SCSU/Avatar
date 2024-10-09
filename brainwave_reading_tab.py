@@ -1,14 +1,12 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QTableWidget, QTableWidgetItem, QListWidget, QLineEdit, QTextEdit, QRadioButton, QGroupBox, QSizePolicy
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QPixmap, QIcon
+
+# Workaround to import DataMode and bciConnection classes from brainwave-prediction-app/client/brainflow1
 import sys
 import os
-
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'brainwave-prediction-app')))
-
 from client.brainflow1 import DataMode, bciConnection
-
-bcicon = bciConnection.get_instance()
 
 class BrainwaveReading_Tab(QWidget):
     button_pressed = pyqtSignal(str)
@@ -19,6 +17,15 @@ class BrainwaveReading_Tab(QWidget):
         self.use_brainflow = use_brainflow
         self.predictions_log = []
         self.flight_log = []
+
+        # Create an instance of bciConnection (singleton)
+        self.bcicon = bciConnection.get_instance()
+
+        # Optional: To view the documentation of the bciConnection class, you can use:
+        # print(self.bcicon.__doc__)
+
+        # Start up the bciConnectionController server
+        # self.bcicon.bciConnectionController()
 
         # Main Layout
         main_layout = QHBoxLayout()  # Main layout with left and right sections
@@ -31,12 +38,18 @@ class BrainwaveReading_Tab(QWidget):
         synthetic_live_radios_box = QGroupBox()
         synthetic_live_radios_layout = QVBoxLayout()
         # Create radio button group
-        radio_group = QRadioButton("Synthetic Data")
-        radio_live = QRadioButton("Live Data")
-        radio_live.setChecked(True)  # Set the default
+        self.radio_group = QRadioButton("Synthetic Data")
+        self.radio_live = QRadioButton("Live Data")
+        self.radio_live.setChecked(True)  # Set the default
+
+        # Switch to synthetic data
+        self.radio_group.toggled.connect(self.update_data_mode)
+
+        # Switch to live data
+        self.radio_live.toggled.connect(self.update_data_mode)
         
-        synthetic_live_radios_layout.addWidget(radio_group)
-        synthetic_live_radios_layout.addWidget(radio_live)
+        synthetic_live_radios_layout.addWidget(self.radio_group)
+        synthetic_live_radios_layout.addWidget(self.radio_live)
         
         synthetic_live_radios_box.setLayout(synthetic_live_radios_layout)
 
@@ -240,3 +253,25 @@ class BrainwaveReading_Tab(QWidget):
         self.get_drone_action("connect")
         self.flight_log.append("Connected.")
         self.flight_log_list.addItem("Connected.")
+
+    def update_data_mode(self) -> None:
+        """
+        Switches to either synthetic or live data based on the 
+        state of the radio button
+
+        This method is triggered when the state of either the 
+        'Synthetic Data' or 'Live Data' radio button changes. 
+        It sets the data mode in the bcicon instance accordingly
+
+        Parameters:
+            mode (DataMode): The mode to set (either synthetic or live)
+
+        Returns:
+            None
+        """
+        if self.radio_group.isChecked():
+            self.bcicon.set_mode(DataMode.SYNTHETIC)
+            print("Switched to Synthetic Data Mode")
+        elif self.radio_live.isChecked():
+            self.bcicon.set_mode(DataMode.LIVE)
+            print("Switched to Live Data Mode")
