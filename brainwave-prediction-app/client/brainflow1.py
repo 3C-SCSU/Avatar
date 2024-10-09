@@ -4,21 +4,42 @@ import pandas as pd
 import requests
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, LogLevels, BoardIds
 from brainflow.data_filter import DataFilter
+from enum import Enum
+
+class DataMode(Enum):
+    SYNTHETIC = "Synthetic"
+    LIVE = "Live"
 
 
 class bciConnection():
 
+    __instance = None
+
+    def __init__(self, serial_port : str = "/dev/cu.usbserial-D200PMA1", mode: DataMode = DataMode.SYNTHETIC):
+        if bciConnection.__instance != None:
+            raise Exception("This should be a singleton class")
+        
+        bciConnection.__instance = self
+        self.__params = BrainFlowInputParams()
+        self.__serial_port = serial_port
+        self.__mode = mode
+
+    @staticmethod
+    def get_instance(serial_port : str = "/dev/cu.usbserial-D200PMA1",  mode: DataMode = DataMode.SYNTHETIC):
+        if bciConnection.__instance == None:
+            return bciConnection(serial_port, mode)
+        return bciConnection.__instance
+
+    def set_mode(self, mode: DataMode):
+        self.__mode = mode
+
     def read_from_board(self):
 
-        # print(BoardIds.CYTON_BOARD.value)
-
-        # use synthetic board for demo
-        # params = BrainFlowInputParams()
-        # params.serial_port = "/dev/cu.usbserial-D200PMA1"
-        # board = BoardShim(BoardIds.CYTON_DAISY_BOARD.value, params)
-
-        params = BrainFlowInputParams()
-        board = BoardShim(BoardIds.SYNTHETIC_BOARD.value, params)
+        if self.__mode == DataMode.LIVE:
+            self.__params.serial_port = self.__serial_port
+            board = BoardShim(BoardIds.CYTON_BOARD.value, self.__params)
+        else:
+            board = BoardShim(BoardIds.SYNTHETIC_BOARD.value, self.__params)
 
         board.prepare_session()
         board.start_stream(streamer_params="streaming_board://225.1.1.1:6677")
@@ -83,5 +104,5 @@ class bciConnection():
 
 
 if __name__ == "__main__":
-    bcicon = bciConnection()
+    bcicon = bciConnection.get_instance()
     bcicon.bciConnectionController()
