@@ -26,6 +26,20 @@ class BrainwaveReading_Tab(QWidget):
         # Left Area - Control Mode, Brainwave Prediction, and Actions
         left_layout = QVBoxLayout()
 
+        #Synthetic data & Live data radio buttons
+        
+        synthetic_live_radios_box = QGroupBox()
+        synthetic_live_radios_layout = QVBoxLayout()
+        # Create radio button group
+        radio_group = QRadioButton("Synthetic Data")
+        radio_live = QRadioButton("Live Data")
+        radio_live.setChecked(True)  # Set the default
+        
+        synthetic_live_radios_layout.addWidget(radio_group)
+        synthetic_live_radios_layout.addWidget(radio_live)
+        
+        synthetic_live_radios_box.setLayout(synthetic_live_radios_layout)
+
         # Control Mode with Radio Buttons
         control_group_box = QGroupBox("")
         control_group_box.setMaximumWidth(300)
@@ -110,6 +124,9 @@ class BrainwaveReading_Tab(QWidget):
         # Flight Log Section
         flight_log_label = QLabel("Flight Log")
         flight_log_label.setStyleSheet("color: white;")
+        # Reduce the gap between the label and the list
+        flight_log_label.setAlignment(Qt.AlignTop)
+
         self.flight_log_list = QListWidget()
         self.flight_log_list.setFixedSize(250, 150)
         self.flight_log_list.setStyleSheet("background-color: #1b3a4b; color: white; border: 1px solid white;")
@@ -128,9 +145,27 @@ class BrainwaveReading_Tab(QWidget):
         left_layout.addLayout(model_prediction_layout)
         left_layout.addLayout(button_layout)
         left_layout.addLayout(manual_input_and_keep_alive_layout)  # Add manual input and keep alive button layout
-        left_layout.addWidget(flight_log_label)
-        left_layout.addWidget(self.flight_log_list)
+        
+        # Container to display the flight log list and synthetic live radios
+        flight_log_and_radios_horizontal_layout = QHBoxLayout()
+        flight_log_and_radios_horizontal_layout.setAlignment(Qt.AlignLeft)
+
+        # Vertical layout for flight log label and list
+        flight_log_vertical_layout = QVBoxLayout()
+        flight_log_vertical_layout.addWidget(flight_log_label)
+        flight_log_vertical_layout.addWidget(self.flight_log_list, alignment=Qt.AlignTop) # Align the flight log list to the top
+
+
+        # Add flight log controls to the horizontal layout
+        flight_log_and_radios_horizontal_layout.addLayout(flight_log_vertical_layout)
+        flight_log_and_radios_horizontal_layout.addWidget(synthetic_live_radios_box)
+        # Align the synthetic live radios to the top
+        flight_log_and_radios_horizontal_layout.setAlignment(synthetic_live_radios_box, Qt.AlignTop | Qt.AlignCenter)
+        # Add the horizontal layout to the left layout
+        left_layout.addLayout(flight_log_and_radios_horizontal_layout)
+
         left_layout.addWidget(connect_button, alignment=Qt.AlignLeft)
+
 
         # Right Area - Predictions Table and Console Log
         right_layout = QVBoxLayout()
