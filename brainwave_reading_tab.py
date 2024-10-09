@@ -1,6 +1,14 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QTableWidget, QTableWidgetItem, QListWidget, QLineEdit, QTextEdit, QRadioButton, QGroupBox, QSizePolicy
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QPixmap, QIcon
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'brainwave-prediction-app')))
+
+from client.brainflow1 import DataMode, bciConnection
+
+bcicon = bciConnection.get_instance()
 
 class BrainwaveReading_Tab(QWidget):
     button_pressed = pyqtSignal(str)
