@@ -175,30 +175,40 @@ class BrainwaveReading_Tab(QWidget):
         self.setStyleSheet("background-color: #64778D;")
 
     def read_mind(self):
-        """Handle the 'Read my mind' action."""
-        prediction_response = self.use_brainflow()
-        self.prediction_label = prediction_response['prediction_label']
-        count = prediction_response['prediction_count']
+        """Handle the 'Read my mind' action."""            
+       # try read my mind button action if prediction_response is defined
+        try: 
+            prediction_response = self.use_brainflow()
+            self.prediction_label = prediction_response['prediction_label']
+            count = prediction_response['prediction_count']
+            
+            # Adding items with center alignment
+            count_item = QTableWidgetItem(str(count))
+            label_item = QTableWidgetItem(self.prediction_label)
 
-        # Adding items with center alignment
-        count_item = QTableWidgetItem(str(count))
-        label_item = QTableWidgetItem(self.prediction_label)
+            # Set text alignment to center
+            count_item.setTextAlignment(Qt.AlignCenter)
+            label_item.setTextAlignment(Qt.AlignCenter)
+            
+            # Set text color to white
+            count_item.setForeground(QColor(255, 255, 255))  
+            label_item.setForeground(QColor(255, 255, 255))  
 
-        # Set text alignment to center
-        count_item.setTextAlignment(Qt.AlignCenter)
-        label_item.setTextAlignment(Qt.AlignCenter)
-        
-        # Set text color to white
-        count_item.setForeground(QColor(255, 255, 255))  
-        label_item.setForeground(QColor(255, 255, 255))  
+            # Update the server table with the new data
+            self.server_table.setItem(0, 0, count_item)
+            self.server_table.setItem(0, 1, label_item)
+            
+        # log with error if prediction_response is not defined
+        except (TypeError, KeyError):
+           self.console_log.append("Error reading your mind!!")
 
-        # Update the server table with the new data
-        self.server_table.setItem(0, 0, count_item)
-        self.server_table.setItem(0, 1, label_item)
 
     def not_thinking(self):
         """Handle 'Not what I was thinking' button."""
-        drone_input = self.drone_input.text() if self.drone_input.text() else "manual input"
+        if hasattr(self, 'drone_input'):  # Check if drone_input is defined
+            drone_input = self.drone_input.text() 
+        else:
+            drone_input = "manual input"  # Default if drone_input is not set
         self.get_drone_action(drone_input)
 
         prediction_record = [len(self.predictions_log) + 1, "manual", drone_input]
@@ -218,10 +228,19 @@ class BrainwaveReading_Tab(QWidget):
 
     def execute_prediction(self):
         """Handle 'Execute' button."""
-        self.flight_log.append(self.prediction_label)
-        self.flight_log_list.addItem(self.prediction_label)
-        self.get_drone_action(self.prediction_label)
-        self.console_log.append("Executed action: " + self.prediction_label)
+        # check if prediction_label is present if not raise error with message
+        try:
+            if not hasattr(self, 'prediction_label') or self.prediction_label is None:
+                raise ValueError("No prediction label available.")
+            else:
+                self.flight_log.append(self.prediction_label)
+                self.flight_log_list.addItem(self.prediction_label)
+                self.get_drone_action(self.prediction_label)
+                self.console_log.append("Executed action: " + self.prediction_label)
+        
+        except (KeyError, ValueError) as e:
+            self.console_log.append(f"Error Executing action: {e}")
+        
 
     def connect_drone(self):
         """Handle the 'Connect' button."""
