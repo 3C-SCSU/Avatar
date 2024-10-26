@@ -1,4 +1,10 @@
-// use std::env;
+/// File Shuffler
+///
+/// This application shuffles files in a specified source directory at defined intervals.
+///
+/// # Author
+/// Joshua Olaoye
+
 use std::fs;
 use std::io;
 use std::path::{Path, PathBuf};
@@ -12,7 +18,20 @@ use terminal_size::{Width, terminal_size};
 use chrono::{DateTime, FixedOffset, TimeZone, LocalResult};
 use clap::{Arg, Command};
 
-// Enum class for the time interval
+/// Enum representing the time intervals for processing files.
+///
+/// This enum defines the various intervals at which the application can process files in the specified source directory.
+///
+/// # Variants
+///
+/// - `Never`: 
+///   Indicates that the processing should occur only once and not repeat.
+/// 
+/// - `EveryWeek`: 
+///   Indicates that the processing should occur once every week.
+/// 
+/// - `Every30Seconds`: 
+///   Indicates that the processing should occur every 30 seconds.
 #[derive(Debug)]
 enum Interval {
     Never,
@@ -20,6 +39,25 @@ enum Interval {
     Every30Seconds,
 }
 
+/// Implementation of `FromStr` trait for `Interval` enum.
+///
+/// This implementation allows for the creation of an `Interval` instance from a string representation.
+///
+/// # Errors
+///
+/// Returns an error if the input string does not match one of the defined interval options:
+/// - "0" for `Interval::Never`
+/// - "1" for `Interval::EveryWeek`
+/// - "2" for `Interval::Every30Seconds`
+///
+/// # Examples
+///
+/// ```
+/// use std::str::FromStr;
+///
+/// let interval = Interval::from_str("1").unwrap(); // Converts to `Interval::EveryWeek`
+/// let invalid_interval = Interval::from_str("3"); // Returns an error
+/// ```
 impl FromStr for Interval {
     type Err = ();
 
@@ -542,7 +580,7 @@ fn extract_datetime(local_result: LocalResult<DateTime<FixedOffset>>) -> Option<
 
 /// The main entry point of the application.
 ///
-/// This program processes files in a specified source directory at defined intervals.
+/// This program shuffles files in a specified source directory at defined intervals.
 /// It can run continuously based on the specified interval or process the directory just once.
 ///
 /// # Usage
@@ -596,10 +634,10 @@ fn extract_datetime(local_result: LocalResult<DateTime<FixedOffset>>) -> Option<
 /// If the specified interval is not supported, the application will use `0` (never) by default.
 fn main() -> io::Result<()> {
     // Set up command-line argument parsing
-    let matches = Command::new("File Processor")
+    let matches = Command::new("File Shuffler")
         .version("1.0")
         .author("Your Name")
-        .about("Processes files in a directory")
+        .about("Shuffles files in a directory")
         .arg(Arg::new("source_directory")
             .help("The source directory to process")
             .required(true)
