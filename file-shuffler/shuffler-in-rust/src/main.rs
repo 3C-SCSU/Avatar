@@ -1,4 +1,4 @@
-use std::env;
+// use std::env;
 use std::fs;
 use std::io;
 use std::path::{Path, PathBuf};
@@ -10,6 +10,7 @@ use std::str::FromStr;
 use std::collections::HashSet;
 use terminal_size::{Width, terminal_size};
 use chrono::{DateTime, FixedOffset, TimeZone, LocalResult};
+use clap::{Arg, Command};
 
 // Enum class for the time interval
 #[derive(Debug)]
@@ -546,32 +547,42 @@ fn extract_datetime(local_result: LocalResult<DateTime<FixedOffset>>) -> Option<
 ///
 /// # Usage
 ///
-/// To run the application, provide a source directory and an interval type:
+/// To run the application, provide a source directory and an optional interval flag:
 ///
 /// ```bash
-/// cargo run -- <source_directory> <interval>
+/// cargo run [--] <source_directory> [-i <interval>]
 /// ```
 ///
 /// # Arguments
 ///
-/// - `<source_directory>`: The path to the directory containing files to be processed.
-/// - `<interval>`: The time interval for processing the directory. Acceptable values are:
+/// - `<source_directory>`: 
+///   The path to the directory containing files to be processed. This argument is required.
+///
+/// - `-i <interval>` or `--interval <interval>`: 
+///   The time interval for processing the directory. Acceptable values are:
 ///     - `0`: Never repeat (process only once).
 ///     - `1`: Process every week.
 ///     - `2`: Process every 30 seconds.
+///   If not provided, the default value is `0`.
 ///
 /// # Example
 ///
 /// To process files in the `example_dir` every 30 seconds:
 ///
 /// ```bash
-/// cargo run -- example_dir 2
+/// cargo run example_dir -i 2
 /// ```
 ///
 /// To process files in `example_dir` only once:
 ///
 /// ```bash
-/// cargo run -- example_dir 0
+/// cargo run example_dir
+/// ```
+///
+/// To process files in `example_dir` every week:
+///
+/// ```bash
+/// cargo run example_dir -i 1
 /// ```
 ///
 /// # Errors
@@ -579,21 +590,32 @@ fn extract_datetime(local_result: LocalResult<DateTime<FixedOffset>>) -> Option<
 /// This application will exit with an error message if:
 /// - The provided source directory does not exist or is not a directory.
 /// - The source directory is not at least two levels deep.
-/// - The interval is not provided.
+/// - The specified interval is not supported (values other than `0`, `1`, or `2`).
 ///
 /// # Notes
-/// If the interval is specified is not supported, the application will use `0` (never) by default.
+/// If the specified interval is not supported, the application will use `0` (never) by default.
 fn main() -> io::Result<()> {
-    // Get the source directory and interval from command-line arguments
-    let args: Vec<String> = env::args().collect();
-    if args.len() != 3 {
-        eprintln!("Usage: {} <source_directory> <interval>", args[0]);
-        eprintln!("Interval: 0 for never, 1 for every week, 2 for every 30 seconds");
-        std::process::exit(1);
-    }
+    // Set up command-line argument parsing
+    let matches = Command::new("File Processor")
+        .version("1.0")
+        .author("Your Name")
+        .about("Processes files in a directory")
+        .arg(Arg::new("source_directory")
+            .help("The source directory to process")
+            .required(true)
+            .index(1))
+        .arg(Arg::new("interval")
+            .short('i') // Define short flag '-i'
+            .long("interval") // Define long flag '--interval'
+            .help("Set the processing interval (0: never, 1: every week, 2: every 30 seconds)")
+            .default_value("0") // Default to "0" for 'never'
+        ).get_matches();
 
-    let source_dir = PathBuf::from(&args[1]);
-    let interval: Interval = args[2].parse().unwrap_or(Interval::Never);
+    let source_dir = PathBuf::from(matches.get_one::<String>("source_directory").unwrap());
+    let interval: Interval = matches.get_one::<String>("interval")
+        .unwrap()
+        .parse()
+        .unwrap_or(Interval::Never); // Default to Never if invalid
 
     if !source_dir.exists() || !source_dir.is_dir() {
         eprintln!("Source directory not found or not a directory.");
