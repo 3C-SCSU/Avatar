@@ -8,6 +8,8 @@ use std::time::{SystemTime, UNIX_EPOCH, Duration};
 use std::thread;
 use std::str::FromStr;
 use std::collections::HashSet;
+use terminal_size::{Width, terminal_size};
+use chrono::{DateTime, FixedOffset, TimeZone, LocalResult};
 
 // Enum class for the time interval
 #[derive(Debug)]
@@ -16,7 +18,6 @@ enum Interval {
     EveryWeek,
     Every30Seconds,
 }
-
 
 
 impl FromStr for Interval {
@@ -63,6 +64,11 @@ fn rename_files_in_directory(dir: &Path) -> io::Result<()> {
         }
 
         if path.is_file() {
+            // Get last modified timestamp
+            let timestamp = get_formatted_modified_time(&path)?;
+
+            println!("| Currently modifying file\n| File name: {:?}\n| Unix timestamp: {:?}", path, timestamp);
+            println!("•");
             // Generate a unique random number within the range of 1 to n
             let mut random_number;
             let mut new_path;
@@ -81,6 +87,10 @@ fn rename_files_in_directory(dir: &Path) -> io::Result<()> {
             // Uncomment and implement the timestamp update if needed
             let random_time = FileTime::from_system_time(random_timestamp());
             set_file_times(&new_path, random_time, random_time)?;
+
+            let modified_timestamp = get_formatted_modified_time(&new_path)?;
+
+            println!("| Modified file\n| New file name: {:?}\n| Modified unix timestamp: {:?}\n", new_path, modified_timestamp);
         }
     }
 
@@ -98,6 +108,7 @@ fn rename_files_in_directory(dir: &Path) -> io::Result<()> {
 
     // FIXME: One off error on mac
     println!("Renamed {:?} file(s) in: {:?}", n, dir);
+    print_dashes(true);
     Ok(())
 }
 
@@ -157,6 +168,8 @@ fn process_directory_recursive(dir: &Path, root_dir: &Path) -> io::Result<()> {
     // After processing subdirectories, check if the current directory is now a leaf
     if dir != root_dir && !has_subdirectories(dir) {
         if dir.parent() == Some(root_dir) {
+            println!("Currently processing {:?}", dir);           
+            print_dashes(false);
             rename_files_in_directory(dir)?;
             return Ok(())
         }
@@ -178,6 +191,61 @@ fn is_at_least_two_levels_deep(dir: &Path) -> bool {
         }
     }
     false
+}
+
+fn print_dashes(add_new_line: bool) {
+    let width = if let Some((Width(w), _)) = terminal_size() {
+        w as usize
+    } else {
+        80 // Default width if terminal size can't be determined
+    };
+
+    println!("{}", "-".repeat(width));
+
+    if add_new_line {
+        println!(); // Print an additional new line if specified
+    }
+}
+
+/// Function to get the formatted last modified time of a file
+fn get_formatted_modified_time(path: &PathBuf) -> std::io::Result<String> {
+    let metadata = fs::metadata(path)?;
+    let modified_time = metadata.modified()?;
+    
+    let timestamp = modified_time_to_unix(&modified_time)?;
+    let formatted_date = format_timestamp(timestamp);
+    
+    Ok(formatted_date)
+}
+
+/// Function to convert SystemTime to UNIX timestamp
+fn modified_time_to_unix(modified_time: &SystemTime) -> std::io::Result<u64> {
+    let duration_since_epoch = modified_time.duration_since(UNIX_EPOCH)
+        .expect("Time went backwards");
+    Ok(duration_since_epoch.as_secs())
+}
+
+/// Function to format UNIX timestamp to a human-readable string
+fn format_timestamp(timestamp: u64) -> String {
+    // Define a fixed offset for CDT (UTC-5)
+    let fixed_offset = FixedOffset::west_opt(5 * 3600).expect("Invalid offset"); // 5 hours behind UTC
+
+    // Convert the timestamp to DateTime<FixedOffset>
+    let datetime: LocalResult<DateTime<FixedOffset>> = fixed_offset.timestamp_opt(timestamp as i64, 0);
+
+    // Extract the DateTime
+    match extract_datetime(datetime) {
+        Some(dt) => dt.format("%B %d, %Y at %I:%M %p").to_string(),
+        None => "Invalid date".to_string(), // Handle the None case as needed
+    }
+}
+
+fn extract_datetime(local_result: LocalResult<DateTime<FixedOffset>>) -> Option<DateTime<FixedOffset>> {
+    match local_result {
+        LocalResult::Single(dt) => Some(dt),
+        LocalResult::Ambiguous(dt1, _) => Some(dt1), // You can choose which one to return or handle both
+        LocalResult::None => None,
+    }
 }
 
 fn main() -> io::Result<()> {
