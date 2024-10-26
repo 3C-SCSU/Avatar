@@ -286,10 +286,3 @@ fn main() -> io::Result<()> {
 
     Ok(())
 }
-
-
-// Cargo
-// Cargo run <dirname> <time interval>
-// 0 - Never
-// 1 - Every week
-// 2 - Every 30 seconds
