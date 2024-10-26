@@ -67,7 +67,7 @@ fn rename_files_in_directory(dir: &Path) -> io::Result<()> {
             // Get last modified timestamp
             let timestamp = get_formatted_modified_time(&path)?;
 
-            println!("| Currently modifying file\n| File name: {:?}\n| Unix timestamp: {:?}", path, timestamp);
+            println!("| Original file\n| File name: {:?}\n| Timestamp: {:?}", path, timestamp);
             println!("•");
             // Generate a unique random number within the range of 1 to n
             let mut random_number;
@@ -90,7 +90,7 @@ fn rename_files_in_directory(dir: &Path) -> io::Result<()> {
 
             let modified_timestamp = get_formatted_modified_time(&new_path)?;
 
-            println!("| Modified file\n| New file name: {:?}\n| Modified unix timestamp: {:?}\n", new_path, modified_timestamp);
+            println!("| Modified file\n| File name: {:?}\n| Timestamp: {:?}\n", new_path, modified_timestamp);
         }
     }
 
@@ -286,3 +286,10 @@ fn main() -> io::Result<()> {
 
     Ok(())
 }
+
+
+// Cargo
+// Cargo run <dirname> <time interval>
+// 0 - Never
+// 1 - Every week
+// 2 - Every 30 seconds
