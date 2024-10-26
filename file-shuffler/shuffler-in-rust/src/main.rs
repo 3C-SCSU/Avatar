@@ -168,8 +168,8 @@ fn process_directory_recursive(dir: &Path, root_dir: &Path) -> io::Result<()> {
     // After processing subdirectories, check if the current directory is now a leaf
     if dir != root_dir && !has_subdirectories(dir) {
         if dir.parent() == Some(root_dir) {
-            println!("Currently processing {:?}", dir);           
             print_dashes(false);
+            println!("Currently processing {:?}\n", dir);
             rename_files_in_directory(dir)?;
             return Ok(())
         }
