@@ -661,7 +661,7 @@ fn main() -> io::Result<()> {
     }
 
     if !is_at_least_two_levels_deep(&source_dir) {
-        eprintln!("Source directory is not at least 2 levels deep.");
+        eprintln!("Source directory is not at least 1 levels deep.");
         std::process::exit(1);
     }
 
