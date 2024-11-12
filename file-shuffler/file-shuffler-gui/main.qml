@@ -56,24 +56,8 @@ ApplicationWindow {
     function runFileShuffler() {
         outputBoxText = "Running File Shuffler...\n"
         
-        
+        outputBoxText += "\n"
+        outputBoxText += fileShufflerGui.run_file_shuffler_program()
 
-        var process = Qt.createQmlObject('import QtQuick 2.0; QtObject { signal readyReadStandardOutput; signal readyReadStandardError; signal finished; }', parent);
-
-        process.start("python3", ["../run_file_shuffler.py"]);
-
-        process.readyReadStandardOutput.connect(function() {
-            var output = process.readAllStandardOutput();
-            outputBoxText += output;
-        });
-
-        process.readyReadStandardError.connect(function() {
-            var error = process.readAllStandardError();
-            outputBoxText += error;
-        });
-
-        process.finished.connect(function() {
-            outputBoxText += "\nProcess finished";
-        });
     }
 }
