@@ -76,7 +76,7 @@ ApplicationWindow {
                             Layout.alignment: Qt.AlignHCenter
 
                             Image {
-                                source: "brainwave-prediction-app/images/brain.png"
+                                source: "images/brain.png"
                                 width: 130
                                 height: 130
                                 anchors.centerIn: parent
@@ -184,6 +184,11 @@ ApplicationWindow {
                                 placeholderText: "Manual Command"
                                 Layout.preferredWidth: 400
                                 Layout.alignment: Qt.AlignHCenter
+                                background: Rectangle{
+                                    color: "white"
+                                    radius: 5
+                                }
+                                
                             }
                             Button {
                                 text: "Keep Drone Alive"
@@ -201,17 +206,27 @@ ApplicationWindow {
                             title: "Flight Log"
                             Layout.preferredWidth: 230
                             Layout.preferredHeight: 170
-                            ListView {
-                                id: flightLogView
-                                Layout.preferredWidth: 230
-                                Layout.preferredHeight: 170
-                                model: ListModel {}
-                                delegate: Text {
-                                    text: log
-                                    color: "white"
+                            
+                            // Background Rectangle inside the ListView
+                            Rectangle {
+                                color: "white"  // Set only the box area color to white
+                                anchors.fill: parent
+
+                                ListView {
+                                    id: flightLogView
+                                    anchors.fill: parent  // Fill the Rectangle background with ListView content
+                                    model: ListModel {
+                                        
+                                    }
+                                    delegate: Text {
+                                        text: log
+                                        color: "black"  // Set text color for readability
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                    }
                                 }
                             }
                         }
+
 
                         // Connect Image with Transparent Button
                         Rectangle {
@@ -220,7 +235,7 @@ ApplicationWindow {
                             color: "#1b3a4b" // Dark blue background
 
                             Image {
-                                source: "brainwave-prediction-app/images/connect.png"
+                                source: "images/connect.png"
                                 width: 80
                                 height: 80
                                 anchors.centerIn: parent
@@ -308,23 +323,39 @@ ApplicationWindow {
                             }
                         }
 
-                        // Console Log Section
+                    
+
+
+                        // Console Log
                         GroupBox {
                             title: "Console Log"
-                            Layout.preferredWidth: 300
-                            Layout.preferredHeight: 250
-                            Layout.alignment: Qt.AlignRight
+                            Layout.preferredWidth: 230
+                            Layout.preferredHeight: 170
+                            
+                            // Background Rectangle inside the ListView
+                            Rectangle {
+                                color: "white"  // Set only the box area color to white
+                                anchors.fill: parent
 
-                            TextArea {
-                                id: consoleLog
-                                Layout.fillWidth: true
-                                Layout.fillHeight: true
-                                text: "Console output here..."
+                                ListView {
+                                    id: consolelog
+                                    anchors.fill: parent  // Fill the Rectangle background with ListView content
+                                    model: ListModel {
+                                        
+                                    }
+                                    delegate: Text {
+                                        text: log
+                                        color: "black"  // Set text color for readability
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                    }
+                                }
                             }
                         }
                     }
                 }
-            }
+            }  
+                    
+                                                       
 
             // Transfer Data view
             Rectangle {

@@ -66,7 +66,7 @@ if __name__ == "__main__":
     engine = QQmlApplicationEngine()
 
     # Load the QML file
-    qml_file = Path(__file__).resolve().parent / "main.qml"
+    qml_file = Path(__file__).resolve().parent / "GUI5_BrainwaveReading.qml"
 
     # Check if the QML file exists
     if not qml_file.exists():
