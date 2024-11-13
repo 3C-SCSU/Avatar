@@ -1,8 +1,7 @@
 # This Python file uses the following encoding: utf-8
 import sys
-from pathlib import Path
-
 import subprocess
+from pathlib import Path
 
 from PySide6.QtCore import QObject, Slot
 from PySide6.QtGui import QGuiApplication
@@ -12,12 +11,19 @@ class FileShufflerGui(QObject):
     def __init__(self):
         super().__init__()
         
-    @Slot(str)
-    def run_file_shuffler_program(self, id):
-        process = subprocess.Popen(["python", "../run_file_shuffler.py"], stdout=subprocess.PIPE, shell=True)
-        (file_shuffler_output, err) = process.communicate()
+    @Slot(result=str)
+    def run_file_shuffler_program(self):
+        process = subprocess.Popen(
+            ["py", "./run_file_shuffler.py"], #todo - handle `py` not working (an instance where python3 or python works but not py)
+            stdout=subprocess.PIPE, 
+            stderr=subprocess.PIPE, 
+            shell=True, 
+            text=True # Ensure output is returned as string
+        )
+        stdout, stderr = process.communicate()
 
-        return file_shuffler_output
+        # Concatenate stdout and stderr
+        return stdout + stderr
 
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)

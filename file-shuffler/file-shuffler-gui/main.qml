@@ -48,16 +48,10 @@ ApplicationWindow {
             anchors.top: parent.verticalCenter
             anchors.topMargin: parent.height * 0.3 + 10
             onClicked: {
-                runFileShuffler()
+                outputBoxText = "Running File Shuffler...\n";
+                var output = fileShufflerGui.run_file_shuffler_program();
+                outputBoxText += output;
             }
         }
-    }
-
-    function runFileShuffler() {
-        outputBoxText = "Running File Shuffler...\n"
-        
-        outputBoxText += "\n"
-        outputBoxText += fileShufflerGui.run_file_shuffler_program()
-
     }
 }
