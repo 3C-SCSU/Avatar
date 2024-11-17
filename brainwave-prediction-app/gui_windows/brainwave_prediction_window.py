@@ -81,8 +81,7 @@ class Brainwaves:
 
     #loops through for reading which button is pressed when this tab is open
     def buttonLoop(self, window1, event1, values1, get_drone_action, use_brainflow):
-        
-        #local copy
+            
         event = event1
         values = values1
            
