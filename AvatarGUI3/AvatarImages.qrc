@@ -1,0 +1,21 @@
+<RCC>
+  <qresource prefix="Img">
+    <file>brain.png</file>
+    <file>Back.png</file>
+    <file>brain.png</file>
+    <file>Connect.png</file>
+    <file>Down.png</file>
+    <file>Forward.png</file>
+    <file>Home.png</file>
+    <file>Land.png</file>
+    <file>Left.png</file>
+    <file>Right.png</file>
+    <file>Stream.png</file>
+    <file>Takeoff.png</file>
+    <file>Turn Left.png</file>
+    <file>Turn Right.png</file>
+    <file>Up.png</file>
+    <file>upload.png</file>
+    <file>Connect.png</file>
+  </qresource>
+</RCC>
