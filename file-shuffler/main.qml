@@ -33,12 +33,15 @@ ApplicationWindow {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
 
-            TextArea {
-                id: outputBox
-                text: outputBoxText
-                color: "black"
+            ScrollView {
                 anchors.fill: parent
-                readOnly: true
+
+                TextArea {
+                    id: outputBox
+                    text: outputBoxText
+                    color: "black"
+                    readOnly: true
+                }
             }
         }
 
