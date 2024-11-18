@@ -54,7 +54,9 @@ def main():
         else:
             print("Failed to find sh.exe path, ensure that sh.exe is installed (check git bash installation)")
         
-        os.system(f"{sh_exe_path} ./run.sh")
+        subprocess.run(["powershell", f"& {sh_exe_path} ./run.sh"], shell=True)
+
+        #os.system(f"{sh_exe_path} ./run.sh")
     elif current_os == "Linux":
         os.system("sh ./run.sh")
     elif current_os == "Darwin":  # macOS
