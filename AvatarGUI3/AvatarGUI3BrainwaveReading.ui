@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Avatar</class>
+ <widget class="QMainWindow" name="Avatar">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>830</width>
+    <height>799</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">QWidget{
+	background:&quot;#4a5b7b&quot;
+}</string>
+   </property>
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>811</width>
+      <height>751</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>100</horstretch>
+      <verstretch>100</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>16777215</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QTabWidget::tab-bar {
+    alignment: left;
+}</string>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="BrainwaveReading">
+     <attribute name="title">
+      <string>BrainwaveReading</string>
+     </attribute>
+     <widget class="QRadioButton" name="manualcontrol">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>20</y>
+        <width>121</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QRadioButton{
+color:white;
+}
+</string>
+      </property>
+      <property name="text">
+       <string>Manual Contol</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="autopilot">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>20</y>
+        <width>99</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QRadioButton{
+color:white;
+}
+</string>
+      </property>
+      <property name="text">
+       <string>Autopilot</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="readmymind">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>60</y>
+        <width>141</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+    background-color: rgb(36, 44, 77); /* Default background color */
+	background-image: url(:/Img/brain.png);
+    color: white;
+    border: none;
+}
+
+QPushButton:hover {
+    background-color: white; /* Change background to white on hover */
+	color: black;
+}
+</string>
+      </property>
+      <property name="text">
+       <string>Read my mind..</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="manualcontrol_2">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>580</y>
+        <width>141</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+    background-color: rgb(36, 44, 77); /* Default background color */
+	background-image: url(:/Img/Connect.png);
+    color: white;
+    border: none;
+}
+
+QPushButton:hover {
+    background-color: white; /* Change background to white on hover */
+	color: black;
+}
+</string>
+      </property>
+      <property name="text">
+       <string>Connect</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="themodelsays">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>200</y>
+        <width>121</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel{
+color:white;
+}
+</string>
+      </property>
+      <property name="text">
+       <string>The model says...</string>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="countlabel">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>230</y>
+        <width>191</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <column>
+       <property name="text">
+        <string>Count</string>
+       </property>
+       <property name="background">
+        <color>
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
+        </color>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Label</string>
+       </property>
+       <property name="background">
+        <color>
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
+        </color>
+       </property>
+      </column>
+     </widget>
+     <widget class="QPushButton" name="notwhatiwasthinking">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>310</y>
+        <width>151</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+    background-color: rgb(36, 44, 77); /* Default background color */
+    color: white;
+    border: none;
+}
+
+QPushButton:hover {
+    background-color: white; /* Change background to white on hover */
+	color:black;
+}
+</string>
+      </property>
+      <property name="text">
+       <string>Not what I was thinking</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="execute">
+      <property name="geometry">
+       <rect>
+        <x>219</x>
+        <y>311</y>
+        <width>101</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+    background-color: rgb(36, 44, 77); /* Default background color */
+    color: white;
+    border: none;
+}
+
+QPushButton:hover {
+    background-color: white; /* Change background to white on hover */
+	color:black;
+}
+</string>
+      </property>
+      <property name="text">
+       <string>Execute</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="keepdronealive">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>380</y>
+        <width>131</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+    background-color: rgb(36, 44, 77); /* Default background color */
+    color: white;
+    border: none;
+}
+
+QPushButton:hover {
+    background-color: white; /* Change background to white on hover */
+	color:black;
+}
+</string>
+      </property>
+      <property name="text">
+       <string>Keep Drone Alive</string>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="dronealivetext">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>380</y>
+        <width>301</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QTextEdit{
+	background-color: white;
+}
+</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="flightlog">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>440</y>
+        <width>71</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel{
+	    color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>Flight Log</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="consolelog">
+      <property name="geometry">
+       <rect>
+        <x>590</x>
+        <y>460</y>
+        <width>81</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel{
+	    color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>Console Log </string>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="flightlogspace">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>480</y>
+        <width>191</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QTextEdit{
+	background-color: white;
+}
+</string>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOn</enum>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="consolelogspace">
+      <property name="geometry">
+       <rect>
+        <x>590</x>
+        <y>490</y>
+        <width>201</width>
+        <height>111</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QTextEdit{
+	background-color: white;
+}
+</string>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOn</enum>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="prediction">
+      <property name="geometry">
+       <rect>
+        <x>450</x>
+        <y>80</y>
+        <width>321</width>
+        <height>291</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">/* Header section - default style */
+QHeaderView::section {
+    color: black; /* Default text color */
+    background-color: white; /* Background color */
+}
+
+/* Header section - hover style */
+QHeaderView::section:hover {
+    color: white; /* Change text to black on hover */
+    background-color: black; /* Optional hover background color */
+    font-weight: medium; /* Make text bold on hover */
+}
+
+</string>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOn</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <column>
+       <property name="text">
+        <string>Prediction Count</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Server Prediction</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Prediction Label</string>
+       </property>
+      </column>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
