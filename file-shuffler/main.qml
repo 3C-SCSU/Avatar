@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import QtQuick.Dialogs
 
 ApplicationWindow {
     visible: true
@@ -10,6 +11,7 @@ ApplicationWindow {
     title: "File Shuffler"
 
     property string outputBoxText: ""
+    property bool ranShuffle: false 
 
     Column {
         anchors.fill: parent
@@ -45,16 +47,50 @@ ApplicationWindow {
             }
         }
 
-        Button {
-            text: "Run File Shuffler"
+        Row {
+            id: buttonRow
+            spacing: 20
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.verticalCenter
             anchors.topMargin: parent.height * 0.3 + 10
-            onClicked: {
-                outputBoxText = "Running File Shuffler...\n";
-                var output = fileShufflerGui.run_file_shuffler_program();
-                outputBoxText += output;
+
+            Button {
+                id: folderButton
+                text: "Select your Directory"
+                onClicked: myFolderDialog.open()
             }
+
+            Button {
+                id: runButton
+                text: "Run File Shuffler"
+                onClicked: {
+                    ranShuffle = true; 
+                    outputBoxText = "Running File Shuffler...\n";
+                    var output = fileShufflerGui.run_file_shuffler_program();
+                    outputBoxText += output;
+                }
+            }
+        }
+
+        Text {
+            id: ranText
+            text: "Shuffle Complete!"
+            color: "yellow"
+            font.bold: true
+            font.pixelSize: 18
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: buttonRow.bottom 
+            anchors.topMargin: 10 
+            visible: ranShuffle 
+        }
+    }
+
+    FolderDialog {
+        id: myFolderDialog
+        title: "Select Your Directory"
+        onAccepted:
+        {
+            console.log(myFolderDialog.selectedFolder)
         }
     }
 }
