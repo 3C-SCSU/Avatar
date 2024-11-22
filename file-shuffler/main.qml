@@ -11,6 +11,7 @@ ApplicationWindow {
     title: "File Shuffler"
 
     property string outputBoxText: ""
+    property string selectedDirectory: ""
     property bool ranShuffle: false 
 
     Column {
@@ -65,8 +66,8 @@ ApplicationWindow {
                 text: "Run File Shuffler"
                 onClicked: {
                     ranShuffle = true; 
-                    outputBoxText = "Running File Shuffler...\n";
-                    var output = fileShufflerGui.run_file_shuffler_program();
+                    outputBoxText = `Running File Shuffler...\n`;
+                    var output = fileShufflerGui.run_file_shuffler_program(selectedDirectory);
                     outputBoxText += output;
                 }
             }
@@ -90,7 +91,10 @@ ApplicationWindow {
         title: "Select Your Directory"
         onAccepted:
         {
-            console.log(myFolderDialog.selectedFolder)
+            let cleanedDirectory = String(myFolderDialog.selectedFolder);
+            cleanedDirectory = cleanedDirectory.replace("file:///", "");
+            selectedDirectory = cleanedDirectory;
+            outputBoxText += `Selected directory: ${selectedDirectory}\n`;
         }
     }
 }

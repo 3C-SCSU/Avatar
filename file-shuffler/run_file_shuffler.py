@@ -40,7 +40,18 @@ def convert_to_universal_path(windows_path):
     
     return universal_path
 
-def main():
+def remove_quotes(input):
+    return input.replace("\"", "")
+
+def main(path):
+    run_sh_location = os.path.join(os.getcwd(), "run.sh")
+
+    if(len(path) > 0):
+        universalParameterizedPath = convert_to_universal_path(path)
+        universalParameterizedPath = remove_quotes(universalParameterizedPath)
+        os.chdir(universalParameterizedPath)
+        print(f"Running file shuffler in {universalParameterizedPath}")
+
     current_os = platform.system()
     if current_os == "Windows":
         print("Finding sh.exe to run the script...")
@@ -54,13 +65,54 @@ def main():
         else:
             print("Failed to find sh.exe path, ensure that sh.exe is installed (check git bash installation)")
         
-        subprocess.run(["powershell", f"& {sh_exe_path} .\\run.sh"], shell=True)
+        run_sh_location = convert_to_universal_path(run_sh_location)
+
+        print("Running file shuffler, please wait...\n")
+
+        result = subprocess.run(
+            ["powershell", f"& {sh_exe_path} {run_sh_location}"],
+            shell=True,
+            capture_output=True,
+            text=True
+        )
+        
+        # Combine stdout and stderr and filter only new lines
+        output = result.stdout + result.stderr
+        new_lines = [line for line in output.split('\n') if line]
+
+        print('\n'.join(new_lines)) #print the output to the console
+
+        return '\n'.join(new_lines) #return the output for the gui to consume
 
     elif current_os == "Linux":
-        os.system("sh ./run.sh")
+        result = subprocess.run(
+            ["sh", "./run.sh"],
+            shell=True,
+            capture_output=True,
+            text=True
+        )
+        output = result.stdout + result.stderr
+        return output
     elif current_os == "Darwin":  # macOS
-        os.system("sh ./run.sh")
+        result = subprocess.run(
+            ["sh", "./run.sh"],
+            shell=True,
+            capture_output=True,
+            text=True
+        )
+        output = result.stdout + result.stderr
+        return output
     else:
-        print(f"{current_os} detected - attempting `sh ./run.sh`")
+        print(f"{current_os} detected - attempting run.sh")
+        result = subprocess.run(
+            ["sh", "./run.sh"],
+            shell=True,
+            capture_output=True,
+            text=True
+        )
+        output = result.stdout + result.stderr
+        return output
 
-main()
+#Need to do this to avoid the import from calling main
+if __name__ == "__main__":
+    main("")
