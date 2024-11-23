@@ -1,0 +1,38 @@
+{
+    "files": [
+        "AvatarGUI3BrainwaveReading.py",
+        "AvatarGUI3BrainwaveReading.ui",
+        "AvatarImages.qrc",
+        "BrainwaveReadingTab.py",
+        "manual_drone_control_window3.py",
+        "transfer_files_window3.py",
+        "transfer_files_window3.ui",
+        "GUI3.py"  // Added GUI3.py is the main py file with all tabs
+    ],
+    "resources": [
+        "AvatarImages.qrc"
+    ],
+    "ui_files": [
+        "AvatarGUI3BrainwaveReading.ui",
+        "transfer_files_window3.ui"
+    ],
+    "dependencies": [
+        "PyQt5",
+        "numpy",
+        "PyQt5.QtCore",
+        "PyQt5.QtWidgets",
+        "configparser",
+        "os",
+        "sys",
+        "cv2",
+        "tello"
+    ]
+}
+
+
+
+
+
+
+
+
