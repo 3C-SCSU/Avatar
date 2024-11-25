@@ -9,8 +9,16 @@ from PySide6.QtCore import QObject, Signal, Slot, QThread
 import time
 import random
 
+VALIDPREDICTIONS = set(["Forward", "Left", "Right", "Land", "Up", "Down"])
+
+class Prediction:
+    def __init__(self, count : str, server : str, label : str):
+        self.count = count
+        self.server = server
+        self.label = label
+
 class LiveData(QThread):
-    data = Signal(str)
+    data = Signal(Prediction)
 
     def __init__(self):
         super().__init__()
@@ -19,6 +27,7 @@ class LiveData(QThread):
                         "Up", "Down", "Stop", "Wait", "Hold",
                         "Backward", "Reverse"
                         ]
+        self.count = 1
 
     def run(self):
         print("Connecting to BCI headset...")
@@ -27,7 +36,9 @@ class LiveData(QThread):
 
         while self.running:
             thought = random.choice(self.thoughts)
-            self.data.emit(thought)
+            prediction = Prediction(str(self.count), "Prediction Server", thought)
+            self.count += 1
+            self.data.emit(prediction)
             time.sleep(2)
 
         print("BCI headset disconnected. Data stream stopped.")
@@ -46,28 +57,35 @@ class BrainwavesBackend(QObject):
         self.flight_log = []  # List to store flight log entries
         self.predictions_log = []  # List to store prediction records
         self.current_prediction_label = ""
+        self.liveData = LiveData()
+        self.liveData.data.connect(self.handleAction)
+
+    @Slot(Prediction)
+    def handleAction(self, prediction):
+        self.current_prediction_label = prediction.label
+        self.predictions_log.append({
+            "count": prediction.count,
+            "server": prediction.server,
+            "label": self.current_prediction_label
+        })
+
+        self.predictionsTableUpdated.emit(self.predictions_log)
+
+        if self.current_prediction_label in VALIDPREDICTIONS:
+            self.executeAction()
 
     @Slot()
     def readMyMind(self):
-        # Mock function to simulate brainwave reading
-        self.current_prediction_label = "Move Forward"
-        # Update the predictions log
-        self.predictions_log.append({
-            "count": "1",
-            "server": "Prediction Server",
-            "label": self.current_prediction_label
-        })
-        self.predictionsTableUpdated.emit(self.predictions_log)
+        if not self.liveData.isRunning():
+            self.liveData.start()
+        else:
+            self.liveData.stop()
 
     @Slot(str)
     def notWhatIWasThinking(self, manual_action):
         # Handle manual action input
-        self.predictions_log.append({
-            "count": "manual",
-            "server": "manual",
-            "label": manual_action
-        })
-        self.predictionsTableUpdated.emit(self.predictions_log)
+        prediction = Prediction("manual", "manual", manual_action)
+        self.handleAction(prediction)
 
     @Slot()
     def executeAction(self):
