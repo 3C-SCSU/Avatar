@@ -4,7 +4,37 @@ import os
 from pathlib import Path
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
-from PySide6.QtCore import QObject, Signal, Slot
+from PySide6.QtCore import QObject, Signal, Slot, QThread
+
+import time
+import random
+
+class LiveData(QThread):
+    data = Signal(str)
+
+    def __init__(self):
+        super().__init__()
+        self.running = True
+        self.thoughts = ["Forward", "Left", "Right", "Land", 
+                        "Up", "Down", "Stop", "Wait", "Hold",
+                        "Backward", "Reverse"
+                        ]
+
+    def run(self):
+        print("Connecting to BCI headset...")
+        time.sleep(2)
+        print("BCI headset connected. Streaming data...")
+
+        while self.running:
+            thought = random.choice(self.thoughts)
+            self.data.emit(thought)
+            time.sleep(2)
+
+        print("BCI headset disconnected. Data stream stopped.")
+
+    def stop(self):
+        self.running = False
+        self.wait()
 
 class BrainwavesBackend(QObject):
     # Define signals to update QML components
