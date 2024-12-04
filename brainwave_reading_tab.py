@@ -1,3 +1,5 @@
+#Anastasiya Gorlov
+
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QTableWidget, QTableWidgetItem, QListWidget, QLineEdit, QTextEdit, QRadioButton, QGroupBox, QSizePolicy
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QPixmap, QIcon
@@ -225,6 +227,13 @@ class BrainwaveReading_Tab(QWidget):
         self.server_table.setItem(0, 0, QTableWidgetItem(str(count)))
         self.server_table.setItem(0, 1, QTableWidgetItem(self.prediction_label))
 
+        # Updated -- added if else for automatic execution
+        if self.prediction_label in ["forward", "backward", "left", "right", "up", "down"]:
+            self.execute_prediction(automatic=True)  # Call with automatic=True
+        else:
+            self.console_log.append("Waiting for manual execution.")
+
+
     def not_thinking(self):
         """Handle 'Not what I was thinking' button."""
         drone_input = self.drone_input.text() if self.drone_input.text() else "manual input"
@@ -239,12 +248,17 @@ class BrainwaveReading_Tab(QWidget):
             for j, data in enumerate(record):
                 self.predictions_table.setItem(i, j, QTableWidgetItem(str(data)))
 
-    def execute_prediction(self):
+    def execute_prediction(self, automatic=False): # Updates, Adding automatic Call with automatic with Flase
         """Handle 'Execute' button."""
         self.flight_log.append(self.prediction_label)
         self.flight_log_list.addItem(self.prediction_label)
         self.get_drone_action(self.prediction_label)
-        self.console_log.append("Executed action: " + self.prediction_label)
+
+        if automatic:
+                self.console_log.append("Automatic executed action: " + self.prediction_label)
+        else:
+            self.console_log.append("Manual executed action: " + self.prediction_label)
+
 
     def connect_drone(self):
         """Handle the 'Connect' button."""

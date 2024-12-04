@@ -1,7 +1,11 @@
+# Anastasiya Gorlov
 import sys
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTabWidget, QVBoxLayout, QDesktopWidget
 import importlib
+from djitellopy import Tello
+tello = Tello()
+
 
 # Import the necessary modules
 manual_drone_control_module = importlib.import_module("brainwave-prediction-app3.gui_windows3.manual_drone_control_window3")
@@ -10,12 +14,26 @@ ManDroneCont_Tab = manual_drone_control_module.ManDroneCont_Tab
 transfer_files_module = importlib.import_module("brainwave-prediction-app3.gui_windows3.transfer_files_window3")
 TransferFilesWindow = transfer_files_module.TransferFilesWindow
 
+
+#Updated, added function
+def use_brainflow():
+    return {
+        'prediction_label': 'driving',
+        'prediction_count': 1
+    }
+
+#Updated
 # Add your module path to the system path
-module_path = '/Users/divyadarsi/Avatar/AvatarGUI3'  # Update this path
+module_path = '/Users/anastasiyagorlov/Documents/avatar_project/AvatarGUI3'  # Update this path
 if module_path not in sys.path:
     sys.path.append(module_path)
 
-from BrainwaveReadingTab import Ui_Avatar  # Import your generated UI class
+#Updated
+from brainwave_reading_tab import BrainwaveReading_Tab  # Import your generated UI class
+
+
+
+
 
 def get_drone_action(action):
     if action == 'Connect':
@@ -75,9 +93,8 @@ class MainWindow(QMainWindow):
         self.tabWidget = QTabWidget()
 
         # Create and setup your brainwave tab with QMainWindow, not QWidget
-        brainwave_tab_widget = QMainWindow()  # Change to QMainWindow
-        brainwave_tab = Ui_Avatar()
-        brainwave_tab.setupUi(brainwave_tab_widget)
+        brainwave_tab_widget =  BrainwaveReading_Tab(get_drone_action, use_brainflow)
+
 
         # Add the brainwave tab widget to the tab widget
         self.tabWidget.addTab(brainwave_tab_widget, "Brainwave Reading")
