@@ -162,7 +162,7 @@ BrainWaveAnalysis <- R6Class("BrainWaveAnalysis",
 
 # Example usage
 categories <- c("backward", "forward", "land", "left", "right", "takeoff")
-base_path <- "/Users/joshuaolaoye/Downloads/brainwaves-csv"
+base_path <- # Path to the brainwave-csv directory
 
 analysis <- BrainWaveAnalysis$new(categories, base_path)
 analysis$process_all_categories()
