@@ -26,7 +26,7 @@ class Controller:
 
 # Example usage
 if __name__ == "__main__":
-    r_script_path = "./controller.R"  # Base directory for R scripts
+    r_script_path = "./controller.R"  # File path to R script
 
     controller = Controller(r_script_path)
 
