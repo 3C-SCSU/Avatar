@@ -5,7 +5,7 @@ import QtQuick.Layouts 1.15
 ApplicationWindow {
     visible: true
     width: 1200
-    height: 800 
+    height: 800
     title: "Avatar - Brainwave Reading"
 
     ColumnLayout {
@@ -135,7 +135,6 @@ ApplicationWindow {
                                     }
                                 }
                             }
-
                             ListView {
                                 id: predictionListView
                                 Layout.fillWidth: true
@@ -154,12 +153,20 @@ ApplicationWindow {
                             spacing: 10
                             Layout.alignment: Qt.AlignHCenter
                             Button {
-                                text: "Not what I was thinking..."
+                                text: backend.current_prediction_label //Automatic label generated from backend
                                 Layout.preferredWidth: 160
                                 Layout.preferredHeight: 80
                                 background: Rectangle {
                                     color: "#1b3a4b"
-                                } 
+                                }
+                                contentItem: Text {
+                                    text: parent.text  // Use the Button's `text` property
+                                    font.pixelSize: 15  // Set the font size
+                                    color: "white"  // Set the text color
+                                    anchors.centerIn: parent  // Center the text
+                                    horizontalAlignment: Text.AlignHCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                }
                                 onClicked: backend.notWhatIWasThinking(manualInput.text)
                             }
                             Button {
@@ -168,7 +175,7 @@ ApplicationWindow {
                                 Layout.preferredHeight: 80
                                 background: Rectangle {
                                     color: "#1b3a4b"
-                                } 
+                                }
                                 onClicked: backend.executeAction()
                             }
                         }
@@ -201,17 +208,34 @@ ApplicationWindow {
                             title: "Flight Log"
                             Layout.preferredWidth: 230
                             Layout.preferredHeight: 170
-                            ListView {
-                                id: flightLogView
-                                Layout.preferredWidth: 230
-                                Layout.preferredHeight: 170
-                                model: ListModel {}
-                                delegate: Text {
-                                    text: log
-                                    color: "white"
+                            Flickable {
+                                id: flightLogFlickable
+                                width: parent.width
+                                height: parent.height
+
+                                contentHeight: flightLogView.contentHeight
+                                clip: true
+
+                                ColumnLayout {
+                                    ListView {
+                                        id: flightLogView
+                                        Layout.preferredWidth: 230
+                                        Layout.preferredHeight: 170
+                                        model:ListModel {}
+                                        delegate: Text {
+                                            text: log
+                                            color: "white"
+                                        }
+                                    }
+                                }
+                                ScrollBar.vertical: ScrollBar {
+                                    width: 10
+                                    policy: ScrollBar.AlwaysOn
                                 }
                             }
+
                         }
+
 
                         // Connect Image with Transparent Button
                         Rectangle {
@@ -428,6 +452,30 @@ ApplicationWindow {
                     text: "Manual Drone Control View"
                 }
             }
+
+            Connections {
+                target: backend
+                function onPredictionsTableUpdated(predictions)
+                {
+                    predictionListView.model.clear()
+                    for (let i = 0; i<predictions.length; i++) {
+                        predictionListView.model.append({
+                        count: predictions[i].count,
+                        label: predictions[i].label
+                    })
+                }
+            }
+
+            function onFlightLogUpdated(flightLogs)
+            {
+                flightLogView.model.clear()
+                for (let i = 0; i<flightLogs.length; i++) {
+                    flightLogView.model.append({
+                    log: flightLogs[i]
+                })
+            }
         }
     }
+}
+}
 }
