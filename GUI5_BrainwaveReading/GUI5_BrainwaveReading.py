@@ -114,4 +114,4 @@ if __name__ == "__main__":
     engine.rootContext().setContextProperty("backend", backend)
 
     # Start the main application loop
-    sys.exit(app.exec())
+    sys.exit(app.exec()
