@@ -12,7 +12,7 @@ ApplicationWindow {
         anchors.fill: parent
         spacing: 10
 
-        // Tab bar
+        // Tab Bar for Navigation
         TabBar {
             id: tabBar
             Layout.fillWidth: true
@@ -32,7 +32,7 @@ ApplicationWindow {
             }
         }
 
-        // Stack layout for switching views
+        // StackLayout for Switching Views
         StackLayout {
             id: stackLayout
             Layout.fillWidth: true
@@ -45,32 +45,34 @@ ApplicationWindow {
                 Layout.fillHeight: true
 
                 ColumnLayout {
-                    spacing: 10
+                    spacing: 20
                     anchors.centerIn: parent
 
                     // Brainwave Image Section
                     Item {
-                        width: 200
-                        height: 200
+                        Layout.preferredWidth: 200
+                        Layout.preferredHeight: 200
+
                         Image {
                             source: "images/brain.png"
                             anchors.centerIn: parent
-                            width: 100
-                            height: 100
+                            width: 120
+                            height: 120
                             fillMode: Image.PreserveAspectFit
-                        }
-
-                        Button {
-                            text: "Read my mind..."
-                            anchors.centerIn: parent
-                            onClicked: {
-                                console.log("Read my mind clicked");
-                                backend.readMyMind(); // Ensure `backend` is correctly defined elsewhere.
-                            }
                         }
                     }
 
-                    // Manual Input
+                    // "Read My Mind" Button
+                    Button {
+                        text: "Read my mind..."
+                        Layout.alignment: Qt.AlignHCenter
+                        onClicked: {
+                            console.log("Read my mind clicked");
+                            backend.readMyMind(); // Ensure `backend` is correctly defined elsewhere.
+                        }
+                    }
+
+                    // Manual Command Input Section
                     TextField {
                         id: manualInput
                         placeholderText: "Enter manual command..."
@@ -81,6 +83,7 @@ ApplicationWindow {
                     Button {
                         text: "Execute"
                         Layout.preferredWidth: 120
+                        Layout.alignment: Qt.AlignHCenter
                         onClicked: {
                             console.log("Executing manual action...");
                             backend.executeAction(); // Call backend logic.
@@ -92,21 +95,36 @@ ApplicationWindow {
             // Transfer Data View
             Rectangle {
                 color: "#4a5b7b"
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
                 ScrollView {
                     anchors.centerIn: parent
                     width: Math.min(parent.width * 0.9, 600)
                     height: Math.min(parent.height * 0.9, contentHeight)
 
                     ColumnLayout {
-                        spacing: 10
+                        spacing: 15
 
-                        Label { text: "Target IP"; color: "white" }
+                        Label {
+                            text: "Target IP"
+                            color: "white"
+                            Layout.alignment: Qt.AlignLeft
+                        }
                         TextField { Layout.fillWidth: true }
 
-                        Label { text: "Target Username"; color: "white" }
+                        Label {
+                            text: "Target Username"
+                            color: "white"
+                            Layout.alignment: Qt.AlignLeft
+                        }
                         TextField { Layout.fillWidth: true }
 
-                        Label { text: "Target Password"; color: "white" }
+                        Label {
+                            text: "Target Password"
+                            color: "white"
+                            Layout.alignment: Qt.AlignLeft
+                        }
                         TextField {
                             Layout.fillWidth: true
                             echoMode: TextInput.Password
@@ -114,7 +132,10 @@ ApplicationWindow {
 
                         Button {
                             text: "Save Config"
-                            onClicked: console.log("Save Configuration clicked.")
+                            Layout.alignment: Qt.AlignHCenter
+                            onClicked: {
+                                console.log("Save Configuration clicked.");
+                            }
                         }
                     }
                 }
@@ -122,12 +143,14 @@ ApplicationWindow {
 
             // Manual Drone Control View
             Rectangle {
-                color: "lightgrey"
+                color: "#d3d3d3"
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+
                 Text {
                     anchors.centerIn: parent
                     text: "Manual Drone Control View"
+                    font.pixelSize: 20
                     color: "black"
                 }
             }

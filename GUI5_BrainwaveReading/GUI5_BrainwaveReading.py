@@ -12,15 +12,15 @@ class BrainwavesBackend(QObject):
     Backend class that acts as a bridge between QML and Python logic.
     Handles logic for brainwave simulation, drone actions, and communication with QML.
     """
-    
-    # Define signals to communicate data with QML components
-    flightLogUpdated = Signal(list)  # Signal to send flight log updates
-    predictionsTableUpdated = Signal(list)  # Signal to send predictions table updates
+
+    # Signals to communicate updates with QML components
+    flightLogUpdated = Signal(list)  # Updates flight log data in QML
+    predictionsTableUpdated = Signal(list)  # Updates predictions table in QML
 
     def __init__(self):
         super().__init__()
-        
-        # Initialize flight log and prediction log lists
+
+        # Initialize internal data structures
         self.flight_log = []  # List to store flight log entries
         self.predictions_log = []  # List to store prediction records
         self.current_prediction_label = ""
@@ -28,51 +28,49 @@ class BrainwavesBackend(QObject):
     @Slot()
     def readMyMind(self):
         """
-        Simulate a brainwave reading by generating mock predictions.
-        This is called when a user clicks the 'Read My Mind' button in QML.
+        Simulates brainwave reading and generates a mock prediction.
+        Triggered when the 'Read My Mind' button is clicked in QML.
         """
-        self.current_prediction_label = "Move Forward"  # Mocked prediction logic
-        # Add new prediction data to the predictions log
+        self.current_prediction_label = "Move Forward"  # Example mock prediction
         self.predictions_log.append({
             "count": len(self.predictions_log) + 1,
             "server": "Prediction Server",
             "label": self.current_prediction_label
         })
-        # Notify QML of the updated predictions
+
+        # Notify QML about the updated predictions log
         self.predictionsTableUpdated.emit(self.predictions_log)
 
     @Slot(str)
     def notWhatIWasThinking(self, manual_action):
         """
-        Handle manual input from the user. Simulate a user-driven prediction entry.
-        :param manual_action: Text string inputted by the user for manual action.
+        Handles manual input for user-defined predictions.
+        :param manual_action: Text input provided by the user.
         """
-        # Log the manual input into the predictions log
         self.predictions_log.append({
             "count": len(self.predictions_log) + 1,
             "server": "manual",
             "label": manual_action
         })
-        # Notify QML of the updated predictions table
+
+        # Notify QML about the updated predictions table
         self.predictionsTableUpdated.emit(self.predictions_log)
 
     @Slot()
     def executeAction(self):
         """
-        Simulate executing a drone action based on the current prediction.
-        Logs the action into the flight log.
+        Executes a drone action based on the current prediction label.
+        Logs the executed action in the flight log.
         """
         if self.current_prediction_label:
-            # Log the action into the flight log
             self.flight_log.insert(0, f"Executed: {self.current_prediction_label}")
-            # Notify QML of the updated flight log
             self.flightLogUpdated.emit(self.flight_log)
 
     @Slot()
     def connectDrone(self):
         """
-        Simulate a connection to a drone.
-        Logs a 'Drone Connected' message into the flight log.
+        Simulates connecting to a drone.
+        Logs a connection message in the flight log.
         """
         self.flight_log.insert(0, "Drone connected.")
         self.flightLogUpdated.emit(self.flight_log)
@@ -80,40 +78,40 @@ class BrainwavesBackend(QObject):
     @Slot()
     def keepDroneAlive(self):
         """
-        Simulate sending a keep-alive signal to the drone.
-        Logs a 'Keep alive' message into the flight log.
+        Simulates sending a keep-alive signal to the drone.
+        Logs the action in the flight log.
         """
         self.flight_log.insert(0, "Keep alive signal sent.")
         self.flightLogUpdated.emit(self.flight_log)
 
 
 if __name__ == "__main__":
-    # Set the Quick Controls style to "Fusion"
+    # Set the Quick Controls style to "Fusion" for a consistent look
     os.environ["QT_QUICK_CONTROLS_STYLE"] = "Fusion"
 
-    # Start the QML application
+    # Initialize the QML application
     app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine()
 
-    # Determine the QML file's path
+    # Determine the path to the QML file
     qml_file = Path(__file__).resolve().parent / "GUI5_BrainwaveReading.qml"
 
-    # Ensure the QML file exists
+    # Validate the QML file's existence
     if not qml_file.exists():
         print(f"Error: {qml_file} does not exist.")
         sys.exit(-1)
 
-    # Load the QML file
+    # Load the QML file into the engine
     engine.load(str(qml_file))
 
-    # Ensure the QML was successfully loaded
+    # Ensure the QML was loaded successfully
     if not engine.rootObjects():
-        print("Error: QML application engine failed to load.")
+        print("Error: Failed to load QML application engine.")
         sys.exit(-1)
 
-    # Create and set the backend for communication with QML
+    # Initialize the backend and expose it to QML
     backend = BrainwavesBackend()
     engine.rootContext().setContextProperty("backend", backend)
 
-    # Execute the main application loop
+    # Start the main application loop
     sys.exit(app.exec())
