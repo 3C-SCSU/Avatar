@@ -1,0 +1,7 @@
+{
+    "files": [
+        "GUI5_Avatar_Image.qrc"
+        "GUI5_ManualDroneControl.py",
+        "GUI5_ManualDroneControl.qml"
+    ]
+}
