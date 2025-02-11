@@ -8,6 +8,22 @@ ApplicationWindow {
     height: 800 
     title: "Avatar - Brainwave Reading"
 
+    // Proper connection handling
+    Connections {
+        target: backend  // Now properly defined through context property
+        function onImagesReady(imageData) {
+            imageModel.clear();
+            for (let item of imageData) {
+                imageModel.append(item);
+            }
+        }
+    }
+
+    ListModel {
+        id: imageModel
+    }
+
+
     ColumnLayout {
         anchors.fill: parent
         spacing: 10
@@ -29,10 +45,6 @@ ApplicationWindow {
             TabButton {
                 text: "Manual Drone Control"
                 onClicked: stackLayout.currentIndex = 2
-            }
-            TabButton {
-                text: "Brainwave Visualization"
-                onClicked: stackLayout.currentIndex = 3
             }
         }
 
@@ -1128,6 +1140,69 @@ ApplicationWindow {
                 console.log(action + " triggered.")
             }
 
+            // Brainwave Visualization
+
+            Rectangle {
+                color: "#2b3a4a"
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                ColumnLayout {
+                    anchors.fill: parent
+                    spacing: 10
+
+                    Text {
+                        text: "Brainwave Visualization"
+                        font.bold: true
+                        font.pixelSize: 20
+                        color: "white"
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    // Grid Layout for 6 Graphs (2 Rows x 3 Columns)
+                    GridLayout {
+                        columns: 3
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        columnSpacing: 10
+                        rowSpacing: 10
+
+                        Repeater {
+                            model: imageModel  
+                            delegate: Rectangle {
+                                color: "black"
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
+                                border.color: "#3b4b57"
+
+                                ColumnLayout {
+                                    width: parent.width
+                                    height: parent.height
+                                    spacing: 5
+
+                                    // Graph Title
+                                    Text {
+                                        text: model.graphTitle
+                                        color: "white"
+                                        font.bold: true
+                                        Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+                                        Layout.topMargin: 10
+                                    }
+
+                                    // Display Image
+                                    Image {
+                                        source: model.imagePath
+                                        Layout.preferredWidth: parent.width * 0.9
+                                        Layout.preferredHeight: parent.height * 0.8
+                                        Layout.alignment: Qt.AlignHCenter
+                                        fillMode: Image.PreserveAspectFit
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             // Brainwave Visualization
 
             Rectangle {
