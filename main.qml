@@ -264,21 +264,57 @@ ApplicationWindow {
                                     onClicked: backend.connectDrone()
                                 }
                             }
-                            Rectangle{
-                                width: 150
-                                height: 150
-                                color: "#1b3a4b" // Dark blue background
+                            ColumnLayout {
+                                spacing: 5
+                                Layout.alignment: Qt.AlignHCenter
+
+                                // Radio Button
                                 RadioButton {
-                                    text: "Random Forest"
+                                    id: randomForestRadio
+                                    Layout.alignment: Qt.AlignHCenter
                                     checked: true
+                                    onClicked: backend.selectModel("Random Forest")
+                                }
+
+                                // Green Box with Text
+                                Rectangle {
+                                    width: 150
+                                    height: 80
+                                    color: "#4CAF50"
+                                    radius: 5
+
+                                    Text {
+                                        text: "Random Forest"
+                                        font.bold: true
+                                        font.pixelSize: 16
+                                        color: "white"
+                                        anchors.centerIn: parent
+                                    }
                                 }
                             }
-                            Rectangle{
-                                width: 150
-                                height: 150
-                                color: "#1b3a4b" // Dark blue background
+                            ColumnLayout {
+                                spacing: 5
+                                Layout.alignment: Qt.AlignHCenter
+
+                                // Radio Button
                                 RadioButton {
-                                    text: "Deep Learning"
+                                    id: deepLearningRadio
+                                    Layout.alignment: Qt.AlignHCenter
+                                    onClicked: backend.selectModel("Deep Learning")
+                                }
+                                // Green Box with Text
+                                Rectangle {
+                                    width: 150
+                                    height: 80
+                                    color: "#4CAF50"
+                                    radius: 5
+
+                                    Text {
+                                        text: "Deep Learning"
+                                        font.pixelSize: 16
+                                        color: "white"
+                                        anchors.centerIn: parent
+                                    }
                                 }
                             }
                         }
