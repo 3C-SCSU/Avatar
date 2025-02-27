@@ -56,18 +56,15 @@ ApplicationWindow {
                         spacing: 10
 
                         // Control Mode
-                        GroupBox {
+                        RowLayout {
                             Layout.alignment: Qt.AlignHCenter
-                            Layout.fillWidth: true
-                            RowLayout {
-                                spacing: 10
-                                RadioButton {
-                                    text: "Manual Control"
-                                    checked: true
-                                }
-                                RadioButton {
-                                    text: "Autopilot"
-                                }
+                            spacing: 10
+                            RadioButton {
+                                text: "Manual Control"
+                                checked: true
+                            }
+                            RadioButton {
+                                text: "Autopilot"
                             }
                         }
 
@@ -87,8 +84,8 @@ ApplicationWindow {
                             }
 
                             Button {
-                                width: 120
-                                height: 20
+                                width: 130
+                                height: 130
                                 anchors.centerIn: parent
                                 background: Item {} // No background
                                 contentItem: Text {
@@ -96,6 +93,7 @@ ApplicationWindow {
                                     color: "white" // Set text color to white
                                     anchors.centerIn: parent
                                 }
+                                onClicked: backend.readMyMind()
                             }
                         }
 
@@ -113,7 +111,7 @@ ApplicationWindow {
 
                             // Header with white background
                             RowLayout {
-                                spacing: 2
+                                spacing: 1
                                 Rectangle {
                                     color: "white"
                                     width: 145
@@ -139,12 +137,10 @@ ApplicationWindow {
                             }
 
                             ListView {
+                                id: predictionListView
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
-                                model: ListModel {
-                                    ListElement { count: "1"; label: "Response A" }
-                                    ListElement { count: "2"; label: "Response B" }
-                                }
+                                model: ListModel {}
                                 delegate: RowLayout {
                                     spacing: 150
                                     Text { text: model.count; color: "white"; width: 80 }
@@ -164,6 +160,7 @@ ApplicationWindow {
                                 background: Rectangle {
                                     color: "#1b3a4b"
                                 } 
+                                onClicked: backend.notWhatIWasThinking(manualInput.text)
                             }
                             Button {
                                 text: "Execute"
@@ -172,6 +169,7 @@ ApplicationWindow {
                                 background: Rectangle {
                                     color: "#1b3a4b"
                                 } 
+                                onClicked: backend.executeAction()
                             }
                         }
 
@@ -182,9 +180,15 @@ ApplicationWindow {
                             Layout.fillWidth: true
                             Layout.alignment: Qt.AlignHCenter
                             TextField {
-                                placeholderText: "Manual Command (Optional)"
+                                id: manualInput
+                                placeholderText: "Manual Command"
                                 Layout.preferredWidth: 400
                                 Layout.alignment: Qt.AlignHCenter
+                                background: Rectangle{
+                                    color: "white"
+                                    radius: 5
+                                }
+                                
                             }
                             Button {
                                 text: "Keep Drone Alive"
@@ -192,7 +196,8 @@ ApplicationWindow {
                                 height: 40
                                 background: Rectangle {
                                     color: "#1b3a4b"
-                                }                            
+                                }
+                                onClicked: backend.keepDroneAlive()
                             }
                         }
 
@@ -201,18 +206,27 @@ ApplicationWindow {
                             title: "Flight Log"
                             Layout.preferredWidth: 230
                             Layout.preferredHeight: 170
-                            ListView {
-                                Layout.preferredWidth: 230
-                                Layout.preferredHeight: 170
-                                model: ListModel {
-                                    ListElement { log: "Log Entry 1" }
-                                }
-                                delegate: Text {
-                                    text: log
-                                    color: "white"
+                            
+                            // Background Rectangle inside the ListView
+                            Rectangle {
+                                color: "white"  // Set only the box area color to white
+                                anchors.fill: parent
+
+                                ListView {
+                                    id: flightLogView
+                                    anchors.fill: parent  // Fill the Rectangle background with ListView content
+                                    model: ListModel {
+                                        
+                                    }
+                                    delegate: Text {
+                                        text: log
+                                        color: "black"  // Set text color for readability
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                    }
                                 }
                             }
                         }
+
 
                         // Connect Image with Transparent Button
                         Rectangle {
@@ -230,7 +244,7 @@ ApplicationWindow {
 
                             Button {
                                 width: 80
-                                height: 20
+                                height: 80
                                 anchors.centerIn: parent
                                 background: Item {} // No background
                                 contentItem: Text {
@@ -238,6 +252,7 @@ ApplicationWindow {
                                     color: "white" // Set text color to white
                                     anchors.centerIn: parent
                                 }
+                                onClicked: backend.connectDrone()
                             }
                         }
                     }
@@ -256,7 +271,7 @@ ApplicationWindow {
 
                             // Header with white background
                             RowLayout {
-                                spacing: 2
+                                spacing: 1
                                 Rectangle {
                                     color: "white"
                                     width: 230
@@ -308,29 +323,46 @@ ApplicationWindow {
                             }
                         }
 
-                        // Console Log Section
+                    
+
+
+                        // Console Log
                         GroupBox {
                             title: "Console Log"
-                            Layout.preferredWidth: 300
-                            Layout.preferredHeight: 250
-                            Layout.alignment: Qt.AlignRight
+                            Layout.preferredWidth: 230
+                            Layout.preferredHeight: 170
+                            
+                            // Background Rectangle inside the ListView
+                            Rectangle {
+                                color: "white"  // Set only the box area color to white
+                                anchors.fill: parent
 
-                            TextArea {
-                                Layout.fillWidth: true
-                                Layout.fillHeight: true
-                                text: "Console output here..."
+                                ListView {
+                                    id: consolelog
+                                    anchors.fill: parent  // Fill the Rectangle background with ListView content
+                                    model: ListModel {
+                                        
+                                    }
+                                    delegate: Text {
+                                        text: log
+                                        color: "black"  // Set text color for readability
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                    }
+                                }
                             }
                         }
                     }
                 }
-            }
+            }  
+                    
+                                                       
 
             // Transfer Data view
             Rectangle {
                 color: "#4a5b7b"
                 ScrollView {
                     anchors.centerIn: parent
-                    width: Math.min(parent.width * 0.9, 600) // Set a maximum width
+                    width: Math.min(parent.width * 0.9, 600)
                     height: Math.min(parent.height * 0.9, contentHeight)
                     clip: true
 
