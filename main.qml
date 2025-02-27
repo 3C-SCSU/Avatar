@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
+
 ApplicationWindow {
     visible: true
     width: 1200
@@ -49,6 +50,10 @@ ApplicationWindow {
             TabButton {
                 text: "Brainwave Visualization"
                 onClicked: stackLayout.currentIndex = 3
+            }
+            TabButton {
+                text: "File Shuffler"
+                onClicked: stackLayout.currentIndex = 4
             }
 
         }
@@ -511,6 +516,21 @@ ApplicationWindow {
                         }
                     }
                 }
+            }
+            //file-shuffler view
+            Rectangle {
+                color: "#2b3a4a"
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                Button {
+                    text: "Run File Shuffler"
+                    width: 200
+                    height: 100
+                    anchors.centerIn: parent
+                    onClicked: backend.launch_file_shuffler_gui() 
+                }
+
             }
         }
     }
