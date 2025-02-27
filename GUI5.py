@@ -6,6 +6,7 @@ from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtCore import QObject, Signal, Slot, QUrl
 from pdf2image import convert_from_path  # Converts PDFs to images
+import subprocess # Import subprocess module to run the file-shuffler program
 
 
 class BrainwavesBackend(QObject):
@@ -96,6 +97,12 @@ class BrainwavesBackend(QObject):
         print("Final Image Paths Sent to QML:", self.image_paths)
 
         self.imagesReady.emit(self.image_paths)  # Send data to QML
+    
+    @Slot()
+    def launch_file_shuffler_gui(self):
+        # Launch the file shuffler GUI program
+        file_shuffler_path = Path(__file__).resolve().parent / "file-shuffler/file-shuffler-gui.py"
+        subprocess.Popen(["python", str(file_shuffler_path)])
 
 if __name__ == "__main__":
     os.environ["QT_QUICK_CONTROLS_STYLE"] = "Fusion"
