@@ -93,7 +93,7 @@ class BrainwaveReading_Tab(QWidget):
         # Server Response Table
         self.server_table = QTableWidget(1, 2)
         self.server_table.setHorizontalHeaderLabels(['Count', 'Label'])
-        self.server_table.setFixedHeight(200)
+        self.server_table.setFixedHeight(100)
         self.server_table.setFixedWidth(400)
         self.server_table.setStyleSheet("background-color: #1b3a4b; color: white; border: 1px solid white;")
 
