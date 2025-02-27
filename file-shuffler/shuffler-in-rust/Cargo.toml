@@ -1,0 +1,12 @@
+[package]
+name = "shuffler-in-rust"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+walkdir = "2.3"
+rand = "0.8"
+filetime = "0.2"
+terminal_size = "0.1"
+chrono = "0.4"
+clap = { version = "4.0", features = ["derive"] }
