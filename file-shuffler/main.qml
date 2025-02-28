@@ -12,5 +12,12 @@ ApplicationWindow {
 
     Loader {
         source: "./file-shuffler-component/file-shuffler-view.qml"
+        onStatusChanged: {
+            if (status === Loader.error) {
+                console.error("Error loading file-shuffler-view.qml:", source, errorString())
+            } else if (status === Loader.Ready) {
+                console.log("Successfully loaded file-shuffler-view.qml:")
+            }
+        }
     }
 }

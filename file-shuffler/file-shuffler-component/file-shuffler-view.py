@@ -15,9 +15,11 @@ class FileShufflerView(QObject):
 
     @Slot(str, result=str)
     def run_file_shuffler_program(self, path):
+        print(f"Received request to run with path: {path}") # Debugging
         # Need to parse the path as the FolderDialog appends file:// in front of the selection
         path = path.replace("file://", "")
         response = run_file_shuffler.main(path)
+        print(f"Response: {response}") # Debugging
         return response
 
 if __name__ == "__main__":
