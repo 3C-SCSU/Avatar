@@ -6,6 +6,7 @@ import QtQuick.Dialogs
 import "./"
 
 Rectangle {
+    id: fileShufflerView
     width: 640
     height: 480
     color: "#4a5b7b" // Set the background color
