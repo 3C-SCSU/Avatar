@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import QtQuick.Dialogs
 
 
 ApplicationWindow {
@@ -517,18 +518,98 @@ ApplicationWindow {
                     }
                 }
             }
-            //file-shuffler view
+            //File shuffler view 
             Rectangle {
                 color: "#2b3a4a"
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                Button {
-                    text: "Run File Shuffler"
-                    width: 200
-                    height: 100
-                    anchors.centerIn: parent
-                    onClicked: backend.launch_file_shuffler_gui() 
+                property string outputBoxText: ""
+                property string selectedDirectory: ""
+                property bool ranShuffle: false 
+
+                Column {
+                    anchors.fill: parent
+                    spacing: 10
+
+                    Text {
+                        text: "File Shuffler"
+                        color: "white"
+                        font.bold: true
+                        font.pixelSize: 24
+                        horizontalAlignment: Text.AlignHCenter
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: parent.top
+                        anchors.topMargin: 20
+                    }
+
+                    Rectangle {
+                        width: parent.width * 0.6
+                        height: parent.height * 0.6
+                        color: "lightgrey"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        ScrollView {
+                            anchors.fill: parent
+
+                            TextArea {
+                                id: outputBox
+                                text: outputBoxText
+                                color: "black"
+                                readOnly: true
+                            }
+                        }
+                    }
+
+                    Row {
+                        id: buttonRow
+                        spacing: 20
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: parent.verticalCenter
+                        anchors.topMargin: parent.height * 0.3 + 10
+
+                        Button {
+                            id: folderButton
+                            text: "Select your Directory"
+                            onClicked: myFolderDialog.open()
+                        }
+
+                        Button {
+                            id: runButton
+                            text: "Run File Shuffler"
+                            onClicked: {
+                                ranShuffle = true; 
+                                outputBoxText = `Running File Shuffler...\n`;
+                                var output = fileShufflerGui.run_file_shuffler_program(selectedDirectory);
+                                outputBoxText += output;
+                            }
+                        }
+                    }
+
+                    Text {
+                        id: ranText
+                        text: "Shuffle Complete!"
+                        color: "yellow"
+                        font.bold: true
+                        font.pixelSize: 18
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: buttonRow.bottom 
+                        anchors.topMargin: 10 
+                        visible: ranShuffle 
+                    }
+                }
+
+                FolderDialog {
+                    id: myFolderDialog
+                    title: "Select Your Directory"
+                    onAccepted:
+                    {
+                        let cleanedDirectory = String(myFolderDialog.selectedFolder);
+                        cleanedDirectory = cleanedDirectory.replace("file:///", "");
+                        selectedDirectory = cleanedDirectory;
+                        outputBoxText += `Selected directory: ${selectedDirectory}\n`;
+                    }
                 }
 
             }
