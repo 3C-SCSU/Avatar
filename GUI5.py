@@ -7,6 +7,8 @@ from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtCore import QObject, Signal, Slot, QUrl
 from pdf2image import convert_from_path  # Converts PDFs to images
 
+# Add the parent directory to the Python path
+sys.path.append(str(Path(__file__).resolve().parent / "file-shuffler"))
 import run_file_shuffler
 
 
