@@ -7,22 +7,17 @@ from PySide6.QtCore import QObject, Slot
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
 
-import run_file_shuffler
 
 class FileShufflerGui(QObject):
     def __init__(self):
         super().__init__()
-        
-    @Slot(str, result=str)
-    def run_file_shuffler_program(self, path):
-        #Need to parse the path as the FolderDialog appends file:// in front of the selection
-        path = path.replace("file://", "")
-        response = run_file_shuffler.main(path)
-        return response
 
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine()
+
+    engine.addImportPath(str(Path(__file__).resolve().parent)) #so that I can call the file shuffler view class from here
+
 
     bindingContext = FileShufflerGui()
     engine.rootContext().setContextProperty("fileShufflerGui", bindingContext)
