@@ -593,7 +593,9 @@ ApplicationWindow {
                             height: 100
                             // Ensure vertical scrollbar is always on
 
-                            ScrollBar {
+                            
+                        }
+                        ScrollBar {
                                 id: flightLogScrollBar
                                 orientation: Qt.Vertical
                                 anchors.right: parent.right
@@ -601,7 +603,7 @@ ApplicationWindow {
                                 anchors.bottom: parent.bottom
                                 width: 20 // Set width for the scrollbar
                             }
-                        }
+
                     }
                 }
             }
