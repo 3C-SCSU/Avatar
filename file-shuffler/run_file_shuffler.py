@@ -1,8 +1,4 @@
-#Group 8
-#Cha Vue, Kevin Gutierrez, Sagar Neupane
-
 # Determines the user's current operating system and runs run.sh based on which OS they're on
-
 import os
 import platform
 import subprocess
