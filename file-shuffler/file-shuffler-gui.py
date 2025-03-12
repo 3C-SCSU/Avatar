@@ -1,7 +1,3 @@
-#Group 8
-#Cha Vue, Kevin Gutierrez, Sagar Neupane
-
-
 # This Python file uses the following encoding: utf-8
 import sys
 import subprocess
