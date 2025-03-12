@@ -1,7 +1,3 @@
-// Group 8
-//Cha Vue, Kevin Gutierrez, Sagar Neupane
-
-
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
