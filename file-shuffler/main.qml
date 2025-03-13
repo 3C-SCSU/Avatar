@@ -10,91 +10,14 @@ ApplicationWindow {
     color: "#4a5b7b" // Set the background color
     title: "File Shuffler"
 
-    property string outputBoxText: ""
-    property string selectedDirectory: ""
-    property bool ranShuffle: false 
-
-    Column {
-        anchors.fill: parent
-        spacing: 10
-
-        Text {
-            text: "File Shuffler"
-            color: "white"
-            font.bold: true
-            font.pixelSize: 24
-            horizontalAlignment: Text.AlignHCenter
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
-            anchors.topMargin: 20
-        }
-
-        Rectangle {
-            width: parent.width * 0.6
-            height: parent.height * 0.6
-            color: "lightgrey"
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-
-            ScrollView {
-                anchors.fill: parent
-
-                TextArea {
-                    id: outputBox
-                    text: outputBoxText
-                    color: "black"
-                    readOnly: true
-                }
+    Loader {
+        source: "./file-shuffler-component/file-shuffler-view.qml"
+        onStatusChanged: {
+            if (status === Loader.error) {
+                console.error("Error loading file-shuffler-view.qml:", source, errorString())
+            } else if (status === Loader.Ready) {
+                console.log("Successfully loaded file-shuffler-view.qml:")
             }
-        }
-
-        Row {
-            id: buttonRow
-            spacing: 20
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.verticalCenter
-            anchors.topMargin: parent.height * 0.3 + 10
-
-            Button {
-                id: folderButton
-                text: "Select your Directory"
-                onClicked: myFolderDialog.open()
-            }
-
-            Button {
-                id: runButton
-                text: "Run File Shuffler"
-                onClicked: {
-                    ranShuffle = true; 
-                    outputBoxText = `Running File Shuffler...\n`;
-                    var output = fileShufflerGui.run_file_shuffler_program(selectedDirectory);
-                    outputBoxText += output;
-                }
-            }
-        }
-
-        Text {
-            id: ranText
-            text: "Shuffle Complete!"
-            color: "yellow"
-            font.bold: true
-            font.pixelSize: 18
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: buttonRow.bottom 
-            anchors.topMargin: 10 
-            visible: ranShuffle 
-        }
-    }
-
-    FolderDialog {
-        id: myFolderDialog
-        title: "Select Your Directory"
-        onAccepted:
-        {
-            let cleanedDirectory = String(myFolderDialog.selectedFolder);
-            cleanedDirectory = cleanedDirectory.replace("file:///", "");
-            selectedDirectory = cleanedDirectory;
-            outputBoxText += `Selected directory: ${selectedDirectory}\n`;
         }
     }
 }

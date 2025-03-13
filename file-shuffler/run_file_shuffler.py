@@ -1,5 +1,4 @@
 # Determines the user's current operating system and runs run.sh based on which OS they're on
-
 import os
 import platform
 import subprocess
@@ -44,8 +43,19 @@ def remove_quotes(input):
     return input.replace("\"", "")
 
 def main(path):
-    run_sh_location = os.path.join(os.getcwd(), "run.sh")
+    # Get the directory where run_file_shuffler.py is located
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    # Look for run.sh in the same directory as this script
+    run_sh_location = os.path.join(script_dir, "run.sh")
+    
+    # Debug print to verify the path
+    print(f"Looking for run.sh at: {run_sh_location}")
+    
+    if not os.path.exists(run_sh_location):
+        print(f"ERROR: run.sh not found at {run_sh_location}")
+        return f"ERROR: run.sh not found at {run_sh_location}"
 
+    working_dir = os.getcwd()
     if(len(path) > 0):
         universalParameterizedPath = convert_to_universal_path(path)
         universalParameterizedPath = remove_quotes(universalParameterizedPath)
@@ -57,13 +67,14 @@ def main(path):
         print("Finding sh.exe to run the script...")
         sh_exe_path = find_windows_sh_exe_location()
 
-        if(len(sh_exe_path) > 0):
+        if sh_exe_path and len(sh_exe_path) > 0:
             print(f"\nFound sh.exe at {sh_exe_path}, running the file shuffler... \n")
 
             print("File shuffler output:")
             sh_exe_path = convert_to_universal_path(sh_exe_path)
         else:
             print("Failed to find sh.exe path, ensure that sh.exe is installed (check git bash installation)")
+            return "Failed to find sh.exe path, ensure that sh.exe is installed (check git bash installation)"
         
         run_sh_location = convert_to_universal_path(run_sh_location)
 
@@ -76,6 +87,9 @@ def main(path):
             text=True
         )
         
+        # Change back to original working directory
+        os.chdir(working_dir)
+        
         # Combine stdout and stderr and filter only new lines
         output = result.stdout + result.stderr
         new_lines = [line for line in output.split('\n') if line]
@@ -86,30 +100,38 @@ def main(path):
 
     elif current_os == "Linux":
         result = subprocess.run(
-            ["sh", "./run.sh"],
+            ["sh", run_sh_location],  # Use the absolute path
             shell=True,
             capture_output=True,
             text=True
         )
+        # Change back to original working directory
+        os.chdir(working_dir)
         output = result.stdout + result.stderr
         return output
+        
     elif current_os == "Darwin":  # macOS
         result = subprocess.run(
-            ["sh", "./run.sh"],
+            ["sh", run_sh_location],  # Use the absolute path
             shell=True,
             capture_output=True,
             text=True
         )
+        # Change back to original working directory
+        os.chdir(working_dir)
         output = result.stdout + result.stderr
         return output
+        
     else:
         print(f"{current_os} detected - attempting run.sh")
         result = subprocess.run(
-            ["sh", "./run.sh"],
+            ["sh", run_sh_location],  # Use the absolute path
             shell=True,
             capture_output=True,
             text=True
         )
+        # Change back to original working directory
+        os.chdir(working_dir)
         output = result.stdout + result.stderr
         return output
 
