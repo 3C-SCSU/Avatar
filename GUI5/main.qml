@@ -17,9 +17,6 @@ ApplicationWindow {
             id: tabBar
             Layout.fillWidth: true
             height: 40
-            background: Rectangle {
-                color: "#2C3E50"  //Dark
-            }
 
             TabButton {
                 text: "Brainwave Reading"
@@ -46,7 +43,6 @@ ApplicationWindow {
                 color: "#3b4b57" // Background color
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                
 
                 RowLayout {
                     Layout.fillWidth: true
@@ -78,7 +74,6 @@ ApplicationWindow {
                             height: 150
                             color: "#1b3a4b" // Dark blue background
                             Layout.alignment: Qt.AlignHCenter
-          
 
                             Image {
                                 source: "images/brain.png"
@@ -110,8 +105,8 @@ ApplicationWindow {
                         }
 
                         GroupBox {
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
+                            Layout.preferredWidth: 300
+                            Layout.preferredHeight: 80
                             Layout.alignment: Qt.AlignHCenter
 
                             // Header with white background
@@ -447,269 +442,40 @@ ApplicationWindow {
                 }
             }
 
-
-            // Manual Drone Control view - completely revised to match the image
+            // Manual Drone Control view
             Rectangle {
-                id: droneControlView
-                color: "#2C3E50" // Dark blue background matching the image
+                color: "lightgrey"
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-
-                GridLayout {
-                    anchors.fill: parent
-                    rows: 5
-                    columns: 5
-                    rowSpacing: 5
-                    columnSpacing: 5
-
-                    // Row 1: Home, Up, Flight Log
-                    DroneButton {
-                        Layout.row: 0
-                        Layout.column: 0
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        buttonText: "Home"
-                        imagePath: "images/home.png"
-                        onClicked: droneController.getDroneAction("home")
-                    }
-
-                    DroneButton {
-                        Layout.row: 0
-                        Layout.column: 1
-                        Layout.columnSpan: 3
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        buttonText: "Up"
-                        imagePath: "images/up.png"
-                        onClicked: droneController.getDroneAction("up")
-                    }
-
-                    // Flight Log box
-                    Rectangle {
-                        Layout.row: 0
-                        Layout.column: 4
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        color: "#2C3E50"
-                        border.color: "#1B2631"
-                        
-                        ColumnLayout {
-                            anchors.fill: parent
-                            anchors.margins: 5
-                            spacing: 5
-                            
-                            Text {
-                                text: "Flight Log"
-                                font.pixelSize: 16
-                                color: "white"
-                            }
-                            
-                            Rectangle {
-                                Layout.fillWidth: true
-                                Layout.fillHeight: true
-                                color: "white"
-                                border.color: "#1B2631"
-                                
-                                TextArea {
-                                    id: flightLogSpace
-                                    width: 400 // Adjust to account for scrollbar width
-                                    height: 100
-                                    // Ensure vertical scrollbar is always on
-
-                            
-                                }
-                                ScrollBar {
-                                    id: flightLogScrollBar
-                                    orientation: Qt.Vertical
-                                    anchors.right: parent.right
-                                    anchors.top: parent.top
-                                    anchors.bottom: parent.bottom
-                                    width: 20 // Set width for the scrollbar
-                                }
-                            }
-                        }
-                    }
-
-                    // Row 2: Forward button (full width)
-                    DroneButton {
-                        Layout.row: 1
-                        Layout.column: 0
-                        Layout.columnSpan: 5
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        buttonText: "Forward"
-                        imagePath: "images/forward.png"
-                        onClicked: droneController.getDroneAction("forward")
-                    }
-
-                    // Row 3: Turn Left, Left, Stream, Right, Turn Right
-                    DroneButton {
-                        Layout.row: 2
-                        Layout.column: 0
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        Layout.preferredWidth: 60
-                        buttonText: "Turn Left"
-                        imagePath: "images/turnLeft.png"
-                        onClicked: droneController.getDroneAction("turn_left")
-                    }
-
-                    DroneButton {
-                        Layout.row: 2
-                        Layout.column: 1
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        Layout.preferredWidth: 60
-                        buttonText: "Left"
-                        imagePath: "images/left.png"
-                        onClicked: droneController.getDroneAction("left")
-                    }
-
-                    DroneButton {
-                        Layout.row: 2
-                        Layout.column: 2
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        Layout.preferredWidth: 60
-                        buttonText: "Stream"
-                        imagePath: "images/drone.png"
-                        onClicked: droneController.getDroneAction("stream")
-                    }
-
-                    DroneButton {
-                        Layout.row: 2
-                        Layout.column: 3
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        Layout.preferredWidth: 60
-                        buttonText: "Right"
-                        imagePath: "images/right.png"
-                        onClicked: droneController.getDroneAction("right")
-                    }
-
-                    DroneButton {
-                        Layout.row: 2
-                        Layout.column: 4
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        Layout.preferredWidth: 60
-                        buttonText: "Turn Right"
-                        imagePath: "images/turnRight.png"
-                        onClicked: droneController.getDroneAction("turn_right")
-                    }
-
-                    // Row 4: Back button (full width)
-                    DroneButton {
-                        Layout.row: 3
-                        Layout.column: 0
-                        Layout.columnSpan: 5
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        buttonText: "Back"
-                        imagePath: "images/back.png"
-                        onClicked: droneController.getDroneAction("backward")
-                    }
-
-                    // Row 5: Connect, Down, Empty, Takeoff, Land
-                    DroneButton {
-                        Layout.row: 4
-                        Layout.column: 0
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        buttonText: "Connect"
-                        imagePath: "images/connect.png"
-                        onClicked: droneController.getDroneAction("connect")
-                    }
-
-                    DroneButton {
-                        Layout.row: 4
-                        Layout.column: 1
-                        Layout.columnSpan: 3
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                       
-                        buttonText: "Down"
-                        imagePath: "images/down.png"
-                        onClicked: droneController.getDroneAction("down")
-                    }
-
-                    // Container for Takeoff and Land buttons
-                    RowLayout {
-                        Layout.row: 4
-                        Layout.column: 4
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        spacing: 5
-
-                        DroneButton {
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                            Layout.row:4
-                            Layout.column:2
-                            Layout.preferredWidth:30
-                    
-                            buttonText: "Takeoff"
-                            imagePath: "images/takeoff.png"
-                            onClicked: droneController.getDroneAction("takeoff")
-                        }
-
-                        DroneButton {
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                            Layout.row:4
-                            Layout.column:3
-                            Layout.preferredWidth: 30
-                        
-                            buttonText: "Land"
-                            imagePath: "images/land.png"
-                            onClicked: droneController.getDroneAction("land")
-                        }
-                    }
+                Text {
+                    anchors.centerIn: parent
+                    text: "Manual Drone Control View"
                 }
             }
-        }
-    }
 
-    // Reusable component for drone control buttons
-    component DroneButton: Button {
-        property string buttonText: ""
-        property string imagePath: ""
-        
-        background: Rectangle {
-            color: parent.hovered ? "white" : "#242c4d"
-            border.color: "#1B2631"
-        }
-        
-        contentItem: Item {
-            Image {
-                source: imagePath
-                width: Math.min(parent.width, parent.height) * 0.6
-                height: width
-                anchors.centerIn: parent
-                fillMode: Image.PreserveAspectFit
+            Connections {
+                target: backend
+                function onPredictionsTableUpdated(predictions)
+                {
+                    predictionListView.model.clear()
+                    for (let i = 0; i<predictions.length; i++) {
+                        predictionListView.model.append({
+                        count: predictions[i].count,
+                        label: predictions[i].label
+                    })
+                }
             }
-            
-            Text {
-                text: buttonText
-                color: parent.parent.hovered ? "black" : "white"
-                font.pixelSize: 14
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 5
-                anchors.horizontalCenter: parent.horizontalCenter
+
+            function onFlightLogUpdated(flightLogs)
+            {
+                flightLogView.model.clear()
+                for (let i = 0; i<flightLogs.length; i++) {
+                    flightLogView.model.append({
+                    log: flightLogs[i]
+                })
             }
         }
-        
-        hoverEnabled: true
     }
-    
-    // DroneController object to handle actions
-    QtObject {
-        id: droneController
-        
-        function getDroneAction(action) {
-            console.log(action + " triggered")
-            // Add to flight log
-            flightLogArea.append(action + " command sent")
-        }
-    }
+}
+}
 }
