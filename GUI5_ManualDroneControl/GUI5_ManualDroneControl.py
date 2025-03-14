@@ -76,7 +76,7 @@ if __name__ == '__main__':
     context.setContextProperty("droneController", drone_controller)
 
     # Load QML file
-    engine.load('GUI5_ManualDroneControl.qml')
+    engine.load('GUI5_ManualDroneControl/GUI5_ManualDroneControl.qml')
 
     if not engine.rootObjects():
         sys.exit(-1)

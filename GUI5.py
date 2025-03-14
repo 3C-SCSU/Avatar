@@ -5,7 +5,7 @@ from pathlib import Path
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtCore import QObject, Signal, Slot, QUrl
-from pdf2image import convert_from_path  # Converts PDFs to images
+from pdf2image import convert_from_path  
 
 # Add the parent directory to the Python path
 sys.path.append(str(Path(__file__).resolve().parent / "file-shuffler"))
@@ -27,17 +27,45 @@ class BrainwavesBackend(QObject):
         self.image_paths = []  # Store converted image paths
         self.plots_dir = os.path.abspath("plotscode/plots") # Change the path if needed
 
+    @Slot(str)
+    def selectModel(self, model_name):
+        """ Select the machine learning model """
+        print(f"Model selected: {model_name}")
+        self.current_model = model_name
+        self.flight_log.insert(0, f"Selected Model: {model_name}")
+        self.flightLogUpdated.emit(self.flight_log)
+
     @Slot()
     def readMyMind(self):
-        # Mock function to simulate brainwave reading
-        self.current_prediction_label = "Move Forward"
-        # Update the predictions log
+        """ Runs the selected model and processes the brainwave data. """
+        if self.current_model == "Random Forest":
+            prediction = self.run_random_forest()
+        else:
+            prediction = self.run_deep_learning()
+
+        # Log the prediction
         self.predictions_log.append({
-            "count": "1",
-            "server": "Prediction Server",
-            "label": self.current_prediction_label
+            "count": str(len(self.predictions_log) + 1),
+            "server": "Brainwave AI",
+            "label": prediction
         })
         self.predictionsTableUpdated.emit(self.predictions_log)
+
+        # Update Flight Log
+        self.flight_log.insert(0, f"Executed: {prediction} (Model: {self.current_model})")
+        self.flightLogUpdated.emit(self.flight_log)
+
+    def run_random_forest(self):
+        """ Simulated Random Forest model processing """
+        print("Running Random Forest Model...")
+        time.sleep(1)  # Simulate processing delay
+        return random.choice(["Move Forward", "Turn Left", "Turn Right", "Land"])
+
+    def run_deep_learning(self):
+        """ Simulated Deep Learning model processing """
+        print("Running Deep Learning Model...")
+        time.sleep(2)  # Simulate slightly longer DL processing time
+        return random.choice(["Move Forward", "Turn Left", "Turn Right", "Land", "Hover"])
 
     @Slot(str)
     def notWhatIWasThinking(self, manual_action):
@@ -61,7 +89,7 @@ class BrainwavesBackend(QObject):
         # Mock function to simulate drone connection
         self.flight_log.insert(0, "Drone connected.")
         self.flightLogUpdated.emit(self.flight_log)
-
+        
     @Slot()
     def keepDroneAlive(self):
         # Mock function to simulate sending keep-alive signal

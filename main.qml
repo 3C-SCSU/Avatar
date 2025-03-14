@@ -241,30 +241,87 @@ ApplicationWindow {
                         }
 
                         // Connect Image with Transparent Button
-                        Rectangle {
-                            width: 150
-                            height: 150
-                            color: "#1b3a4b" // Dark blue background
+                        RowLayout {
+                            Layout.alignment: Qt.AlignHCenter
+                            spacing: 20
+                            Rectangle {
+                                width: 150
+                                height: 150
+                                color: "#1b3a4b" // Dark blue background
 
-                            Image {
-                                source: "brainwave-prediction-app/images/connect.png"
-                                width: 80
-                                height: 80
-                                anchors.centerIn: parent
-                                fillMode: Image.PreserveAspectFit
-                            }
-
-                            Button {
-                                width: 80
-                                height: 80
-                                anchors.centerIn: parent
-                                background: Item {} // No background
-                                contentItem: Text {
-                                    text: "Connect"
-                                    color: "white" // Set text color to white
+                                Image {
+                                    source: "brainwave-prediction-app/images/connect.png"
+                                    width: 80
+                                    height: 80
                                     anchors.centerIn: parent
+                                    fillMode: Image.PreserveAspectFit
                                 }
-                                onClicked: backend.connectDrone()
+
+                                Button {
+                                    width: 80
+                                    height: 80
+                                    anchors.centerIn: parent
+                                    background: Item {} // No background
+                                    contentItem: Text {
+                                        text: "Connect"
+                                        color: "white" // Set text color to white
+                                        anchors.centerIn: parent
+                                    }
+                                    onClicked: backend.connectDrone()
+                                }
+                            }
+                            ColumnLayout {
+                                spacing: 5
+                                Layout.alignment: Qt.AlignHCenter
+
+                                // Radio Button
+                                RadioButton {
+                                    id: randomForestRadio
+                                    Layout.alignment: Qt.AlignHCenter
+                                    checked: true
+                                    onClicked: backend.selectModel("Random Forest")
+                                }
+
+                                // Green Box with Text
+                                Rectangle {
+                                    width: 150
+                                    height: 80
+                                    color: "#4CAF50"
+                                    radius: 5
+
+                                    Text {
+                                        text: "Random Forest"
+                                        font.bold: true
+                                        font.pixelSize: 16
+                                        color: "white"
+                                        anchors.centerIn: parent
+                                    }
+                                }
+                            }
+                            ColumnLayout {
+                                spacing: 5
+                                Layout.alignment: Qt.AlignHCenter
+
+                                // Radio Button
+                                RadioButton {
+                                    id: deepLearningRadio
+                                    Layout.alignment: Qt.AlignHCenter
+                                    onClicked: backend.selectModel("Deep Learning")
+                                }
+                                // Green Box with Text
+                                Rectangle {
+                                    width: 150
+                                    height: 80
+                                    color: "#4CAF50"
+                                    radius: 5
+
+                                    Text {
+                                        text: "Deep Learning"
+                                        font.pixelSize: 16
+                                        color: "white"
+                                        anchors.centerIn: parent
+                                    }
+                                }
                             }
                         }
                     }
