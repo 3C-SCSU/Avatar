@@ -6,6 +6,7 @@ from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtCore import QObject, Signal, Slot, QUrl
 from pdf2image import convert_from_path  
+from djitellopy import Tello
 
 # Add the parent directory to the Python path
 sys.path.append(str(Path(__file__).resolve().parent / "file-shuffler"))
@@ -26,6 +27,7 @@ class BrainwavesBackend(QObject):
         self.current_prediction_label = ""
         self.image_paths = []  # Store converted image paths
         self.plots_dir = os.path.abspath("plotscode/plots") # Change the path if needed
+        self.tello = Tello()
 
     @Slot(str)
     def selectModel(self, model_name):
@@ -96,6 +98,56 @@ class BrainwavesBackend(QObject):
         self.flight_log.insert(0, "Keep alive signal sent.")
         self.flightLogUpdated.emit(self.flight_log)
 
+    @Slot(str)
+    def getDroneAction(self, action):
+        try:
+            if action == 'connect':
+                self.tello.connect()
+                self.logMessage.emit("Connected to Tello Drone")
+            elif action == 'up':
+                self.tello.move_up(30)
+                self.logMessage.emit("Moving up")
+            elif action == 'down':
+                self.tello.move_down(30)
+                self.logMessage.emit("Moving down")
+            elif action == 'forward':
+                self.tello.move_forward(30)
+                self.logMessage.emit("Moving forward")
+            elif action == 'backward':
+                self.tello.move_back(30)
+                self.logMessage.emit("Moving backward")
+            elif action == 'left':
+                self.tello.move_left(30)
+                self.logMessage.emit("Moving left")
+            elif action == 'right':
+                self.tello.move_right(30)
+                self.logMessage.emit("Moving right")
+            elif action == 'turn_left':
+                self.tello.rotate_counter_clockwise(45)
+                self.logMessage.emit("Rotating left")
+            elif action == 'turn_right':
+                self.tello.rotate_clockwise(45)
+                self.logMessage.emit("Rotating right")
+            elif action == 'takeoff':
+                self.tello.takeoff()
+                self.logMessage.emit("Taking off")
+            elif action == 'land':
+                self.tello.land()
+                self.logMessage.emit("Landing")
+            elif action == 'go_home':
+                self.go_home()
+            else:
+                self.logMessage.emit("Unknown action")
+        except Exception as e:
+            self.logMessage.emit(f"Error during {action}: {e}")
+
+    # Method for returning to home (an approximation)
+    def go_home(self):
+        # Assuming the home action means moving backward and upwards
+        self.tello.move_back(50)  # Move back to home point (adjust distance as needed)
+        self.tello.move_up(50)    # Move up to avoid obstacles
+        self.logMessage.emit("Returning to home")
+    
     @Slot()
     def convert_pdfs_to_images(self):
         # Convert PDF files to images and send image paths + graph names to QML.
