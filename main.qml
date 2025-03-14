@@ -509,7 +509,7 @@ ApplicationWindow {
 
                     // Home Button
                     Button {
-                        Layout.preferredWidth: 100 // Set larger width for Home button
+                        Layout.preferredWidth: 150 // Set larger width for Home button
                         Layout.preferredHeight: 150 // Set height for Home button
 
                         // Define the custom background
