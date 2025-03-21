@@ -1,18 +1,13 @@
-### Author
-
-Thomas Herold
-
-
 ### Overview
 
-This Python program is designed to organize CSV files from various subdirectories into a central directory structure based on specific categories like "takeoff", "backward", "right", etc. The program processes directories containing BCI data, identifies files, moves them to appropriate folders, and deletes unnecessary .txt files.
+This Python program, `unifyCSV.py` is designed to organize CSV files from various subdirectories into a central directory structure based on specific categories, such as `backward`, `forward`, `landing`, `left`, `right`, and `takeoff`. The program processes directories containing BCI data, identifies files, moves them to appropriate folders, and deletes unnecessary `.txt` files.
 
 
 ### Features
 
 - Organizes CSV Files: Files are moved to corresponding directories like takeoff, backward, right, etc.
-- Removes Duplicate Files: Duplicate .csv files are identified and deleted.
-- Deletes .txt Files: All .txt files in the source directories are deleted.
+- Removes Duplicate Files: Duplicate `.csv` files are identified and deleted.
+- Deletes TXT Files: All `.txt` files in the source directories are deleted.
 - Cleans Up Empty Directories: Once the files are moved, empty subdirectories and group directories are removed.
 
 
@@ -39,7 +34,7 @@ data/
         OpenBCI-RAW-2025-03-12_14-46-24.txt
 ```
 
-It is important to note that the "group" subdirectories are not name specific, meaning that they can have any given name. This also goes for the "individual" and "Test" subdirectories. The subdirectories located in "individual" and "Test" directories have various names, so the program has to account for this. With the way that the program is currently written (3/21/2025), subdirectory names must follow this naming scheme:
+It is important to note that the "group" subdirectories are not name specific, meaning that they can have any given name. This also goes for the "individual" and "Test" subdirectories. The subdirectories located in "individual" and "Test" directories have various names, so the program must account for this. With the way that the program is currently written (3/21/2025), subdirectory names must follow this naming scheme:
 
 - `backward` or `backwards`
 - `forward`
@@ -48,4 +43,9 @@ It is important to note that the "group" subdirectories are not name specific, m
 - `right`
 - `takeoff` or `take_off`
 
-This naming is not case sensitive (Ex. `TAKE_OFF` would be allowed.), and the location of the word in the string does not matter (Ex. `OpenBCISession_backward_5/` is allowed.).
+This naming is not case sensitive (Ex. `TAKE_OFF` is allowed.), and the location of the word in the string does not matter (Ex. `OpenBCISession_takeoff_5/` is allowed.).
+
+
+#### Author
+
+Thomas Herold
