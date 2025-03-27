@@ -291,7 +291,7 @@ ApplicationWindow {
 
                                     Text {
                                         text: "Random Forest"
-                                        font.bold: true
+                                        font.bold: isRandomForestSelected
                                         font.pixelSize: 16
                                         color: "white"
                                         anchors.centerIn: parent
@@ -328,6 +328,7 @@ ApplicationWindow {
                                         font.pixelSize: 16
                                         color: "white"
                                         anchors.centerIn: parent
+                                        font.bold: !isRandomForestSelected
                                     }
                                 }
 
