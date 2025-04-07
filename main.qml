@@ -1240,7 +1240,7 @@ ApplicationWindow {
             // Brainwave Visualization
 
             Rectangle {
-                color: "#2b3a4a"
+                color: "#f0f0f5"
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
@@ -1248,57 +1248,154 @@ ApplicationWindow {
                     anchors.fill: parent
                     spacing: 10
 
-                    Text {
-                        text: "Brainwave Visualization"
-                        font.bold: true
-                        font.pixelSize: 20
-                        color: "white"
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
                     // Grid Layout for 6 Graphs (2 Rows x 3 Columns)
                     GridLayout {
-                        columns: 3
                         Layout.fillWidth: true
                         Layout.fillHeight: true
+                        columns: 3
+                        Layout.margins: 10
                         columnSpacing: 10
                         rowSpacing: 10
 
                         Repeater {
                             model: imageModel  
                             delegate: Rectangle {
-                                color: "black"
+                                color: "#e6e6f0"
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
-                                border.color: "#3b4b57"
+                                border.color: "#d0d0d8"
+                                border.width: 1
+                                radius: 4
 
-                                ColumnLayout {
+                                Column {
                                     width: parent.width
                                     height: parent.height
-                                    spacing: 5
+                                    spacing: 0
 
-                                    // Graph Title
-                                    Text {
-                                        text: model.graphTitle
-                                        color: "white"
-                                        font.bold: true
-                                        Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
-                                        Layout.topMargin: 10
+                                    Rectangle {
+                                        width: parent.width
+                                        height: 30
+                                        color: "#5d6d9a"
+
+                                        Text {
+                                            // Extract just the first word from the title
+                                            text: {
+                                                var parts = model.graphTitle.split(" ");
+                                                return parts[0]; // Just return "Takeoff", "Forward", etc.
+                                            }
+                                            color: "white"
+                                            font.bold: true
+                                            font.pixelSize: 14
+                                            
+                                            // Center text using calculations rather than anchors
+                                            x: (parent.width - width) / 2
+                                            y: (parent.height - height) / 2
+                                        }
                                     }
+                                    Rectangle {
+                                        width: parent.width
+                                        height: parent.height - 30  // Total height minus header height
+                                        color: "white"
 
-                                    // Display Image
-                                    Image {
-                                        source: model.imagePath
-                                        Layout.preferredWidth: parent.width * 0.9
-                                        Layout.preferredHeight: parent.height * 0.8
-                                        Layout.alignment: Qt.AlignHCenter
-                                        fillMode: Image.PreserveAspectFit
+                                        // Display Image
+                                        Image {
+                                            x: 8  // Margin
+                                            y: 8  // Margin
+                                            width: parent.width - 16  // Margin on both sides
+                                            height: parent.height - 16  // Margin on both sides
+                                            source: model.imagePath
+                                            fillMode: Image.PreserveAspectFit
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                }
+                    
+                    // Refresh and Rollback buttons after graphs
+                    RowLayout {
+                        Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
+                        Layout.bottomMargin: 20
+                        spacing: 15
+                        
+                        // Refresh Button
+                        Button {
+                            text: "Refresh"
+                            implicitWidth: 120
+                            implicitHeight: 40
+                            
+                            // This property allows us to track the hover state
+                            property bool isHovering: false
+                            
+                            // Define the hover handler
+                            HoverHandler {
+                                onHoveredChanged: parent.isHovering = hovered
+                            }
+                            
+                            background: Rectangle {
+                                // Use the isHovering property to change color
+                                color: parent.isHovering ? "#3e4e7a" : "#2e3a5c"
+                                radius: 4
+                                
+                                // Add a smooth color transition
+                                Behavior on color {
+                                    ColorAnimation { duration: 150 }
+                                }
+                            }
+                            
+                            contentItem: Text {
+                                text: parent.text
+                                font.pixelSize: 14
+                                color: "white"
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            
+                            onClicked: {
+                                backend.setDataset("refresh")
+                            }
+                        }
+                        
+                        // Rollback Button
+                        Button {
+                            text: "Rollback"
+                            implicitWidth: 120
+                            implicitHeight: 40
+                            
+                            // This property allows us to track the hover state
+                            property bool isHovering: false
+                            
+                            // Define the hover handler
+                            HoverHandler {
+                                onHoveredChanged: parent.isHovering = hovered
+                            }
+                            
+                            background: Rectangle {
+                                // Use the isHovering property to change color
+                                color: parent.isHovering ? "#3e4e7a" : "#2e3a5c"
+                                radius: 4
+                                
+                                // Add a smooth color transition
+                                Behavior on color {
+                                    ColorAnimation { duration: 150 }
+                                }
+                            }
+                            
+                            contentItem: Text {
+                                text: parent.text
+                                font.pixelSize: 14
+                                color: "white"
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            
+                            onClicked: {
+                                // Display rollback plots
+                                backend.setDataset("rollback")
+                            }
+                        }
+                    }
+                }    
             }
             //File shuffler view 
             Rectangle {
