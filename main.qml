@@ -57,6 +57,14 @@ ApplicationWindow {
                 text: "File Shuffler"
                 onClicked: stackLayout.currentIndex = 4
             }
+            TabButton {
+                text: "Manual NAO6 Controller"
+                onClicked: {
+                    stackLayout.currentIndex = 5
+                    console.log("Manual Controller tab clicked")
+                    tabController.startNaoViewer()
+                }
+            }
 
         }
 
@@ -1393,6 +1401,31 @@ ApplicationWindow {
                         cleanedDirectory = cleanedDirectory.replace("file:///", "");
                         fileShufflerView.selectedDirectory = cleanedDirectory;
                         fileShufflerView.outputBoxText += "Selected directory: " + fileShufflerView.selectedDirectory + "\n";
+                    }
+                }
+            }
+            // Manual Controller Tab (Nao Viewer)
+            Rectangle {
+                color: "#2f4050"
+
+                Column {
+                    anchors.centerIn: parent
+                    spacing: 20
+
+                    Text {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: "Nao Viewer Running"
+                        color: "white"
+                        font.pixelSize: 18
+                    }
+
+                    Button {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: "Stop Nao Viewer"
+                        onClicked: {
+                            console.log("Stop button clicked")
+                            tabController.stopNaoViewer()
+                        }
                     }
                 }
             }
