@@ -469,6 +469,9 @@ class NaoViewerWidget(QWidget):
         # Calculate new position - CORRECTED: Using positive direction for forward
         self.model_position += QVector3D(direction_x * self.move_step, 0, direction_z * self.move_step)
 
+        animation_folder = f"Nao/nao6_forward_animation/face_forward/"
+        self._play_obj_animation(animation_folder)
+
         # Update the model's transform
         self.update_model_transform()
         print(f"Moving forward along direction vector: ({direction_x:.2f}, 0, {direction_z:.2f})")
@@ -482,6 +485,9 @@ class NaoViewerWidget(QWidget):
 
         # Calculate new position - CORRECTED: Using negative direction for backward
         self.model_position -= QVector3D(direction_x * self.move_step, 0, direction_z * self.move_step)
+
+        animation_folder = f"Nao/nao6_forward_animation/face_forward/"
+        self._play_obj_animation(animation_folder)
 
         # Update the model's transform
         self.update_model_transform()
@@ -522,6 +528,10 @@ class NaoViewerWidget(QWidget):
 
             # Increment vertical state
             self.vertical_state += 1
+
+            # Start OBJ animation sequence for turning right
+            animation_folder = f"Nao/nao6_take_off_animation/face_forward/"
+            self._play_obj_animation(animation_folder)
 
             # Update the model's transform
             self.update_model_transform()
