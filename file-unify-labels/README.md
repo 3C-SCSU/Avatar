@@ -1,6 +1,7 @@
 ### Overview
 
 This Python program, `unifyTXT.py` is designed to organize CSV files from various subdirectories into a central directory structure based on specific categories, such as `backward`, `forward`, `landing`, `left`, `right`, and `takeoff`. The program processes directories containing BCI data, identifies files, moves them to appropriate folders, and deletes unnecessary `.csv` files.
+
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/J5JI_SrRVtA/0.jpg)](https://www.youtube.com/watch?v=J5JI_SrRVtA)
 
 ### Features
