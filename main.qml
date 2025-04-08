@@ -340,6 +340,28 @@ ApplicationWindow {
                                     }
                                 }
                             }
+                            // Adding Synthetic Data and Live Data Radio Button (Row 344 to 364) as part of Ticket 186
+                            Column {
+                                spacing: 10
+
+                                RadioButton {
+                                    id: syntheticRadio
+                                    text: "Synthetic Data"
+                                    checked: false
+                                    onClicked: {
+                                        backend.setDataMode("synthetic")
+                                    }
+                                }
+
+                                RadioButton {
+                                    id: liveRadio
+                                    text: "Live Data"
+                                    checked: true
+                                    onClicked: {
+                                        backend.setDataMode("live")
+                                    }
+                                }
+                            }
                         }
                     }
 
