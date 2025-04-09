@@ -5,22 +5,22 @@ def manual_drone_control_window(items, get_drone_action, window1):
     #Define the layout for the Manual Drone Control Page
 
     #Column layouts for centering"Done.")
-    top_center = [[sg.Button('Up', size=(8,2), image_filename="./images/up.png")]]
+    top_center = [[sg.Button('Up', size=(8,2), image_filename="./GUI_Pics/up.png")]]
     top_right = [[sg.Text('Flight Log')], [sg.Listbox(values=[], size=(30, 6), key='LOG')]]
-    bottom_center = [[sg.Button('Down', size=(8,2), image_filename="./images/down.png")]]
+    bottom_center = [[sg.Button('Down', size=(8,2), image_filename="./GUI_Pics/down.png")]]
 
     manual_drone_control_layout = [ 
-                [sg.Button('Home', size=(8,2), image_filename="./images/home.png"), sg.Push(), sg.Column(top_center, pad=((55,0),(0,0))), sg.Push(), sg.Column(top_right), ],       
-                [sg.Push(),sg.Push(),sg.Button('Forward', size=(8,2), image_filename="./images/forward.png"), sg.Push(), sg.Push(),], 
+                [sg.Button('Home', size=(8,2), image_filename="./GUI_Pics/home.png"), sg.Push(), sg.Column(top_center, pad=((55,0),(0,0))), sg.Push(), sg.Column(top_right), ],       
+                [sg.Push(),sg.Push(),sg.Button('Forward', size=(8,2), image_filename="./GUI_Pics/Forward.png"), sg.Push(), sg.Push(),], 
 
-                [sg.Button('Turn Left', size=(8,2), image_filename="./images/turnLeft.png"),  
-                sg.Button('Left', size=(8,2), image_filename="./images/left.png"),
-                sg.Button(image_filename="./images/drone.png"),
-                sg.Button('Right', size=(8,2), image_filename="./images/right.png"),
-                sg.Button('Turn Right', size=(8,2), image_filename="./images/turnRight.png")],
+                [sg.Button('Turn Left', size=(8,2), image_filename="./GUI_Pics/turnLeft.png"),  
+                sg.Button('Left', size=(8,2), image_filename="./GUI_Pics/left.png"),
+                sg.Button(image_filename="./GUI_Pics/drone.png"),
+                sg.Button('Right', size=(8,2), image_filename="./GUI_Pics/right.png"),
+                sg.Button('Turn Right', size=(8,2), image_filename="./GUI_Pics/turnRight.png")],
 
-                [sg.Button('Back', size=(8,2), image_filename="./images/back.png")],
-                [sg.Button('Connect', size=(8,2), image_filename="./images/connect.png"), sg.Push(),sg.Push(), sg.Column(bottom_center, pad=((55,0),(0,0))), sg.Push(), sg.Button('Takeoff', size=(8,2), image_filename="./images/takeoff.png"), sg.Button('Land', size=(8,2), image_filename="./images/land.png")]]
+                [sg.Button('Back', size=(8,2), image_filename="./GUI_Pics/back.png")],
+                [sg.Button('Connect', size=(8,2), image_filename="./GUI_Pics/connect.png"), sg.Push(),sg.Push(), sg.Column(bottom_center, pad=((55,0),(0,0))), sg.Push(), sg.Button('Takeoff', size=(8,2), image_filename="./GUI_Pics/takeoff.png"), sg.Button('Land', size=(8,2), image_filename="./GUI_Pics/land.png")]]
     
     manual_drone_control_window = sg.Window('Manual Drone Control', manual_drone_control_layout, size=(1200, 800), element_justification='c')
 
