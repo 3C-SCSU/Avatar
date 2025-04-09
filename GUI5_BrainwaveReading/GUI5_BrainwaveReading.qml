@@ -76,7 +76,7 @@ ApplicationWindow {
                             Layout.alignment: Qt.AlignHCenter
 
                             Image {
-                                source: "images/brain.png"
+                                source: "GUI_Pics/brain.png"
                                 width: 130
                                 height: 130
                                 anchors.centerIn: parent
@@ -235,7 +235,7 @@ ApplicationWindow {
                             color: "#1b3a4b" // Dark blue background
 
                             Image {
-                                source: "images/connect.png"
+                                source: "GUI_Pics/connect.png"
                                 width: 80
                                 height: 80
                                 anchors.centerIn: parent
