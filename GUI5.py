@@ -10,6 +10,8 @@ from pdf2image import convert_from_path
 from djitellopy import Tello
 import random
 import time
+from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
+
 
 # Add the parent directory to the Python path
 sys.path.append(str(Path(__file__).resolve().parent / "file-shuffler"))
@@ -321,6 +323,36 @@ class BrainwavesBackend(QObject):
         path = path.replace("file://", "")
         response = run_file_shuffler.main(path)
         return response
+
+    # Adding Synthetic Data and Live Data Logic (Row 327 to 355) as part of Ticket 186
+
+    @Slot(str)
+    def setDataMode(self, mode):
+        """
+        Set data mode to either synthetic or live based on radio button selection.
+        """
+        if mode == "synthetic":
+            self.init_synthetic_board()
+            print("Switched to Synthetic Data Mode")
+        elif mode == "live":
+            self.init_live_board()
+            print("Switched to Live Data Mode")
+        else:
+            print(f"Unknown data mode: {mode}")
+
+
+    def init_synthetic_board(self):
+        """ Initialize BrainFlow with synthetic board for testing """
+        params = BrainFlowInputParams()
+        self.board = BoardShim(BoardIds.SYNTHETIC_BOARD.value, params)
+        print("\nSynthetic board initialized.")
+
+    def init_live_board(self):
+        """ Initialize BrainFlow with a real headset """
+        params = BrainFlowInputParams()
+        params.serial_port = "/dev/cu.usbserial-D200PMA1"  # Update if different on your system
+        self.board = BoardShim(BoardIds.CYTON_DAISY_BOARD.value, params)
+        print("\nLive headset board initialized.")
 
 if __name__ == "__main__":
     os.environ["QT_QUICK_CONTROLS_STYLE"] = "Fusion"

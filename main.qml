@@ -5,6 +5,7 @@ import QtQuick.Dialogs
 
 
 ApplicationWindow {
+    property bool isRandomForestSelected: false
     visible: true
     width: 1200
     height: 800 
@@ -276,13 +277,12 @@ ApplicationWindow {
                             ColumnLayout {
                                 spacing: 5
                                 Layout.alignment: Qt.AlignHCenter
-
+                                
                                 // Radio Button
                                 RadioButton {
                                     id: randomForestRadio
                                     Layout.alignment: Qt.AlignHCenter
-                                    checked: true
-                                    onClicked: backend.selectModel("Random Forest")
+                                    checked: isRandomForestSelected
                                 }
 
                                 // Green Box with Text
@@ -294,10 +294,18 @@ ApplicationWindow {
 
                                     Text {
                                         text: "Random Forest"
-                                        font.bold: true
+                                        font.bold: isRandomForestSelected
                                         font.pixelSize: 16
                                         color: "white"
                                         anchors.centerIn: parent
+                                    }
+
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: {
+                                            isRandomForestSelected = true;
+                                            backend.selectModel("Random Forest");
+                                        }
                                     }
                                 }
                             }
@@ -309,7 +317,7 @@ ApplicationWindow {
                                 RadioButton {
                                     id: deepLearningRadio
                                     Layout.alignment: Qt.AlignHCenter
-                                    onClicked: backend.selectModel("Deep Learning")
+                                    checked: !isRandomForestSelected
                                 }
                                 // Green Box with Text
                                 Rectangle {
@@ -323,6 +331,37 @@ ApplicationWindow {
                                         font.pixelSize: 16
                                         color: "white"
                                         anchors.centerIn: parent
+                                        font.bold: !isRandomForestSelected
+                                    }
+                                }
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        isRandomForestSelected = false;
+                                        backend.selectModel("Deep Learning");
+                                    }
+                                }
+                            }
+                            // Adding Synthetic Data and Live Data Radio Button (Row 344 to 364) as part of Ticket 186
+                            Column {
+                                spacing: 10
+
+                                RadioButton {
+                                    id: syntheticRadio
+                                    text: "Synthetic Data"
+                                    checked: false
+                                    onClicked: {
+                                        backend.setDataMode("synthetic")
+                                    }
+                                }
+
+                                RadioButton {
+                                    id: liveRadio
+                                    text: "Live Data"
+                                    checked: true
+                                    onClicked: {
+                                        backend.setDataMode("live")
                                     }
                                 }
                             }
