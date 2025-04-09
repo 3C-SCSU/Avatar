@@ -70,7 +70,7 @@ class BrainwaveReading_Tab(QWidget):
         # Brainwave Image and Button to "Read my mind..."
         brainwave_button_layout = QVBoxLayout()
         brainwave_image = QLabel()
-        pixmap = QPixmap("brainwave-prediction-app/images/brain.png")  # Set brain image
+        pixmap = QPixmap("GUI_Pics/brain.png")  # Set brain image
         brainwave_image.setPixmap(pixmap)
         brainwave_image.setFixedSize(120, 120)
         brainwave_image.setScaledContents(True)
@@ -146,7 +146,7 @@ class BrainwaveReading_Tab(QWidget):
 
         # Connect Button Section
         connect_button = QPushButton("Connect")
-        connect_pixmap = QPixmap("brainwave-prediction-app/images/connect.png")  # Set connect image
+        connect_pixmap = QPixmap("GUI_Pics/connect.png")  # Set connect image
         connect_button.setIcon(QIcon(connect_pixmap))
         connect_button.setFixedSize(150, 50)
         connect_button.setStyleSheet("background-color: #1b3a4b; color: white; border-radius: 5px;")
