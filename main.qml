@@ -25,6 +25,9 @@ ApplicationWindow {
         id: imageModel
     }
 
+    ListModel {
+        id: logModel
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -103,7 +106,7 @@ ApplicationWindow {
                             Layout.alignment: Qt.AlignHCenter
 
                             Image {
-                                source: "brainwave-prediction-app/images/brain.png"
+                                source: "GUI5/images/brain.png"
                                 width: 130
                                 height: 130
                                 anchors.centerIn: parent
@@ -250,7 +253,7 @@ ApplicationWindow {
                                 color: "#1b3a4b" // Dark blue background
 
                                 Image {
-                                    source: "brainwave-prediction-app/images/connect.png"
+                                    source: "GUI5/images/connect.png"
                                     width: 80
                                     height: 80
                                     anchors.centerIn: parent
@@ -530,7 +533,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "brainwave-prediction-app/images/Home.png"
+                                source: "GUI5/images/Home.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -583,7 +586,7 @@ ApplicationWindow {
                                 anchors.fill: parent
 
                                 Image {
-                                    source: "brainwave-prediction-app/images/Up.png"
+                                    source: "GUI5/images/Up.png"
                                     width: 150
                                     height: 150
                                     anchors.centerIn: parent
@@ -688,7 +691,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "brainwave-prediction-app/images/Forward.png"
+                                source: "GUI5/images/Forward.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -739,7 +742,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "brainwave-prediction-app/images/turnLeft.png"
+                                source: "GUI5/images/turnLeft.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -787,7 +790,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "brainwave-prediction-app/images/Left.png"
+                                source: "GUI5/images/Left.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -835,7 +838,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "brainwave-prediction-app/images/Stream.png"
+                                source: "GUI5/images/Stream.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -883,7 +886,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "brainwave-prediction-app/images/right.png"
+                                source: "GUI5/images/right.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -932,7 +935,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "brainwave-prediction-app/images/turnRight.png"
+                                source: "GUI5/images/turnRight.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -986,7 +989,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "brainwave-prediction-app/images/back.png"
+                                source: "GUI5/images/back.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -1040,7 +1043,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "brainwave-prediction-app/images/connect.png"
+                                source: "GUI5/images/connect.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -1088,7 +1091,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "brainwave-prediction-app/images/down.png"
+                                source: "GUI5/images/down.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -1136,7 +1139,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "brainwave-prediction-app/images/takeoff.png"
+                                source: "GUI5/images/takeoff.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -1182,7 +1185,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "brainwave-prediction-app/images/land.png"
+                                source: "GUI5/images/land.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
