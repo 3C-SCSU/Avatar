@@ -198,7 +198,7 @@ ApplicationWindow {
                     anchors.fill: parent
 
                     Image {
-                        source: "images/Forward.png"
+                        source: "GUI_Pics/Forward.png"
                         width: 150
                         height: 150
                         anchors.centerIn: parent
