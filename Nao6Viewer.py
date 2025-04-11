@@ -182,7 +182,7 @@ class NaoViewerWidget(QWidget):
 
     def parse_obj_file(self, obj_file_path):
         """
-        Parses the OBJ file and extracts vertices, normals, textures, faces, and materials.
+        Parses the OBJ file and extracts vertices, normals, textures, faces, and materials.remote-tracking branch 'refs/remotes/origin/main'
         :param obj_file_path: Path to the OBJ file.
         :return: Parsed vertices, normals, textures, faces, and materials.
         """
@@ -524,7 +524,7 @@ class NaoViewerWidget(QWidget):
         angle_rad = math.radians(self.model_rotation_y)
         direction_x = math.sin(angle_rad)
         direction_z = math.cos(angle_rad)
-        
+
         # Update position based on current rotation
         current_pos = self.controller.getPosition()
         current_rot = self.controller.getRotation()
