@@ -2,7 +2,7 @@ import sys
 import os
 import math
 import datetime
-from PySide6.QtCore import QUrl, Qt, QSize, QPropertyAnimation, QTimer
+from PySide6.QtCore import QObject, QUrl, Qt, Signal, QSize, Property, QPropertyAnimation, QTimer
 from PySide6.QtGui import QColor, QVector3D, QPixmap, QQuaternion, QMatrix4x4
 from PySide6.QtWidgets import (
     QApplication, QWidget, QHBoxLayout, QVBoxLayout,
@@ -11,6 +11,53 @@ from PySide6.QtWidgets import (
 from PySide6.Qt3DCore import Qt3DCore
 from PySide6.Qt3DExtras import Qt3DExtras
 from PySide6.Qt3DRender import Qt3DRender
+
+class ObjectTransformController(QObject):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self._target = None
+        self._matrix = QMatrix4x4()
+        self._position = QVector3D(0, 0, 0)
+        self._rotation = QVector3D(0, 0, 0)
+        self._scale = QVector3D(3, 3, 3)
+        self._has_moved_up = False
+
+    def setTarget(self, t):
+        self._target = t
+        self.updateMatrix()
+
+    def getPosition(self):
+        return self._position
+
+    def setPosition(self, pos):
+        self._position = pos
+        self.updateMatrix()
+        self.positionChanged.emit()
+
+    def getRotation(self):
+        return self._rotation
+
+    def setRotation(self, rot):
+        self._rotation = rot
+        self.updateMatrix()
+        self.rotationChanged.emit()
+
+    def updateMatrix(self):
+        self._matrix.setToIdentity()
+        self._matrix.translate(self._position)
+        self._matrix.rotate(self._rotation.y(), QVector3D(0, 1, 0))  # Y-axis rotation
+        self._matrix.rotate(self._rotation.x(), QVector3D(1, 0, 0))  # X-axis rotation
+        self._matrix.rotate(self._rotation.z(), QVector3D(0, 0, 1))  # Z-axis rotation
+        self._matrix.scale(self._scale)
+
+        if self._target is not None:
+            self._target.setMatrix(self._matrix)
+
+    positionChanged = Signal()
+    rotationChanged = Signal()
+    position = Property(QVector3D, getPosition, setPosition, notify=positionChanged)
+    rotation = Property(QVector3D, getRotation, setRotation, notify=rotationChanged)
+
 
 class NaoViewerWidget(QWidget):
     def __init__(self, obj_file_path="Nao/Nao.obj", mtl_file_path="Nao/Nao.obj", parent=None):
@@ -24,6 +71,9 @@ class NaoViewerWidget(QWidget):
         self.view_container = Qt3DExtras.Qt3DWindow()
         self.view_container.defaultFrameGraph().setClearColor(QColor(50, 50, 50))
 
+        # Record current animation
+        self._current_animation = None
+
         # Create a container widget to hold the 3D view
         self.container = QWidget.createWindowContainer(self.view_container, self)
         self.layout.addWidget(self.container)
@@ -33,8 +83,8 @@ class NaoViewerWidget(QWidget):
 
         # Set up the camera
         self.camera = self.view_container.camera()
-        self.camera.setPosition(QVector3D(0, 0, 12.0))
-        self.camera.setViewCenter(QVector3D(0, 2, 0))
+        self.camera.setPosition(QVector3D(0, 0, 40.0))
+        self.camera.setViewCenter(QVector3D(0, 6, 0))
 
         # Create camera controller
         self.camera_controller = Qt3DExtras.QOrbitCameraController(self.root_entity)
@@ -241,21 +291,21 @@ class NaoViewerWidget(QWidget):
         ]
 
         # Create paremt mesh entity
-        self.mesh_entity = Qt3DCore.QEntity(self.root_entity)
-        self.mesh_transform = Qt3DCore.QTransform()
+        self.parent_entity = Qt3DCore.QEntity(self.root_entity)
+        self.parent_transform = Qt3DCore.QTransform()
 
         # Create mesh entity for each part
-        self.gray_entity = Qt3DCore.QEntity(self.mesh_entity)
+        self.gray_entity = Qt3DCore.QEntity(self.parent_entity)
         self.gray_transform = Qt3DCore.QTransform()
-        self.orange_entity = Qt3DCore.QEntity(self.mesh_entity)
+        self.orange_entity = Qt3DCore.QEntity(self.parent_entity)
         self.orange_transform = Qt3DCore.QTransform()
-        self.teal_entity = Qt3DCore.QEntity(self.mesh_entity)
+        self.teal_entity = Qt3DCore.QEntity(self.parent_entity)
         self.teal_transform = Qt3DCore.QTransform()
-        self.white_entity = Qt3DCore.QEntity(self.mesh_entity)
+        self.white_entity = Qt3DCore.QEntity(self.parent_entity)
         self.white_transform = Qt3DCore.QTransform()
 
         # Create a mesh component from the OBJ file
-        self.mesh = Qt3DRender.QMesh()
+        self.parent_mesh = Qt3DRender.QMesh()
         self.gray_mesh = Qt3DRender.QMesh()
         self.gray_mesh.setSource(QUrl.fromLocalFile("Nao/nao6_turn_right_animation/face_forward/gray/nao6_right_gray0001.obj"))
         self.orange_mesh = Qt3DRender.QMesh()
@@ -281,7 +331,7 @@ class NaoViewerWidget(QWidget):
         
         # Iterate through the parsed materials and create Qt3D materials
         for material_name, material_data in material_properties.items():
-            material = Qt3DExtras.QPhongMaterial(self.mesh_entity)
+            material = Qt3DExtras.QPhongMaterial(self.parent_entity)
 
             # Set ambient color (Ka)
             ambient_color = material_data.get('Ka', [0.2, 0.2, 0.2])
@@ -310,6 +360,10 @@ class NaoViewerWidget(QWidget):
             self.material_list.append((material_name, material))
 
 
+        self.controller = ObjectTransformController(self.parent_transform)
+        self.controller.setTarget(self.parent_transform)
+
+
         # Iterate over file paths and add the corresponding component based on the material name
         for color_name, entity in entity_dict.items():
             # Check if the file path contains the part name
@@ -327,8 +381,8 @@ class NaoViewerWidget(QWidget):
                 entity.addComponent(self.material_list[8][1])
 
 
-        self.mesh_entity.addComponent(self.mesh)
-        self.mesh_entity.addComponent(self.mesh_transform)
+        self.parent_entity.addComponent(self.parent_mesh)
+        self.parent_entity.addComponent(self.parent_transform)
 
         # Iterate through each entity in entity_dict
         for entity_name, entity_info in entity_dict.items():
@@ -437,7 +491,7 @@ class NaoViewerWidget(QWidget):
         if self._current_animation:
             self._current_animation.stop()
 
-        animation = QPropertyAnimation(self.objTransform)
+        animation = QPropertyAnimation(self.controller)
         animation.setTargetObject(self.controller)
         animation.setPropertyName(property_name.encode())
         animation.setStartValue(start_value)
@@ -448,76 +502,91 @@ class NaoViewerWidget(QWidget):
         return animation
 
 
-    def update_model_transform(self):
-        """Update the model's transform to reflect current position and rotation"""
-        # Create rotation quaternion around Y axis
-        rotation = QQuaternion.fromAxisAndAngle(QVector3D(0, 1, 0), self.model_rotation_y)
+    def moveForward(self):
+        """Move the model forward in its current direction"""
+        # Update position based on current rotation
+        current_pos = self.controller.getPosition()
+        current_rot = self.controller.getRotation()
 
-        # Set rotation and translation
-        self.mesh_transform.setRotation(rotation)
-        self.mesh_transform.setTranslation(self.model_position)
+        # Calculate the forward direction vector
+        forward_vector = QVector3D(
+            5 * math.sin(math.radians(current_rot.y())),
+            0,
+            5 * math.cos(math.radians(current_rot.y()))
+        )
+
+        print("Current rotation: " + str(current_rot.y()))
+
+        print(current_rot.y())
+
+        # Calculate the new position
+        new_pos = current_pos + forward_vector
+
+        # Create and start the position animation
+        pos_anim = self._create_movement_animation("position", current_pos, new_pos, 2500)
+        pos_anim.start()
+
+        animation_folder = f"Nao/nao6_forward_animation/face_forward/"
+        self._play_obj_animation(animation_folder)
 
         print(f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}")
 
-    def moveForward(self):
-        """Move the model forward in its current direction"""
-        # Calculate direction vector based on current rotation
-        angle_rad = math.radians(self.model_rotation_y)
-        direction_x = math.sin(angle_rad)
-        direction_z = math.cos(angle_rad)
-
-        # Calculate new position - CORRECTED: Using positive direction for forward
-        self.model_position += QVector3D(direction_x * self.move_step, 0, direction_z * self.move_step)
-
-        animation_folder = f"Nao/nao6_forward_animation/face_forward/"
-        self._play_obj_animation(animation_folder)
-
-        # Update the model's transform
-        self.update_model_transform()
-        print(f"Moving forward along direction vector: ({direction_x:.2f}, 0, {direction_z:.2f})")
-
     def moveBackward(self):
         """Move the model backward from its current direction"""
-        # Calculate direction vector based on current rotation
-        angle_rad = math.radians(self.model_rotation_y)
-        direction_x = math.sin(angle_rad)
-        direction_z = math.cos(angle_rad)
+        # Update position based on current rotation
+        current_pos = self.controller.getPosition()
+        current_rot = self.controller.getRotation()
 
-        # Calculate new position - CORRECTED: Using negative direction for backward
-        self.model_position -= QVector3D(direction_x * self.move_step, 0, direction_z * self.move_step)
+        # Calculate the forward direction vector
+        forward_vector = QVector3D(
+            5 * math.sin(math.radians(current_rot.y())),
+            0,
+            5 * math.cos(math.radians(current_rot.y()))
+        )
+
+        # Calculate the new position
+        new_pos = current_pos - forward_vector
+
+        # Create and start the position animation
+        pos_anim = self._create_movement_animation("position", current_pos, new_pos, 2500)
+        pos_anim.start()
 
         animation_folder = f"Nao/nao6_forward_animation/face_forward/"
         self._play_obj_animation(animation_folder)
 
-        # Update the model's transform
-        self.update_model_transform()
-        print(f"Moving backward along direction vector: ({-direction_x:.2f}, 0, {-direction_z:.2f})")
+        print(f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}")
 
     def turnLeft(self):
         """Rotate the model to the left (counter-clockwise)"""
-        # CORRECTED: Decrease the Y rotation angle for left turn
-        self.model_rotation_y = (self.model_rotation_y - self.rotation_step) % 360
+        # Update rotation
+        current_rot = self.controller.getRotation()
+        new_rot = QVector3D(current_rot.x(), current_rot.y() + 90, current_rot.z())
+        rot_anim = self._create_movement_animation("rotation", current_rot, new_rot, 2500)
+
+        # Start the rotation animation
+        rot_anim.start()
 
         # Start OBJ animation sequence for turning left
         animation_folder = f"Nao/nao6_turn_left_animation/face_forward/"
         self._play_obj_animation(animation_folder)
 
-        # Update the model's transform
-        self.update_model_transform()
-        print(f"Turning left to {self.model_rotation_y}°")
+        print(f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}")
 
     def turnRight(self):
         """Rotate the model to the right (clockwise)"""
-        # CORRECTED: Increase the Y rotation angle for right turn
-        self.model_rotation_y = (self.model_rotation_y + self.rotation_step) % 360
+        # Update rotation
+        current_rot = self.controller.getRotation()
+        new_rot = QVector3D(current_rot.x(), current_rot.y() - 90, current_rot.z())
+        rot_anim = self._create_movement_animation("rotation", current_rot, new_rot, 2500)
+
+        # Start the rotation animation
+        rot_anim.start()
 
         # Start OBJ animation sequence for turning right
         animation_folder = f"Nao/nao6_turn_right_animation/face_forward/"
         self._play_obj_animation(animation_folder)
 
-        # Update the model's transform
-        self.update_model_transform()
-        print(f"Turning right to {self.model_rotation_y}°")
+        print(f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}")
 
     def moveUp(self):
         """Move the model upward along the Y axis (takeoff)"""
@@ -533,9 +602,7 @@ class NaoViewerWidget(QWidget):
             animation_folder = f"Nao/nao6_take_off_animation/face_forward/"
             self._play_obj_animation(animation_folder)
 
-            # Update the model's transform
-            self.update_model_transform()
-            print(f"Taking off! New vertical state: {self.vertical_state}")
+            print(f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}")
         else:
             print(f"Already at maximum takeoff height (state: {self.vertical_state})")
 
@@ -549,9 +616,7 @@ class NaoViewerWidget(QWidget):
             # Decrement vertical state
             self.vertical_state -= 1
 
-            # Update the model's transform
-            self.update_model_transform()
-            print(f"Landing! New vertical state: {self.vertical_state}")
+            print(f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}")
         else:
             print("Cannot land - already on the ground (state: 0)")
 
