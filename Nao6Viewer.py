@@ -69,6 +69,8 @@ class NaoViewerWidget(QWidget):
         self._animation_frame = 0
         self._animation_timer = QTimer(self)
         self._animation_timer.timeout.connect(self._update_animation_frame)
+        self.animation_in_progress = False
+
 
         # Load the robot
         self.load_robot(mtl_file_path)
@@ -83,43 +85,43 @@ class NaoViewerWidget(QWidget):
         :return: Dictionary of material properties.
         """
         material_properties = {}
-        
+
         try:
             with open(mtl_file_path, 'r') as mtl_file:
                 current_material = None
                 for line in mtl_file:
                     line = line.strip()
-                    
+
                     if line.startswith('newmtl '):
                         current_material = line.split(' ')[1]
                         material_properties[current_material] = {}
-                    
+
                     # Parse specular exponent (Ns)
-                    elif line.startswith('Ns '):  
+                    elif line.startswith('Ns '):
                         material_properties[current_material]['Ns'] = float(line.split(' ')[1])
 
                     # Parse ambient color (Ka)
-                    elif line.startswith('Ka '):  
+                    elif line.startswith('Ka '):
                         color_values = line.split(' ')[1:]
                         material_properties[current_material]['Ka'] = [float(v) for v in color_values]
 
                     # Parse diffuse color (Kd)
-                    elif line.startswith('Kd '):  
+                    elif line.startswith('Kd '):
                         color_values = line.split(' ')[1:]
                         material_properties[current_material]['Kd'] = [float(v) for v in color_values]
-                    
+
                     # Parse specular color (Ks)
-                    elif line.startswith('Ks '):  
+                    elif line.startswith('Ks '):
                         color_values = line.split(' ')[1:]
                         material_properties[current_material]['Ks'] = [float(v) for v in color_values]
-                    
+
                     # Parse emissive color (Ke)
-                    elif line.startswith('Ke '):  
+                    elif line.startswith('Ke '):
                         color_values = line.split(' ')[1:]
                         material_properties[current_material]['Ke'] = [float(v) for v in color_values]
-                    
+
                     # Parse optical density (Ni)
-                    elif line.startswith('Ni '):  
+                    elif line.startswith('Ni '):
                         material_properties[current_material]['Ni'] = float(line.split(' ')[1])
 
         except FileNotFoundError:
@@ -172,10 +174,10 @@ class NaoViewerWidget(QWidget):
                         faces.append(face_vertices)
                     elif line.startswith('usemtl '):  # Material
                         material_name = line.split()[1]
-                        
+
                         if current_material is not None:
                             materials.append((current_material, current_face_index))
-                        
+
                         current_material = material_name
                         current_face_index = len(faces)
 
@@ -189,7 +191,7 @@ class NaoViewerWidget(QWidget):
         print(f"  Textures: {len(textures)}")
         print(f"  Faces: {len(faces)}")
         print(f"  Materials: {len(materials)}")
-        
+
         return vertices, normals, textures, faces, materials
 
     def get_first_material_name_from_obj(self, obj_file_path):
@@ -206,31 +208,31 @@ class NaoViewerWidget(QWidget):
             print(f"Error: The file '{obj_file_path}' was not found.")
         except Exception as e:
             print(f"Error: {e}")
-        
+
         # If no material is found
         return None
-    
+
     def process_materials_for_files(self, file_paths):
         """Processes a list of .obj file paths and returns the first material name for each file."""
         material_names = {}
-        
+
         for path in file_paths:
             material_name = self.get_first_material_name_from_obj(path)
             material_names[path] = material_name
-            
+
         return material_names
-    
+
     def find_corresponding_material(self, material, file_name):
         """Searches a list of material names for a specific material name. Returns Qt3DExtras.QPhongMaterial"""
-        
+
         for nao6_materials in self.material_list:
             material_name_without_decimals = material.split('.')[0]
             if nao6_materials[0] == material_name_without_decimals:
                 return(nao6_materials[1])
-            
+
         print(f"No corresponding material found for {file_name}. Using default color {self.material_list[10][0]}")
         return self.material_list[10][1]
-    
+
     def load_robot(self, mtl_file_path):
         # All obj files rendered
         file_paths = [
@@ -278,7 +280,7 @@ class NaoViewerWidget(QWidget):
         # Apply different materials based on the .obj file's usemtl section
         # For each part in the model, we'll create a new material and apply it
         self.material_list = []
-        
+
         # Iterate through the parsed materials and create Qt3D materials
         for material_name, material_data in material_properties.items():
             material = Qt3DExtras.QPhongMaterial(self.mesh_entity)
@@ -294,11 +296,11 @@ class NaoViewerWidget(QWidget):
             # Set specular color (Ks)
             specular_color = material_data.get('Ks', [0.8, 0.8, 0.8])
             material.setSpecular(QColor(*[int(c * 255) for c in specular_color]))  # Convert to 0-255 range
-            
+
             # Set specular exponent (Ns)
             specular_exponent = material_data.get('Ns', 0.0)
             material.setShininess(specular_exponent / 1000.0)  # Normalized to 0-1 range
-            
+
             # # Print the material properties (Ka, Kd, Ks, Ns)
             # print(f"Material name: {material_name}")
             # print(f"  Ka (Ambient Color): {ambient_color}")
@@ -337,7 +339,7 @@ class NaoViewerWidget(QWidget):
             # Get the mesh loader and transform components using dynamic attribute access
             mesh_loader = getattr(self, mesh_loader_attr)
             transform = getattr(self, transform_attr)
-            
+
             # Add components for the current entity
             entity_info.addComponent(mesh_loader)
             entity_info.addComponent(transform)
@@ -348,6 +350,8 @@ class NaoViewerWidget(QWidget):
         """Timer callback to update animation frames"""
         if not self._animation_frames_white:
             self._animation_timer.stop()
+            self.animation_in_progress = False
+            print("Animation stopped - no frames")
             return
 
         if self._animation_frame < len(self._animation_frames_white):
@@ -362,7 +366,7 @@ class NaoViewerWidget(QWidget):
             frame_path = self._animation_frames_teal[self._animation_frame]
             mtl_path = frame_path.replace(".obj", ".mtl")
             self._load_obj_frame(frame_path, mtl_path, self.teal_mesh)
-            
+
             frame_path = self._animation_frames_white[self._animation_frame]
             mtl_path = frame_path.replace(".obj", ".mtl")
             self._load_obj_frame(frame_path, mtl_path, self.white_mesh)
@@ -372,7 +376,12 @@ class NaoViewerWidget(QWidget):
             # Animation completed
             self._animation_timer.stop()
             self._animation_frame = 0
-            self._animation_frames = []
+            self._animation_frames_gray = []
+            self._animation_frames_orange = []
+            self._animation_frames_teal = []
+            self._animation_frames_white = []
+            self.animation_in_progress = False
+            print("Animation completed")
 
     def _load_obj_frame(self, obj_path, mtl_path=None, mesh=None):
         """Load a new OBJ frame to the 3D scene"""
@@ -418,8 +427,6 @@ class NaoViewerWidget(QWidget):
         self._animation_frames_teal = self._find_animation_frames(animation_folder+"teal/")
         self._animation_frames_white = self._find_animation_frames(animation_folder+"white/")
 
-        self._update_animation_frame()
-
         if not self._animation_frames_white:
             print(f"No animation frames found in {animation_folder}")
             return False
@@ -427,12 +434,16 @@ class NaoViewerWidget(QWidget):
         # Reset animation state
         self._animation_frame = 0
 
+        # Set animation flag
+        self.animation_in_progress = True
+        print("Animation started")
+
         # Start the animation timer
         self._animation_timer.setInterval(frame_delay)
         self._animation_timer.start()
 
         return True
-    
+
     def _create_movement_animation(self, property_name, start_value, end_value, duration=1000):
         if self._current_animation:
             self._current_animation.stop()
@@ -461,6 +472,11 @@ class NaoViewerWidget(QWidget):
 
     def moveForward(self):
         """Move the model forward in its current direction"""
+
+        if self.animation_in_progress:
+                print("Animation in progress, movement command ignored")
+                return False
+
         # Calculate direction vector based on current rotation
         angle_rad = math.radians(self.model_rotation_y)
         direction_x = math.sin(angle_rad)
@@ -478,6 +494,11 @@ class NaoViewerWidget(QWidget):
 
     def moveBackward(self):
         """Move the model backward from its current direction"""
+
+        if self.animation_in_progress:
+                print("Animation in progress, movement command ignored")
+                return False
+
         # Calculate direction vector based on current rotation
         angle_rad = math.radians(self.model_rotation_y)
         direction_x = math.sin(angle_rad)
@@ -495,6 +516,11 @@ class NaoViewerWidget(QWidget):
 
     def turnLeft(self):
         """Rotate the model to the left (counter-clockwise)"""
+
+        if self.animation_in_progress:
+                print("Animation in progress, movement command ignored")
+                return False
+
         # CORRECTED: Decrease the Y rotation angle for left turn
         self.model_rotation_y = (self.model_rotation_y - self.rotation_step) % 360
 
@@ -508,6 +534,11 @@ class NaoViewerWidget(QWidget):
 
     def turnRight(self):
         """Rotate the model to the right (clockwise)"""
+
+        if self.animation_in_progress:
+                print("Animation in progress, movement command ignored")
+                return False
+
         # CORRECTED: Increase the Y rotation angle for right turn
         self.model_rotation_y = (self.model_rotation_y + self.rotation_step) % 360
 
@@ -521,6 +552,11 @@ class NaoViewerWidget(QWidget):
 
     def moveUp(self):
         """Move the model upward along the Y axis (takeoff)"""
+
+        if self.animation_in_progress:
+                print("Animation in progress, movement command ignored")
+                return False
+
         # Only allow takeoff if not already at max height
         if self.vertical_state < self.max_vertical_state:
             # Increase Y position
@@ -541,6 +577,11 @@ class NaoViewerWidget(QWidget):
 
     def moveDown(self):
         """Move the model downward along the Y axis (land)"""
+
+        if self.animation_in_progress:
+                print("Animation in progress, movement command ignored")
+                return False
+
         # Only allow landing if currently in the air
         if self.vertical_state > 0:
             # Decrease Y position
@@ -635,8 +676,15 @@ def main():
             if action_method == "moveDown" and nao_viewer.vertical_state == 0:
                 text_field.append(f"Cannot land - already on the ground! at {timestamp}")
                 return
+            # Check if robot is in the air (vertical_state > 0) and this isn't the Land button
+            if nao_viewer.vertical_state > 0 and action_method != "moveDown":
+                text_field.append(f"Cannot perform {label} while in the air - please land first! at {timestamp}")
+                return
 
-            text_field.append(f"{label} Button Clicked! at {timestamp}")
+            if nao_viewer.animation_in_progress:
+                text_field.append(f"Cannot call {label} -- action already in progress! at {timestamp}")
+            else:
+                text_field.append(f"{label} Button Clicked! at {timestamp}")
 
             # Call the appropriate method on the nao_viewer
             method = getattr(nao_viewer, action_method, None)
