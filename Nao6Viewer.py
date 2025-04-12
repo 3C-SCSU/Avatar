@@ -309,13 +309,13 @@ class NaoViewerWidget(QWidget):
         # Create a mesh component from the OBJ file
         self.parent_mesh = Qt3DRender.QMesh()
         self.gray_mesh = Qt3DRender.QMesh()
-        self.gray_mesh.setSource(QUrl.fromLocalFile("Nao/nao6_turn_right_animation/face_forward/gray/nao6_right_gray0001.obj"))
+        self.gray_mesh.setSource(QUrl.fromLocalFile("Nao/nao6_forward_animation/face_forward/gray/nao6_forward_gray0001.obj"))
         self.orange_mesh = Qt3DRender.QMesh()
-        self.orange_mesh.setSource(QUrl.fromLocalFile("Nao/nao6_turn_right_animation/face_forward/orange/nao6_right_orange0001.obj"))
+        self.orange_mesh.setSource(QUrl.fromLocalFile("Nao/nao6_forward_animation/face_forward/orange/nao6_forward_orange0001.obj"))
         self.teal_mesh = Qt3DRender.QMesh()
-        self.teal_mesh.setSource(QUrl.fromLocalFile("Nao/nao6_turn_right_animation/face_forward/teal/nao6_right_teal0001.obj"))
+        self.teal_mesh.setSource(QUrl.fromLocalFile("Nao/nao6_forward_animation/face_forward/teal/nao6_forward_teal0001.obj"))
         self.white_mesh = Qt3DRender.QMesh()
-        self.white_mesh.setSource(QUrl.fromLocalFile("Nao/nao6_turn_right_animation/face_forward/white/nao6_right_white0001.obj"))
+        self.white_mesh.setSource(QUrl.fromLocalFile("Nao/nao6_forward_animation/face_forward/white/nao6_forward_white0001.obj"))
 
         entity_dict = {
             "gray": self.gray_entity,
@@ -544,7 +544,7 @@ class NaoViewerWidget(QWidget):
         new_pos = current_pos + forward_vector
 
         # Create and start the position animation
-        pos_anim = self._create_movement_animation("position", current_pos, new_pos, 2500)
+        pos_anim = self._create_movement_animation("position", current_pos, new_pos, 3000)
         pos_anim.start()
 
         animation_folder = f"Nao/nao6_forward_animation/face_forward/"
@@ -578,7 +578,7 @@ class NaoViewerWidget(QWidget):
         new_pos = current_pos - forward_vector
 
         # Create and start the position animation
-        pos_anim = self._create_movement_animation("position", current_pos, new_pos, 2500)
+        pos_anim = self._create_movement_animation("position", current_pos, new_pos, 3000)
         pos_anim.start()
 
         animation_folder = f"Nao/nao6_forward_animation/face_forward/"
@@ -642,12 +642,17 @@ class NaoViewerWidget(QWidget):
         # Only allow takeoff if not already at max height
         if self.vertical_state < self.max_vertical_state:
             # Increase Y position
-            self.model_position.setY(self.model_position.y() + self.vertical_step)
+            current_pos = self.controller.getPosition()
+            new_pos = current_pos + QVector3D(0, self.vertical_step, 0)
+
+            # Create and start the position animation
+            pos_anim = self._create_movement_animation("position", current_pos, new_pos, 3200)
+            pos_anim.start()
 
             # Increment vertical state
             self.vertical_state += 1
 
-            # Start OBJ animation sequence for turning right
+            # Start OBJ animation sequence for taking off
             animation_folder = f"Nao/nao6_take_off_animation/face_forward/"
             self._play_obj_animation(animation_folder)
 
@@ -665,10 +670,20 @@ class NaoViewerWidget(QWidget):
         # Only allow landing if currently in the air
         if self.vertical_state > 0:
             # Decrease Y position
-            self.model_position.setY(self.model_position.y() - self.vertical_step)
+            current_pos = self.controller.getPosition()
+            new_pos = current_pos - QVector3D(0, self.vertical_step, 0)
+
+            # Create and start the position animation
+            pos_anim = self._create_movement_animation("position", current_pos, new_pos, 1200)
+            pos_anim.start()
+
 
             # Decrement vertical state
             self.vertical_state -= 1
+            
+            # Start OBJ animation sequence for taking off
+            animation_folder = f"Nao/nao6_landing_animation/face_forward/"
+            self._play_obj_animation(animation_folder)
 
             print(f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}")
         else:
