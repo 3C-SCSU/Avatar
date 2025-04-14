@@ -68,7 +68,7 @@ ApplicationWindow {
 
             // Brainwave Reading view
             Rectangle {
-                color: "#3b4b57" // Background color
+                color: "#64778d" // Background color
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
@@ -100,7 +100,7 @@ ApplicationWindow {
                         Rectangle {
                             width: 150
                             height: 150
-                            color: "#1b3a4b" // Dark blue background
+                            color: "#242c4d" // Dark blue background
                             Layout.alignment: Qt.AlignHCenter
 
                             Image {
@@ -186,7 +186,7 @@ ApplicationWindow {
                                 Layout.preferredWidth: 160
                                 Layout.preferredHeight: 80
                                 background: Rectangle {
-                                    color: "#1b3a4b"
+                                    color: "#242c4d"
                                 } 
                                 onClicked: backend.notWhatIWasThinking(manualInput.text)
                             }
@@ -195,7 +195,7 @@ ApplicationWindow {
                                 Layout.preferredWidth: 160
                                 Layout.preferredHeight: 80
                                 background: Rectangle {
-                                    color: "#1b3a4b"
+                                    color: "#242c4d"
                                 } 
                                 onClicked: backend.executeAction()
                             }
@@ -218,7 +218,7 @@ ApplicationWindow {
                                 width: 130
                                 height: 40
                                 background: Rectangle {
-                                    color: "#1b3a4b"
+                                    color: "#242c4d"
                                 }
                                 onClicked: backend.keepDroneAlive()
                             }
@@ -248,7 +248,7 @@ ApplicationWindow {
                             Rectangle {
                                 width: 150
                                 height: 150
-                                color: "#1b3a4b" // Dark blue background
+                                color: "#242c4d" // Dark blue background
 
                                 Image {
                                     source: "GUI_Pics/connect.png"
@@ -286,7 +286,7 @@ ApplicationWindow {
                                 Rectangle {
                                     width: 150
                                     height: 80
-                                    color: "#4CAF50"
+                                    color: "#6eb109"
                                     radius: 5
 
                                     Text {
@@ -320,7 +320,7 @@ ApplicationWindow {
                                 Rectangle {
                                     width: 150
                                     height: 80
-                                    color: "#4CAF50"
+                                    color: "#6eb109"
                                     radius: 5
 
                                     Text {
@@ -330,15 +330,15 @@ ApplicationWindow {
                                         anchors.centerIn: parent
                                         font.bold: !isRandomForestSelected
                                     }
-                                }
 
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        isRandomForestSelected = false;
-                                        backend.selectModel("Deep Learning");
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: {
+                                            isRandomForestSelected = false;
+                                            backend.selectModel("Deep Learning");
+                                        }
                                     }
-                                }
+                                }                                
                             }
                             // Adding Synthetic Data and Live Data Radio Button (Row 344 to 364) as part of Ticket 186
                             Column {
@@ -451,7 +451,7 @@ ApplicationWindow {
 
             // Transfer Data view
             Rectangle {
-                color: "#4a5b7b"
+                color: "#64778d"
                 ScrollView {
                     anchors.centerIn: parent
                     width: Math.min(parent.width * 0.9, 600)
@@ -542,6 +542,8 @@ ApplicationWindow {
             }
 
             // Manual Drone Control view
+        Rectangle{
+            color: "#64778d"
             ColumnLayout {
                 anchors.fill: parent
                 spacing: 10
@@ -692,17 +694,20 @@ ApplicationWindow {
                         }
                     }
 
-                    // Log ListView
-                    ListView {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 150
-                        model: logModel
-                        delegate: Item {
-                            Text {
-                                text: modelData
-                            }
-                        }
-                    }
+                    // // Log ListView
+                    // ListView {
+                    //     Layout.fillWidth: true
+                    //     Layout.preferredHeight: 150
+                    //     model: ListModel {
+                    //                 ListElement { count: "1"; server: "Log A"; label: "Label A" }
+                    //                 ListElement { count: "2"; server: "Log B"; label: "Label B" }
+                    //             }
+                    //     delegate: Item {
+                    //         Text {
+                    //             text: modelData
+                    //         }
+                    //     }
+                    // }
                 }
 
                 // Forward Button
@@ -874,7 +879,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "brainwave-prediction-app/images/Stream.png"
+                                source: "GUI_Pics/Stream.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -1259,10 +1264,11 @@ ApplicationWindow {
                 // Here you would implement the actual drone control logic
                 console.log(action + " triggered.")
             }
+        }
             // Brainwave Visualization
 
             Rectangle {
-                color: "#f0f0f5"
+                color: "#64778d"
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
@@ -1297,7 +1303,7 @@ ApplicationWindow {
                                     Rectangle {
                                         width: parent.width
                                         height: 30
-                                        color: "#5d6d9a"
+                                        color: "#242c4d"
 
                                         Text {
                                             // Extract just the first word from the title
@@ -1422,7 +1428,7 @@ ApplicationWindow {
             //File shuffler view 
             Rectangle {
                 id: fileShufflerView
-                color: "#2b3a4a"
+                color: "#64778d"
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
@@ -1451,10 +1457,8 @@ ApplicationWindow {
                         color: "lightgrey"
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.verticalCenter: parent.verticalCenter
-
                         ScrollView {
                             anchors.fill: parent
-
                             TextArea {
                                 id: outputBox
                                 text: fileShufflerView.outputBoxText
@@ -1471,7 +1475,6 @@ ApplicationWindow {
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.top: parent.verticalCenter
                         anchors.topMargin: parent.height * 0.3 + 10
-
                         Button {
                             id: folderButton
                             text: "Select your Directory"
