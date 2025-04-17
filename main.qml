@@ -42,7 +42,7 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = 0
             }
             TabButton {
-                text: "Transfer Data"
+                text: "Brainwave Visualization"
                 onClicked: stackLayout.currentIndex = 1
             }
             TabButton {
@@ -50,11 +50,11 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = 2
             }
             TabButton {
-                text: "Brainwave Visualization"
+                text: "File Shuffler"
                 onClicked: stackLayout.currentIndex = 3
             }
             TabButton {
-                text: "File Shuffler"
+                text: "Transfer Data"
                 onClicked: stackLayout.currentIndex = 4
             }
 
@@ -449,98 +449,165 @@ ApplicationWindow {
                 }
             }
 
-            // Transfer Data view
+            // Brainwave Visualization
             Rectangle {
                 color: "#64778d"
-                ScrollView {
-                    anchors.centerIn: parent
-                    width: Math.min(parent.width * 0.9, 600)
-                    height: Math.min(parent.height * 0.9, contentHeight)
-                    clip: true
+                Layout.fillWidth: true
+                Layout.fillHeight: true
 
-                    ColumnLayout {
-                        id: contentLayout
-                        width: parent.width
-                        spacing: 10
+                ColumnLayout {
+                    anchors.fill: parent
+                    spacing: 10
 
-                        Label { text: "Target IP"; color: "white" }
-                        TextField { Layout.fillWidth: true }
+                    // Grid Layout for 6 Graphs (2 Rows x 3 Columns)
+                    GridLayout {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        columns: 3
+                        Layout.margins: 10
+                        columnSpacing: 10
+                        rowSpacing: 10
 
-                        Label { text: "Target Username"; color: "white" }
-                        TextField { Layout.fillWidth: true }
-
-                        Label { text: "Target Password"; color: "white" }
-                        TextField {
-                            Layout.fillWidth: true
-                            echoMode: TextInput.Password
-                        }
-
-                        Label { text: "Private Key Directory:"; color: "white" }
-                        RowLayout {
-                            Layout.fillWidth: true
-                            TextField {
-                                id: privateKeyDirInput
+                        Repeater {
+                            model: imageModel  
+                            delegate: Rectangle {
+                                color: "#e6e6f0"
                                 Layout.fillWidth: true
-                            }
-                            Button {
-                                text: "Browse"
-                                onClicked: console.log("Browse for Private Key Directory")
-                            }
-                        }
+                                Layout.fillHeight: true
+                                border.color: "#d0d0d8"
+                                border.width: 1
+                                radius: 4
 
-                        CheckBox {
-                            text: "Ignore Host Key"
-                            checked: true
-                            contentItem: Text {
-                                text: parent.text
-                                color: "white"
-                                leftPadding: parent.indicator.width + parent.spacing
-                            }
-                        }
+                                Column {
+                                    width: parent.width
+                                    height: parent.height
+                                    spacing: 0
 
-                        Label { text: "Source Directory:"; color: "white" }
-                        RowLayout {
-                            Layout.fillWidth: true
-                            TextField {
-                                id: sourceDirInput
-                                Layout.fillWidth: true
-                            }
-                            Button {
-                                text: "Browse"
-                                onClicked: console.log("Browse for Source Directory")
-                            }
-                        }
+                                    Rectangle {
+                                        width: parent.width
+                                        height: 30
+                                        color: "#242c4d"
 
-                        Label { text: "Target Directory:"; color: "white" }
-                        TextField {
-                            Layout.fillWidth: true
-                            text: "/home/"
-                            placeholderText: "/home/"
-                        }
+                                        Text {
+                                            // Extract just the first word from the title
+                                            text: {
+                                                var parts = model.graphTitle.split(" ");
+                                                return parts[0]; // Just return "Takeoff", "Forward", etc.
+                                            }
+                                            color: "white"
+                                            font.bold: true
+                                            font.pixelSize: 14
+                                            
+                                            // Center text using calculations rather than anchors
+                                            x: (parent.width - width) / 2
+                                            y: (parent.height - height) / 2
+                                        }
+                                    }
+                                    Rectangle {
+                                        width: parent.width
+                                        height: parent.height - 30  // Total height minus header height
+                                        color: "white"
 
-                        RowLayout {
-                            Layout.fillWidth: true
-                            Button {
-                                text: "Save Config"
-                                onClicked: console.log("Save Config clicked")
-                            }
-                            Button {
-                                text: "Load Config"
-                                onClicked: console.log("Load Config clicked")
-                            }
-                            Button {
-                                text: "Clear Config"
-                                onClicked: console.log("Clear Config clicked")
-                            }
-                            Button {
-                                text: "Upload"
-                                onClicked: console.log("Upload clicked")
+                                        // Display Image
+                                        Image {
+                                            x: 8  // Margin
+                                            y: 8  // Margin
+                                            width: parent.width - 16  // Margin on both sides
+                                            height: parent.height - 16  // Margin on both sides
+                                            source: model.imagePath
+                                            fillMode: Image.PreserveAspectFit
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
-                }
+                    
+                    // Refresh and Rollback buttons after graphs
+                    RowLayout {
+                        Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
+                        Layout.bottomMargin: 20
+                        spacing: 15
+                        
+                        // Refresh Button
+                        Button {
+                            text: "Refresh"
+                            implicitWidth: 120
+                            implicitHeight: 40
+                            
+                            // This property allows us to track the hover state
+                            property bool isHovering: false
+                            
+                            // Define the hover handler
+                            HoverHandler {
+                                onHoveredChanged: parent.isHovering = hovered
+                            }
+                            
+                            background: Rectangle {
+                                // Use the isHovering property to change color
+                                color: parent.isHovering ? "#3e4e7a" : "#2e3a5c"
+                                radius: 4
+                                
+                                // Add a smooth color transition
+                                Behavior on color {
+                                    ColorAnimation { duration: 150 }
+                                }
+                            }
+                            
+                            contentItem: Text {
+                                text: parent.text
+                                font.pixelSize: 14
+                                color: "white"
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            
+                            onClicked: {
+                                backend.setDataset("refresh")
+                            }
+                        }
+                        
+                        // Rollback Button
+                        Button {
+                            text: "Rollback"
+                            implicitWidth: 120
+                            implicitHeight: 40
+                            
+                            // This property allows us to track the hover state
+                            property bool isHovering: false
+                            
+                            // Define the hover handler
+                            HoverHandler {
+                                onHoveredChanged: parent.isHovering = hovered
+                            }
+                            
+                            background: Rectangle {
+                                // Use the isHovering property to change color
+                                color: parent.isHovering ? "#3e4e7a" : "#2e3a5c"
+                                radius: 4
+                                
+                                // Add a smooth color transition
+                                Behavior on color {
+                                    ColorAnimation { duration: 150 }
+                                }
+                            }
+                            
+                            contentItem: Text {
+                                text: parent.text
+                                font.pixelSize: 14
+                                color: "white"
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            
+                            onClicked: {
+                                // Display rollback plots
+                                backend.setDataset("rollback")
+                            }
+                        }
+                    }
+                }    
             }
-
             // Manual Drone Control view
         Rectangle{
             color: "#64778d"
@@ -1265,166 +1332,7 @@ ApplicationWindow {
                 console.log(action + " triggered.")
             }
         }
-            // Brainwave Visualization
 
-            Rectangle {
-                color: "#64778d"
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-
-                ColumnLayout {
-                    anchors.fill: parent
-                    spacing: 10
-
-                    // Grid Layout for 6 Graphs (2 Rows x 3 Columns)
-                    GridLayout {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        columns: 3
-                        Layout.margins: 10
-                        columnSpacing: 10
-                        rowSpacing: 10
-
-                        Repeater {
-                            model: imageModel  
-                            delegate: Rectangle {
-                                color: "#e6e6f0"
-                                Layout.fillWidth: true
-                                Layout.fillHeight: true
-                                border.color: "#d0d0d8"
-                                border.width: 1
-                                radius: 4
-
-                                Column {
-                                    width: parent.width
-                                    height: parent.height
-                                    spacing: 0
-
-                                    Rectangle {
-                                        width: parent.width
-                                        height: 30
-                                        color: "#242c4d"
-
-                                        Text {
-                                            // Extract just the first word from the title
-                                            text: {
-                                                var parts = model.graphTitle.split(" ");
-                                                return parts[0]; // Just return "Takeoff", "Forward", etc.
-                                            }
-                                            color: "white"
-                                            font.bold: true
-                                            font.pixelSize: 14
-                                            
-                                            // Center text using calculations rather than anchors
-                                            x: (parent.width - width) / 2
-                                            y: (parent.height - height) / 2
-                                        }
-                                    }
-                                    Rectangle {
-                                        width: parent.width
-                                        height: parent.height - 30  // Total height minus header height
-                                        color: "white"
-
-                                        // Display Image
-                                        Image {
-                                            x: 8  // Margin
-                                            y: 8  // Margin
-                                            width: parent.width - 16  // Margin on both sides
-                                            height: parent.height - 16  // Margin on both sides
-                                            source: model.imagePath
-                                            fillMode: Image.PreserveAspectFit
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    
-                    // Refresh and Rollback buttons after graphs
-                    RowLayout {
-                        Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
-                        Layout.bottomMargin: 20
-                        spacing: 15
-                        
-                        // Refresh Button
-                        Button {
-                            text: "Refresh"
-                            implicitWidth: 120
-                            implicitHeight: 40
-                            
-                            // This property allows us to track the hover state
-                            property bool isHovering: false
-                            
-                            // Define the hover handler
-                            HoverHandler {
-                                onHoveredChanged: parent.isHovering = hovered
-                            }
-                            
-                            background: Rectangle {
-                                // Use the isHovering property to change color
-                                color: parent.isHovering ? "#3e4e7a" : "#2e3a5c"
-                                radius: 4
-                                
-                                // Add a smooth color transition
-                                Behavior on color {
-                                    ColorAnimation { duration: 150 }
-                                }
-                            }
-                            
-                            contentItem: Text {
-                                text: parent.text
-                                font.pixelSize: 14
-                                color: "white"
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                            }
-                            
-                            onClicked: {
-                                backend.setDataset("refresh")
-                            }
-                        }
-                        
-                        // Rollback Button
-                        Button {
-                            text: "Rollback"
-                            implicitWidth: 120
-                            implicitHeight: 40
-                            
-                            // This property allows us to track the hover state
-                            property bool isHovering: false
-                            
-                            // Define the hover handler
-                            HoverHandler {
-                                onHoveredChanged: parent.isHovering = hovered
-                            }
-                            
-                            background: Rectangle {
-                                // Use the isHovering property to change color
-                                color: parent.isHovering ? "#3e4e7a" : "#2e3a5c"
-                                radius: 4
-                                
-                                // Add a smooth color transition
-                                Behavior on color {
-                                    ColorAnimation { duration: 150 }
-                                }
-                            }
-                            
-                            contentItem: Text {
-                                text: parent.text
-                                font.pixelSize: 14
-                                color: "white"
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                            }
-                            
-                            onClicked: {
-                                // Display rollback plots
-                                backend.setDataset("rollback")
-                            }
-                        }
-                    }
-                }    
-            }
             //File shuffler view 
             Rectangle {
                 id: fileShufflerView
@@ -1515,6 +1423,97 @@ ApplicationWindow {
                         cleanedDirectory = cleanedDirectory.replace("file:///", "");
                         fileShufflerView.selectedDirectory = cleanedDirectory;
                         fileShufflerView.outputBoxText += "Selected directory: " + fileShufflerView.selectedDirectory + "\n";
+                    }
+                }
+            }
+            // Transfer Data view
+            Rectangle {
+                color: "#64778d"
+                ScrollView {
+                    anchors.centerIn: parent
+                    width: Math.min(parent.width * 0.9, 600)
+                    height: Math.min(parent.height * 0.9, contentHeight)
+                    clip: true
+
+                    ColumnLayout {
+                        id: contentLayout
+                        width: parent.width
+                        spacing: 10
+
+                        Label { text: "Target IP"; color: "white" }
+                        TextField { Layout.fillWidth: true }
+
+                        Label { text: "Target Username"; color: "white" }
+                        TextField { Layout.fillWidth: true }
+
+                        Label { text: "Target Password"; color: "white" }
+                        TextField {
+                            Layout.fillWidth: true
+                            echoMode: TextInput.Password
+                        }
+
+                        Label { text: "Private Key Directory:"; color: "white" }
+                        RowLayout {
+                            Layout.fillWidth: true
+                            TextField {
+                                id: privateKeyDirInput
+                                Layout.fillWidth: true
+                            }
+                            Button {
+                                text: "Browse"
+                                onClicked: console.log("Browse for Private Key Directory")
+                            }
+                        }
+
+                        CheckBox {
+                            text: "Ignore Host Key"
+                            checked: true
+                            contentItem: Text {
+                                text: parent.text
+                                color: "white"
+                                leftPadding: parent.indicator.width + parent.spacing
+                            }
+                        }
+
+                        Label { text: "Source Directory:"; color: "white" }
+                        RowLayout {
+                            Layout.fillWidth: true
+                            TextField {
+                                id: sourceDirInput
+                                Layout.fillWidth: true
+                            }
+                            Button {
+                                text: "Browse"
+                                onClicked: console.log("Browse for Source Directory")
+                            }
+                        }
+
+                        Label { text: "Target Directory:"; color: "white" }
+                        TextField {
+                            Layout.fillWidth: true
+                            text: "/home/"
+                            placeholderText: "/home/"
+                        }
+
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Button {
+                                text: "Save Config"
+                                onClicked: console.log("Save Config clicked")
+                            }
+                            Button {
+                                text: "Load Config"
+                                onClicked: console.log("Load Config clicked")
+                            }
+                            Button {
+                                text: "Clear Config"
+                                onClicked: console.log("Clear Config clicked")
+                            }
+                            Button {
+                                text: "Upload"
+                                onClicked: console.log("Upload clicked")
+                            }
+                        }
                     }
                 }
             }
