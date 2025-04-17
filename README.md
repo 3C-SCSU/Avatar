@@ -159,6 +159,13 @@ TODO: Update this section with a walkthrough on sparse checkout
    ```sh
    git clone https://github.com/3C-SCSU/Avatar.git
    ```
+
+#### Updating your local Avatar
+This will update your local checked-out branch:
+   ```sh
+   git  pull origin master
+   ```
+
 ### Installation for Forking ( Recommended )
 #### Forking
 **1. Navigate to the Fork Button:**<br>
