@@ -37,7 +37,7 @@ class TabController(QObject):
             lambda: print("Error:", self.nao_process.readAllStandardError().data().decode()))
 
         # Start the process
-        script_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Nao6Viewer.py")
+        script_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "NA06_Manual_Control/Nao6Viewer.py")
         print(f"Starting Nao Viewer from: {script_path}")
         self.nao_process.start(sys.executable, [script_path])
 
