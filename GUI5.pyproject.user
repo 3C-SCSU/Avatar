@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 15.0.1, 2025-04-07T11:47:38. -->
+<!-- Written by QtCreator 15.0.1, 2025-04-11T13:14:27. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -153,7 +153,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">/Users/corrin/Desktop/Important Files/Senior Project/Avatar/GUI5_BrainwaveReading.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/corrin/Desktop/Important Files/Senior Project/Avatar/GUI5_BrainwaveReading.py</value>
-    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
+    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">true</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/corrin/Desktop/Important Files/Senior Project/Avatar/GUI5_BrainwaveReading.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
@@ -172,7 +172,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">/Users/corrin/Desktop/Important Files/Senior Project/Avatar/GUI5TransferData.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/corrin/Desktop/Important Files/Senior Project/Avatar/GUI5TransferData.py</value>
-    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
+    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">true</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/corrin/Desktop/Important Files/Senior Project/Avatar/GUI5TransferData.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
@@ -191,7 +191,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">/Users/corrin/Desktop/Important Files/Senior Project/Avatar/GUI5_ManualDroneControl.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/corrin/Desktop/Important Files/Senior Project/Avatar/GUI5_ManualDroneControl.py</value>
-    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
+    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">true</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/corrin/Desktop/Important Files/Senior Project/Avatar/GUI5_ManualDroneControl.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
@@ -210,7 +210,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">GUI5.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/corrin/Desktop/Important Files/Senior Project/Avatar/GUI5.py</value>
-    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
+    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">true</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/corrin/Desktop/Important Files/Senior Project/Avatar/GUI5.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
@@ -229,7 +229,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">test_script.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/corrin/Desktop/Important Files/Senior Project/Avatar/test_script.py</value>
-    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
+    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">true</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/corrin/Desktop/Important Files/Senior Project/Avatar/test_script.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
