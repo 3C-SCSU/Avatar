@@ -2,13 +2,14 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Dialogs
+import Qt.labs.platform
 
 
 ApplicationWindow {
     property bool isRandomForestSelected: false
     visible: true
     width: 1200
-    height: 800 
+    height: 800
     title: "Avatar - Brainwave Reading"
 
     // Proper connection handling
@@ -42,7 +43,7 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = 0
             }
             TabButton {
-                text: "Brainwave Visualization"
+                text: "Transfer Data"
                 onClicked: stackLayout.currentIndex = 1
             }
             TabButton {
@@ -50,11 +51,11 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = 2
             }
             TabButton {
-                text: "File Shuffler"
+                text: "Brainwave Visualization"
                 onClicked: stackLayout.currentIndex = 3
             }
             TabButton {
-                text: "Transfer Data"
+                text: "File Shuffler"
                 onClicked: stackLayout.currentIndex = 4
             }
 
@@ -68,7 +69,7 @@ ApplicationWindow {
 
             // Brainwave Reading view
             Rectangle {
-                color: "#64778d" // Background color
+                color: "#3b4b57" // Background color
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
@@ -100,7 +101,7 @@ ApplicationWindow {
                         Rectangle {
                             width: 150
                             height: 150
-                            color: "#242c4d" // Dark blue background
+                            color: "#1b3a4b" // Dark blue background
                             Layout.alignment: Qt.AlignHCenter
 
                             Image {
@@ -115,7 +116,8 @@ ApplicationWindow {
                                 width: 130
                                 height: 130
                                 anchors.centerIn: parent
-                                background: Item {} // No background
+                                background: Item {
+                                } // No background
                                 contentItem: Text {
                                     text: "Read my mind..."
                                     color: "white" // Set text color to white
@@ -168,11 +170,16 @@ ApplicationWindow {
                                 id: predictionListView
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
-                                model: ListModel {}
+                                model: ListModel {
+                                }
                                 delegate: RowLayout {
                                     spacing: 150
-                                    Text { text: model.count; color: "white"; width: 80 }
-                                    Text { text: model.label; color: "white"; width: 80 }
+                                    Text {
+                                        text: model.count; color: "white"; width: 80
+                                    }
+                                    Text {
+                                        text: model.label; color: "white"; width: 80
+                                    }
                                 }
                             }
                         }
@@ -186,8 +193,8 @@ ApplicationWindow {
                                 Layout.preferredWidth: 160
                                 Layout.preferredHeight: 80
                                 background: Rectangle {
-                                    color: "#242c4d"
-                                } 
+                                    color: "#1b3a4b"
+                                }
                                 onClicked: backend.notWhatIWasThinking(manualInput.text)
                             }
                             Button {
@@ -195,8 +202,8 @@ ApplicationWindow {
                                 Layout.preferredWidth: 160
                                 Layout.preferredHeight: 80
                                 background: Rectangle {
-                                    color: "#242c4d"
-                                } 
+                                    color: "#1b3a4b"
+                                }
                                 onClicked: backend.executeAction()
                             }
                         }
@@ -218,7 +225,7 @@ ApplicationWindow {
                                 width: 130
                                 height: 40
                                 background: Rectangle {
-                                    color: "#242c4d"
+                                    color: "#1b3a4b"
                                 }
                                 onClicked: backend.keepDroneAlive()
                             }
@@ -233,7 +240,8 @@ ApplicationWindow {
                                 id: flightLogView
                                 Layout.preferredWidth: 230
                                 Layout.preferredHeight: 170
-                                model: ListModel {}
+                                model: ListModel {
+                                }
                                 delegate: Text {
                                     text: log
                                     color: "white"
@@ -248,7 +256,7 @@ ApplicationWindow {
                             Rectangle {
                                 width: 150
                                 height: 150
-                                color: "#242c4d" // Dark blue background
+                                color: "#1b3a4b" // Dark blue background
 
                                 Image {
                                     source: "GUI_Pics/connect.png"
@@ -262,7 +270,8 @@ ApplicationWindow {
                                     width: 80
                                     height: 80
                                     anchors.centerIn: parent
-                                    background: Item {} // No background
+                                    background: Item {
+                                    } // No background
                                     contentItem: Text {
                                         text: "Connect"
                                         color: "white" // Set text color to white
@@ -274,7 +283,7 @@ ApplicationWindow {
                             ColumnLayout {
                                 spacing: 5
                                 Layout.alignment: Qt.AlignHCenter
-                                
+
                                 // Radio Button
                                 RadioButton {
                                     id: randomForestRadio
@@ -286,7 +295,7 @@ ApplicationWindow {
                                 Rectangle {
                                     width: 150
                                     height: 80
-                                    color: "#6eb109"
+                                    color: "#4CAF50"
                                     radius: 5
 
                                     Text {
@@ -320,7 +329,7 @@ ApplicationWindow {
                                 Rectangle {
                                     width: 150
                                     height: 80
-                                    color: "#6eb109"
+                                    color: "#4CAF50"
                                     radius: 5
 
                                     Text {
@@ -330,15 +339,15 @@ ApplicationWindow {
                                         anchors.centerIn: parent
                                         font.bold: !isRandomForestSelected
                                     }
+                                }
 
-                                    MouseArea {
-                                        anchors.fill: parent
-                                        onClicked: {
-                                            isRandomForestSelected = false;
-                                            backend.selectModel("Deep Learning");
-                                        }
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        isRandomForestSelected = false;
+                                        backend.selectModel("Deep Learning");
                                     }
-                                }                                
+                                }
                             }
                             // Adding Synthetic Data and Live Data Radio Button (Row 344 to 364) as part of Ticket 186
                             Column {
@@ -419,14 +428,24 @@ ApplicationWindow {
                                 Layout.preferredWidth: 700
                                 Layout.preferredHeight: 550
                                 model: ListModel {
-                                    ListElement { count: "1"; server: "Prediction A"; label: "Label A" }
-                                    ListElement { count: "2"; server: "Prediction B"; label: "Label B" }
+                                    ListElement {
+                                        count: "1"; server: "Prediction A"; label: "Label A"
+                                    }
+                                    ListElement {
+                                        count: "2"; server: "Prediction B"; label: "Label B"
+                                    }
                                 }
                                 delegate: RowLayout {
                                     spacing: 50
-                                    Text { text: model.count; color: "white"; width: 120 }
-                                    Text { text: model.server; color: "white"; width: 200 }
-                                    Text { text: model.label; color: "white"; width: 120 }
+                                    Text {
+                                        text: model.count; color: "white"; width: 120
+                                    }
+                                    Text {
+                                        text: model.server; color: "white"; width: 200
+                                    }
+                                    Text {
+                                        text: model.label; color: "white"; width: 120
+                                    }
                                 }
                             }
                         }
@@ -449,168 +468,115 @@ ApplicationWindow {
                 }
             }
 
-            // Brainwave Visualization
+            // Transfer Data view
             Rectangle {
-                color: "#64778d"
-                Layout.fillWidth: true
-                Layout.fillHeight: true
+                color: "#4a5b7b"
+                ScrollView {
+                    anchors.centerIn: parent
+                    width: Math.min(parent.width * 0.9, 600)
+                    height: Math.min(parent.height * 0.9, contentHeight)
+                    clip: true
 
-                ColumnLayout {
-                    anchors.fill: parent
-                    spacing: 10
+                    ColumnLayout {
+                        id: contentLayout
+                        width: parent.width
+                        spacing: 10
 
-                    // Grid Layout for 6 Graphs (2 Rows x 3 Columns)
-                    GridLayout {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        columns: 3
-                        Layout.margins: 10
-                        columnSpacing: 10
-                        rowSpacing: 10
+                        Label {
+                            text: "Target IP"; color: "white"
+                        }
+                        TextField {
+                            Layout.fillWidth: true
+                        }
 
-                        Repeater {
-                            model: imageModel  
-                            delegate: Rectangle {
-                                color: "#e6e6f0"
+                        Label {
+                            text: "Target Username"; color: "white"
+                        }
+                        TextField {
+                            Layout.fillWidth: true
+                        }
+
+                        Label {
+                            text: "Target Password"; color: "white"
+                        }
+                        TextField {
+                            Layout.fillWidth: true
+                            echoMode: TextInput.Password
+                        }
+
+                        Label {
+                            text: "Private Key Directory:"; color: "white"
+                        }
+                        RowLayout {
+                            Layout.fillWidth: true
+                            TextField {
+                                id: privateKeyDirInput
                                 Layout.fillWidth: true
-                                Layout.fillHeight: true
-                                border.color: "#d0d0d8"
-                                border.width: 1
-                                radius: 4
+                            }
+                            Button {
+                                text: "Browse"
+                                onClicked: console.log("Browse for Private Key Directory")
+                            }
+                        }
 
-                                Column {
-                                    width: parent.width
-                                    height: parent.height
-                                    spacing: 0
+                        CheckBox {
+                            text: "Ignore Host Key"
+                            checked: true
+                            contentItem: Text {
+                                text: parent.text
+                                color: "white"
+                                leftPadding: parent.indicator.width + parent.spacing
+                            }
+                        }
 
-                                    Rectangle {
-                                        width: parent.width
-                                        height: 30
-                                        color: "#242c4d"
+                        Label {
+                            text: "Source Directory:"; color: "white"
+                        }
+                        RowLayout {
+                            Layout.fillWidth: true
+                            TextField {
+                                id: sourceDirInput
+                                Layout.fillWidth: true
+                            }
+                            Button {
+                                text: "Browse"
+                                onClicked: console.log("Browse for Source Directory")
+                            }
+                        }
 
-                                        Text {
-                                            // Extract just the first word from the title
-                                            text: {
-                                                var parts = model.graphTitle.split(" ");
-                                                return parts[0]; // Just return "Takeoff", "Forward", etc.
-                                            }
-                                            color: "white"
-                                            font.bold: true
-                                            font.pixelSize: 14
-                                            
-                                            // Center text using calculations rather than anchors
-                                            x: (parent.width - width) / 2
-                                            y: (parent.height - height) / 2
-                                        }
-                                    }
-                                    Rectangle {
-                                        width: parent.width
-                                        height: parent.height - 30  // Total height minus header height
-                                        color: "white"
+                        Label {
+                            text: "Target Directory:"; color: "white"
+                        }
+                        TextField {
+                            Layout.fillWidth: true
+                            text: "/home/"
+                            placeholderText: "/home/"
+                        }
 
-                                        // Display Image
-                                        Image {
-                                            x: 8  // Margin
-                                            y: 8  // Margin
-                                            width: parent.width - 16  // Margin on both sides
-                                            height: parent.height - 16  // Margin on both sides
-                                            source: model.imagePath
-                                            fillMode: Image.PreserveAspectFit
-                                        }
-                                    }
-                                }
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Button {
+                                text: "Save Config"
+                                onClicked: console.log("Save Config clicked")
+                            }
+                            Button {
+                                text: "Load Config"
+                                onClicked: console.log("Load Config clicked")
+                            }
+                            Button {
+                                text: "Clear Config"
+                                onClicked: console.log("Clear Config clicked")
+                            }
+                            Button {
+                                text: "Upload"
+                                onClicked: console.log("Upload clicked")
                             }
                         }
                     }
-                    
-                    // Refresh and Rollback buttons after graphs
-                    RowLayout {
-                        Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
-                        Layout.bottomMargin: 20
-                        spacing: 15
-                        
-                        // Refresh Button
-                        Button {
-                            text: "Refresh"
-                            implicitWidth: 120
-                            implicitHeight: 40
-                            
-                            // This property allows us to track the hover state
-                            property bool isHovering: false
-                            
-                            // Define the hover handler
-                            HoverHandler {
-                                onHoveredChanged: parent.isHovering = hovered
-                            }
-                            
-                            background: Rectangle {
-                                // Use the isHovering property to change color
-                                color: parent.isHovering ? "#3e4e7a" : "#2e3a5c"
-                                radius: 4
-                                
-                                // Add a smooth color transition
-                                Behavior on color {
-                                    ColorAnimation { duration: 150 }
-                                }
-                            }
-                            
-                            contentItem: Text {
-                                text: parent.text
-                                font.pixelSize: 14
-                                color: "white"
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                            }
-                            
-                            onClicked: {
-                                backend.setDataset("refresh")
-                            }
-                        }
-                        
-                        // Rollback Button
-                        Button {
-                            text: "Rollback"
-                            implicitWidth: 120
-                            implicitHeight: 40
-                            
-                            // This property allows us to track the hover state
-                            property bool isHovering: false
-                            
-                            // Define the hover handler
-                            HoverHandler {
-                                onHoveredChanged: parent.isHovering = hovered
-                            }
-                            
-                            background: Rectangle {
-                                // Use the isHovering property to change color
-                                color: parent.isHovering ? "#3e4e7a" : "#2e3a5c"
-                                radius: 4
-                                
-                                // Add a smooth color transition
-                                Behavior on color {
-                                    ColorAnimation { duration: 150 }
-                                }
-                            }
-                            
-                            contentItem: Text {
-                                text: parent.text
-                                font.pixelSize: 14
-                                color: "white"
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                            }
-                            
-                            onClicked: {
-                                // Display rollback plots
-                                backend.setDataset("rollback")
-                            }
-                        }
-                    }
-                }    
+                }
             }
+
             // Manual Drone Control view
-        Rectangle{
-            color: "#64778d"
             ColumnLayout {
                 anchors.fill: parent
                 spacing: 10
@@ -761,20 +727,17 @@ ApplicationWindow {
                         }
                     }
 
-                    // // Log ListView
-                    // ListView {
-                    //     Layout.fillWidth: true
-                    //     Layout.preferredHeight: 150
-                    //     model: ListModel {
-                    //                 ListElement { count: "1"; server: "Log A"; label: "Label A" }
-                    //                 ListElement { count: "2"; server: "Log B"; label: "Label B" }
-                    //             }
-                    //     delegate: Item {
-                    //         Text {
-                    //             text: modelData
-                    //         }
-                    //     }
-                    // }
+                    // Log ListView
+                    ListView {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 150
+                        model: logModel
+                        delegate: Item {
+                            Text {
+                                text: modelData
+                            }
+                        }
+                    }
                 }
 
                 // Forward Button
@@ -946,7 +909,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "GUI_Pics/Stream.png"
+                                source: "brainwave-prediction-app/images/Stream.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -1177,7 +1140,7 @@ ApplicationWindow {
                                     connectButtonText.color = "white"; // Revert text color to white on exit
                                 }
                                 onClicked: {
-                                backend.getDroneAction("connect"); // Action for the "Connect" button
+                                    backend.getDroneAction("connect"); // Action for the "Connect" button
                                 }
                             }
                         }
@@ -1326,23 +1289,187 @@ ApplicationWindow {
                     }
                 }
             }
+
             function getDroneAction(action) {
                 //logModel.append({ action: action + " button pressed" })
                 // Here you would implement the actual drone control logic
                 console.log(action + " triggered.")
             }
-        }
 
+            // Brainwave Visualization
+
+            Rectangle {
+                color: "#f0f0f5"
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                ColumnLayout {
+                    anchors.fill: parent
+                    spacing: 10
+
+                    // Grid Layout for 6 Graphs (2 Rows x 3 Columns)
+                    GridLayout {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        columns: 3
+                        Layout.margins: 10
+                        columnSpacing: 10
+                        rowSpacing: 10
+
+                        Repeater {
+                            model: imageModel
+                            delegate: Rectangle {
+                                color: "#e6e6f0"
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
+                                border.color: "#d0d0d8"
+                                border.width: 1
+                                radius: 4
+
+                                Column {
+                                    width: parent.width
+                                    height: parent.height
+                                    spacing: 0
+
+                                    Rectangle {
+                                        width: parent.width
+                                        height: 30
+                                        color: "#5d6d9a"
+
+                                        Text {
+                                            // Extract just the first word from the title
+                                            text: {
+                                                var parts = model.graphTitle.split(" ");
+                                                return parts[0]; // Just return "Takeoff", "Forward", etc.
+                                            }
+                                            color: "white"
+                                            font.bold: true
+                                            font.pixelSize: 14
+
+                                            // Center text using calculations rather than anchors
+                                            x: (parent.width - width) / 2
+                                            y: (parent.height - height) / 2
+                                        }
+                                    }
+                                    Rectangle {
+                                        width: parent.width
+                                        height: parent.height - 30  // Total height minus header height
+                                        color: "white"
+
+                                        // Display Image
+                                        Image {
+                                            x: 8  // Margin
+                                            y: 8  // Margin
+                                            width: parent.width - 16  // Margin on both sides
+                                            height: parent.height - 16  // Margin on both sides
+                                            source: model.imagePath
+                                            fillMode: Image.PreserveAspectFit
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Refresh and Rollback buttons after graphs
+                    RowLayout {
+                        Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
+                        Layout.bottomMargin: 20
+                        spacing: 15
+
+                        // Refresh Button
+                        Button {
+                            text: "Refresh"
+                            implicitWidth: 120
+                            implicitHeight: 40
+
+                            // This property allows us to track the hover state
+                            property bool isHovering: false
+
+                            // Define the hover handler
+                            HoverHandler {
+                                onHoveredChanged: parent.isHovering = hovered
+                            }
+
+                            background: Rectangle {
+                                // Use the isHovering property to change color
+                                color: parent.isHovering ? "#3e4e7a" : "#2e3a5c"
+                                radius: 4
+
+                                // Add a smooth color transition
+                                Behavior on color {
+                                    ColorAnimation {
+                                        duration: 150
+                                    }
+                                }
+                            }
+
+                            contentItem: Text {
+                                text: parent.text
+                                font.pixelSize: 14
+                                color: "white"
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+
+                            onClicked: {
+                                backend.setDataset("refresh")
+                            }
+                        }
+
+                        // Rollback Button
+                        Button {
+                            text: "Rollback"
+                            implicitWidth: 120
+                            implicitHeight: 40
+
+                            // This property allows us to track the hover state
+                            property bool isHovering: false
+
+                            // Define the hover handler
+                            HoverHandler {
+                                onHoveredChanged: parent.isHovering = hovered
+                            }
+
+                            background: Rectangle {
+                                // Use the isHovering property to change color
+                                color: parent.isHovering ? "#3e4e7a" : "#2e3a5c"
+                                radius: 4
+
+                                // Add a smooth color transition
+                                Behavior on color {
+                                    ColorAnimation {
+                                        duration: 150
+                                    }
+                                }
+                            }
+
+                            contentItem: Text {
+                                text: parent.text
+                                font.pixelSize: 14
+                                color: "white"
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+
+                            onClicked: {
+                                // Display rollback plots
+                                backend.setDataset("rollback")
+                            }
+                        }
+                    }
+                }
+            }
             //File shuffler view 
             Rectangle {
                 id: fileShufflerView
-                color: "#64778d"
+                color: "#2b3a4a"
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
                 property string outputBoxText: ""
                 property string selectedDirectory: ""
-                property bool ranShuffle: false 
+                property bool ranShuffle: false
 
                 Column {
                     anchors.fill: parent
@@ -1365,8 +1492,10 @@ ApplicationWindow {
                         color: "lightgrey"
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.verticalCenter: parent.verticalCenter
+
                         ScrollView {
                             anchors.fill: parent
+
                             TextArea {
                                 id: outputBox
                                 text: fileShufflerView.outputBoxText
@@ -1383,139 +1512,59 @@ ApplicationWindow {
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.top: parent.verticalCenter
                         anchors.topMargin: parent.height * 0.3 + 10
-                        Button {
-                            id: folderButton
-                            text: "Select your Directory"
-                            onClicked: folderDialog.open()
-                        }
 
                         Button {
-                            id: runButton
+                            text: "Unify Thoughts"
+                            Layout.alignment: Qt.AlignLeft
+                            onClicked: unifyThoughts.open()
+                        }
+
+
+                        Button {
                             text: "Run File Shuffler"
-                            onClicked: {
-                                fileShufflerView.ranShuffle = true; 
-                                fileShufflerView.outputBoxText = `Running File Shuffler...\n`;
-                                var output = fileShufflerGui.run_file_shuffler_program(fileShufflerView.selectedDirectory);
-                                fileShufflerView.outputBoxText += output;
-                            }
-                        }
-                    }
-
-                    Text {
-                        id: ranText
-                        text: "Shuffle Complete!"
-                        color: "yellow"
-                        font.bold: true
-                        font.pixelSize: 18
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.top: buttonRow.bottom 
-                        anchors.topMargin: 10 
-                        visible: fileShufflerView.ranShuffle 
-                    }
-                }
-
-                FolderDialog {
-                    id: folderDialog
-                    title: "Select Your Directory"
-                    onAccepted:
-                    {
-                        let cleanedDirectory = String(folderDialog.selectedFolder);
-                        cleanedDirectory = cleanedDirectory.replace("file:///", "");
-                        fileShufflerView.selectedDirectory = cleanedDirectory;
-                        fileShufflerView.outputBoxText += "Selected directory: " + fileShufflerView.selectedDirectory + "\n";
-                    }
-                }
-            }
-            // Transfer Data view
-            Rectangle {
-                color: "#64778d"
-                ScrollView {
-                    anchors.centerIn: parent
-                    width: Math.min(parent.width * 0.9, 600)
-                    height: Math.min(parent.height * 0.9, contentHeight)
-                    clip: true
-
-                    ColumnLayout {
-                        id: contentLayout
-                        width: parent.width
-                        spacing: 10
-
-                        Label { text: "Target IP"; color: "white" }
-                        TextField { Layout.fillWidth: true }
-
-                        Label { text: "Target Username"; color: "white" }
-                        TextField { Layout.fillWidth: true }
-
-                        Label { text: "Target Password"; color: "white" }
-                        TextField {
-                            Layout.fillWidth: true
-                            echoMode: TextInput.Password
+                            Layout.alignment: Qt.AlignRight
+                            onClicked: fileDialog.open()
                         }
 
-                        Label { text: "Private Key Directory:"; color: "white" }
-                        RowLayout {
-                            Layout.fillWidth: true
-                            TextField {
-                                id: privateKeyDirInput
-                                Layout.fillWidth: true
+
+                        FileDialog {
+                            id: fileDialog
+                            title: "Choose a CSV file to shuffle"
+                            nameFilters: ["CSV files (*.csv)"]
+                            fileMode: FileDialog.OpenFile
+                            visible: false
+
+                            onAccepted: {
+                                if (fileDialog.selectedFile) {
+                                    console.log("File selected:", fileDialog.selectedFile)
+                                    fileShufflerGui.shuffle_csv_file(fileDialog.selectedFile)
+                                } else {
+                                    console.log("No file returned")
+                                }
                             }
-                            Button {
-                                text: "Browse"
-                                onClicked: console.log("Browse for Private Key Directory")
+
+                            onRejected: {
+                                console.log("File dialog canceled")
                             }
                         }
 
-                        CheckBox {
-                            text: "Ignore Host Key"
-                            checked: true
-                            contentItem: Text {
-                                text: parent.text
-                                color: "white"
-                                leftPadding: parent.indicator.width + parent.spacing
-                            }
-                        }
+                        FolderDialog {
+                            id: unifyThoughts
+                            folder: "file:///"  // Or "." for current working directory
 
-                        Label { text: "Source Directory:"; color: "white" }
-                        RowLayout {
-                            Layout.fillWidth: true
-                            TextField {
-                                id: sourceDirInput
-                                Layout.fillWidth: true
+                            onAccepted: {
+                                console.log("Selected folder:", unifyThoughts.folder)
+                                fileShufflerGui.unify_thoughts(unifyThoughts.folder)
                             }
-                            Button {
-                                text: "Browse"
-                                onClicked: console.log("Browse for Source Directory")
-                            }
-                        }
 
-                        Label { text: "Target Directory:"; color: "white" }
-                        TextField {
-                            Layout.fillWidth: true
-                            text: "/home/"
-                            placeholderText: "/home/"
-                        }
+                            onRejected: {
+                                console.log("Folder dialog canceled")
+                            }
 
-                        RowLayout {
-                            Layout.fillWidth: true
-                            Button {
-                                text: "Save Config"
-                                onClicked: console.log("Save Config clicked")
-                            }
-                            Button {
-                                text: "Load Config"
-                                onClicked: console.log("Load Config clicked")
-                            }
-                            Button {
-                                text: "Clear Config"
-                                onClicked: console.log("Clear Config clicked")
-                            }
-                            Button {
-                                text: "Upload"
-                                onClicked: console.log("Upload clicked")
-                            }
                         }
                     }
                 }
+
             }
         }
     }
