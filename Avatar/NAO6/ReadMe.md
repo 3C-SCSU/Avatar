@@ -64,5 +64,6 @@ You can use `scp` or Choreograph to transfer files.
     │   ├── conftest.py      # testing configs
     │   └── test_robot_controls.py
     ├── robot_controller.py  # Robot initilization
+    ├── setup_naoqi_env.sh
     └── README.md            # You are here
 ```

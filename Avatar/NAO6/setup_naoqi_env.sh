@@ -14,7 +14,6 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
 fi
 
 NAOQI_SDK_PATH="$HOME/Downloads/pynaoqi-python2.7-2.8.7.4-linux64-20210819_141148/lib/python2.7/site-packages"
-# NAOQI_SDK_PATH="/mnt/c/Users/91968/OneDrive/Desktop/Repos/naoqi-sdk/pynaoqi-python2.7-2.8.7.4-linux64-20210819_141148/lib/python2.7/site-packages"
 
 if [ -d "$NAOQI_SDK_PATH" ]; then
   export PYTHONPATH="$PYTHONPATH:$NAOQI_SDK_PATH"
