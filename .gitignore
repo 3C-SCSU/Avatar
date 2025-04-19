@@ -13,6 +13,8 @@ venv.bak/
 __pycache__/
 
 
+.vscode/
+
 plotscode/plots/
 plotscode/.Rhistory
 plotscode/.RData
