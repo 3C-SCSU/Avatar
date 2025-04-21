@@ -76,7 +76,7 @@ ApplicationWindow {
                             Layout.alignment: Qt.AlignHCenter
 
                             Image {
-                                source: "images/brain.png"
+                                source: "GUI_Pics/brain.png"
                                 width: 130
                                 height: 130
                                 anchors.centerIn: parent
@@ -244,7 +244,7 @@ ApplicationWindow {
                             color: "#1b3a4b" // Dark blue background
 
                             Image {
-                                source: "images/connect.png"
+                                source: "GUI_Pics/connect.png"
                                 width: 80
                                 height: 80
                                 anchors.centerIn: parent
@@ -470,7 +470,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "images/Home.png"
+                                source: "GUI_Pics/home.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -520,7 +520,7 @@ ApplicationWindow {
                                 anchors.fill: parent
 
                                 Image {
-                                    source: "images/Up.png"
+                                    source: "GUI_Pics/up.png"
                                     width: 150
                                     height: 150
                                     anchors.centerIn: parent
@@ -620,7 +620,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                              Image {
-                                source: "images/Forward.png"
+                                source: "GUI_Pics/Forward.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -671,7 +671,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "images/turnLeft.png"
+                                source: "GUI_Pics/turnLeft.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -718,7 +718,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "images/Left.png"
+                                source: "GUI_Pics/left.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -813,7 +813,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "images/right.png"
+                                source: "GUI_Pics/right.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -861,7 +861,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "images/turnRight.png"
+                                source: "GUI_Pics/turnRight.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -915,7 +915,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "images/back.png"
+                                source: "GUI_Pics/back.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -968,7 +968,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "images/connect.png"
+                                source: "GUI_Pics/connect.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -1015,7 +1015,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "images/down.png"
+                                source: "GUI_Pics/down.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -1063,7 +1063,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "images/takeoff.png"
+                                source: "GUI_Pics/takeoff.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -1109,7 +1109,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "images/land.png"
+                                source: "GUI_Pics/land.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
