@@ -1525,6 +1525,32 @@ ApplicationWindow {
                     }
                 }
             }
+            
+            // Manual Controller Tab (Nao Viewer)
+            Rectangle {
+                color: "#2f4050"
+
+                Column {
+                    anchors.centerIn: parent
+                    spacing: 20
+
+                    Text {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: "Nao Viewer Running"
+                        color: "white"
+                        font.pixelSize: 18
+                    }
+
+                    Button {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: "Stop Nao Viewer"
+                        onClicked: {
+                            console.log("Stop button clicked")
+                            tabController.stopNaoViewer()
+                        }
+                    }
+                }
+            }
         }
     }
 }

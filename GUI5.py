@@ -394,11 +394,16 @@ class BrainwavesBackend(QObject):
 
 if __name__ == "__main__":
     os.environ["QT_QUICK_CONTROLS_STYLE"] = "Fusion"
-    app = QGuiApplication(sys.argv)
+    app = QApplication(sys.argv)
     engine = QQmlApplicationEngine()
+
+    # Create our controllers
+    tab_controller = TabController()
+    print("TabController created")
 
     # Initialize backend before loading QML
     backend = BrainwavesBackend()
+    engine.rootContext().setContextProperty("tabController", tab_controller)
     engine.rootContext().setContextProperty("backend", backend)
     engine.rootContext().setContextProperty("imageModel", [])  # Initialize empty model
     engine.rootContext().setContextProperty("fileShufflerGui", backend)  # For file shuffler
@@ -419,6 +424,6 @@ if __name__ == "__main__":
     backend.imagesReady.connect(lambda images: engine.rootContext().setContextProperty("imageModel", images))
 
     # Clean up when exiting
-    app.aboutToQuit.connect(tab_controller.stopNaoViewer)
+    app.aboutToQuit.connect(TabController.stopNaoViewer)
 
     sys.exit(app.exec())
