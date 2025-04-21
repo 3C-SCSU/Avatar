@@ -1,7 +1,5 @@
 import sys
 import os
-import time
-import random
 import subprocess
 from pathlib import Path
 from PySide6.QtWidgets import QApplication
@@ -9,6 +7,10 @@ from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtCore import QObject, Signal, Slot, QProcess, QUrl
 from pdf2image import convert_from_path
 from djitellopy import Tello
+import random
+import time
+from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
+
 
 # Add the parent directory to the Python path for file-shuffler
 sys.path.append(str(Path(__file__).resolve().parent / "file-shuffler"))
@@ -54,7 +56,7 @@ class BrainwavesBackend(QObject):
     flightLogUpdated = Signal(list)
     predictionsTableUpdated = Signal(list)
     imagesReady = Signal(list)
-    logMessage = Signal(str)  # Added missing signal for drone actions
+    logMessage = Signal(str)
 
     def __init__(self):
         super().__init__()
@@ -62,9 +64,13 @@ class BrainwavesBackend(QObject):
         self.predictions_log = []  # List to store prediction records
         self.current_prediction_label = ""
         self.image_paths = []  # Store converted image paths
-        self.plots_dir = os.path.abspath("plotscode/plots")  # Change the path if needed
-        self.tello = Tello()
-        self.current_model = "Deep Learning"  # Default model
+        self.plots_dir = os.path.abspath("plotscode/plots") # Base plots directory
+        self.current_dataset = "refresh"  # Default dataset to display
+        try:
+            self.tello = Tello()
+        except Exception as e:
+            print(f"Warning: Failed to initialize Tello drone: {e}")
+            self.logMessage.emit(f"Warning: Failed to initialize Tello drone: {e}")
 
     @Slot(str)
     def selectModel(self, model_name):
@@ -193,11 +199,126 @@ class BrainwavesBackend(QObject):
         self.logMessage.emit("Returning to home")
 
     @Slot()
+    def check_plots_exist(self):
+        """
+        Check if all necessary plot PDFs exist in both Rollback and Refresh directories.
+        If not, run controller.py to generate them.
+        """
+        print("\n=== CHECKING IF PLOTS EXIST ===")
+        
+        # Create plots base directory if it doesn't exist
+        plots_base_dir = Path(self.plots_dir)
+        if not plots_base_dir.exists():
+            print(f"Creating plots base directory: {plots_base_dir}")
+            plots_base_dir.mkdir(parents=True, exist_ok=True)
+        
+        # List of datasets to check
+        datasets = ["rollback", "refresh"]
+        
+        # List of PDF files that should exist for each dataset
+        pdf_files = [
+            "takeoff_plots.pdf", "forward_plots.pdf", "right_plots.pdf",
+            "land_plots.pdf", "backward_plots.pdf", "left_plots.pdf"
+        ]
+        
+        # Check if all directories and PDFs exist
+        missing_pdfs = False
+        for dataset in datasets:
+            dataset_dir = plots_base_dir / dataset
+            if not dataset_dir.exists():
+                print(f"Creating dataset directory: {dataset_dir}")
+                dataset_dir.mkdir(parents=True, exist_ok=True)
+                missing_pdfs = True
+                continue
+                
+            print(f"Checking PDFs in {dataset_dir}...")
+            for pdf_file in pdf_files:
+                pdf_path = dataset_dir / pdf_file
+                if not pdf_path.exists():
+                    print(f"Missing file: {pdf_path}")
+                    missing_pdfs = True
+                    break
+        
+        # If any PDFs are missing, run the controller.py script
+        if missing_pdfs:
+            print("Some plot files are missing. Running controller.py to generate them...")
+            
+            # Get the path to controller.py in the plotscode directory
+            controller_path = Path(self.plots_dir).parent / "controller.py"  # plotscode/controller.py
+            print(f"Controller path: {controller_path}")
+            print(f"Controller exists: {controller_path.exists()}")
+            
+            if controller_path.exists():
+                try:
+                    # Change to the plotscode directory before running the script
+                    original_dir = os.getcwd()
+                    os.chdir(controller_path.parent)
+                    
+                    # Run the controller.py script to generate plots for both datasets
+                    print(f"Executing: {sys.executable} {controller_path}")
+                    result = subprocess.run(
+                        [sys.executable, str(controller_path)],
+                        check=True,
+                        capture_output=True,
+                        text=True
+                    )
+                    
+                    # Go back to the original directory
+                    os.chdir(original_dir)
+                    
+                    # Print output for debugging
+                    print(f"Output: {result.stdout}")
+                    if result.stderr:
+                        print(f"Errors: {result.stderr}")
+                    
+                    print("Successfully generated plot files.")
+                    return True
+                except subprocess.CalledProcessError as e:
+                    print(f"Error running controller.py: {e}")
+                    if hasattr(e, 'stderr'):
+                        print(f"Error output: {e.stderr}")
+                    return False
+                except Exception as e:
+                    print(f"Unexpected error: {str(e)}")
+                    return False
+            else:
+                print(f"Controller script not found: {controller_path}")
+                return False
+        
+        return True  # All files exist
+    
+    @Slot(str)
+    def setDataset(self, dataset_name):
+        """
+        Set the current dataset to display (refresh or rollback).
+        :param dataset_name: Name of the dataset ('refresh' or 'rollback')
+        """
+        if dataset_name.lower() in ["refresh", "rollback"]:
+            self.current_dataset = dataset_name.lower()
+            print(f"Switched to {self.current_dataset} dataset")
+            # Update the displayed images
+            self.convert_pdfs_to_images()
+        else:
+            print(f"Invalid dataset name: {dataset_name}")
+    
+    @Slot()
     def convert_pdfs_to_images(self):
+        """
+        Convert PDF files from the current dataset to images and send to QML.
+        """
+        print(f"\n=== STARTING CONVERT PDFS TO IMAGES FOR {self.current_dataset.upper()} ===")
+        
+        # First check if all plot PDFs exist, and generate them if needed
+        success = self.check_plots_exist()
+        print(f"Result of check_plots_exist: {success}")
+        
+        # Current dataset directory
+        dataset_dir = Path(self.plots_dir) / self.current_dataset
+        
         # Convert PDF files to images and send image paths + graph names to QML.
         self.image_paths = []
-        graph_titles = ["Takeoff Graph", "Forward Graph", "Right Graph",
-                        "Landing Graph", "Backward Graph", "Left Graph"]
+        graph_titles = ["Takeoff", "Forward", "Right",
+                        "Landing", "Backward", "Left"]
 
         # Load files in the correct order
         pdf_files = [
@@ -206,19 +327,22 @@ class BrainwavesBackend(QObject):
         ]
 
         for i, pdf_file in enumerate(pdf_files):
-            pdf_path = os.path.join(self.plots_dir, pdf_file)
-            if not os.path.exists(pdf_path):
+            pdf_path = dataset_dir / pdf_file
+            if not pdf_path.exists():
                 print(f"Missing file: {pdf_path}")  # Debugging: Check missing PDFs
                 continue  # Skip if file does not exist
 
-            images = convert_from_path(pdf_path, dpi=150)  # Convert PDF to image
-            image_path = os.path.join(self.plots_dir, f"{pdf_file.replace('.pdf', '.png')}")
-            images[0].save(image_path, "PNG")  # Save first page as an image
-
+            images = convert_from_path(str(pdf_path), dpi=150)  # Convert PDF to image
+            image_path = dataset_dir / f"{pdf_file.replace('.pdf', '.png')}"
+            images[0].save(str(image_path), "PNG")  # Save first page as an image
+            
             # Debugging: Print the generated image path
             print(f"Generated image: {image_path}")
 
-            self.image_paths.append({"graphTitle": graph_titles[i], "imagePath": QUrl.fromLocalFile(image_path).toString()})
+            self.image_paths.append({
+                "graphTitle": graph_titles[i], 
+                "imagePath": QUrl.fromLocalFile(str(image_path)).toString()
+            })
 
         # Debugging: Print final list of image paths
         print("Final Image Paths Sent to QML:", self.image_paths)
@@ -238,51 +362,52 @@ class BrainwavesBackend(QObject):
         response = run_file_shuffler.main(path)
         return response
 
+    # Adding Synthetic Data and Live Data Logic (Row 327 to 355) as part of Ticket 186
 
-def handle_engine_status(object, url):
-    if object is None:
-        print(f"Error loading QML file: {url.toString()}")
-    else:
-        print(f"Successfully loaded QML: {url.toString()}")
+    @Slot(str)
+    def setDataMode(self, mode):
+        """
+        Set data mode to either synthetic or live based on radio button selection.
+        """
+        if mode == "synthetic":
+            self.init_synthetic_board()
+            print("Switched to Synthetic Data Mode")
+        elif mode == "live":
+            self.init_live_board()
+            print("Switched to Live Data Mode")
+        else:
+            print(f"Unknown data mode: {mode}")
 
 
-if __name__ == '__main__':
-    print("Starting application...")
+    def init_synthetic_board(self):
+        """ Initialize BrainFlow with synthetic board for testing """
+        params = BrainFlowInputParams()
+        self.board = BoardShim(BoardIds.SYNTHETIC_BOARD.value, params)
+        print("\nSynthetic board initialized.")
+
+    def init_live_board(self):
+        """ Initialize BrainFlow with a real headset """
+        params = BrainFlowInputParams()
+        params.serial_port = "/dev/cu.usbserial-D200PMA1"  # Update if different on your system
+        self.board = BoardShim(BoardIds.CYTON_DAISY_BOARD.value, params)
+        print("\nLive headset board initialized.")
+
+if __name__ == "__main__":
     os.environ["QT_QUICK_CONTROLS_STYLE"] = "Fusion"
-    app = QApplication(sys.argv)
-
-    # Create our controllers
-    tab_controller = TabController()
-    print("TabController created")
-
-    backend = BrainwavesBackend()
-    print("BrainwavesBackend created")
-
-    # Create the QML engine
+    app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine()
-    print("QML engine created")
 
-    # Connect to status signal for better debugging
-    engine.objectCreated.connect(handle_engine_status)
-
-    # Expose the controllers to QML
-    engine.rootContext().setContextProperty("tabController", tab_controller)
+    # Initialize backend before loading QML
+    backend = BrainwavesBackend()
     engine.rootContext().setContextProperty("backend", backend)
     engine.rootContext().setContextProperty("imageModel", [])  # Initialize empty model
     engine.rootContext().setContextProperty("fileShufflerGui", backend)  # For file shuffler
     print("Controllers exposed to QML")
+    engine.rootContext().setContextProperty("fileShufflerGui", backend) #For file shuffler
 
-    # Load the QML file
-    qml_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "main.qml")
-    print(f"Loading QML file from: {qml_file}")
-    engine.load(QUrl.fromLocalFile(qml_file))
-
-    # Check if the QML file was loaded successfully
-    if not engine.rootObjects():
-        print("Failed to load QML file!")
-        sys.exit(-1)
-
-    print("QML file loaded, application should be visible now")
+    # Load QML
+    qml_file = Path(__file__).resolve().parent / "main.qml"
+    engine.load(str(qml_file))
 
     # Convert PDFs after engine load
     try:
