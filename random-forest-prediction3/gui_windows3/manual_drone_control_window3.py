@@ -64,7 +64,7 @@ class ManDroneCont_Tab(QWidget):
                 self.home = QPushButton("Home", self.top)
                 self.home.setFixedSize(QSize(150, 150))
                 self.home.clicked.connect(self.goHome.emit)
-                self.home.setStyleSheet(f"background-image: url(brainwave-prediction-app3/images3/Home.png);")
+                self.home.setStyleSheet(f"background-image: url(GUI_Pics/home.png);")
                 self.top_H.addWidget(self.home)
                 #Up
                 self.up = self.makeButton("Up",self.top,False)
