@@ -1,20 +1,13 @@
 ### Overview
 
-This Python program, `unifyTXT.py`, is an updated version of the original unification tool created to organize `.txt` files from subdirectories and remove `.csv` files. It was developed by Group 10 to fix Ticket #197. The script walks through all folders inside the `data/` directory and unifies `.txt` files into category folders such as `backward`, `takeoff`, `landing`, etc., while removing `.csv` files and empty folders.
-
-This version corrects a previous limitation where the script only worked with specific folder structures. It now supports all group datasets, regardless of subfolder naming or nesting depth.
-
----
+This Python program, `unifyTXT.py` is designed to organize CSV files from various subdirectories into a central directory structure based on specific categories, such as `backward`, `forward`, `landing`, `left`, `right`, and `takeoff`. The program processes directories containing BCI data, identifies files, moves them to appropriate folders, and deletes unnecessary `.csv` files.
 
 ### Features
 
-- Organizes TXT Files: Moves `.txt` files into central category folders like `takeoff`, `backward`, `left`, etc.
-- Deletes CSV Files: All `.csv` files found in subdirectories are deleted.
-- Automatically Detects Categories: Recognizes keywords in folder names, even if nested or uniquely labeled (e.g., `OpenBCISession_backward_5`).
-- Fixes Permissions: Handles read-only files/folders to prevent errors.
-- Cleans Up: Deletes empty folders after moving or deleting files.
-
----
+- Organizes TXT Files: Files are moved to corresponding directories like takeoff, backward, right, etc.
+- Removes Duplicate Files: Duplicate `.txt` files are identified and deleted.
+- Deletes CSV Files: All `.csv` files in the source directories are deleted.
+- Cleans Up Empty Directories: Once the files are moved, empty subdirectories and group directories are removed.
 
 ### Usage
 
@@ -37,6 +30,8 @@ data/
 ├── takeoff/
 ├── forward/
 ```
+`unifyTXT.py` should be ran inside the same directory that the data directory is located. Line 81 of the program, `base_directory = "data"`, holds the name of the data folder. "data" can be changed depending on the name of the data folder.
+
 
 ---
 
@@ -85,9 +80,11 @@ The keyword can appear anywhere in the folder name — for example:
 
 ---
 
+
 ### Author
 
 Modified by Group 10 — Brittney Johnson, Veejay Deonarine, and Tamunotekena Ogan  
 Fixes Ticket #197 
 Original Author: Thomas Herold
+
 
