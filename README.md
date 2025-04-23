@@ -42,7 +42,7 @@
 
 
   <p align="center">
-    An application of Machine Learning on brainwave donations in order to remotely pilot a drone in real-time through brainwave reading. 
+    Brainwave machine Learning for drones and robots. Moving the world with your mind. 
     <br />
     <br />
     <a href="https://github.com/3C-SCSU/Avatar"><strong>Explore the docs »</strong></a>
