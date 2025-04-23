@@ -93,10 +93,11 @@ def move_files_to_categories(base_dir):
                     except Exception as e:
                         print(f"Could not remove folder: {dirpath} → {e}")
 
-    # Final pass to clean up any empty leftover folders, including group folders
     print(f"\nAll folders under '{base_dir}' processed. .txt files unified, .csv files deleted, and empty folders removed.")
+
+    # Final pass to remove any leftover empty folders (recursively)
     remove_empty_folders(base_dir)
 
 if __name__ == "__main__":
-    base_dir = "data"  # Base directory to start from: \data\. This should be in the same directory as the Python script.
-    move_files_to_categories(base_dir)
+    base_directory = "data"  # Base directory to start from: \data\. This should be in the same directory as the Python script.
+    move_files_to_categories(base_directory)
