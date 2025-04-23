@@ -55,16 +55,28 @@ ApplicationWindow {
                         Layout.fillHeight: true
                         spacing: 10
 
-                        // Control Mode
+                       // Control Mode
                         RowLayout {
                             Layout.alignment: Qt.AlignHCenter
                             spacing: 10
+
                             RadioButton {
-                                text: "Manual Control"
                                 checked: true
+                                contentItem: Text {
+                                    text: "Manual Control"
+                                    color: "white"
+                                    font.bold: true
+                                    anchors.centerIn: parent
+                                }
                             }
+
                             RadioButton {
-                                text: "Autopilot"
+                                contentItem: Text {
+                                    text: "Autopilot"
+                                    color: "white"
+                                    font.bold: true
+                                    anchors.centerIn: parent
+                                }
                             }
                         }
 
@@ -76,7 +88,7 @@ ApplicationWindow {
                             Layout.alignment: Qt.AlignHCenter
 
                             Image {
-                                source: "images/brain.png"
+                                source: "GUI_Pics/brain.png"
                                 width: 130
                                 height: 130
                                 anchors.centerIn: parent
@@ -101,6 +113,7 @@ ApplicationWindow {
                         Label {
                             text: "The model says ..."
                             color: "white"
+                            
                             Layout.alignment: Qt.AlignHCenter
                         }
 
@@ -148,31 +161,42 @@ ApplicationWindow {
                                 }
                             }
                         }
+                         // Action Buttons
+                            RowLayout {
+                                spacing: 10
+                                Layout.alignment: Qt.AlignHCenter
 
-                        // Action Buttons
-                        RowLayout {
-                            spacing: 10
-                            Layout.alignment: Qt.AlignHCenter
-                            Button {
-                                text: "Not what I was thinking..."
-                                Layout.preferredWidth: 160
-                                Layout.preferredHeight: 80
-                                background: Rectangle {
-                                    color: "#1b3a4b"
-                                } 
-                                onClicked: backend.notWhatIWasThinking(manualInput.text)
-                            }
-                            Button {
-                                text: "Execute"
-                                Layout.preferredWidth: 160
-                                Layout.preferredHeight: 80
-                                background: Rectangle {
-                                    color: "#1b3a4b"
-                                } 
-                                onClicked: backend.executeAction()
-                            }
-                        }
+                                Button {
+                                    Layout.preferredWidth: 160
+                                    Layout.preferredHeight: 80
+                                    background: Rectangle {
+                                        color: "#1b3a4b"
+                                    } 
+                                    contentItem: Text {
+                                        text: "Not what I was thinking..."
+                                        color: "white"
+                                        font.bold: true
+                                        anchors.centerIn: parent
+                                    }
+                                    onClicked: backend.notWhatIWasThinking(manualInput.text)
+                                }
 
+                                Button {
+                                    Layout.preferredWidth: 160
+                                    Layout.preferredHeight: 80
+                                    background: Rectangle {
+                                        color: "#1b3a4b"
+                                    } 
+                                    contentItem: Text {
+                                        text: "Execute"
+                                        color: "white"
+                                        font.bold: true
+                                        anchors.centerIn: parent
+                                    }
+                                    onClicked: backend.executeAction()
+                                }
+                            }
+        
                         // Manual Input and Keep Alive
                         GridLayout {
                             columns: 2
@@ -190,15 +214,19 @@ ApplicationWindow {
                                 }
                                 
                             }
-                            Button {
-                                text: "Keep Drone Alive"
-                                width: 130
-                                height: 40
-                                background: Rectangle {
-                                    color: "#1b3a4b"
-                                }
-                                onClicked: backend.keepDroneAlive()
+                           Button {
+                            width: 130
+                            height: 40
+                            background: Rectangle {
+                                color: "#1b3a4b"
                             }
+                            contentItem: Text {
+                                text: "Keep Drone Alive"
+                                color: "white"
+                                font.bold: true
+                                anchors.centerIn: parent
+                            }
+                            onClicked: backend.keepDroneAlive()
                         }
 
                         // Flight Log
@@ -235,7 +263,7 @@ ApplicationWindow {
                             color: "#1b3a4b" // Dark blue background
 
                             Image {
-                                source: "images/connect.png"
+                                source: "GUI_Pics/connect.png"
                                 width: 80
                                 height: 80
                                 anchors.centerIn: parent
@@ -249,13 +277,14 @@ ApplicationWindow {
                                 background: Item {} // No background
                                 contentItem: Text {
                                     text: "Connect"
-                                    color: "white" // Set text color to white
+                                    color: "white"
+                                    font.bold: true
                                     anchors.centerIn: parent
                                 }
                                 onClicked: backend.connectDrone()
                             }
                         }
-                    }
+
 
                     // Right Column (Prediction Table and Console Log)
                     ColumnLayout {
@@ -371,19 +400,36 @@ ApplicationWindow {
                         width: parent.width
                         spacing: 10
 
-                        Label { text: "Target IP"; color: "white" }
+                        Label {
+                            text: "Target IP"
+                            color: "white"
+                            font.bold: true
+                        }
                         TextField { Layout.fillWidth: true }
 
-                        Label { text: "Target Username"; color: "white" }
+                        Label {
+                            text: "Target Username"
+                            color: "white"
+                            font.bold: true
+                        }
                         TextField { Layout.fillWidth: true }
 
-                        Label { text: "Target Password"; color: "white" }
+                        Label {
+                            text: "Target Password"
+                            color: "white"
+                            font.bold: true
+                        }
                         TextField {
                             Layout.fillWidth: true
                             echoMode: TextInput.Password
                         }
 
-                        Label { text: "Private Key Directory:"; color: "white" }
+                        Label {
+                            text: "Private Key Directory:"
+                            color: "white"
+                            font.bold: true
+                        }
+
                         RowLayout {
                             Layout.fillWidth: true
                             TextField {
@@ -406,7 +452,12 @@ ApplicationWindow {
                             }
                         }
 
-                        Label { text: "Source Directory:"; color: "white" }
+                        Label {
+                            text: "Source Directory:"
+                            color: "white"
+                            font.bold: true
+                        }
+
                         RowLayout {
                             Layout.fillWidth: true
                             TextField {
@@ -419,35 +470,74 @@ ApplicationWindow {
                             }
                         }
 
-                        Label { text: "Target Directory:"; color: "white" }
+                        Label {
+                            text: "Target Directory:"
+                            color: "white"
+                            font.bold: true
+                        }
+
                         TextField {
                             Layout.fillWidth: true
                             text: "/home/"
                             placeholderText: "/home/"
                         }
 
-                        RowLayout {
+                       RowLayout {
                             Layout.fillWidth: true
+
                             Button {
-                                text: "Save Config"
+                                background: Rectangle { color: "#1b3a4b" }
+                                contentItem: Text {
+                                    text: "Save Config"
+                                    color: "white"
+                                    font.bold: true
+                                    horizontalAlignment: Text.AlignHCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                }
                                 onClicked: console.log("Save Config clicked")
                             }
+
                             Button {
-                                text: "Load Config"
+                                background: Rectangle { color: "#1b3a4b" }
+                                contentItem: Text {
+                                    text: "Load Config"
+                                    color: "white"
+                                    font.bold: true
+                                    horizontalAlignment: Text.AlignHCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                }
                                 onClicked: console.log("Load Config clicked")
                             }
+
                             Button {
-                                text: "Clear Config"
+                                background: Rectangle { color: "#1b3a4b" }
+                                contentItem: Text {
+                                    text: "Clear Config"
+                                    color: "white"
+                                    font.bold: true
+                                    horizontalAlignment: Text.AlignHCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                }
                                 onClicked: console.log("Clear Config clicked")
                             }
+
                             Button {
-                                text: "Upload"
+                                background: Rectangle { color: "#1b3a4b" }
+                                contentItem: Text {
+                                    text: "Upload"
+                                    color: "white"
+                                    font.bold: true
+                                    horizontalAlignment: Text.AlignHCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                }
                                 onClicked: console.log("Upload clicked")
                             }
                         }
-                    }
-                }
-            }
+
+
+                    }  // end of ColumnLayout (contentLayout)
+                }  // end of ScrollView
+            }  // end of Transfer Data Rectangle
 
             // Manual Drone Control view
             Rectangle {
@@ -459,6 +549,6 @@ ApplicationWindow {
                     text: "Manual Drone Control View"
                 }
             }
-        }
-    }
-}
+        }  // end of StackLayout
+    }  // end of outer ColumnLayout
+}  // end of ApplicationWindow

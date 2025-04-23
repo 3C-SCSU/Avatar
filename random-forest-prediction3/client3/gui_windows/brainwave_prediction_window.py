@@ -9,7 +9,7 @@ def brainwave_prediction_window(window1, get_drone_action, use_brainflow):
     response_headings = ['Count', 'Label']
     top_left = [    
                     [sg.Radio('Manual Control', 'pilot', default=True, size=(-20, 1)), sg.Radio('Autopilot', 'pilot',  size=(12, 1))],
-                    [sg.Button('Read the file...', size=(40,5), image_filename="./images/brain.png" )], 
+                    [sg.Button('Read the file...', size=(40,5), image_filename="./GUI_Pics/brain.png" )], 
                     #[sg.Text(key="-COUNT-"), sg.Text(key="-PREDICTION-")], 
                     [sg.Text("The model says ...")], 
                     [sg.Table (values=[], headings=response_headings,  auto_size_columns=False, def_col_width=15, justification='center', num_rows=1, key='-SERVER_TABLE-', row_height=25, tooltip="Server Response Table", hide_vertical_scroll=True,)],
@@ -39,7 +39,7 @@ def brainwave_prediction_window(window1, get_drone_action, use_brainflow):
                                                                     )
                                     ], 
                                     [sg.Column(bottom_left), sg.Push(), sg.Column(bottom_right)],
-                                    [sg.Button('Connect', size=(8,2), image_filename="./images/connect.png"), sg.Push(),],                               
+                                    [sg.Button('Connect', size=(8,2), image_filename="./GUI_Pics/connect.pngg"), sg.Push(),],                               
 
                                   ]
 
