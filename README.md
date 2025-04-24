@@ -42,7 +42,7 @@
 
 
   <p align="center">
-    Brainwave machine Learning for drones and robots. Moving the world with your mind. 
+    Brainwave Machine Learning for drones and robots. Moving the world with your mind. 
     <br />
     <br />
     <a href="https://github.com/3C-SCSU/Avatar"><strong>Explore the docs »</strong></a>
