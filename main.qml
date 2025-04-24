@@ -39,22 +39,27 @@ ApplicationWindow {
 
             TabButton {
                 text: "Brainwave Reading"
+                font.bold: true
                 onClicked: stackLayout.currentIndex = 0
             }
             TabButton {
                 text: "Brainwave Visualization"
+                font.bold: true
                 onClicked: stackLayout.currentIndex = 1
             }
             TabButton {
                 text: "Manual Drone Control"
+                font.bold: true
                 onClicked: stackLayout.currentIndex = 2
             }
             TabButton {
                 text: "File Shuffler"
+                font.bold: true
                 onClicked: stackLayout.currentIndex = 3
             }
             TabButton {
                 text: "Transfer Data"
+                font.bold: true
                 onClicked: stackLayout.currentIndex = 4
             }
 
@@ -89,10 +94,12 @@ ApplicationWindow {
                             spacing: 10
                             RadioButton {
                                 text: "Manual Control"
+                                font.bold: true
                                 checked: true
                             }
                             RadioButton {
                                 text: "Autopilot"
+                                font.bold: true
                             }
                         }
 
@@ -118,6 +125,7 @@ ApplicationWindow {
                                 background: Item {} // No background
                                 contentItem: Text {
                                     text: "Read my mind..."
+                                    font.bold: true
                                     color: "white" // Set text color to white
                                     anchors.centerIn: parent
                                 }
@@ -128,6 +136,7 @@ ApplicationWindow {
                         // Model Prediction Section
                         Label {
                             text: "The model says ..."
+                            font.bold: true
                             color: "white"
                             Layout.alignment: Qt.AlignHCenter
                         }
@@ -183,6 +192,7 @@ ApplicationWindow {
                             Layout.alignment: Qt.AlignHCenter
                             Button {
                                 text: "Not what I was thinking..."
+                                font.bold: true
                                 Layout.preferredWidth: 160
                                 Layout.preferredHeight: 80
                                 background: Rectangle {
@@ -192,6 +202,7 @@ ApplicationWindow {
                             }
                             Button {
                                 text: "Execute"
+                                font.bold: true
                                 Layout.preferredWidth: 160
                                 Layout.preferredHeight: 80
                                 background: Rectangle {
@@ -215,6 +226,7 @@ ApplicationWindow {
                             }
                             Button {
                                 text: "Keep Drone Alive"
+                                font.bold: true
                                 width: 130
                                 height: 40
                                 background: Rectangle {
@@ -226,7 +238,7 @@ ApplicationWindow {
 
                         // Flight Log
                         GroupBox {
-                            title: "Flight Log"
+                            title: "Flight Log" 
                             Layout.preferredWidth: 230
                             Layout.preferredHeight: 170
                             ListView {
@@ -237,6 +249,7 @@ ApplicationWindow {
                                 delegate: Text {
                                     text: log
                                     color: "white"
+                                    font.bold: true
                                 }
                             }
                         }
@@ -267,6 +280,7 @@ ApplicationWindow {
                                         text: "Connect"
                                         color: "white" // Set text color to white
                                         anchors.centerIn: parent
+                                        font.bold: true
                                     }
                                     onClicked: backend.connectDrone()
                                 }
@@ -291,10 +305,11 @@ ApplicationWindow {
 
                                     Text {
                                         text: "Random Forest"
-                                        font.bold: isRandomForestSelected
+                                        font.bold: true
                                         font.pixelSize: 16
                                         color: "white"
                                         anchors.centerIn: parent
+                                        
                                     }
 
                                     MouseArea {
@@ -328,7 +343,7 @@ ApplicationWindow {
                                         font.pixelSize: 16
                                         color: "white"
                                         anchors.centerIn: parent
-                                        font.bold: !isRandomForestSelected
+                                        font.bold: true
                                     }
 
                                     MouseArea {
@@ -348,6 +363,7 @@ ApplicationWindow {
                                     id: syntheticRadio
                                     text: "Synthetic Data"
                                     checked: false
+                                    font.bold: true
                                     onClicked: {
                                         backend.setDataMode("synthetic")
                                     }
@@ -357,6 +373,7 @@ ApplicationWindow {
                                     id: liveRadio
                                     text: "Live Data"
                                     checked: true
+                                    font.bold: true
                                     onClicked: {
                                         backend.setDataMode("live")
                                     }
@@ -374,6 +391,7 @@ ApplicationWindow {
                         // Predictions Table
                         GroupBox {
                             title: "Predictions Table"
+                            font.bold: true 
                             Layout.preferredWidth: 700
                             Layout.preferredHeight: 550
 
@@ -424,9 +442,9 @@ ApplicationWindow {
                                 }
                                 delegate: RowLayout {
                                     spacing: 50
-                                    Text { text: model.count; color: "white"; width: 120 }
-                                    Text { text: model.server; color: "white"; width: 200 }
-                                    Text { text: model.label; color: "white"; width: 120 }
+                                    Text { text: model.count; color: "white"; width: 120; font.bold: true }
+                                    Text { text: model.server; color: "white"; width: 200; font.bold: true }
+                                    Text { text: model.label; color: "white"; width: 120; font.bold: true }
                                 }
                             }
                         }
@@ -434,6 +452,7 @@ ApplicationWindow {
                         // Console Log Section
                         GroupBox {
                             title: "Console Log"
+                            font.bold: true
                             Layout.preferredWidth: 300
                             Layout.preferredHeight: 250
                             Layout.alignment: Qt.AlignRight
@@ -443,6 +462,7 @@ ApplicationWindow {
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
                                 text: "Console output here..."
+                                font.bold: true
                             }
                         }
                     }
