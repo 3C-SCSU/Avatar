@@ -42,7 +42,7 @@
 
 
   <p align="center">
-    An application of Machine Learning on brainwave donations in order to remotely pilot a drone in real-time through brainwave reading. 
+    Brainwave Machine Learning for drones and robots. Moving the world with your mind. 
     <br />
     <br />
     <a href="https://github.com/3C-SCSU/Avatar"><strong>Explore the docs »</strong></a>
@@ -95,7 +95,7 @@
 
 <!--[![Product Name Screen Shot][product-screenshot]](https://example.com)-->
 
-This is an open source project from the Cloud Computing Club of Saint Cloud State University. Brainwaves are read using an OpenBCI headset. These brainwaves are sent to a server and randomly renamed and dated for privacy. After shuffling, the data is loaded into Spark where it is processed and a piloting prediction is made. A client-side request reads the most recent prediction and instructs the drone for its next action. 
+This is an open source project from the Cloud Computing Club of Saint Cloud State University. Brainwaves are read using an OpenBCI headset. These brainwaves are sent to a server and randomly renamed and dated for privacy. After shuffling, the data is loaded into Spark where it is processed and a piloting prediction is made. A client-side request reads the most recent prediction and instructs drones and robots for its next action. 
 
  ### Institutional Review Board
 
@@ -159,6 +159,13 @@ TODO: Update this section with a walkthrough on sparse checkout
    ```sh
    git clone https://github.com/3C-SCSU/Avatar.git
    ```
+
+#### Updating your local Avatar
+This will update your local checked-out branch:
+   ```sh
+   git  pull origin master
+   ```
+
 ### Installation for Forking ( Recommended )
 #### Forking
 **1. Navigate to the Fork Button:**<br>
