@@ -372,6 +372,8 @@ Cloud Computing Club 3c.scsu@gmail.com
 
 Discord: https://discord.gg/mxbQ7HpPjq
 
+YouTube: https://www.youtube.com/@3CSCSU
+
 Project Link: [https://github.com/3C-SCSU/Avatar](https://github.com/3C-SCSU/Avatar)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
