@@ -39,26 +39,32 @@ ApplicationWindow {
 
             TabButton {
                 text: "Brainwave Reading"
+                font.bold: true
                 onClicked: stackLayout.currentIndex = 0
             }
             TabButton {
                 text: "Brainwave Visualization"
+                font.bold: true
                 onClicked: stackLayout.currentIndex = 1
             }
             TabButton {
                 text: "Manual Drone Control"
+                font.bold: true
                 onClicked: stackLayout.currentIndex = 2
             }
             TabButton {
                 text: "File Shuffler"
+                font.bold: true
                 onClicked: stackLayout.currentIndex = 3
             }
             TabButton {
                 text: "Transfer Data"
+                font.bold: true
                 onClicked: stackLayout.currentIndex = 4
             }
             TabButton {
                 text: "Manual NAO6 Controller"
+                font.bold: true
                 onClicked: {
                     stackLayout.currentIndex = 5
                     console.log("Manual Controller tab clicked")
@@ -98,9 +104,11 @@ ApplicationWindow {
                             RadioButton {
                                 text: "Manual Control"
                                 checked: true
+                                font.bold: true
                             }
                             RadioButton {
                                 text: "Autopilot"
+                                font.bold: true
                             }
                         }
 
@@ -126,6 +134,7 @@ ApplicationWindow {
                                 background: Item {} // No background
                                 contentItem: Text {
                                     text: "Read my mind..."
+                                    font.bold: true
                                     color: "white" // Set text color to white
                                     anchors.centerIn: parent
                                 }
@@ -137,6 +146,7 @@ ApplicationWindow {
                         Label {
                             text: "The model says ..."
                             color: "white"
+                            font.bold: true
                             Layout.alignment: Qt.AlignHCenter
                         }
 
@@ -179,8 +189,8 @@ ApplicationWindow {
                                 model: ListModel {}
                                 delegate: RowLayout {
                                     spacing: 150
-                                    Text { text: model.count; color: "white"; width: 80 }
-                                    Text { text: model.label; color: "white"; width: 80 }
+                                    Text { text: model.count; font.bold: true; color: "white"; width: 80 }
+                                    Text { text: model.label; font.bold: true; color: "white"; width: 80 }
                                 }
                             }
                         }
@@ -191,6 +201,7 @@ ApplicationWindow {
                             Layout.alignment: Qt.AlignHCenter
                             Button {
                                 text: "Not what I was thinking..."
+                                font.bold: true
                                 Layout.preferredWidth: 160
                                 Layout.preferredHeight: 80
                                 background: Rectangle {
@@ -200,6 +211,7 @@ ApplicationWindow {
                             }
                             Button {
                                 text: "Execute"
+                                font.bold: true; 
                                 Layout.preferredWidth: 160
                                 Layout.preferredHeight: 80
                                 background: Rectangle {
@@ -218,11 +230,13 @@ ApplicationWindow {
                             TextField {
                                 id: manualInput
                                 placeholderText: "Manual Command"
+                                font.bold: true
                                 Layout.preferredWidth: 400
                                 Layout.alignment: Qt.AlignHCenter
                             }
                             Button {
                                 text: "Keep Drone Alive"
+                                font.bold: true
                                 width: 130
                                 height: 40
                                 background: Rectangle {
@@ -245,6 +259,7 @@ ApplicationWindow {
                                 delegate: Text {
                                     text: log
                                     color: "white"
+                                    font.bold: true
                                 }
                             }
                         }
@@ -273,6 +288,7 @@ ApplicationWindow {
                                     background: Item {} // No background
                                     contentItem: Text {
                                         text: "Connect"
+                                        font.bold: true
                                         color: "white" // Set text color to white
                                         anchors.centerIn: parent
                                     }
@@ -299,7 +315,7 @@ ApplicationWindow {
 
                                     Text {
                                         text: "Random Forest"
-                                        font.bold: isRandomForestSelected
+                                        font.bold: true
                                         font.pixelSize: 16
                                         color: "white"
                                         anchors.centerIn: parent
@@ -336,7 +352,7 @@ ApplicationWindow {
                                         font.pixelSize: 16
                                         color: "white"
                                         anchors.centerIn: parent
-                                        font.bold: !isRandomForestSelected
+                                        font.bold: true
                                     }
 
                                     MouseArea {
@@ -355,6 +371,7 @@ ApplicationWindow {
                                 RadioButton {
                                     id: syntheticRadio
                                     text: "Synthetic Data"
+                                    font.bold: true
                                     checked: false
                                     onClicked: {
                                         backend.setDataMode("synthetic")
@@ -364,6 +381,7 @@ ApplicationWindow {
                                 RadioButton {
                                     id: liveRadio
                                     text: "Live Data"
+                                    font.bold: true
                                     checked: true
                                     onClicked: {
                                         backend.setDataMode("live")
@@ -432,9 +450,9 @@ ApplicationWindow {
                                 }
                                 delegate: RowLayout {
                                     spacing: 50
-                                    Text { text: model.count; color: "white"; width: 120 }
-                                    Text { text: model.server; color: "white"; width: 200 }
-                                    Text { text: model.label; color: "white"; width: 120 }
+                                    Text { text: model.count; font.bold: true; color: "white"; width: 120 }
+                                    Text { text: model.server; font.bold: true; color: "white"; width: 200 }
+                                    Text { text: model.label; font.bold: true; color: "white"; width: 120 }
                                 }
                             }
                         }
@@ -451,6 +469,7 @@ ApplicationWindow {
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
                                 text: "Console output here..."
+                                font.bold: true
                             }
                         }
                     }
@@ -540,6 +559,7 @@ ApplicationWindow {
                         // Refresh Button
                         Button {
                             text: "Refresh"
+                            font.bold: true
                             implicitWidth: 120
                             implicitHeight: 40
                             
@@ -565,6 +585,7 @@ ApplicationWindow {
                             contentItem: Text {
                                 text: parent.text
                                 font.pixelSize: 14
+                                font.bold: true
                                 color: "white"
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
@@ -578,6 +599,7 @@ ApplicationWindow {
                         // Rollback Button
                         Button {
                             text: "Rollback"
+                            font.bold: true
                             implicitWidth: 120
                             implicitHeight: 40
                             
@@ -603,6 +625,7 @@ ApplicationWindow {
                             contentItem: Text {
                                 text: parent.text
                                 font.pixelSize: 14
+                                font.bold: true
                                 color: "white"
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
@@ -655,6 +678,7 @@ ApplicationWindow {
                             Text {
                                 id: buttonText // Give an ID to reference
                                 text: "Home"
+                                font.bold: true
                                 color: "white" // Initial text color
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
@@ -710,6 +734,7 @@ ApplicationWindow {
                                     text: "Up"
                                     color: "white" // Initial text color
                                     font.pixelSize: 18
+                                    font.bold: true
                                     anchors.horizontalCenter: parent.horizontalCenter
                                     anchors.verticalCenter: parent.verticalCenter
                                 }
@@ -738,6 +763,7 @@ ApplicationWindow {
                             Text {
                                 id: flightlog
                                 text: "Flight Log"
+                                font.bold: true
                                 font.pixelSize: 20
                                 color: "white"
                             }
@@ -817,6 +843,7 @@ ApplicationWindow {
                                 id: forwardText // Unique ID for the Forward button text
                                 text: "Forward"
                                 color: "white" // Initial text color
+                                font.bold: true
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
@@ -868,6 +895,7 @@ ApplicationWindow {
                                 id: turnLeftText // Unique ID for the Turn Left button text
                                 text: "Turn Left"
                                 color: "white" // Initial text color
+                                font.bold: true
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
@@ -916,6 +944,7 @@ ApplicationWindow {
                                 id: leftText // Unique ID for the Left button text
                                 text: "Left"
                                 color: "white" // Initial text color
+                                font.bold: true
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
@@ -964,6 +993,7 @@ ApplicationWindow {
                                 id: streamText // Unique ID for the Stream button text
                                 text: "Stream"
                                 color: "white" // Initial text color
+                                font.bold: true
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
@@ -1012,6 +1042,7 @@ ApplicationWindow {
                                 id: rightText // Unique ID for the Right button text
                                 text: "Right"
                                 color: "white" // Initial text color
+                                font.bold: true
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
@@ -1061,6 +1092,7 @@ ApplicationWindow {
                                 id: turnRightText // Unique ID for the Turn Right button text
                                 text: "Turn Right"
                                 color: "white" // Initial text color
+                                font.bold: true
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
@@ -1115,6 +1147,7 @@ ApplicationWindow {
                                 id: backButtonText // Unique ID for the Back button text
                                 text: "Back"
                                 color: "white" // Initial text color
+                                font.bold: true
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
@@ -1169,6 +1202,7 @@ ApplicationWindow {
                                 id: connectButtonText // Unique ID for the Connect button text
                                 text: "Connect"
                                 color: "white" // Initial text color
+                                font.bold: true
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
@@ -1217,6 +1251,7 @@ ApplicationWindow {
                                 id: downButtonText // Unique ID for the Down button text
                                 text: "Down"
                                 color: "white" // Initial text color
+                                font.bold: true
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
@@ -1265,6 +1300,7 @@ ApplicationWindow {
                                 id: takeoffButtonText // Unique ID for the Takeoff button text
                                 text: "Takeoff"
                                 color: "white" // Initial text color
+                                font.bold: true
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
@@ -1311,6 +1347,7 @@ ApplicationWindow {
                                 id: landButtonText // Unique ID for the Land button text
                                 text: "Land"
                                 color: "white" // Initial text color
+                                font.bold: true
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
@@ -1394,12 +1431,14 @@ ApplicationWindow {
                         Button {
                             id: folderButton
                             text: "Select your Directory"
+                            font.bold: true
                             onClicked: folderDialog.open()
                         }
 
                         Button {
                             id: runButton
                             text: "Run File Shuffler"
+                            font.bold: true
                             onClicked: {
                                 fileShufflerView.ranShuffle = true; 
                                 fileShufflerView.outputBoxText = `Running File Shuffler...\n`;
@@ -1448,19 +1487,19 @@ ApplicationWindow {
                         width: parent.width
                         spacing: 10
 
-                        Label { text: "Target IP"; color: "white" }
+                        Label { text: "Target IP"; color: "white"; font.bold: true}
                         TextField { Layout.fillWidth: true }
 
-                        Label { text: "Target Username"; color: "white" }
+                        Label { text: "Target Username"; color: "white"; font.bold: true }
                         TextField { Layout.fillWidth: true }
 
-                        Label { text: "Target Password"; color: "white" }
+                        Label { text: "Target Password"; color: "white"; font.bold: true }
                         TextField {
                             Layout.fillWidth: true
                             echoMode: TextInput.Password
                         }
 
-                        Label { text: "Private Key Directory:"; color: "white" }
+                        Label { text: "Private Key Directory:"; color: "white"; font.bold: true }
                         RowLayout {
                             Layout.fillWidth: true
                             TextField {
@@ -1469,21 +1508,24 @@ ApplicationWindow {
                             }
                             Button {
                                 text: "Browse"
+                                font.bold: true
                                 onClicked: console.log("Browse for Private Key Directory")
                             }
                         }
 
                         CheckBox {
                             text: "Ignore Host Key"
+                            font.bold: true
                             checked: true
                             contentItem: Text {
                                 text: parent.text
+                                font.bold: true
                                 color: "white"
                                 leftPadding: parent.indicator.width + parent.spacing
                             }
                         }
 
-                        Label { text: "Source Directory:"; color: "white" }
+                        Label { text: "Source Directory:"; color: "white"; font.bold: true }
                         RowLayout {
                             Layout.fillWidth: true
                             TextField {
@@ -1492,11 +1534,12 @@ ApplicationWindow {
                             }
                             Button {
                                 text: "Browse"
+                                font.bold: true
                                 onClicked: console.log("Browse for Source Directory")
                             }
                         }
 
-                        Label { text: "Target Directory:"; color: "white" }
+                        Label { text: "Target Directory:"; color: "white"; font.bold: true }
                         TextField {
                             Layout.fillWidth: true
                             text: "/home/"
@@ -1507,18 +1550,22 @@ ApplicationWindow {
                             Layout.fillWidth: true
                             Button {
                                 text: "Save Config"
+                                font.bold: true
                                 onClicked: console.log("Save Config clicked")
                             }
                             Button {
                                 text: "Load Config"
+                                font.bold: true
                                 onClicked: console.log("Load Config clicked")
                             }
                             Button {
                                 text: "Clear Config"
+                                font.bold: true
                                 onClicked: console.log("Clear Config clicked")
                             }
                             Button {
                                 text: "Upload"
+                                font.bold: true
                                 onClicked: console.log("Upload clicked")
                             }
                         }
@@ -1537,6 +1584,7 @@ ApplicationWindow {
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: "Nao Viewer Running"
+                        font.bold: true
                         color: "white"
                         font.pixelSize: 18
                     }
@@ -1544,6 +1592,7 @@ ApplicationWindow {
                     Button {
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: "Stop Nao Viewer"
+                        font.bold: true
                         onClicked: {
                             console.log("Stop button clicked")
                             tabController.stopNaoViewer()
