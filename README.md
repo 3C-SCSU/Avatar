@@ -95,7 +95,7 @@
 
 <!--[![Product Name Screen Shot][product-screenshot]](https://example.com)-->
 
-This is an open source project from the Cloud Computing Club of Saint Cloud State University. Brainwaves are read using an OpenBCI headset. These brainwaves are sent to a server and randomly renamed and dated for privacy. After shuffling, the data is loaded into Spark where it is processed and a piloting prediction is made. A client-side request reads the most recent prediction and instructs the drone for its next action. 
+This is an open source project from the Cloud Computing Club of Saint Cloud State University. Brainwaves are read using an OpenBCI headset. These brainwaves are sent to a server and randomly renamed and dated for privacy. After shuffling, the data is loaded into Spark where it is processed and a piloting prediction is made. A client-side request reads the most recent prediction and instructs drones and robots for its next action. 
 
  ### Institutional Review Board
 
