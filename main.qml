@@ -317,7 +317,7 @@ ApplicationWindow {
                                         text: "Random Forest"
                                         font.bold: true
                                         font.pixelSize: 16
-                                        color: "white"
+                                        color: isRandomForestSelected ? "yellow" : "white"
                                         anchors.centerIn: parent
                                     }
 
@@ -350,7 +350,7 @@ ApplicationWindow {
                                     Text {
                                         text: "Deep Learning"
                                         font.pixelSize: 16
-                                        color: "white"
+                                        color: !isRandomForestSelected ? "yellow" : "white"
                                         anchors.centerIn: parent
                                         font.bold: true
                                     }
