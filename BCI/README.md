@@ -1,5 +1,9 @@
 ---
 
+<img width="100%"  height="30%" alt="image" src="https://github.com/user-attachments/assets/d12d047a-449f-4564-8a64-c100c6f667f3" />
+
+---
+
 
 ### Cloud Computinng Club
 
@@ -11,9 +15,9 @@ Join us at our [Discord server](https://discord.gg/mxbQ7HpPjq) for more informat
 
 All members of [Cloud Computing Club](https://huskiesconnect.stcloudstate.edu/organization/3c) have access to the ISELF205, which allows the club members to sharpen their skills into developing a strong portfolio that helps growing professionally.
 
-
-
+<p align="center">
 <img width="900" alt="image" src="https://github.com/user-attachments/assets/8894e449-0fec-4938-990c-139fa810e7d6" />
+</p>
 
 ---
 
@@ -23,8 +27,9 @@ Brainwave Machine Learning for drones and robots. Moving the world with your min
 
 The bleeding-edge intersection of neuro-haptics, brain-computer interface (BCI) technology, and machine learning to enable the creation and control of humanoid robots and flying avatars. Our work integrates neuroscience and haptic feedback to develop human computer system interfaces that allow users to control cyber physical systems using their brain signals. This innovative approach uses advanced artificial intelligence to classify signal patterns and respond to brain thoughts in real-time, providing an avatar bird’s eyes feeling. The project development approaches the challenges and opportunities associated with Neuro-Haptics BCI for immersive avatars, paving the way for a new era in human-computer interaction.
 
+<p align="center">
 <img width="900" alt="image" src="https://github.com/user-attachments/assets/0005cf7a-f08b-4a7b-8bb6-7ab58b92de27" />
-
+</p>
 
 | [![Alternate Text](https://img.youtube.com/vi/4boWM6esa08/0.jpg)](https://www.youtube.com/watch?v=4boWM6esa08) | [![Alternate Text](https://img.youtube.com/vi/f2y4jwb2Cgg/0.jpg)](https://www.youtube.com/watch?v=f2y4jwb2Cgg) |
 | --- | --- |
@@ -34,14 +39,13 @@ The bleeding-edge intersection of neuro-haptics, brain-computer interface (BCI) 
 
 ---
 
-
 ### Autonomous Systems Laboratory
 
 The Autonomous Systems Laboratory (ISELF205) is a cutting-edge research hub that equips students with state-of-the-art tools to develop projects in Brain-Computer Interfaces (BCI), Artificial Intelligence (AI), and Cloud Computing. The lab boasts an impressive setup, featuring five BCI headsets, eight workstations with dual PCs, including six Linux-powered Chromebooks, and a dedicated NVIDIA GPU server for high-performance computing. Students also have access to four tablets, four smartphones, four VR headsets, and four drones, creating a versatile platform for immersive and autonomous systems research. A large monitor and smart TV serve as central display units, complemented by a Nao6 humanoid robot that facilitates hands-on experimentation. By integrating software, hardware, and human biology with brain-computer interfaces, this advanced infrastructure empowers students and researchers to push the boundaries of autonomous systems technology and explore innovative frontiers.
 
-
+<p align="center">
 <img width="900" alt="image" src="https://github.com/user-attachments/assets/56d4efd1-3f7c-4063-a156-0e28d225b713" />
-
+</p>
 
 
 
