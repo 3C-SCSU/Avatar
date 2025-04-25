@@ -241,6 +241,7 @@ ApplicationWindow {
                                 Text {
                                     text: "Flight Log"
                                     font.bold: true
+                                    font.pixelSize: 20
                                     color: "white"
                                     horizontalAlignment: Text.AlignHCenter
                                     Layout.alignment: Qt.AlignHCenter
@@ -308,13 +309,14 @@ ApplicationWindow {
                             Layout.preferredWidth: 700
                             Layout.preferredHeight: 550
                             
-                            ColumnLayout {
+                             ColumnLayout {
                                 spacing: 5
                                 anchors.fill: parent
 
                                 Text {
                                     text: "Predictions Table"
                                     font.bold: true
+                                    font.pixelSize: 20
                                     color: "white"
                                     horizontalAlignment: Text.AlignHCenter
                                     Layout.alignment: Qt.AlignHCenter
@@ -390,6 +392,7 @@ ApplicationWindow {
                                 Text {
                                     text: "Console Log"
                                     font.bold: true
+                                    font.pixelSize: 20
                                     color: "white"
                                     horizontalAlignment: Text.AlignHCenter
                                     Layout.alignment: Qt.AlignHCenter
