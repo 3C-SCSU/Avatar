@@ -45,6 +45,9 @@
     Brainwave Machine Learning for drones and robots. Moving the world with your mind. 
     <br />
     <br />
+    <a href="https://github.com/3C-SCSU/Avatar/tree/main/BCI"><strong>BCI News »</strong></a>
+    <br />
+    <br />
     <a href="https://github.com/3C-SCSU/Avatar"><strong>Explore the docs »</strong></a>
     <br />
     <br />
