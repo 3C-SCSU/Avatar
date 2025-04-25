@@ -391,7 +391,7 @@ ApplicationWindow {
 
                                 Text {
                                     text: "Console Log"
-                                    font.bold: true
+                                    font.weight: Font.Bold
                                     font.pixelSize: 20
                                     color: "white"
                                     horizontalAlignment: Text.AlignHCenter
