@@ -91,6 +91,7 @@ ApplicationWindow {
                                 contentItem: Text {
                                     text: "Read my mind..."
                                     color: "white" // Set text color to white
+                                     font.bold: true // Make the text bold
                                     anchors.centerIn: parent
                                 }
                                 onClicked: backend.readMyMind()
@@ -186,18 +187,26 @@ ApplicationWindow {
                             columnSpacing: 10
                             Layout.fillWidth: true
                             Layout.alignment: Qt.AlignHCenter
+
                             TextField {
                                 id: manualInput
                                 placeholderText: "Manual Command"
                                 Layout.preferredWidth: 400
                                 Layout.alignment: Qt.AlignHCenter
+                                // No changes here, as TextField has a white background by default
                             }
+
                             Button {
                                 text: "Keep Drone Alive"
                                 width: 130
                                 height: 40
                                 background: Rectangle {
-                                    color: "#1b3a4b"
+                                    color: "#1b3a4b" // Blueish background
+                                }
+                                contentItem: Text {
+                                    text: parent.text
+                                    color: "white" // Set text color to white for blueish background
+                                    anchors.centerIn: parent
                                 }
                                 onClicked: backend.keepDroneAlive()
                             }
@@ -259,6 +268,7 @@ ApplicationWindow {
                                 contentItem: Text {
                                     text: "Connect"
                                     color: "white" // Set text color to white
+                                    font.bold: true // Make the text bold
                                     anchors.centerIn: parent
                                 }
                                 onClicked: backend.connectDrone()
@@ -275,8 +285,11 @@ ApplicationWindow {
                         // Predictions Table
                         GroupBox {
                             title: "Predictions Table"
+                            color: "white"
+                            
                             Layout.preferredWidth: 700
                             Layout.preferredHeight: 550
+                            font.bold: true // Make the text bold
 
                             // Header with white background
                             RowLayout {
@@ -335,8 +348,10 @@ ApplicationWindow {
                         // Console Log Section
                         GroupBox {
                             title: "Console Log"
+                    
                             Layout.preferredWidth: 300
                             Layout.preferredHeight: 250
+                            font.bold: true // Make the text bold
                             Layout.alignment: Qt.AlignRight
 
                             TextArea {
@@ -344,6 +359,7 @@ ApplicationWindow {
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
                                 text: "Console output here..."
+                                font.bold: true // Make the text bold
                             }
                         }
                     }
@@ -559,6 +575,7 @@ ApplicationWindow {
                                 text: "Flight Log"
                                 font.pixelSize: 20
                                 color: "white"
+                                font.bold: true // Make the text bold
                             }
                             // Flight Log TextArea (Box)
                             Rectangle {
