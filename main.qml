@@ -1575,7 +1575,7 @@ ApplicationWindow {
             
             // Manual Controller Tab (Nao Viewer)
             Rectangle {
-                color: "#2f4050"
+                color: "#64778d"
 
                 Column {
                     anchors.centerIn: parent
