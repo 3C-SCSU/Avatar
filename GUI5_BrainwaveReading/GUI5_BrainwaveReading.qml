@@ -390,7 +390,7 @@ ApplicationWindow {
                                 anchors.fill: parent
 
                                 Text {
-                                    text: "Console Log"
+                                    text: "Console Log BOLD TEST"
                                     font.weight: Font.Bold
                                     font.pixelSize: 20
                                     color: "white"
