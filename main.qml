@@ -2,13 +2,14 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Dialogs
+import Qt.labs.platform
 
 
 ApplicationWindow {
     property bool isRandomForestSelected: false
     visible: true
     width: 1200
-    height: 800 
+    height: 800
     title: "Avatar - Brainwave Reading"
 
     // Proper connection handling
@@ -39,37 +40,23 @@ ApplicationWindow {
 
             TabButton {
                 text: "Brainwave Reading"
-                font.bold: true
                 onClicked: stackLayout.currentIndex = 0
             }
             TabButton {
-                text: "Brainwave Visualization"
-                font.bold: true
+                text: "Transfer Data"
                 onClicked: stackLayout.currentIndex = 1
             }
             TabButton {
                 text: "Manual Drone Control"
-                font.bold: true
                 onClicked: stackLayout.currentIndex = 2
             }
             TabButton {
-                text: "File Shuffler"
-                font.bold: true
+                text: "Brainwave Visualization"
                 onClicked: stackLayout.currentIndex = 3
             }
             TabButton {
-                text: "Transfer Data"
-                font.bold: true
+                text: "File Shuffler"
                 onClicked: stackLayout.currentIndex = 4
-            }
-            TabButton {
-                text: "Manual NAO6 Controller"
-                font.bold: true
-                onClicked: {
-                    stackLayout.currentIndex = 5
-                    console.log("Manual Controller tab clicked")
-                    tabController.startNaoViewer()
-                }
             }
 
         }
@@ -82,7 +69,7 @@ ApplicationWindow {
 
             // Brainwave Reading view
             Rectangle {
-                color: "#64778d" // Background color
+                color: "#3b4b57" // Background color
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
@@ -104,11 +91,9 @@ ApplicationWindow {
                             RadioButton {
                                 text: "Manual Control"
                                 checked: true
-                                font.bold: true
                             }
                             RadioButton {
                                 text: "Autopilot"
-                                font.bold: true
                             }
                         }
 
@@ -116,7 +101,7 @@ ApplicationWindow {
                         Rectangle {
                             width: 150
                             height: 150
-                            color: "#242c4d" // Dark blue background
+                            color: "#1b3a4b" // Dark blue background
                             Layout.alignment: Qt.AlignHCenter
 
                             Image {
@@ -134,7 +119,6 @@ ApplicationWindow {
                                 background: Item {} // No background
                                 contentItem: Text {
                                     text: "Read my mind..."
-                                    font.bold: true
                                     color: "white" // Set text color to white
                                     anchors.centerIn: parent
                                 }
@@ -146,7 +130,6 @@ ApplicationWindow {
                         Label {
                             text: "The model says ..."
                             color: "white"
-                            font.bold: true
                             Layout.alignment: Qt.AlignHCenter
                         }
 
@@ -189,8 +172,8 @@ ApplicationWindow {
                                 model: ListModel {}
                                 delegate: RowLayout {
                                     spacing: 150
-                                    Text { text: model.count; font.bold: true; color: "white"; width: 80 }
-                                    Text { text: model.label; font.bold: true; color: "white"; width: 80 }
+                                    Text { text: model.count; color: "white"; width: 80 }
+                                    Text { text: model.label; color: "white"; width: 80 }
                                 }
                             }
                         }
@@ -201,22 +184,20 @@ ApplicationWindow {
                             Layout.alignment: Qt.AlignHCenter
                             Button {
                                 text: "Not what I was thinking..."
-                                font.bold: true
                                 Layout.preferredWidth: 160
                                 Layout.preferredHeight: 80
                                 background: Rectangle {
-                                    color: "#242c4d"
-                                } 
+                                    color: "#1b3a4b"
+                                }
                                 onClicked: backend.notWhatIWasThinking(manualInput.text)
                             }
                             Button {
                                 text: "Execute"
-                                font.bold: true; 
                                 Layout.preferredWidth: 160
                                 Layout.preferredHeight: 80
                                 background: Rectangle {
-                                    color: "#242c4d"
-                                } 
+                                    color: "#1b3a4b"
+                                }
                                 onClicked: backend.executeAction()
                             }
                         }
@@ -230,17 +211,15 @@ ApplicationWindow {
                             TextField {
                                 id: manualInput
                                 placeholderText: "Manual Command"
-                                font.bold: true
                                 Layout.preferredWidth: 400
                                 Layout.alignment: Qt.AlignHCenter
                             }
                             Button {
                                 text: "Keep Drone Alive"
-                                font.bold: true
                                 width: 130
                                 height: 40
                                 background: Rectangle {
-                                    color: "#242c4d"
+                                    color: "#1b3a4b"
                                 }
                                 onClicked: backend.keepDroneAlive()
                             }
@@ -259,7 +238,6 @@ ApplicationWindow {
                                 delegate: Text {
                                     text: log
                                     color: "white"
-                                    font.bold: true
                                 }
                             }
                         }
@@ -271,7 +249,7 @@ ApplicationWindow {
                             Rectangle {
                                 width: 150
                                 height: 150
-                                color: "#242c4d" // Dark blue background
+                                color: "#1b3a4b" // Dark blue background
 
                                 Image {
                                     source: "GUI_Pics/connect.png"
@@ -288,7 +266,6 @@ ApplicationWindow {
                                     background: Item {} // No background
                                     contentItem: Text {
                                         text: "Connect"
-                                        font.bold: true
                                         color: "white" // Set text color to white
                                         anchors.centerIn: parent
                                     }
@@ -298,7 +275,7 @@ ApplicationWindow {
                             ColumnLayout {
                                 spacing: 5
                                 Layout.alignment: Qt.AlignHCenter
-                                
+
                                 // Radio Button
                                 RadioButton {
                                     id: randomForestRadio
@@ -310,14 +287,14 @@ ApplicationWindow {
                                 Rectangle {
                                     width: 150
                                     height: 80
-                                    color: "#6eb109"
+                                    color: "#4CAF50"
                                     radius: 5
 
                                     Text {
                                         text: "Random Forest"
-                                        font.bold: true
+                                        font.bold: isRandomForestSelected
                                         font.pixelSize: 16
-                                        color: isRandomForestSelected ? "yellow" : "white"
+                                        color: "white"
                                         anchors.centerIn: parent
                                     }
 
@@ -344,25 +321,25 @@ ApplicationWindow {
                                 Rectangle {
                                     width: 150
                                     height: 80
-                                    color: "#6eb109"
+                                    color: "#4CAF50"
                                     radius: 5
 
                                     Text {
                                         text: "Deep Learning"
                                         font.pixelSize: 16
-                                        color: !isRandomForestSelected ? "yellow" : "white"
+                                        color: "white"
                                         anchors.centerIn: parent
-                                        font.bold: true
+                                        font.bold: !isRandomForestSelected
                                     }
+                                }
 
-                                    MouseArea {
-                                        anchors.fill: parent
-                                        onClicked: {
-                                            isRandomForestSelected = false;
-                                            backend.selectModel("Deep Learning");
-                                        }
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        isRandomForestSelected = false;
+                                        backend.selectModel("Deep Learning");
                                     }
-                                }                                
+                                }
                             }
                             // Adding Synthetic Data and Live Data Radio Button (Row 344 to 364) as part of Ticket 186
                             Column {
@@ -371,7 +348,6 @@ ApplicationWindow {
                                 RadioButton {
                                     id: syntheticRadio
                                     text: "Synthetic Data"
-                                    font.bold: true
                                     checked: false
                                     onClicked: {
                                         backend.setDataMode("synthetic")
@@ -381,7 +357,6 @@ ApplicationWindow {
                                 RadioButton {
                                     id: liveRadio
                                     text: "Live Data"
-                                    font.bold: true
                                     checked: true
                                     onClicked: {
                                         backend.setDataMode("live")
@@ -450,9 +425,9 @@ ApplicationWindow {
                                 }
                                 delegate: RowLayout {
                                     spacing: 50
-                                    Text { text: model.count; font.bold: true; color: "white"; width: 120 }
-                                    Text { text: model.server; font.bold: true; color: "white"; width: 200 }
-                                    Text { text: model.label; font.bold: true; color: "white"; width: 120 }
+                                    Text { text: model.count; color: "white"; width: 120 }
+                                    Text { text: model.server; color: "white"; width: 200 }
+                                    Text { text: model.label; color: "white"; width: 120 }
                                 }
                             }
                         }
@@ -469,179 +444,105 @@ ApplicationWindow {
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
                                 text: "Console output here..."
-                                font.bold: true
                             }
                         }
                     }
                 }
             }
 
-            // Brainwave Visualization
+            // Transfer Data view
             Rectangle {
-                color: "#64778d"
-                Layout.fillWidth: true
-                Layout.fillHeight: true
+                color: "#4a5b7b"
+                ScrollView {
+                    anchors.centerIn: parent
+                    width: Math.min(parent.width * 0.9, 600)
+                    height: Math.min(parent.height * 0.9, contentHeight)
+                    clip: true
 
-                ColumnLayout {
-                    anchors.fill: parent
-                    spacing: 10
+                    ColumnLayout {
+                        id: contentLayout
+                        width: parent.width
+                        spacing: 10
 
-                    // Grid Layout for 6 Graphs (2 Rows x 3 Columns)
-                    GridLayout {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        columns: 3
-                        Layout.margins: 10
-                        columnSpacing: 10
-                        rowSpacing: 10
+                        Label { text: "Target IP"; color: "white" }
+                        TextField { Layout.fillWidth: true }
 
-                        Repeater {
-                            model: imageModel  
-                            delegate: Rectangle {
-                                color: "#e6e6f0"
+                        Label { text: "Target Username"; color: "white" }
+                        TextField { Layout.fillWidth: true }
+
+                        Label { text: "Target Password"; color: "white" }
+                        TextField {
+                            Layout.fillWidth: true
+                            echoMode: TextInput.Password
+                        }
+
+                        Label { text: "Private Key Directory:"; color: "white" }
+                        RowLayout {
+                            Layout.fillWidth: true
+                            TextField {
+                                id: privateKeyDirInput
                                 Layout.fillWidth: true
-                                Layout.fillHeight: true
-                                border.color: "#d0d0d8"
-                                border.width: 1
-                                radius: 4
+                            }
+                            Button {
+                                text: "Browse"
+                                onClicked: console.log("Browse for Private Key Directory")
+                            }
+                        }
 
-                                Column {
-                                    width: parent.width
-                                    height: parent.height
-                                    spacing: 0
+                        CheckBox {
+                            text: "Ignore Host Key"
+                            checked: true
+                            contentItem: Text {
+                                text: parent.text
+                                color: "white"
+                                leftPadding: parent.indicator.width + parent.spacing
+                            }
+                        }
 
-                                    Rectangle {
-                                        width: parent.width
-                                        height: 30
-                                        color: "#242c4d"
+                        Label { text: "Source Directory:"; color: "white" }
+                        RowLayout {
+                            Layout.fillWidth: true
+                            TextField {
+                                id: sourceDirInput
+                                Layout.fillWidth: true
+                            }
+                            Button {
+                                text: "Browse"
+                                onClicked: console.log("Browse for Source Directory")
+                            }
+                        }
 
-                                        Text {
-                                            // Extract just the first word from the title
-                                            text: {
-                                                var parts = model.graphTitle.split(" ");
-                                                return parts[0]; // Just return "Takeoff", "Forward", etc.
-                                            }
-                                            color: "white"
-                                            font.bold: true
-                                            font.pixelSize: 14
-                                            
-                                            // Center text using calculations rather than anchors
-                                            x: (parent.width - width) / 2
-                                            y: (parent.height - height) / 2
-                                        }
-                                    }
-                                    Rectangle {
-                                        width: parent.width
-                                        height: parent.height - 30  // Total height minus header height
-                                        color: "white"
+                        Label { text: "Target Directory:"; color: "white" }
+                        TextField {
+                            Layout.fillWidth: true
+                            text: "/home/"
+                            placeholderText: "/home/"
+                        }
 
-                                        // Display Image
-                                        Image {
-                                            x: 8  // Margin
-                                            y: 8  // Margin
-                                            width: parent.width - 16  // Margin on both sides
-                                            height: parent.height - 16  // Margin on both sides
-                                            source: model.imagePath
-                                            fillMode: Image.PreserveAspectFit
-                                        }
-                                    }
-                                }
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Button {
+                                text: "Save Config"
+                                onClicked: console.log("Save Config clicked")
+                            }
+                            Button {
+                                text: "Load Config"
+                                onClicked: console.log("Load Config clicked")
+                            }
+                            Button {
+                                text: "Clear Config"
+                                onClicked: console.log("Clear Config clicked")
+                            }
+                            Button {
+                                text: "Upload"
+                                onClicked: console.log("Upload clicked")
                             }
                         }
                     }
-                    
-                    // Refresh and Rollback buttons after graphs
-                    RowLayout {
-                        Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
-                        Layout.bottomMargin: 20
-                        spacing: 15
-                        
-                        // Refresh Button
-                        Button {
-                            text: "Refresh"
-                            font.bold: true
-                            implicitWidth: 120
-                            implicitHeight: 40
-                            
-                            // This property allows us to track the hover state
-                            property bool isHovering: false
-                            
-                            // Define the hover handler
-                            HoverHandler {
-                                onHoveredChanged: parent.isHovering = hovered
-                            }
-                            
-                            background: Rectangle {
-                                // Use the isHovering property to change color
-                                color: parent.isHovering ? "#3e4e7a" : "#2e3a5c"
-                                radius: 4
-                                
-                                // Add a smooth color transition
-                                Behavior on color {
-                                    ColorAnimation { duration: 150 }
-                                }
-                            }
-                            
-                            contentItem: Text {
-                                text: parent.text
-                                font.pixelSize: 14
-                                font.bold: true
-                                color: "white"
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                            }
-                            
-                            onClicked: {
-                                backend.setDataset("refresh")
-                            }
-                        }
-                        
-                        // Rollback Button
-                        Button {
-                            text: "Rollback"
-                            font.bold: true
-                            implicitWidth: 120
-                            implicitHeight: 40
-                            
-                            // This property allows us to track the hover state
-                            property bool isHovering: false
-                            
-                            // Define the hover handler
-                            HoverHandler {
-                                onHoveredChanged: parent.isHovering = hovered
-                            }
-                            
-                            background: Rectangle {
-                                // Use the isHovering property to change color
-                                color: parent.isHovering ? "#3e4e7a" : "#2e3a5c"
-                                radius: 4
-                                
-                                // Add a smooth color transition
-                                Behavior on color {
-                                    ColorAnimation { duration: 150 }
-                                }
-                            }
-                            
-                            contentItem: Text {
-                                text: parent.text
-                                font.pixelSize: 14
-                                font.bold: true
-                                color: "white"
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                            }
-                            
-                            onClicked: {
-                                // Display rollback plots
-                                backend.setDataset("rollback")
-                            }
-                        }
-                    }
-                }    
+                }
             }
+
             // Manual Drone Control view
-        Rectangle{
-            color: "#64778d"
             ColumnLayout {
                 anchors.fill: parent
                 spacing: 10
@@ -678,7 +579,6 @@ ApplicationWindow {
                             Text {
                                 id: buttonText // Give an ID to reference
                                 text: "Home"
-                                font.bold: true
                                 color: "white" // Initial text color
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
@@ -734,7 +634,6 @@ ApplicationWindow {
                                     text: "Up"
                                     color: "white" // Initial text color
                                     font.pixelSize: 18
-                                    font.bold: true
                                     anchors.horizontalCenter: parent.horizontalCenter
                                     anchors.verticalCenter: parent.verticalCenter
                                 }
@@ -763,7 +662,6 @@ ApplicationWindow {
                             Text {
                                 id: flightlog
                                 text: "Flight Log"
-                                font.bold: true
                                 font.pixelSize: 20
                                 color: "white"
                             }
@@ -795,20 +693,17 @@ ApplicationWindow {
                         }
                     }
 
-                    // // Log ListView
-                    // ListView {
-                    //     Layout.fillWidth: true
-                    //     Layout.preferredHeight: 150
-                    //     model: ListModel {
-                    //                 ListElement { count: "1"; server: "Log A"; label: "Label A" }
-                    //                 ListElement { count: "2"; server: "Log B"; label: "Label B" }
-                    //             }
-                    //     delegate: Item {
-                    //         Text {
-                    //             text: modelData
-                    //         }
-                    //     }
-                    // }
+                    // Log ListView
+                    ListView {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 150
+                        model: logModel
+                        delegate: Item {
+                            Text {
+                                text: modelData
+                            }
+                        }
+                    }
                 }
 
                 // Forward Button
@@ -843,7 +738,6 @@ ApplicationWindow {
                                 id: forwardText // Unique ID for the Forward button text
                                 text: "Forward"
                                 color: "white" // Initial text color
-                                font.bold: true
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
@@ -895,7 +789,6 @@ ApplicationWindow {
                                 id: turnLeftText // Unique ID for the Turn Left button text
                                 text: "Turn Left"
                                 color: "white" // Initial text color
-                                font.bold: true
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
@@ -944,7 +837,6 @@ ApplicationWindow {
                                 id: leftText // Unique ID for the Left button text
                                 text: "Left"
                                 color: "white" // Initial text color
-                                font.bold: true
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
@@ -983,7 +875,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             Image {
-                                source: "GUI_Pics/Stream.png"
+                                source: "brainwave-prediction-app/images/Stream.png"
                                 width: 150
                                 height: 150
                                 anchors.centerIn: parent
@@ -993,7 +885,6 @@ ApplicationWindow {
                                 id: streamText // Unique ID for the Stream button text
                                 text: "Stream"
                                 color: "white" // Initial text color
-                                font.bold: true
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
@@ -1042,7 +933,6 @@ ApplicationWindow {
                                 id: rightText // Unique ID for the Right button text
                                 text: "Right"
                                 color: "white" // Initial text color
-                                font.bold: true
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
@@ -1092,7 +982,6 @@ ApplicationWindow {
                                 id: turnRightText // Unique ID for the Turn Right button text
                                 text: "Turn Right"
                                 color: "white" // Initial text color
-                                font.bold: true
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
@@ -1147,7 +1036,6 @@ ApplicationWindow {
                                 id: backButtonText // Unique ID for the Back button text
                                 text: "Back"
                                 color: "white" // Initial text color
-                                font.bold: true
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
@@ -1202,7 +1090,6 @@ ApplicationWindow {
                                 id: connectButtonText // Unique ID for the Connect button text
                                 text: "Connect"
                                 color: "white" // Initial text color
-                                font.bold: true
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
@@ -1251,7 +1138,6 @@ ApplicationWindow {
                                 id: downButtonText // Unique ID for the Down button text
                                 text: "Down"
                                 color: "white" // Initial text color
-                                font.bold: true
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
@@ -1300,7 +1186,6 @@ ApplicationWindow {
                                 id: takeoffButtonText // Unique ID for the Takeoff button text
                                 text: "Takeoff"
                                 color: "white" // Initial text color
-                                font.bold: true
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
@@ -1347,7 +1232,6 @@ ApplicationWindow {
                                 id: landButtonText // Unique ID for the Land button text
                                 text: "Land"
                                 color: "white" // Initial text color
-                                font.bold: true
                                 font.pixelSize: 18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.verticalCenter: parent.verticalCenter
@@ -1376,18 +1260,177 @@ ApplicationWindow {
                 // Here you would implement the actual drone control logic
                 console.log(action + " triggered.")
             }
-        }
+            // Brainwave Visualization
 
-            //File shuffler view 
+            Rectangle {
+                color: "#f0f0f5"
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                ColumnLayout {
+                    anchors.fill: parent
+                    spacing: 10
+
+                    // Grid Layout for 6 Graphs (2 Rows x 3 Columns)
+                    GridLayout {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        columns: 3
+                        Layout.margins: 10
+                        columnSpacing: 10
+                        rowSpacing: 10
+
+                        Repeater {
+                            model: imageModel
+                            delegate: Rectangle {
+                                color: "#e6e6f0"
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
+                                border.color: "#d0d0d8"
+                                border.width: 1
+                                radius: 4
+
+                                Column {
+                                    width: parent.width
+                                    height: parent.height
+                                    spacing: 0
+
+                                    Rectangle {
+                                        width: parent.width
+                                        height: 30
+                                        color: "#5d6d9a"
+
+                                        Text {
+                                            // Extract just the first word from the title
+                                            text: {
+                                                var parts = model.graphTitle.split(" ");
+                                                return parts[0]; // Just return "Takeoff", "Forward", etc.
+                                            }
+                                            color: "white"
+                                            font.bold: true
+                                            font.pixelSize: 14
+
+                                            // Center text using calculations rather than anchors
+                                            x: (parent.width - width) / 2
+                                            y: (parent.height - height) / 2
+                                        }
+                                    }
+                                    Rectangle {
+                                        width: parent.width
+                                        height: parent.height - 30  // Total height minus header height
+                                        color: "white"
+
+                                        // Display Image
+                                        Image {
+                                            x: 8  // Margin
+                                            y: 8  // Margin
+                                            width: parent.width - 16  // Margin on both sides
+                                            height: parent.height - 16  // Margin on both sides
+                                            source: model.imagePath
+                                            fillMode: Image.PreserveAspectFit
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Refresh and Rollback buttons after graphs
+                    RowLayout {
+                        Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
+                        Layout.bottomMargin: 20
+                        spacing: 15
+
+                        // Refresh Button
+                        Button {
+                            text: "Refresh"
+                            implicitWidth: 120
+                            implicitHeight: 40
+
+                            // This property allows us to track the hover state
+                            property bool isHovering: false
+
+                            // Define the hover handler
+                            HoverHandler {
+                                onHoveredChanged: parent.isHovering = hovered
+                            }
+
+                            background: Rectangle {
+                                // Use the isHovering property to change color
+                                color: parent.isHovering ? "#3e4e7a" : "#2e3a5c"
+                                radius: 4
+
+                                // Add a smooth color transition
+                                Behavior on color {
+                                    ColorAnimation { duration: 150 }
+                                }
+                            }
+
+                            contentItem: Text {
+                                text: parent.text
+                                font.pixelSize: 14
+                                color: "white"
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+
+                            onClicked: {
+                                backend.setDataset("refresh")
+                            }
+                        }
+
+                        // Rollback Button
+                        Button {
+                            text: "Rollback"
+                            implicitWidth: 120
+                            implicitHeight: 40
+
+                            // This property allows us to track the hover state
+                            property bool isHovering: false
+
+                            // Define the hover handler
+                            HoverHandler {
+                                onHoveredChanged: parent.isHovering = hovered
+                            }
+
+                            background: Rectangle {
+                                // Use the isHovering property to change color
+                                color: parent.isHovering ? "#3e4e7a" : "#2e3a5c"
+                                radius: 4
+
+                                // Add a smooth color transition
+                                Behavior on color {
+                                    ColorAnimation { duration: 150 }
+                                }
+                            }
+
+                            contentItem: Text {
+                                text: parent.text
+                                font.pixelSize: 14
+                                color: "white"
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+
+                            onClicked: {
+                                // Display rollback plots
+                                backend.setDataset("rollback")
+                            }
+                        }
+                    }
+                }
+            }
+            //File shuffler view
             Rectangle {
                 id: fileShufflerView
-                color: "#64778d"
+                color: "#2b3a4a"
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
                 property string outputBoxText: ""
                 property string selectedDirectory: ""
-                property bool ranShuffle: false 
+                property bool ranShuffle: false
+                property bool unifiedThoughts: false
 
                 Column {
                     anchors.fill: parent
@@ -1410,8 +1453,10 @@ ApplicationWindow {
                         color: "lightgrey"
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.verticalCenter: parent.verticalCenter
+
                         ScrollView {
                             anchors.fill: parent
+
                             TextArea {
                                 id: outputBox
                                 text: fileShufflerView.outputBoxText
@@ -1428,25 +1473,50 @@ ApplicationWindow {
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.top: parent.verticalCenter
                         anchors.topMargin: parent.height * 0.3 + 10
+
                         Button {
-                            id: folderButton
-                            text: "Select your Directory"
-                            font.bold: true
-                            onClicked: folderDialog.open()
+                            text: "Unify Thoughts"
+                            onClicked: {
+                                unifyThoughts.open()
+                                fileShufflerView.outputBoxText = `Running Thoughts Unifier...\n`;
+                                fileShufflerView.unifiedThoughts = false;
+
+                            }
                         }
 
                         Button {
-                            id: runButton
+                            //id: runButton
                             text: "Run File Shuffler"
-                            font.bold: true
                             onClicked: {
-                                fileShufflerView.ranShuffle = true; 
+                                fileShuffler.open()
                                 fileShufflerView.outputBoxText = `Running File Shuffler...\n`;
-                                var output = fileShufflerGui.run_file_shuffler_program(fileShufflerView.selectedDirectory);
-                                fileShufflerView.outputBoxText += output;
+                                 fileShufflerView.ranShuffle = false;
+
+
                             }
                         }
+
                     }
+                         FolderDialog {
+                             id: fileShuffler
+                             folder: "file:///"  // Or "." for current working directory
+                             visible: false
+
+                             onAccepted: {
+                                 console.log("Selected folder:", fileShuffler.folder)
+                                 fileShufflerGui.run_file_shuffler_program(fileShuffler.folder)
+                                 fileShufflerView.ranShuffle = true;
+                                  var output = fileShufflerGui.run_file_shuffler_program(fileShufflerView.folder);
+                                fileShufflerView.outputBoxText += output;
+                             }
+
+                             onRejected: {
+                                 console.log("Folder dialog canceled")
+                             }
+                         }
+
+
+
 
                     Text {
                         id: ranText
@@ -1455,148 +1525,41 @@ ApplicationWindow {
                         font.bold: true
                         font.pixelSize: 18
                         anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.top: buttonRow.bottom 
-                        anchors.topMargin: 10 
-                        visible: fileShufflerView.ranShuffle 
+                        anchors.top: buttonRow.bottom
+                        anchors.topMargin: 10
+                        visible: fileShufflerView.ranShuffle
+                    }
+
+                    Text {
+                        id: unifiedText
+                        text: "Thoughts Unified!"
+                        color: "lightgreen"
+                        font.bold: true
+                        font.pixelSize: 18
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: ranText.bottom
+                        anchors.topMargin: 10
+                        visible: fileShufflerView.unifiedThoughts
+
                     }
                 }
 
                 FolderDialog {
-                    id: folderDialog
-                    title: "Select Your Directory"
-                    onAccepted:
-                    {
-                        let cleanedDirectory = String(folderDialog.selectedFolder);
-                        cleanedDirectory = cleanedDirectory.replace("file:///", "");
-                        fileShufflerView.selectedDirectory = cleanedDirectory;
-                        fileShufflerView.outputBoxText += "Selected directory: " + fileShufflerView.selectedDirectory + "\n";
-                    }
-                }
-            }
-            // Transfer Data view
-            Rectangle {
-                color: "#64778d"
-                ScrollView {
-                    anchors.centerIn: parent
-                    width: Math.min(parent.width * 0.9, 600)
-                    height: Math.min(parent.height * 0.9, contentHeight)
-                    clip: true
+                    id: unifyThoughts
+                    folder: "file:///"  // Or "." for current working directory
 
-                    ColumnLayout {
-                        id: contentLayout
-                        width: parent.width
-                        spacing: 10
+                    onAccepted: {
+                        console.log("Selected folder:", unifyThoughts.folder)
+                        fileShufflerGui.unify_thoughts(unifyThoughts.folder)
+                        fileShufflerView.unifiedThoughts = true
+                        var outputt = fileShufflerGui.unify_thoughts(unifyThoughts.folder);
+                        fileShufflerView.outputBoxText += outputt;
+                        fileShufflerView.outputBoxText += "\nThoughts Unified!\n"
 
-                        Label { text: "Target IP"; color: "white"; font.bold: true}
-                        TextField { Layout.fillWidth: true }
-
-                        Label { text: "Target Username"; color: "white"; font.bold: true }
-                        TextField { Layout.fillWidth: true }
-
-                        Label { text: "Target Password"; color: "white"; font.bold: true }
-                        TextField {
-                            Layout.fillWidth: true
-                            echoMode: TextInput.Password
-                        }
-
-                        Label { text: "Private Key Directory:"; color: "white"; font.bold: true }
-                        RowLayout {
-                            Layout.fillWidth: true
-                            TextField {
-                                id: privateKeyDirInput
-                                Layout.fillWidth: true
-                            }
-                            Button {
-                                text: "Browse"
-                                font.bold: true
-                                onClicked: console.log("Browse for Private Key Directory")
-                            }
-                        }
-
-                        CheckBox {
-                            text: "Ignore Host Key"
-                            font.bold: true
-                            checked: true
-                            contentItem: Text {
-                                text: parent.text
-                                font.bold: true
-                                color: "white"
-                                leftPadding: parent.indicator.width + parent.spacing
-                            }
-                        }
-
-                        Label { text: "Source Directory:"; color: "white"; font.bold: true }
-                        RowLayout {
-                            Layout.fillWidth: true
-                            TextField {
-                                id: sourceDirInput
-                                Layout.fillWidth: true
-                            }
-                            Button {
-                                text: "Browse"
-                                font.bold: true
-                                onClicked: console.log("Browse for Source Directory")
-                            }
-                        }
-
-                        Label { text: "Target Directory:"; color: "white"; font.bold: true }
-                        TextField {
-                            Layout.fillWidth: true
-                            text: "/home/"
-                            placeholderText: "/home/"
-                        }
-
-                        RowLayout {
-                            Layout.fillWidth: true
-                            Button {
-                                text: "Save Config"
-                                font.bold: true
-                                onClicked: console.log("Save Config clicked")
-                            }
-                            Button {
-                                text: "Load Config"
-                                font.bold: true
-                                onClicked: console.log("Load Config clicked")
-                            }
-                            Button {
-                                text: "Clear Config"
-                                font.bold: true
-                                onClicked: console.log("Clear Config clicked")
-                            }
-                            Button {
-                                text: "Upload"
-                                font.bold: true
-                                onClicked: console.log("Upload clicked")
-                            }
-                        }
-                    }
-                }
-            }
-            
-            // Manual Controller Tab (Nao Viewer)
-            Rectangle {
-                color: "#2f4050"
-
-                Column {
-                    anchors.centerIn: parent
-                    spacing: 20
-
-                    Text {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: "Nao Viewer Running"
-                        font.bold: true
-                        color: "white"
-                        font.pixelSize: 18
                     }
 
-                    Button {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: "Stop Nao Viewer"
-                        font.bold: true
-                        onClicked: {
-                            console.log("Stop button clicked")
-                            tabController.stopNaoViewer()
-                        }
+                    onRejected: {
+                        console.log("Folder dialog canceled")
                     }
                 }
             }
