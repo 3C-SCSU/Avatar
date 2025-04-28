@@ -113,7 +113,7 @@ ApplicationWindow {
                         Label {
                             text: "The model says ..."
                             color: "white"
-                            
+                            font.bold: true
                             Layout.alignment: Qt.AlignHCenter
                         }
 
@@ -231,10 +231,22 @@ ApplicationWindow {
 
                         // Flight Log
                         GroupBox {
-                            title: "Flight Log"
                             Layout.preferredWidth: 230
                             Layout.preferredHeight: 170
                             
+                            ColumnLayout {
+                                spacing: 5
+                                anchors.fill: parent
+
+                                Text {
+                                    text: "Flight Log"
+                                    font.bold: true
+                                    font.pixelSize: 20
+                                    color: "white"
+                                    horizontalAlignment: Text.AlignHCenter
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
                             // Background Rectangle inside the ListView
                             Rectangle {
                                 color: "white"  // Set only the box area color to white
@@ -294,9 +306,22 @@ ApplicationWindow {
 
                         // Predictions Table
                         GroupBox {
-                            title: "Predictions Table"
                             Layout.preferredWidth: 700
                             Layout.preferredHeight: 550
+                            
+                             ColumnLayout {
+                                spacing: 5
+                                anchors.fill: parent
+
+                                Text {
+                                    text: "Predictions Table"
+                                    font.bold: true
+                                    font.pixelSize: 20
+                                    color: "white"
+                                    horizontalAlignment: Text.AlignHCenter
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
 
                             // Header with white background
                             RowLayout {
@@ -357,10 +382,22 @@ ApplicationWindow {
 
                         // Console Log
                         GroupBox {
-                            title: "Console Log"
                             Layout.preferredWidth: 230
                             Layout.preferredHeight: 170
                             
+                            ColumnLayout {
+                                spacing: 5
+                                anchors.fill: parent
+
+                                Text {
+                                    text: "Console Log"
+                                    font.weight: Font.Bold
+                                    font.pixelSize: 20
+                                    color: "white"
+                                    horizontalAlignment: Text.AlignHCenter
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
                             // Background Rectangle inside the ListView
                             Rectangle {
                                 color: "white"  // Set only the box area color to white
