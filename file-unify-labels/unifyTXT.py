@@ -1,18 +1,18 @@
-# Author: Modified by Group 10 (Brittney Johnson, Veejay Deonarine, and Tamunotekena Ogan)
-# Fixes Ticket #197
-# File: unifyTXT.py
+# Author: Thomas Herold
+# File: unifyCSV.py
 
 import os  # Provides functions for file system interaction
 import shutil  # Provides functions for copying, moving, and removing directories/files
 import glob  # Provides functions for finding files
-import stat  # Provides constants and functions for interpreting file mode bits
+import stat
+
 
 # Dynamically map folder names to categories (case insensitive)
 def get_category_from_folder(folder_name):
-    folder_name = folder_name.lower()
-    if "takeoff" in folder_name or "take_off" in folder_name:
+    folder_name = folder_name.lower()  # Change to lowercase to help find
+    if "takeoff" in folder_name or "take_off" in folder_name:  # Checks for unique takeoff names also
         return "takeoff"
-    elif "backward" in folder_name or "backwards" in folder_name:
+    elif "backward" in folder_name or "backwards" in folder_name:  # Checks for unique backward names also
         return "backward"
     elif "right" in folder_name:
         return "right"
@@ -20,83 +20,84 @@ def get_category_from_folder(folder_name):
         return "left"
     elif "forward" in folder_name:
         return "forward"
-    elif "landing" in folder_name or "land" in folder_name:
+    elif "landing" in folder_name:
         return "landing"
     else:
-        print(f"Category not found: {folder_name}")
-        return None
+        print(f"Category not found: {folder_name}")  # Print message to indicate no category was found
+        return None  # Return none to indicate no matching category was found
 
-# Helper function to fix permission issues (especially for folders like group04)
 def change_permissions(path):
+    """
+    Grant owner-write on every file, and owner-write + owner-execute
+    on every directory, under `path`.  Preserves all other bits.
+    """
     for root, dirs, files in os.walk(path):
-        for dir in dirs:
-            os.chmod(os.path.join(root, dir), stat.S_IWRITE)
-        for file in files:
-            os.chmod(os.path.join(root, file), stat.S_IWRITE)
-    os.chmod(path, stat.S_IWRITE)
+        # Grant write+execute on each directory so we can cd into it
+        for d in dirs:
+            full_dir = os.path.join(root, d)
+            mode = os.stat(full_dir).st_mode
+            os.chmod(full_dir, mode | stat.S_IWUSR | stat.S_IXUSR)
 
-# Function to remove any remaining empty folders (even after initial pass)
-def remove_empty_folders(path):
-    for dirpath, dirnames, _ in os.walk(path, topdown=False):
-        for dirname in dirnames:
-            full_path = os.path.join(dirpath, dirname)
-            try:
-                if not os.listdir(full_path):
-                    change_permissions(full_path)
-                    os.rmdir(full_path)
-                    print(f"Removed leftover empty folder: {full_path}")
-            except Exception as e:
-                print(f"Could not remove folder: {full_path} → {e}")
+        # Grant write on each file so we can move or delete it
+        for f in files:
+            full_file = os.path.join(root, f)
+            mode = os.stat(full_file).st_mode
+            os.chmod(full_file, mode | stat.S_IWUSR)
 
-# Walk all subdirectories and process only folders that match categories
-def move_files_to_categories(base_dir):
-    for group in os.listdir(base_dir):
-        group_path = os.path.join(base_dir, group)
-        if not os.path.isdir(group_path):
+    # Finally, also fix the top‐level path itself
+    top_mode = os.stat(path).st_mode
+    # if it’s a directory, ensure it’s traversable too:
+    flags = stat.S_IWUSR
+    if os.path.isdir(path):
+        flags |= stat.S_IXUSR
+    os.chmod(path, top_mode | flags)
+
+# Process the directory with the BCI data
+def move_any_csvs(base_dir):
+    #1) Change permissions
+    change_permissions(base_dir)
+
+    # 2) Move all .txt files into category folders
+    base_directory = base_dir
+
+    pattern = os.path.join(base_dir, '**', '*.txt')
+    for txt_path in glob.glob(pattern, recursive=True):
+        parent = os.path.basename(os.path.dirname(txt_path))
+        category = get_category_from_folder(parent)
+        if not category:
+            print(f"  Skipping (no category match): {txt_path}")
             continue
 
-        for dirpath, _, _ in os.walk(group_path):
-            if not os.path.isdir(dirpath):
-                continue
+        target_dir = os.path.join(base_dir, category)
+        os.makedirs(target_dir, exist_ok=True)
 
-            folder_name = os.path.basename(dirpath)
-            category = get_category_from_folder(folder_name)
-            if category:
-                print(f"Processing category: {category}")
-                category_path = os.path.join(base_dir, category)
-                os.makedirs(category_path, exist_ok=True)
+        dest = os.path.join(target_dir, os.path.basename(txt_path))
+        shutil.move(txt_path, dest)
+        print(f"  Moved: {txt_path} → {dest}")
 
-                # Delete all .csv files
-                csv_files = glob.glob(os.path.join(dirpath, "*.csv"))
-                for csv_file in csv_files:
-                    print(f"Deleting .csv file: {csv_file}")
-                    os.remove(csv_file)
 
-                # Move all .txt files to the category folder
-                txt_files = glob.glob(os.path.join(dirpath, "*.txt"))
-                for txt_file in txt_files:
-                    filename = os.path.basename(txt_file)
-                    destination = os.path.join(category_path, filename)
-                    if not os.path.exists(destination):
-                        print(f"Moving: {txt_file} to {destination}")
-                        shutil.move(txt_file, destination)
-                    else:
-                        print(f"Removing duplicate .txt file: {txt_file}")
-                        os.remove(txt_file)
+    print("TXT unification complete. Now cleaning up other files & empty dirs…")
 
-                # Try to delete the folder if it's empty (immediate cleanup)
-                if not os.listdir(dirpath):
-                    try:
-                        change_permissions(dirpath)
-                        os.rmdir(dirpath)
-                        print(f"Removed empty folder: {dirpath}")
-                    except Exception as e:
-                        print(f"Could not remove folder: {dirpath} → {e}")
+    # 3) Delete any non-.txt files
+    for root, dirs, files in os.walk(base_dir, topdown=False):
+        for fname in files:
+            if not fname.lower().endswith('.txt'):
+                path = os.path.join(root, fname)
+                os.remove(path)
+                print(f"  Removed non-txt file: {path}")
 
-    # Final pass to clean up any empty leftover folders, including group folders
-    print(f"\nAll folders under '{base_dir}' processed. .txt files unified, .csv files deleted, and empty folders removed.")
-    remove_empty_folders(base_dir)
+        # 4) Remove empty directories
+        #    (os.listdir returns [] only if directory is empty)
+        if not os.listdir(root):
+            os.rmdir(root)
+            print(f"  Removed empty directory: {root}")
+
+    print("Cleanup complete.")
+
+
+    print(f"{base_directory} directory processed, TXT files unified!")  # Program completion message
+
 
 if __name__ == "__main__":
-    base_dir = "data"  # Base directory to start from: \data\. This should be in the same directory as the Python script.
-    move_files_to_categories(base_dir)
+    base_directory = "data"  # Base directory to start from: \data\. This should be in the same directory as the Python script.
+    move_any_csvs(base_directory)  # Function call to do all of the data processing
