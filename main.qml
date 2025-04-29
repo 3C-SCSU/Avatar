@@ -299,12 +299,6 @@ ApplicationWindow {
                                 spacing: 5
                                 Layout.alignment: Qt.AlignHCenter
                                 
-                                // Radio Button
-                                RadioButton {
-                                    id: randomForestRadio
-                                    Layout.alignment: Qt.AlignHCenter
-                                    checked: isRandomForestSelected
-                                }
 
                                 // Green Box with Text
                                 Rectangle {
@@ -334,12 +328,7 @@ ApplicationWindow {
                                 spacing: 5
                                 Layout.alignment: Qt.AlignHCenter
 
-                                // Radio Button
-                                RadioButton {
-                                    id: deepLearningRadio
-                                    Layout.alignment: Qt.AlignHCenter
-                                    checked: !isRandomForestSelected
-                                }
+                                
                                 // Green Box with Text
                                 Rectangle {
                                     width: 150
