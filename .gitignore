@@ -12,10 +12,6 @@ env.bak/
 venv.bak/
 __pycache__/
 
-# when using Python 2.7 (for NAO6)
-*.pyc
-
-.vscode/
 
 plotscode/plots/
 plotscode/.Rhistory
