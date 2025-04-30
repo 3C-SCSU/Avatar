@@ -1,5 +1,6 @@
 #Authors: Brady Theisen
 import pandas as pd
+import sys
 import os
 
 def convert_txt_to_csv(file_path):
@@ -33,5 +34,8 @@ def main(directory):
             print(f"Finished processing category: {category}")
 
 if __name__ == "__main__":
-    main("./")
+    if len(sys.argv) < 2:
+        print("Usage: python python.py <directory>")
+    else:
+        main(sys.argv[1])
 
