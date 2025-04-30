@@ -8,12 +8,18 @@ from PySide6.QtCore import QObject, Signal, Slot, QProcess, QUrl
 from pdf2image import convert_from_path
 from djitellopy import Tello
 import random
+import pandas as pd
 import time
+import io
+import urllib.parse
+import contextlib
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
 
 
 # Add the parent directory to the Python path for file-shuffler
 sys.path.append(str(Path(__file__).resolve().parent / "file-shuffler"))
+sys.path.append(str(Path(__file__).resolve().parent / "file-unify-labels"))
+import unifyTXT
 import run_file_shuffler
 
 class TabController(QObject):
@@ -359,10 +365,38 @@ class BrainwavesBackend(QObject):
     def run_file_shuffler_program(self, path):
         # Need to parse the path as the FolderDialog appends file:// in front of the selection
         path = path.replace("file://", "")
+        if path.startswith("/C:"):
+            path = 'C' + path[2:]
+
         response = run_file_shuffler.main(path)
         return response
 
     # Adding Synthetic Data and Live Data Logic (Row 327 to 355) as part of Ticket 186
+
+     @Slot(str, result=str)
+    def unify_thoughts(self, base_dir):
+        """
+        Called from QML when the user picks a directory.
+        """
+        # strip file:/// if necessary
+        path = base_dir.replace("file://", "")
+
+        if base_dir.startswith("file:///"):
+            base_dir = urllib.parse.unquote(base_dir.replace("file://", ""))
+            if os.name == 'nt' and base_dir.startswith("/"):
+                base_dir = base_dir[1:]
+        print("Unify Thoughts on directory:", base_dir)
+        output = io.StringIO()
+
+        try:
+            with contextlib.redirect_stdout(output), contextlib.redirect_stderr(output):
+                unifyTXT.move_any_csvs(base_dir)
+                print("Unify complete.")
+
+        except Exception as e:
+            print("Error during unify:", e)
+
+        return output.getvalue()
 
     @Slot(str)
     def setDataMode(self, mode):
