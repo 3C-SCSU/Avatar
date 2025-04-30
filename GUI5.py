@@ -18,6 +18,8 @@ from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
 
 # Add the parent directory to the Python path for file-shuffler
 sys.path.append(str(Path(__file__).resolve().parent / "file-shuffler"))
+sys.path.append(str(Path(__file__).resolve().parent / "file-unify-labels"))
+import unifyTXT
 import run_file_shuffler
 
 class TabController(QObject):
