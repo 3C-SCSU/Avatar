@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Dialogs
+import Qt.labs.platform
 
 
 ApplicationWindow {
@@ -1368,15 +1369,17 @@ ApplicationWindow {
         }
 
             //File shuffler view 
+            //File shuffler view 
             Rectangle {
                 id: fileShufflerView
-                color: "#64778d"
+                color: "#2b3a4a"
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
                 property string outputBoxText: ""
                 property string selectedDirectory: ""
-                property bool ranShuffle: false 
+                property bool ranShuffle: false
+                property bool unifiedThoughts: false
 
                 Column {
                     anchors.fill: parent
@@ -1399,8 +1402,10 @@ ApplicationWindow {
                         color: "lightgrey"
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.verticalCenter: parent.verticalCenter
+
                         ScrollView {
                             anchors.fill: parent
+
                             TextArea {
                                 id: outputBox
                                 text: fileShufflerView.outputBoxText
@@ -1417,25 +1422,48 @@ ApplicationWindow {
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.top: parent.verticalCenter
                         anchors.topMargin: parent.height * 0.3 + 10
+
                         Button {
-                            id: folderButton
-                            text: "Select your Directory"
-                            font.bold: true
-                            onClicked: folderDialog.open()
+                            text: "Unify Thoughts"
+                            onClicked: {
+                                unifyThoughts.open()
+                                fileShufflerView.outputBoxText = `Running Thoughts Unifier...\n`;
+                                fileShufflerView.unifiedThoughts = false;
+
+                            }
                         }
 
                         Button {
-                            id: runButton
+                            //id: runButton
                             text: "Run File Shuffler"
-                            font.bold: true
                             onClicked: {
-                                fileShufflerView.ranShuffle = true; 
+                                fileShuffler.open()
                                 fileShufflerView.outputBoxText = `Running File Shuffler...\n`;
-                                var output = fileShufflerGui.run_file_shuffler_program(fileShufflerView.selectedDirectory);
-                                fileShufflerView.outputBoxText += output;
+                                fileShufflerView.ranShuffle = false;
+
+
                             }
                         }
+
                     }
+                    FolderDialog {
+                        id: fileShuffler
+                        folder: "file:///"  // Or "." for current working directory
+                        visible: false
+
+                        onAccepted: {
+                            console.log("Selected folder:", fileShuffler.folder)
+                            fileShufflerGui.run_file_shuffler_program(fileShuffler.folder)
+                            fileShufflerView.ranShuffle = true;
+                            var output = fileShufflerGui.run_file_shuffler_program(fileShufflerView.folder);
+                            fileShufflerView.outputBoxText += output;
+                        }
+
+                        onRejected: {
+                            console.log("Folder dialog canceled")
+                        }
+                    }
+
 
                     Text {
                         id: ranText
@@ -1444,21 +1472,41 @@ ApplicationWindow {
                         font.bold: true
                         font.pixelSize: 18
                         anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.top: buttonRow.bottom 
-                        anchors.topMargin: 10 
-                        visible: fileShufflerView.ranShuffle 
+                        anchors.top: buttonRow.bottom
+                        anchors.topMargin: 10
+                        visible: fileShufflerView.ranShuffle
+                    }
+
+                    Text {
+                        id: unifiedThoughts
+                        text: "Thoughts Unified!"
+                        color: "lightgreen"
+                        font.bold: true
+                        font.pixelSize: 18
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: ranText.bottom
+                        anchors.topMargin: 10
+                        visible: fileShufflerView.unifiedThoughts
+
                     }
                 }
 
                 FolderDialog {
-                    id: folderDialog
-                    title: "Select Your Directory"
-                    onAccepted:
-                    {
-                        let cleanedDirectory = String(folderDialog.selectedFolder);
-                        cleanedDirectory = cleanedDirectory.replace("file:///", "");
-                        fileShufflerView.selectedDirectory = cleanedDirectory;
-                        fileShufflerView.outputBoxText += "Selected directory: " + fileShufflerView.selectedDirectory + "\n";
+                    id: unifyThoughts
+                    folder: "file:///"  // Or "." for current working directory
+
+                    onAccepted: {
+                        console.log("Selected folder:", unifyThoughts.folder)
+                        fileShufflerGui.unify_thoughts(unifyThoughts.folder)
+                        fileShufflerView.unifiedThoughts = true
+                        var outputt = fileShufflerGui.unify_thoughts(unifyThoughts.folder);
+                        fileShufflerView.outputBoxText += outputt;
+                        fileShufflerView.outputBoxText += "\nThoughts Unified!\n"
+
+                    }
+
+                    onRejected: {
+                        console.log("Folder dialog canceled")
                     }
                 }
             }
