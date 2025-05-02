@@ -1,0 +1,56 @@
+This instructions are made for Windows Operating System. 
+
+
+Step 1 install NAO6 Python SDK Windows from (https://aldebaran.com/en/support/kb/nao6/downloads/nao6-software-downloads/) 
+	make sure you install and extract it in C drive if you use onedrive or anything like that.
+
+
+Fresh Start: Create a New Virtual Environment
+Step 2: Create venv with Python 3.10
+	Run this in VScode:
+		py -3.10 -m venv ageenv - You should now see a new folder C:\Bounty4\ageenv with a Scripts subfolder that includes Activate.ps1.
+		.\ageenv\Scripts\Activate.ps1
+
+
+Step 3: Set the PYTHONPATH Environment Variable 
+	Search for Environment Variables in the Windows Start menu.
+	Click on “Edit the system environment variables”.
+	In the System Properties window, click on “Environment Variables…”
+	Under "User variables", click "New...".
+	Add:
+		Variable name: PYTHONPATH
+		Variable value: C:\Bounty4\pynaoqi-python2.7-2.8.6.23-win64-vs2015-20191127_152649\lib
+	Click OK → OK → OK to save and close everything.
+
+
+Step 4: Confirm It Works PYTHONPATH Environment Variable
+	Close all PowerShell or CMD windows, then 
+		open a new terminal, and run:
+			echo $env:PYTHONPATH
+		You should see:
+			C:\Bounty4\pynaoqi-python2.7-2.8.6.23-win64-vs2015-20191127_152649
+		Then test:
+			py -2 -c "import naoqi; print('NAOqi imported successfully!')"
+
+
+Step 4: Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+
+
+Step 5: go back to VScode run: .\ageenv\Scripts\Activate.ps1
+	Once it activates, you’ll see: (ageenv) PS C:\Bounty4>
+
+
+Step 6: Install the correct packages
+Inside the activated venv:
+	pip install tensorflow==2.10.0
+	pip install deepface facenet-pytorch opencv-python matplotlib
+	pip install paramiko
+	
+
+Step 7: Confirm it works in powershell: python -c "import tensorflow as tf; print(tf.__version__)"
+		It should print: 2.10.0
+
+Now test your full pipeline:
+
+Step 8: run in VScode:
+	py -2 .\nao_speak_age.py
