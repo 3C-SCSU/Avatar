@@ -4,6 +4,33 @@
 
 ---
 
+### Brain-Computer Interface News
+
+* Brain Computer Interface Market Size Worth USD 12.40 Bn by 2034, Expands Rapidly as Healthcare and Gaming Sectors Embrace Neurotechnology, 2025 https://www.globenewswire.com/news-release/2025/04/25/3068271/0/en/Brain-Computer-Interface-Market-Size-Worth-USD-12-40-Bn-by-2034-Expands-Rapidly-as-Healthcare-and-Gaming-Sectors-Embrace-Neurotechnology.html  
+
+* Brain-Computer Interface Market Outlook 2025–2033 Strategic Insights and Key Growth Opportunities, Taiwan News, 2025 https://www.taiwannews.com.tw/news/6096585  
+
+* Tesla - 	NeuraLink, Job: BCI - Machine Learning Engineer - California Base Salary Range: $199,000 - $331,000 USD, 2025 https://neuralink.com/careers/apply/?gh_jid=5663271003&gh_src=c356a2533us 		 
+
+* Brain Computer Interface Market to Reach USD 7,419.0 Mn by 2033; Amid Growing Research on Neural Interfaces and Cognitive Computing, Yahoo Finance, 2024 https://finance.yahoo.com/news/brain-computer-interface-market-reach-113700811.html 		 
+
+* Synchron, Potential Competitor to Elon Musk’s Neuralink, Obtains Equity 	Interest in Acquandas to Accelerate Development of Brain-Computer 	Interface, Pharm-Exec, 2024 https://www.pharmexec.com/view/synchron-potential-competitor-to-elon-musk-s-neuralink-obtains-equity-interest-in-acquandas-to-accelerate-development-of-brain-computer-interface 		 
+
+* Nvidia's NEW 	Humanoid Robots STUNS The ENITRE INDUSTRY! (Nvidia Project GROOT), 2024 https://www.youtube.com/watch?v=x5lFw6nz3t0 		 
+
+* Revolutionize Your Thoughts with Google's New Brain-Computer Interface, The Pourquoi Pas, 2023 	https://www.thepourquoipas.com/post/revolutionize-your-thoughts-with-google-brain-computer-interface 		 
+
+* Jeff Bezos & 	Bill Gates back Australian brain-computer interface startup Synchron in $110 million Series C, Startup Daily, 2022 https://www.startupdaily.net/topic/funding/jeff-bezos-bill-gates-back-australian-brain-computer-interface-startup-synchron-in-110-million-series-c 		 
+
+* Why Tech billionaires like Elon Musk, Bill Gates, and Jeff Bezos are all 	investing in biotech startups that want to link your computer 	directly to your brain, Business Insider, Dec 21 2022. https://www.businessinsider.com/elon-musk-bill-gates-jeff-bezos-invest-in-brain-implants-2022-12 		 
+
+* Blackrock Neurotech unveils next-generation BCI, Mass Device, 2022 	https://www.massdevice.com/blackrock-neurotech-unveils-next-generation-bci-interface  
+
+* Facebook, now Meta, shows off new neural interface tech during Connect conference, CNET 2021 https://www.cnet.com/tech/computing/facebook-now-meta-shows-off-new-neural-interface-tech-during-connect-conference 
+
+* Facebook is 	building brain-computer interfaces for typing and skin-hearing, Tech Cruch, 2017 https://techcrunch.com/2017/04/19/facebook-brain-interface 
+
+---
 
 ### Cloud Computinng Club
 
@@ -57,12 +84,12 @@ The Autonomous Systems Laboratory (ISELF205) is a pioneering research hub that p
 
 ### Publication
 
-*  Knudson, J., Cavalcanti, A., & Singh, M. (2024) [Neuro-Haptic BCI Spark for TensorFlow Flying Avatars](https://ieeexplore.ieee.org/document/10609879), 24th IEEE EIT International Conference on Electro Information Technology, Eau Claire, Wisconsin, USA, May.
+* Knudson, J., Cavalcanti, A., & Singh, M. (2024) [Neuro-Haptic BCI Spark for TensorFlow Flying Avatars](https://ieeexplore.ieee.org/document/10609879), 24th IEEE EIT International Conference on Electro Information Technology, Eau Claire, Wisconsin, USA, May.
 * Theisen, B., Kang, D., Cavalcanti, A., & Hsiao, W. Y. (2024) [Free Software for Institutional Review Board Compliance](https://cgscholar.com/cg_event/events/T24en/proposal/72084), 20th International Conference on Technology, Knowledge, Society, Valencia, Spain, March.
-*  Hsiao, W. Y., & Cavalcanti, A. (2024) [Choosing the Right Robots for Young Children](https://cgscholar.com/cg_event/events/T24en/proposal/69672): A Study of Technology for Early Childhood Education, 20th International Conference on Technology, Knowledge, Society, Valencia, Spain, March.
-*  Hsiao, W. Y., Chiu, C. H., & Cavalcanti, A. (2024) [Key Strategies for Teaching Robotics to Kids](https://www.learntechlib.org/p/224169), Society for Infomation Technology and Teacher Education (SITE), Las Vegas USA, March.
-*  Cavalcanti, A. (2023) [Tutorial on TensorFlow Spark for BCI Augmented Robotics](https://micsymposium.org/mics2023/wp-content/uploads/2023/03/MICS-2023-Cavalcanti_full-paper-official.pdf), Midwest Instruction and Computing Symposium (MICS), Cedar Falls IA, USA, April, 95-112.
-*  Knudson, J., Doyle, W., Hayen, M., & Cavalcanti, A. (2023) [Kubernetes for High Performance BCI Flying Avatars](https://symposium.foragerone.com/2023-posters-at-st-paul/presentations/50654), Minnesota State Symposium, St. Paul MN, USA, March.
+* Hsiao, W. Y., & Cavalcanti, A. (2024) [Choosing the Right Robots for Young Children](https://cgscholar.com/cg_event/events/T24en/proposal/69672): A Study of Technology for Early Childhood Education, 20th International Conference on Technology, Knowledge, Society, Valencia, Spain, March.
+* Hsiao, W. Y., Chiu, C. H., & Cavalcanti, A. (2024) [Key Strategies for Teaching Robotics to Kids](https://www.learntechlib.org/p/224169), Society for Infomation Technology and Teacher Education (SITE), Las Vegas USA, March.
+* Cavalcanti, A. (2023) [Tutorial on TensorFlow Spark for BCI Augmented Robotics](https://micsymposium.org/mics2023/wp-content/uploads/2023/03/MICS-2023-Cavalcanti_full-paper-official.pdf), Midwest Instruction and Computing Symposium (MICS), Cedar Falls IA, USA, April, 95-112.
+* Knudson, J., Doyle, W., Hayen, M., & Cavalcanti, A. (2023) [Kubernetes for High Performance BCI Flying Avatars](https://symposium.foragerone.com/2023-posters-at-st-paul/presentations/50654), Minnesota State Symposium, St. Paul MN, USA, March.
 
 ---
 
