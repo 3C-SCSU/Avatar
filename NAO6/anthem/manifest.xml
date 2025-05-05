@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<package installOnlyAtStartup="false" uuid="group7_csci_411_final-5af76e" version="0.0.0">
+ <names>
+  <name lang="en_US">Untitled</name>
+ </names>
+ <supportedLanguages>
+  <language>en_US</language>
+ </supportedLanguages>
+ <descriptionLanguages>
+  <language>en_US</language>
+ </descriptionLanguages>
+ <contents>
+  <behaviorContent path="Sing">
+   <nature>interactive</nature>
+   <permissions/>
+  </behaviorContent>
+ </contents>
+</package>

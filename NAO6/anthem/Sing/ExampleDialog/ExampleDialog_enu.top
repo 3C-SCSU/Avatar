@@ -1,0 +1,70 @@
+topic: ~ExampleDialog()
+language: enu
+
+# Defining needed concepts, keywords or sentences corresponding to a concept.
+concept:(yes) [yes "all right" sure "why not" ok certainly "very well" yep yea definitely amen]
+concept:(no) [no nope "don't want" "no way" never "not at all"]
+concept:(how) ["how are you" howdy "what's up" "how do you feel"]
+concept:(happy) [ok fine great happy blessed "all right" glad "not bad"]
+concept:(sad) [sad miserable bad unhappy tired]
+concept:(repeat) [repeat understand]
+concept:(thx) ["thank you" thanks gracias "much obliged" merci]
+concept:(hello) [hello hi hey "good morning" greetings]
+concept:(bye) [bye goodbye "bye bye" "tata" "see you" adios cheerio "so long" farewell "have a nice day"]
+
+
+# Start/Wait animation, Goto.
+# If User expresses a word or a sentence found in the concept "hello",
+# the robot starts Hey_1 animation, answers a random value defined in concept "hello"
+# and waits for the end of the animation before going to the label how. Label is expressed this way: %howAreYou
+u:(~hello) ^start(animations/Stand/Gestures/Hey_1) ~hello ^wait(animations/Stand/Gestures/Hey_1) ^gotoReactivate(howAreYou)
+
+
+# Tag animation.
+# If User asks how the robot feels, it starts a random animation being tagged "myself",
+# answers and go to the label %howAreYou
+u:(~how) ^startTag(myself) I'm fine, thank you. And you, ^gotoReactivate(howAreYou)
+
+
+# %Label.
+# The robot asks how the user feels. 3 kind of answers are expected
+# Expressed by concept, user can be happy, sad or ask the robot to repeat the question.
+proposal: %howAreYou ^startTag(show) how are you today?
+    u1:(~happy) I'm glad you are fine! ^gotoReactivate(favoriteColor)
+    u1:(~sad) Oh, I feel sorry for you. ^nextProposal
+    u1:(~repeat) I'll repeat for you. ^sameProposal
+
+# Output slot stimulation.
+# If User is sad (known from previous question), the robot proposes to play a game.
+# If User accepts, it will stimulate the "playAGame" punctual diagram output.
+proposal: If you feel like talking about it, don't hesitate. ^nextProposal
+proposal: %playAGame Do you want to play a game?
+    u1:(~yes) Let's play $playAGame=1
+    u1:(~no) Ok, anytime.
+
+
+# Variables.
+# the robot asks User for his prefered color between blue and red.
+# this illustrate variables stored in $1 using '_' character.
+proposal: %favoriteColor And what is your favorite color between Blue and Red ?
+    u1:(violet) Violet is my prefered color too ! ^gotoReactivate(playAGame)
+    u1:(_[blue red]) $1 is a very nice color and my prefered is violet. ^gotoReactivate(playAGame)
+    u1:(_[green yellow pink orange purple white black]) $1 is a nice color. ^sameProposal
+
+
+# On any proposal if user asks to repeat, say again the same proposal.
+u:(~repeat) I'll repeat for you. ^sameProposal
+
+# Being polite, the robot always answers accordingly to thankfull sentences.
+u:(~thx) You're welcome
+
+
+# Exiting.
+# Answering to Goodbye and exiting the dialog box, stimulating the onStopped output slot.
+u:(~bye) ~bye $onStopped=1
+
+
+# Responding to events.
+# Here, if the left foot bumper is pressed, the robot starts an animation,
+# say a text and waits for the end of the animation.
+u:(e:LeftBumperPressed) ^start(animations/Stand/Gestures/YouKnowWhat_1) My left foot bumped into something! ^wait(animations/Stand/Gestures/YouKnowWhat_1)
