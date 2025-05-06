@@ -4,9 +4,12 @@ This project processes CSV files from a designated directory, extracts relevant 
 
 Features: 
 
-Efficiently processes up to 1000 CSV files  
-Implements batch processing to optimize runtime 
-Uses Random Forest Classifier for predictions 
+Efficiently processes up to 1000 CSV files
+
+Implements batch processing to optimize runtime
+
+Uses Random Forest Classifier for predictions
+
 Prints classification report & accuracy score
 
 Usage: 
