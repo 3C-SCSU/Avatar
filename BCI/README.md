@@ -10,7 +10,8 @@
 
 * Brain-Computer Interface Market Outlook 2025–2033 Strategic Insights and Key Growth Opportunities, Taiwan News, 2025 https://www.taiwannews.com.tw/news/6096585  
 
-* Tesla - 	NeuraLink, Job: BCI - Machine Learning Engineer - California Base Salary Range: $199,000 - $331,000 USD, 2025 https://neuralink.com/careers/apply/?gh_jid=5663271003&gh_src=c356a2533us 		 
+* Tesla - 	NeuraLink, Job: BCI - Machine Learning Engineer - California Base Salary Range: $199,000 - $331,000 USD, 2025 https://neuralink.com/careers/apply/?gh_jid=5663271003&gh_src=c356a2533us
+* Microsoft to invest $2.7bn in cloud and AI infrastructure, Data Center Dynamics, 2024. https://www.datacenterdynamics.com/en/news/microsoft-to-invest-27bn-in-cloud-and-ai-infrastructure-in-brazil
 
 * Brain Computer Interface Market to Reach USD 7,419.0 Mn by 2033; Amid Growing Research on Neural Interfaces and Cognitive Computing, Yahoo Finance, 2024 https://finance.yahoo.com/news/brain-computer-interface-market-reach-113700811.html 		 
 
