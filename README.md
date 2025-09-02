@@ -371,13 +371,15 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Cloud Computing Club 3c.scsu@gmail.com
+Email: 3c.scsu@gmail.com
 
 Discord: https://discord.gg/mxbQ7HpPjq
 
 YouTube: https://www.youtube.com/@3CSCSU
 
 Project Link: [https://github.com/3C-SCSU/Avatar](https://github.com/3C-SCSU/Avatar)
+
+Cloud Computing Club: [Huskies-Connect](https://huskiesconnect.stcloudstate.edu/organization/3c)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
