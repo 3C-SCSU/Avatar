@@ -9,7 +9,7 @@ ApplicationWindow {
     property bool isRandomForestSelected: false
     visible: true
     width: 1200
-    height: 800 
+    height: 800
     title: "Avatar - Brainwave Reading"
 
     // Proper connection handling
@@ -99,20 +99,39 @@ ApplicationWindow {
                         anchors.left: parent.left
 
                         // Control Mode
-                        Row {                
+                        Row {
                             width: parent.width * 0.4
                             spacing: parent.width * 0.02
                             anchors.horizontalCenter: parent.horizontalCenter
                             Layout.alignment: Qt.AlignJustify // Ensures space between items
 
                             RadioButton {
+                                id: manualControl
                                 text: "Manual Control"
                                 checked: true
                                 font.pixelSize:  parent.width * 0.05 // Larger font size
+
+                                contentItem: Text {
+                                    text: manualControl.text
+                                    color: "white"
+                                    font.pixelSize: manualControl.font.pixelSize
+                                    font.bold: true
+                                    verticalAlignment: Text.AlignVCenter
+                                    leftPadding: manualControl.indicator.width + manualControl.spacing
+                                }
                             }
                             RadioButton {
+                                id: autopilot
                                 text: "Autopilot"
                                 font.pixelSize:  parent.width * 0.05 // Larger font size
+                                contentItem: Text {
+                                    text: autopilot.text
+                                    color: "white"
+                                    font.pixelSize: autopilot.font.pixelSize
+                                    font.bold: true
+                                    verticalAlignment: Text.AlignVCenter
+                                    leftPadding: autopilot.indicator.width + autopilot.spacing
+                                }
                             }
                         }
 
@@ -162,7 +181,7 @@ ApplicationWindow {
                                         Rectangle {
                                             color: "white"
                                             width: parent.width * 0.5
-                                            height: parent.height 
+                                            height: parent.height
                                             Text {
                                                 text: "Count"
                                                 font.bold: true
@@ -174,7 +193,7 @@ ApplicationWindow {
                                         Rectangle {
                                             color: "white"
                                             width: parent.width * 0.5
-                                            height: parent.height 
+                                            height: parent.height
                                             Text {
                                                 text: "Label"
                                                 font.bold: true
@@ -204,6 +223,7 @@ ApplicationWindow {
                             spacing: parent.width * 0.02
                             anchors.horizontalCenter: parent.horizontalCenter
                             Button {
+                                id: notThinking
                                 text: "Not what I was thinking..."
                                 font.pixelSize:  parent.width * 0.03 // Larger font size
                                 width: parent.width * 0.5
@@ -211,15 +231,32 @@ ApplicationWindow {
                                 background: Rectangle {
                                     color: "#242c4d"
                                 }
+                                contentItem: Text {
+                                    text: notThinking.text
+                                    color: "white"
+                                    font.pixelSize: notThinking.font.pixelSize
+                                    horizontalAlignment: Text.AlignHCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                    elide: Text.ElideRight
+                                }
                                 onClicked: backend.notWhatIWasThinking(manualInput.text)
                             }
                             Button {
+                                id: executeBtn
                                 text: "Execute"
                                 font.pixelSize:  parent.width * 0.03 // Larger font size
                                 width: parent.width * 0.5
                                 height: parent.height
                                 background: Rectangle {
                                     color: "#242c4d"
+                                }
+                                contentItem: Text {
+                                    text: executeBtn.text
+                                    color: "white"
+                                    font.pixelSize: executeBtn.font.pixelSize
+                                    horizontalAlignment: Text.AlignHCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                    elide: Text.ElideRight
                                 }
                                 onClicked: backend.executeAction()
                             }
@@ -236,15 +273,22 @@ ApplicationWindow {
                                 placeholderText: "Manual Command"
                                 font.pixelSize:  parent.width * 0.03 // Larger font size
                                 width: parent.width * 0.6
-                                height: parent.height 
+                                height: parent.height
                             }
                             Button {
-                                text: "Keep Drone Alive"
-                                font.pixelSize:  parent.width * 0.03 // Larger font size
                                 width: parent.width * 0.3
-                                height: parent.height 
+                                height: parent.height
                                 background: Rectangle {
                                     color: "#242c4d"
+                                }
+
+                                contentItem: Text {
+                                    text: qsTr("Keep Drone Alive")
+                                    color: "white"
+                                    font.pixelSize: parent.height * 0.5
+                                    horizontalAlignment: Text.AlignHCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                    anchors.fill: parent
                                 }
                                 onClicked: backend.keepDroneAlive()
                             }
@@ -256,15 +300,21 @@ ApplicationWindow {
                             width: parent.width * 0.5
                             height: parent.height * 0.2
                             anchors.horizontalCenter: parent.horizontalCenter
+                            label: Text { text: qsTr("Flight Log"); font.bold: true ; color: "white" }
 
-                            ListView {
-                                id: flightLogView
+                            Rectangle {
                                 anchors.fill: parent
-                                model: ListModel {}
-                                delegate: Text {
-                                    text: log
-                                    font.pixelSize:  parent.width * 0.03 // Larger font size
-                                    color: "white"
+                                color: "white"
+                                ListView {
+                                    id: flightLogView
+                                    anchors.fill: parent
+                                    model: ListModel {}
+                                    delegate: Text {
+                                        text: log
+                                        font.pixelSize:  parent.width * 0.03
+                                        font.bold: true
+                                        color: "white"
+                                    }
                                 }
                             }
                         }
@@ -310,7 +360,7 @@ ApplicationWindow {
                                 // Random Forest Button
                                 Rectangle {
                                     width: parent.width * 0.5
-                                    height: parent.height 
+                                    height: parent.height
                                     color: "#6eb109"
                                     radius: 5
 
@@ -334,7 +384,7 @@ ApplicationWindow {
                                 // Deep Learning Button
                                 Rectangle {
                                     width: parent.width * 0.5
-                                    height: parent.height 
+                                    height: parent.height
                                     color: "#6eb109"
                                     radius: 5
 
@@ -358,7 +408,7 @@ ApplicationWindow {
                             // Synthetic Data and Live Data Radio Buttons
                             Column {
                                 width: parent.width * 0.2
-                                height: parent.height 
+                                height: parent.height
                                 spacing: height * 0.01
 
                                 RadioButton {
@@ -367,6 +417,14 @@ ApplicationWindow {
                                         font.pixelSize: parent.width * 0.1 // Larger font size
                                     font.bold: true
                                     checked: false
+                                    contentItem: Text {
+                                        text: syntheticRadio.text
+                                        color: "white"
+                                        font.pixelSize: syntheticRadio.font.pixelSize
+                                        font.bold: syntheticRadio.font.bold
+                                        verticalAlignment: Text.AlignVCenter
+                                        leftPadding: syntheticRadio.indicator.width + syntheticRadio.spacing
+                                    }
                                     onClicked: {
                                         backend.setDataMode("synthetic")
                                     }
@@ -378,6 +436,14 @@ ApplicationWindow {
                                         font.pixelSize: parent.width * 0.1 // Larger font size
                                     font.bold: true
                                     checked: true
+                                    contentItem: Text {
+                                        text: liveRadio.text
+                                        color: "white"
+                                        font.pixelSize: liveRadio.font.pixelSize
+                                        font.bold: liveRadio.font.bold
+                                        verticalAlignment: Text.AlignVCenter
+                                        leftPadding: liveRadio.indicator.width + liveRadio.spacing
+                                    }
                                     onClicked: {
                                         backend.setDataMode("live")
                                     }
@@ -399,6 +465,17 @@ ApplicationWindow {
                                         width: parent.width * 0.8
                                         height: parent.height * 0.4
 
+                                        label: Text {
+                                            text: qsTr("Predictions Table")
+                                            color: "white"
+                                            font.pixelSize: parent.width * 0.03
+                                            font.bold: true
+                                            anchors.left: parent.left
+                                            anchors.leftMargin: 10    // preserves default left spacing
+                                            anchors.top: parent.top
+                                            anchors.topMargin: 5      // preserves default top spacing
+                                        }
+
 
                                         // Header with white background
                                     Row {
@@ -408,7 +485,7 @@ ApplicationWindow {
                                         Rectangle {
                                             color: "white"
                                             width: parent.width * 0.33
-                                            height: parent.height 
+                                            height: parent.height
                                             Text {
                                                 text: "Predictions Count"
                                                 font.bold: true
@@ -420,7 +497,7 @@ ApplicationWindow {
                                         Rectangle {
                                             color: "white"
                                             width: parent.width * 0.33
-                                            height: parent.height 
+                                            height: parent.height
                                             Text {
                                                 text: "Server Predictions"
                                                 font.bold: true
@@ -432,7 +509,7 @@ ApplicationWindow {
                                         Rectangle {
                                             color: "white"
                                             width: parent.width * 0.33 // Make this responsive
-                                            height: parent.height 
+                                            height: parent.height
                                             Text {
                                                 text: "Prediction Label"
                                                 font.bold: true
@@ -443,33 +520,45 @@ ApplicationWindow {
                                         }
                                     }
 
-                                        ListView {
-                                            Layout.preferredWidth: 700
-                                            Layout.preferredHeight: 550
-                                            model: ListModel {
-                                                ListElement { count: "1"; server: "Prediction A"; label: "Label A" }
-                                                ListElement { count: "2"; server: "Prediction B"; label: "Label B" }
-                                            }
-                                            delegate: RowLayout {
+                                    ListView {
+                                        Layout.preferredWidth: 700
+                                        Layout.preferredHeight: 550
+                                        model: ListModel {
+                                            ListElement { count: "1"; server: "Prediction A"; label: "Label A" }
+                                            ListElement { count: "2"; server: "Prediction B"; label: "Label B" }
+                                        }
+
+                                        delegate: Rectangle {
+                                            width: parent.width
+                                            height: 40
+                                            color: "white"
+
+                                            RowLayout {
+                                                anchors.fill: parent
                                                 spacing: 50
-                                                Text { text: model.count; font.bold: true; color: "white"; width: 120 }
-                                                Text { text: model.server; font.bold: true; color: "white"; width: 200 }
-                                                Text { text: model.label; font.bold: true; color: "white"; width: 120 }
+                                                Text { text: model.count; font.bold: true; color: "black"; width: 120 }
+                                                Text { text: model.server; font.bold: true; color: "black"; width: 200 }
+                                                Text { text: model.label; font.bold: true; color: "black"; width: 120 }
                                             }
                                         }
                                     }
+                                }
 
                         // Console Log Section
                         GroupBox {
                             title: "Console Log"
                             width: parent.width * 0.6
                             height: parent.height * 0.3
+                            label: Text { text: qsTr("Console Log"); font.bold: true; color: "white" }
 
                             TextArea {
                                 id: consoleLog
                                 anchors.fill: parent
                                 text: "Console output here..."
-                                font.pixelSize:  parent.width * 0.03 // Larger font size
+                                font.pixelSize:  parent.width * 0.03
+                                background: Rectangle {
+                                    color: "white"
+                                }
                             }
                         }
                     }
@@ -495,7 +584,7 @@ ApplicationWindow {
                         rowSpacing: 10
 
                         Repeater {
-                            model: imageModel  
+                            model: imageModel
                             delegate: Rectangle {
                                 color: "#e6e6f0"
                                 Layout.fillWidth: true
@@ -523,7 +612,7 @@ ApplicationWindow {
                                             color: "white"
                                             font.bold: true
                                             font.pixelSize: 14
-                                            
+
                                             // Center text using calculations rather than anchors
                                             x: (parent.width - width) / 2
                                             y: (parent.height - height) / 2
@@ -548,39 +637,39 @@ ApplicationWindow {
                             }
                         }
                     }
-                    
+
                     // Refresh and Rollback buttons after graphs
                     RowLayout {
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
                         Layout.bottomMargin: 20
                         spacing: 15
-                        
+
                         // Refresh Button
                         Button {
                             text: "Refresh"
                             font.bold: true
                             implicitWidth: 120
                             implicitHeight: 40
-                            
+
                             // This property allows us to track the hover state
                             property bool isHovering: false
-                            
+
                             // Define the hover handler
                             HoverHandler {
                                 onHoveredChanged: parent.isHovering = hovered
                             }
-                            
+
                             background: Rectangle {
                                 // Use the isHovering property to change color
                                 color: parent.isHovering ? "#3e4e7a" : "#2e3a5c"
                                 radius: 4
-                                
+
                                 // Add a smooth color transition
                                 Behavior on color {
                                     ColorAnimation { duration: 150 }
                                 }
                             }
-                            
+
                             contentItem: Text {
                                 text: parent.text
                                 font.pixelSize: 14
@@ -589,38 +678,38 @@ ApplicationWindow {
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
                             }
-                            
+
                             onClicked: {
                                 backend.setDataset("refresh")
                             }
                         }
-                        
+
                         // Rollback Button
                         Button {
                             text: "Rollback"
                             font.bold: true
                             implicitWidth: 120
                             implicitHeight: 40
-                            
+
                             // This property allows us to track the hover state
                             property bool isHovering: false
-                            
+
                             // Define the hover handler
                             HoverHandler {
                                 onHoveredChanged: parent.isHovering = hovered
                             }
-                            
+
                             background: Rectangle {
                                 // Use the isHovering property to change color
                                 color: parent.isHovering ? "#3e4e7a" : "#2e3a5c"
                                 radius: 4
-                                
+
                                 // Add a smooth color transition
                                 Behavior on color {
                                     ColorAnimation { duration: 150 }
                                 }
                             }
-                            
+
                             contentItem: Text {
                                 text: parent.text
                                 font.pixelSize: 14
@@ -629,14 +718,14 @@ ApplicationWindow {
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
                             }
-                            
+
                             onClicked: {
                                 // Display rollback plots
                                 backend.setDataset("rollback")
                             }
                         }
                     }
-                }    
+                }
             }
             // Manual Drone Control view
             Rectangle {
@@ -770,7 +859,7 @@ ApplicationWindow {
                     color: "transparent"
 
                     Rectangle {
-                        width: parent.width 
+                        width: parent.width
                         height: parent.height
                         anchors.horizontalCenter: parent.horizontalCenter
                         color: "#242c4d"
@@ -1162,7 +1251,7 @@ ApplicationWindow {
                 console.log(action + " triggered.")
             }
             }
-            //File shuffler view 
+            //File shuffler view
             Rectangle {
                 id: fileShufflerView
                 color: "#2b3a4a"
@@ -1402,7 +1491,7 @@ ApplicationWindow {
                     }
                 }
             }
-            
+
             // Manual Controller Tab (Nao Viewer)
             Rectangle {
                 color: "#64778d"
