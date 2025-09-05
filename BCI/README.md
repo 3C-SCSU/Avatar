@@ -83,7 +83,7 @@ The Autonomous Systems Laboratory (ISELF205) is a pioneering research hub that p
 ---
 
 ### Publication
-
+* Darsi, D., Babu, A. S., Cavalcanti, A., & Al-Azzam, O. (2025) [Deep Learning for Brain Computer Instrumentation](https://ieeexplore.ieee.org/document/11103600), 25th IEEE EIT International Conference on Electro Information Technology, Valparaiso, IN, USA, May.
 * Knudson, J., Cavalcanti, A., & Singh, M. (2024) [Neuro-Haptic BCI Spark for TensorFlow Flying Avatars](https://ieeexplore.ieee.org/document/10609879), 24th IEEE EIT International Conference on Electro Information Technology, Eau Claire, Wisconsin, USA, May.
 * Theisen, B., Kang, D., Cavalcanti, A., & Hsiao, W. Y. (2024) [Free Software for Institutional Review Board Compliance](https://cgscholar.com/cg_event/events/T24en/proposal/72084), 20th International Conference on Technology, Knowledge, Society, Valencia, Spain, March.
 * Hsiao, W. Y., & Cavalcanti, A. (2024) [Choosing the Right Robots for Young Children](https://cgscholar.com/cg_event/events/T24en/proposal/69672): A Study of Technology for Early Childhood Education, 20th International Conference on Technology, Knowledge, Society, Valencia, Spain, March.
