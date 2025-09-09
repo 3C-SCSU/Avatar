@@ -753,8 +753,6 @@ ApplicationWindow {
                             source: "GUI_Pics/home.png"
                             width: 150
                             height: 150
-                            // width: parent.width * 0.6
-                            // height: parent.height * 0.6
                             anchors.centerIn: parent
                         }
 
@@ -796,8 +794,6 @@ ApplicationWindow {
                             source: "GUI_Pics/up.png"
                             width: 150
                             height: 150
-                            // width: parent.width * 0.2
-                            // height: parent.height * 0.6
                             anchors.centerIn: parent
                         }
 
@@ -873,8 +869,6 @@ ApplicationWindow {
                             source: "GUI_Pics/Forward.png"
                             width: 150
                             height: 150
-                            // width: parent.width * 0.1
-                            // height: parent.height * 0.6
                             anchors.centerIn: parent
                         }
 
@@ -916,8 +910,6 @@ ApplicationWindow {
                             source: "GUI_Pics/turnLeft.png"
                             width: 150
                             height: 150
-                            // width: parent.width * 0.6
-                            // height: parent.height * 0.6
                             anchors.centerIn: parent
                         }
 
@@ -950,8 +942,6 @@ ApplicationWindow {
                             source: "GUI_Pics/left.png"
                             width: 150
                             height: 150
-                            // width: parent.width * 0.6
-                            // height: parent.height * 0.6
                             anchors.centerIn: parent
                         }
 
@@ -984,8 +974,6 @@ ApplicationWindow {
                             source: "GUI_Pics/Stream.png"
                             width: 150
                             height: 150
-                            // width: parent.width * 0.6
-                            // height: parent.height * 0.6
                             anchors.centerIn: parent
                         }
 
@@ -1018,8 +1006,6 @@ ApplicationWindow {
                             source: "GUI_Pics/right.png"
                             width: 150
                             height: 150
-                            // width: parent.width * 0.6
-                            // height: parent.height * 0.6
                             anchors.centerIn: parent
                         }
 
@@ -1052,8 +1038,6 @@ ApplicationWindow {
                             source: "GUI_Pics/turnRight.png"
                             width: 150
                             height: 150
-                            // width: parent.width * 0.6
-                            // height: parent.height * 0.6
                             anchors.centerIn: parent
                         }
 
@@ -1096,8 +1080,6 @@ ApplicationWindow {
                             source: "GUI_Pics/back.png"
                             width: 150
                             height: 150
-                            // width: parent.width * 0.1
-                            // height: parent.height * 0.6
                             anchors.centerIn: parent
                         }
 
@@ -1144,8 +1126,6 @@ ApplicationWindow {
                                 source: "GUI_Pics/connect.png"
                                 width: 150
                                 height: 150
-                                // width: parent.width * 0.6
-                                // height: parent.height * 0.6
                                 anchors.centerIn: parent
                             }
 
@@ -1178,8 +1158,6 @@ ApplicationWindow {
                                 source: "GUI_Pics/down.png"
                                 width: 150
                                 height: 150
-                                // width: parent.width * 0.3
-                                // height: parent.height * 0.6
                                 anchors.centerIn: parent
                             }
 
@@ -1212,8 +1190,6 @@ ApplicationWindow {
                                 source: "GUI_Pics/takeoff.png"
                                 width: 150
                                 height: 150
-                                // width: parent.width * 0.6
-                                // height: parent.height * 0.6
                                 anchors.centerIn: parent
                             }
 
@@ -1246,8 +1222,6 @@ ApplicationWindow {
                                 source: "GUI_Pics/land.png"
                                 width: 150
                                 height: 150
-                                // width: parent.width * 0.6
-                                // height: parent.height * 0.6
                                 anchors.centerIn: parent
                             }
 
