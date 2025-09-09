@@ -737,7 +737,7 @@ ApplicationWindow {
                 // Top Row - Home, Up, Flight Log
                 Row {
                    width: parent.width
-                    height: parent.height * 0.15
+                    height: parent.height * 0.19
                     anchors.top: parent.top
                     anchors.topMargin: parent.height * 0.0
                     spacing: parent.width * 0.1
@@ -751,8 +751,10 @@ ApplicationWindow {
 
                         Image {
                             source: "GUI_Pics/home.png"
-                            width: parent.width * 0.6
-                            height: parent.height * 0.6
+                            width: 150
+                            height: 150
+                            // width: parent.width * 0.6
+                            // height: parent.height * 0.6
                             anchors.centerIn: parent
                         }
 
@@ -780,7 +782,7 @@ ApplicationWindow {
                                     backend.getDroneAction("home");
                                 }
                             }
-                    }
+                        }
 
                     // Up Button
                     Rectangle {
@@ -792,8 +794,10 @@ ApplicationWindow {
 
                         Image {
                             source: "GUI_Pics/up.png"
-                            width: parent.width * 0.1
-                            height: parent.height * 0.6
+                            width: 150
+                            height: 150
+                            // width: parent.width * 0.2
+                            // height: parent.height * 0.6
                             anchors.centerIn: parent
                         }
 
@@ -801,26 +805,26 @@ ApplicationWindow {
                             text: "Up"
                             font.bold: true
                             color: "white"
-                            font.pixelSize: Math.max(12, parent.width * 0.05)
+                            font.pixelSize: Math.max(12, parent.width * 0.01)
                             anchors.horizontalCenter: parent.horizontalCenter
                             anchors.bottom: parent.bottom
                             anchors.bottomMargin: 10
                         }
 
                         MouseArea {
-                                    anchors.fill: parent
-                                    onEntered: {
-                                        upButtonBackground.color = "white"; // Change background to white on hover
-                                        upButtonText.color = "black"; // Change text color to black on hover
-                                    }
-                                    onExited: {
-                                        upButtonBackground.color = "#242c4d"; // Revert background color on exit
-                                        upButtonText.color = "white"; // Revert text color to white on exit
-                                    }
-                                    onClicked: {
-                                        backend.getDroneAction("up");
-                                    }
-                                }
+                            anchors.fill: parent
+                            onEntered: {
+                                upButtonBackground.color = "white"; // Change background to white on hover
+                                upButtonText.color = "black"; // Change text color to black on hover
+                            }
+                            onExited: {
+                                upButtonBackground.color = "#242c4d"; // Revert background color on exit
+                                upButtonText.color = "white"; // Revert text color to white on exit
+                            }
+                            onClicked: {
+                                backend.getDroneAction("up");
+                            }
+                        }
                     }
 
                     // Flight Log
@@ -853,7 +857,7 @@ ApplicationWindow {
                 // Forward Button
                 Rectangle {
                     width: parent.width
-                    height: parent.height * 0.15
+                    height: parent.height * 0.19
                     anchors.top: parent.top
                     anchors.topMargin: parent.height * 0.20
                     color: "transparent"
@@ -867,8 +871,10 @@ ApplicationWindow {
 
                         Image {
                             source: "GUI_Pics/Forward.png"
-                            width: parent.width * 0.1
-                            height: parent.height * 0.6
+                            width: 150
+                            height: 150
+                            // width: parent.width * 0.1
+                            // height: parent.height * 0.6
                             anchors.centerIn: parent
                         }
 
@@ -876,7 +882,7 @@ ApplicationWindow {
                             text: "Forward"
                             font.bold: true
                             color: "white"
-                            font.pixelSize:  parent.width * 0.03
+                            font.pixelSize:  parent.width * 0.01
                             anchors.horizontalCenter: parent.horizontalCenter
                             anchors.bottom: parent.bottom
                             anchors.bottomMargin: 10
@@ -894,7 +900,7 @@ ApplicationWindow {
                  // Directional Buttons (Turn Left, Left, Stream, Right, Turn Right)
                 Row {
                     width: parent.width
-                    height: parent.height * 0.15
+                    height: parent.height * 0.18
                     anchors.top: parent.top
                     anchors.topMargin: parent.height * 0.4
                     spacing: width * 0.065 // Add spacing between buttons
@@ -908,8 +914,10 @@ ApplicationWindow {
 
                         Image {
                             source: "GUI_Pics/turnLeft.png"
-                            width: parent.width * 0.6
-                            height: parent.height * 0.6
+                            width: 150
+                            height: 150
+                            // width: parent.width * 0.6
+                            // height: parent.height * 0.6
                             anchors.centerIn: parent
                         }
 
@@ -940,8 +948,10 @@ ApplicationWindow {
 
                         Image {
                             source: "GUI_Pics/left.png"
-                            width: parent.width * 0.6
-                            height: parent.height * 0.6
+                            width: 150
+                            height: 150
+                            // width: parent.width * 0.6
+                            // height: parent.height * 0.6
                             anchors.centerIn: parent
                         }
 
@@ -972,8 +982,10 @@ ApplicationWindow {
 
                         Image {
                             source: "GUI_Pics/Stream.png"
-                            width: parent.width * 0.6
-                            height: parent.height * 0.6
+                            width: 150
+                            height: 150
+                            // width: parent.width * 0.6
+                            // height: parent.height * 0.6
                             anchors.centerIn: parent
                         }
 
@@ -1004,8 +1016,10 @@ ApplicationWindow {
 
                         Image {
                             source: "GUI_Pics/right.png"
-                            width: parent.width * 0.6
-                            height: parent.height * 0.6
+                            width: 150
+                            height: 150
+                            // width: parent.width * 0.6
+                            // height: parent.height * 0.6
                             anchors.centerIn: parent
                         }
 
@@ -1036,8 +1050,10 @@ ApplicationWindow {
 
                         Image {
                             source: "GUI_Pics/turnRight.png"
-                            width: parent.width * 0.6
-                            height: parent.height * 0.6
+                            width: 150
+                            height: 150
+                            // width: parent.width * 0.6
+                            // height: parent.height * 0.6
                             anchors.centerIn: parent
                         }
 
@@ -1063,14 +1079,14 @@ ApplicationWindow {
                 // Back Button
                 Rectangle {
                   width: parent.width
-                    height: parent.height * 0.15
+                    height: parent.height * 0.18
                     anchors.top: parent.top
                     anchors.topMargin: parent.height * 0.6
                     color: "transparent"
 
 
                     Rectangle {
-                        width: parent.width * 0.8
+                        width: parent.width
                         height: parent.height
                         anchors.horizontalCenter: parent.horizontalCenter
                         color: "#242c4d"
@@ -1078,8 +1094,10 @@ ApplicationWindow {
 
                         Image {
                             source: "GUI_Pics/back.png"
-                            width: parent.width * 0.1
-                            height: parent.height * 0.6
+                            width: 150
+                            height: 150
+                            // width: parent.width * 0.1
+                            // height: parent.height * 0.6
                             anchors.centerIn: parent
                         }
 
@@ -1087,7 +1105,7 @@ ApplicationWindow {
                             text: "Back"
                             font.bold: true
                             color: "white"
-                            font.pixelSize:  parent.width * 0.03
+                            font.pixelSize:  parent.width * 0.01
                             anchors.horizontalCenter: parent.horizontalCenter
                             anchors.bottom: parent.bottom
                             anchors.bottomMargin: 10
@@ -1105,7 +1123,7 @@ ApplicationWindow {
                 // Connect, Down, Takeoff, Land Buttons
                 Rectangle {
                     width: parent.width
-                    height: parent.height * 0.15
+                    height: parent.height * 0.20
                     anchors.top: parent.top
                     anchors.topMargin: parent.height * 0.8
                     color: "transparent"
@@ -1124,8 +1142,10 @@ ApplicationWindow {
 
                             Image {
                                 source: "GUI_Pics/connect.png"
-                                width: parent.width * 0.6
-                                height: parent.height * 0.6
+                                width: 150
+                                height: 150
+                                // width: parent.width * 0.6
+                                // height: parent.height * 0.6
                                 anchors.centerIn: parent
                             }
 
@@ -1156,8 +1176,10 @@ ApplicationWindow {
 
                             Image {
                                 source: "GUI_Pics/down.png"
-                                width: parent.width * 0.3
-                                height: parent.height * 0.6
+                                width: 150
+                                height: 150
+                                // width: parent.width * 0.3
+                                // height: parent.height * 0.6
                                 anchors.centerIn: parent
                             }
 
@@ -1165,7 +1187,7 @@ ApplicationWindow {
                                 text: "Down"
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: Math.max(12, parent.width * 0.05)
+                                font.pixelSize: Math.max(12, parent.width * 0.01)
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
                                 anchors.bottomMargin: 10
@@ -1188,8 +1210,10 @@ ApplicationWindow {
 
                             Image {
                                 source: "GUI_Pics/takeoff.png"
-                                width: parent.width * 0.6
-                                height: parent.height * 0.6
+                                width: 150
+                                height: 150
+                                // width: parent.width * 0.6
+                                // height: parent.height * 0.6
                                 anchors.centerIn: parent
                             }
 
@@ -1220,8 +1244,10 @@ ApplicationWindow {
 
                             Image {
                                 source: "GUI_Pics/land.png"
-                                width: parent.width * 0.6
-                                height: parent.height * 0.6
+                                width: 150
+                                height: 150
+                                // width: parent.width * 0.6
+                                // height: parent.height * 0.6
                                 anchors.centerIn: parent
                             }
 
