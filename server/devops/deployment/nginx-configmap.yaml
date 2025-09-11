@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  labels:
+    app: 3C-SCSU-pod
+data:
+  nginx.conf: |
+    events {
+        worker_connections 1024;
+    }
+
+    http {
+        upstream prediction_service {
+            server 127.0.0.1:5000;
+        }
+
+        upstream jupyter_service {
+            server 127.0.0.1:8888;
+        }
+
+        server {
+            listen 80;
+            
+            # Default route - proxy to Jupyter
+            location / {
+                proxy_pass http://jupyter_service;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            }
+            
+            # Prediction endpoint routes
+            location /eegrandomforestprediction {
+                proxy_pass http://prediction_service/eegrandomforestprediction;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header Content-Type application/json;
+            }
+            
+            location /lastprediction {
+                proxy_pass http://prediction_service/lastprediction;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
+        }
+    }
+
