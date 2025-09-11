@@ -2,6 +2,7 @@
 # it into Kubernetes.
 #
 # Created with podman-3.4.4
+# Modified to include prediction endpoint container
 apiVersion: v1
 kind: Pod
 metadata:
@@ -20,7 +21,6 @@ spec:
           hostPort: 10000
         - containerPort: 80
           hostPort: 9000
-
       resources: {}
       securityContext:
         capabilities:
@@ -37,8 +37,29 @@ spec:
         - nginx
         - -g
         - daemon off;
+        - -c
+        - /etc/nginx/nginx.conf
       image: docker.io/library/nginx:latest
       name: nginx-pod
+      ports:
+        - containerPort: 80
+      resources: {}
+      securityContext:
+        capabilities:
+          drop:
+            - CAP_MKNOD
+            - CAP_NET_RAW
+            - CAP_AUDIT_WRITE
+      volumeMounts:
+        - mountPath: /etc/nginx/nginx.conf
+          name: nginx-config
+          subPath: nginx.conf
+    - image: docker.io/jdknuds/prediction:latest
+      name: prediction-pod
+      command: ["gunicorn"]
+      args: ["--bind", "0.0.0.0:5000", "--workers", "2", "server.server:app"]
+      ports:
+        - containerPort: 5000
       resources: {}
       securityContext:
         capabilities:
@@ -64,4 +85,7 @@ spec:
     - name: notebook-pvc
       persistentVolumeClaim:
         claimName: notebook-pvc
+    - name: nginx-config
+      configMap:
+        name: nginx-config
 status: {}
