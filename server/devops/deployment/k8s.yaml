@@ -56,6 +56,8 @@ spec:
           subPath: nginx.conf
     - image: docker.io/jdknuds/prediction:latest
       name: prediction-pod
+      command: ["gunicorn"]
+      args: ["--bind", "0.0.0.0:5000", "--workers", "2", "server.server:app"]
       ports:
         - containerPort: 5000
       resources: {}
