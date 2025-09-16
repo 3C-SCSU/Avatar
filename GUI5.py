@@ -18,8 +18,10 @@ from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
 # Add the parent directory to the Python path for file-shuffler
 sys.path.append(str(Path(__file__).resolve().parent / "file-shuffler"))
 sys.path.append(str(Path(__file__).resolve().parent / "file-unify-labels"))
+sys.path.append(str(Path(__file__).resolve().parent / "file-remove8channel"))
 import unifyTXT
 import run_file_shuffler
+import file_remover
 
 
 class TabController(QObject):
@@ -390,13 +392,32 @@ class BrainwavesBackend(QObject):
 
         try:
             with contextlib.redirect_stdout(output), contextlib.redirect_stderr(output):
-                unifyTXT.move_any_csvs(base_dir)
+                unifyTXT.move_any_txt_files(base_dir)
                 print("Unify complete.")
 
         except Exception as e:
             print("Error during unify:", e)
 
         return output.getvalue()
+
+    @Slot(str, result=str)
+    def remove_8_channel(self, base_dir):
+        """
+        Called from QML when the user picks a directory to remove 8 channel data.
+        """
+        # Decode URL path
+        if base_dir.startswith("file:///"):
+            base_dir = urllib.parse.unquote(base_dir.replace("file://", ""))
+            if os.name == 'nt' and base_dir.startswith("/"):
+                base_dir = base_dir[1:]
+        print("Removing 8 Channel data form:", base_dir)
+        output = io.StringIO()
+        try:
+            with contextlib.redirect_stdout(output), contextlib.redirect_stderr(output):
+                remove8channel.file_remover(base_dir)
+                print("8 Channel Data Removal complete.")
+        except Exception as e:
+            print("Error during cleanup: ", e)
 
     @Slot(str)
     def setDataMode(self, mode):
