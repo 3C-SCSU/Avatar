@@ -392,7 +392,7 @@ class BrainwavesBackend(QObject):
 
         try:
             with contextlib.redirect_stdout(output), contextlib.redirect_stderr(output):
-                unifyTXT.move_any_csvs(base_dir)
+                unifyTXT.move_any_txt_files(base_dir)
                 print("Unify complete.")
 
         except Exception as e:
