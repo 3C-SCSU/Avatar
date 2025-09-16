@@ -1316,6 +1316,16 @@ ApplicationWindow {
                         }
 
                         Button {
+                            text: "Remove 8 Channel Data"
+                            onClicked: {
+                                remove8channelDialog.open()
+                                fileShufflerView.outputBoxText = `Running 8 Channel Data Remover...\n`;
+                                fileShufflerView.unifiedThoughts = false;
+
+                            }
+                        }
+
+                        Button {
                             //id: runButton
                             text: "Run File Shuffler"
                             onClicked: {
@@ -1384,6 +1394,25 @@ ApplicationWindow {
                         var outputt = fileShufflerGui.unify_thoughts(unifyThoughts.folder);
                         fileShufflerView.outputBoxText += outputt;
                         fileShufflerView.outputBoxText += "\nThoughts Unified!\n"
+                    }
+
+                    onRejected: {
+                        console.log("Folder dialog canceled")
+                    }
+                }
+
+                FolderDialog {
+                    id: remove8channelDialog
+                    folder: "file:///"  // Or "." for current working directory
+
+                    onAccepted: {
+                        console.log("Selected folder:", remove8channelDialog.folder)
+                        fileShufflerGui.outputBoxText = "Running 8 Channel Data Remover...\n"
+                        var output = fileShufflerGui.remove_8_channel(remove8channelDialog.folder)
+                        fileShufflerView.outputBoxText += output;
+                        fileShufflerView.unifiedThoughts = false
+                        fileShufflerView.ranShuffle = false
+                        fileShufflerView.outputBoxText += "\n8 Channel Data Files Removed!\n"
 
                     }
 
@@ -1391,6 +1420,7 @@ ApplicationWindow {
                         console.log("Folder dialog canceled")
                     }
                 }
+                
             }
             // Transfer Data view
             Rectangle {
