@@ -21,7 +21,7 @@ sys.path.append(str(Path(__file__).resolve().parent / "file-unify-labels"))
 sys.path.append(str(Path(__file__).resolve().parent / "file-remove8channel"))
 import unifyTXT
 import run_file_shuffler
-import file_remover
+import remove8channel
 
 
 class TabController(QObject):
