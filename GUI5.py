@@ -21,42 +21,13 @@ sys.path.append(str(Path(__file__).resolve().parent / "file-unify-labels"))
 sys.path.append(str(Path(__file__).resolve().parent / "file-remove8channel"))
 import unifyTXT
 import run_file_shuffler
-import remove8channel
+# import remove8channel
 
 
 class TabController(QObject):
     def __init__(self):
         super().__init__()
         self.nao_process = None
-
-    @Slot()
-    def startNaoViewer(self):
-        print("Starting Nao Viewer method called")
-        # Check if we already have a process running
-        if self.nao_process is not None and self.nao_process.state() == QProcess.Running:
-            print("Nao Viewer is already running")
-            return
-
-        # Create a new process
-        self.nao_process = QProcess()
-
-        # Connect signals to handle process output
-        self.nao_process.readyReadStandardOutput.connect(
-            lambda: print("Output:", self.nao_process.readAllStandardOutput().data().decode()))
-        self.nao_process.readyReadStandardError.connect(
-            lambda: print("Error:", self.nao_process.readAllStandardError().data().decode()))
-
-        # Start the process
-        script_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "NA06_Manual_Control/Nao6Viewer.py")
-        print(f"Starting Nao Viewer from: {script_path}")
-        self.nao_process.start(sys.executable, [script_path])
-
-    @Slot()
-    def stopNaoViewer(self):
-        print("Stop Nao Viewer method called")
-        if self.nao_process is not None and self.nao_process.state() == QProcess.Running:
-            self.nao_process.terminate()
-            print("Nao Viewer stopped")
 
 
 class BrainwavesBackend(QObject):
@@ -65,6 +36,25 @@ class BrainwavesBackend(QObject):
     predictionsTableUpdated = Signal(list)
     imagesReady = Signal(list)
     logMessage = Signal(str)
+    naoStarted = Signal()
+    naoEnded = Signal()
+
+    @Slot()
+    def startNaoManual(self):
+        print("Nao6 Manual session started")
+        self.naoStarted.emit("Nao6 Manual session started")
+
+    @Slot()
+    def stopNaoManual(self):
+        print("Nao6 Manual session ended")
+        self.naoEnded.emit("Nao6 Manual session ended")
+
+    @Slot()
+    def connectNao(self):
+        # Mock function to simulate drone connection
+        self.flight_log.insert(0, "Nao connected.")
+        self.flightLogUpdated.emit(self.flight_log)
+
 
     def __init__(self):
         super().__init__()
@@ -447,6 +437,8 @@ class BrainwavesBackend(QObject):
         print("\nLive headset board initialized.")
 
 
+
+
 if __name__ == "__main__":
     os.environ["QT_QUICK_CONTROLS_STYLE"] = "Fusion"
     app = QApplication(sys.argv)
@@ -478,7 +470,8 @@ if __name__ == "__main__":
     # Ensure image model updates correctly
     backend.imagesReady.connect(lambda images: engine.rootContext().setContextProperty("imageModel", images))
 
-    # Clean up when exiting
-    app.aboutToQuit.connect(TabController.stopNaoViewer)
-
     sys.exit(app.exec())
+
+
+
+
