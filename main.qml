@@ -1,6 +1,5 @@
 import QtQuick.Dialogs
 import Qt.labs.platform
-
 import QtQuick 6.5
 import QtQuick.Controls 6.4
 import QtQuick.Layouts 1.15
@@ -58,25 +57,24 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = 2
             }
             TabButton {
-                text: "File Shuffler"
-                font.bold: true
-                onClicked: stackLayout.currentIndex = 3
-            }
-            TabButton {
-                text: "Transfer Data"
-                font.bold: true
-                onClicked: stackLayout.currentIndex = 4
-            }
-            TabButton {
                 text: "Manual NAO Control"
                 font.bold: true
                 onClicked: {
-                    stackLayout.currentIndex = 5
+                    stackLayout.currentIndex = 3
                     console.log("Manual Controller tab clicked")
                     tabController.startNaoViewer()
                 }
             }
-
+            TabButton {
+                text: "File Shuffler"
+                font.bold: true
+                onClicked: stackLayout.currentIndex = 4
+            }
+            TabButton {
+                text: "Transfer Data"
+                font.bold: true
+                onClicked: stackLayout.currentIndex = 5
+            }
         }
 
         // Stack layout for different views
@@ -1255,276 +1253,6 @@ ApplicationWindow {
                 console.log(action + " triggered.")
             }
             }
-            //File shuffler view
-            Rectangle {
-                id: fileShufflerView
-                color: "#2b3a4a"
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-
-                property string outputBoxText: ""
-                property string selectedDirectory: ""
-                property bool ranShuffle: false
-                property bool unifiedThoughts: false
-
-                Column {
-                    anchors.fill: parent
-                    spacing: 10
-
-                    Text {
-                        text: "File Shuffler"
-                        color: "white"
-                        font.bold: true
-                        font.pixelSize: 24
-                        horizontalAlignment: Text.AlignHCenter
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.top: parent.top
-                        anchors.topMargin: 20
-                    }
-
-                    Rectangle {
-                        width: parent.width * 0.6
-                        height: parent.height * 0.6
-                        color: "lightgrey"
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        ScrollView {
-                            anchors.fill: parent
-
-                            TextArea {
-                                id: outputBox
-                                text: fileShufflerView.outputBoxText
-                                color: "black"
-                                readOnly: true
-                                width: parent.width
-                            }
-                        }
-                    }
-
-                    Row {
-                        id: buttonRow
-                        spacing: 20
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.top: parent.verticalCenter
-                        anchors.topMargin: parent.height * 0.3 + 10
-
-                        Button {
-                            text: "Unify Thoughts"
-                            onClicked: {
-                                unifyThoughts.open()
-                                fileShufflerView.outputBoxText = `Running Thoughts Unifier...\n`;
-                                fileShufflerView.unifiedThoughts = false;
-
-                            }
-                        }
-
-                        Button {
-                            text: "Remove 8 Channel Data"
-                            onClicked: {
-                                remove8channelDialog.open()
-                                fileShufflerView.outputBoxText = `Running 8 Channel Data Remover...\n`;
-                                fileShufflerView.unifiedThoughts = false;
-
-                            }
-                        }
-
-                        Button {
-                            //id: runButton
-                            text: "Run File Shuffler"
-                            onClicked: {
-                                fileShuffler.open()
-                                fileShufflerView.outputBoxText = `Running File Shuffler...\n`;
-                                fileShufflerView.ranShuffle = false;
-
-
-                            }
-                        }
-
-                    }
-                    FolderDialog {
-                        id: fileShuffler
-                        folder: "file:///"  // Or "." for current working directory
-                        visible: false
-
-                        onAccepted: {
-                            console.log("Selected folder:", fileShuffler.folder)
-                            fileShufflerGui.run_file_shuffler_program(fileShuffler.folder)
-                            fileShufflerView.ranShuffle = true;
-                            var output = fileShufflerGui.run_file_shuffler_program(fileShufflerView.folder);
-                            fileShufflerView.outputBoxText += output;
-                        }
-
-                        onRejected: {
-                            console.log("Folder dialog canceled")
-                        }
-                    }
-
-
-                    Text {
-                        id: ranText
-                        text: "Shuffle Complete!"
-                        color: "yellow"
-                        font.bold: true
-                        font.pixelSize: 18
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.top: buttonRow.bottom
-                        anchors.topMargin: 10
-                        visible: fileShufflerView.ranShuffle
-                    }
-
-                    Text {
-                        id: unifiedThoughts
-                        text: "Thoughts Unified!"
-                        color: "lightgreen"
-                        font.bold: true
-                        font.pixelSize: 18
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.top: ranText.bottom
-                        anchors.topMargin: 10
-                        visible: fileShufflerView.unifiedThoughts
-
-                    }
-                }
-
-                FolderDialog {
-                    id: unifyThoughts
-                    folder: "file:///"  // Or "." for current working directory
-
-                    onAccepted: {
-                        console.log("Selected folder:", unifyThoughts.folder)
-                        fileShufflerGui.unify_thoughts(unifyThoughts.folder)
-                        fileShufflerView.unifiedThoughts = true
-                        var outputt = fileShufflerGui.unify_thoughts(unifyThoughts.folder);
-                        fileShufflerView.outputBoxText += outputt;
-                        fileShufflerView.outputBoxText += "\nThoughts Unified!\n"
-                    }
-
-                    onRejected: {
-                        console.log("Folder dialog canceled")
-                    }
-                }
-
-                FolderDialog {
-                    id: remove8channelDialog
-                    folder: "file:///"  // Or "." for current working directory
-
-                    onAccepted: {
-                        console.log("Selected folder:", remove8channelDialog.folder)
-                        fileShufflerGui.outputBoxText = "Running 8 Channel Data Remover...\n"
-                        var output = fileShufflerGui.remove_8_channel(remove8channelDialog.folder)
-                        fileShufflerView.outputBoxText += output;
-                        fileShufflerView.unifiedThoughts = false
-                        fileShufflerView.ranShuffle = false
-                        fileShufflerView.outputBoxText += "\n8 Channel Data Files Removed!\n"
-
-                    }
-
-                    onRejected: {
-                        console.log("Folder dialog canceled")
-                    }
-                }
-
-            }
-            // Transfer Data view
-            Rectangle {
-                color: "#64778d"
-                ScrollView {
-                    anchors.centerIn: parent
-                    width: Math.min(parent.width * 0.9, 600)
-                    height: Math.min(parent.height * 0.9, contentHeight)
-                    clip: true
-
-                    ColumnLayout {
-                        id: contentLayout
-                        width: parent.width
-                        spacing: 10
-
-                        Label { text: "Target IP"; color: "white"; font.bold: true}
-                        TextField { Layout.fillWidth: true }
-
-                        Label { text: "Target Username"; color: "white"; font.bold: true }
-                        TextField { Layout.fillWidth: true }
-
-                        Label { text: "Target Password"; color: "white"; font.bold: true }
-                        TextField {
-                            Layout.fillWidth: true
-                            echoMode: TextInput.Password
-                        }
-
-                        Label { text: "Private Key Directory:"; color: "white"; font.bold: true }
-                        RowLayout {
-                            Layout.fillWidth: true
-                            TextField {
-                                id: privateKeyDirInput
-                                Layout.fillWidth: true
-                            }
-                            Button {
-                                text: "Browse"
-                                font.bold: true
-                                onClicked: console.log("Browse for Private Key Directory")
-                            }
-                        }
-
-                        CheckBox {
-                            text: "Ignore Host Key"
-                            font.bold: true
-                            checked: true
-                            contentItem: Text {
-                                text: parent.text
-                                font.bold: true
-                                color: "white"
-                                leftPadding: parent.indicator.width + parent.spacing
-                            }
-                        }
-
-                        Label { text: "Source Directory:"; color: "white"; font.bold: true }
-                        RowLayout {
-                            Layout.fillWidth: true
-                            TextField {
-                                id: sourceDirInput
-                                Layout.fillWidth: true
-                            }
-                            Button {
-                                text: "Browse"
-                                font.bold: true
-                                onClicked: console.log("Browse for Source Directory")
-                            }
-                        }
-
-                        Label { text: "Target Directory:"; color: "white"; font.bold: true }
-                        TextField {
-                            Layout.fillWidth: true
-                            text: "/home/"
-                            placeholderText: "/home/"
-                        }
-
-                        RowLayout {
-                            Layout.fillWidth: true
-                            Button {
-                                text: "Save Config"
-                                font.bold: true
-                                onClicked: console.log("Save Config clicked")
-                            }
-                            Button {
-                                text: "Load Config"
-                                font.bold: true
-                                onClicked: console.log("Load Config clicked")
-                            }
-                            Button {
-                                text: "Clear Config"
-                                font.bold: true
-                                onClicked: console.log("Clear Config clicked")
-                            }
-                            Button {
-                                text: "Upload"
-                                font.bold: true
-                                onClicked: console.log("Upload clicked")
-                            }
-                        }
-                    }
-                }
-            }
 
             // Manual Controller Tab (Nao Viewer)
 
@@ -1819,6 +1547,277 @@ ApplicationWindow {
                 function appendLog(msg) {
                     var timestamp = new Date().toLocaleString()
                     consoleLog1.append(msg + " at " + timestamp)
+                }
+            }
+
+            //File shuffler view
+            Rectangle {
+                id: fileShufflerView
+                color: "#2b3a4a"
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                property string outputBoxText: ""
+                property string selectedDirectory: ""
+                property bool ranShuffle: false
+                property bool unifiedThoughts: false
+
+                Column {
+                    anchors.fill: parent
+                    spacing: 10
+
+                    Text {
+                        text: "File Shuffler"
+                        color: "white"
+                        font.bold: true
+                        font.pixelSize: 24
+                        horizontalAlignment: Text.AlignHCenter
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: parent.top
+                        anchors.topMargin: 20
+                    }
+
+                    Rectangle {
+                        width: parent.width * 0.6
+                        height: parent.height * 0.6
+                        color: "lightgrey"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        ScrollView {
+                            anchors.fill: parent
+
+                            TextArea {
+                                id: outputBox
+                                text: fileShufflerView.outputBoxText
+                                color: "black"
+                                readOnly: true
+                                width: parent.width
+                            }
+                        }
+                    }
+
+                    Row {
+                        id: buttonRow
+                        spacing: 20
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: parent.verticalCenter
+                        anchors.topMargin: parent.height * 0.3 + 10
+
+                        Button {
+                            text: "Unify Thoughts"
+                            onClicked: {
+                                unifyThoughts.open()
+                                fileShufflerView.outputBoxText = `Running Thoughts Unifier...\n`;
+                                fileShufflerView.unifiedThoughts = false;
+
+                            }
+                        }
+
+                        Button {
+                            text: "Remove 8 Channel Data"
+                            onClicked: {
+                                remove8channelDialog.open()
+                                fileShufflerView.outputBoxText = `Running 8 Channel Data Remover...\n`;
+                                fileShufflerView.unifiedThoughts = false;
+
+                            }
+                        }
+
+                        Button {
+                            //id: runButton
+                            text: "Run File Shuffler"
+                            onClicked: {
+                                fileShuffler.open()
+                                fileShufflerView.outputBoxText = `Running File Shuffler...\n`;
+                                fileShufflerView.ranShuffle = false;
+
+
+                            }
+                        }
+
+                    }
+                    FolderDialog {
+                        id: fileShuffler
+                        folder: "file:///"  // Or "." for current working directory
+                        visible: false
+
+                        onAccepted: {
+                            console.log("Selected folder:", fileShuffler.folder)
+                            fileShufflerGui.run_file_shuffler_program(fileShuffler.folder)
+                            fileShufflerView.ranShuffle = true;
+                            var output = fileShufflerGui.run_file_shuffler_program(fileShufflerView.folder);
+                            fileShufflerView.outputBoxText += output;
+                        }
+
+                        onRejected: {
+                            console.log("Folder dialog canceled")
+                        }
+                    }
+
+
+                    Text {
+                        id: ranText
+                        text: "Shuffle Complete!"
+                        color: "yellow"
+                        font.bold: true
+                        font.pixelSize: 18
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: buttonRow.bottom
+                        anchors.topMargin: 10
+                        visible: fileShufflerView.ranShuffle
+                    }
+
+                    Text {
+                        id: unifiedThoughts
+                        text: "Thoughts Unified!"
+                        color: "lightgreen"
+                        font.bold: true
+                        font.pixelSize: 18
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: ranText.bottom
+                        anchors.topMargin: 10
+                        visible: fileShufflerView.unifiedThoughts
+
+                    }
+                }
+
+                FolderDialog {
+                    id: unifyThoughts
+                    folder: "file:///"  // Or "." for current working directory
+
+                    onAccepted: {
+                        console.log("Selected folder:", unifyThoughts.folder)
+                        fileShufflerGui.unify_thoughts(unifyThoughts.folder)
+                        fileShufflerView.unifiedThoughts = true
+                        var outputt = fileShufflerGui.unify_thoughts(unifyThoughts.folder);
+                        fileShufflerView.outputBoxText += outputt;
+                        fileShufflerView.outputBoxText += "\nThoughts Unified!\n"
+                    }
+
+                    onRejected: {
+                        console.log("Folder dialog canceled")
+                    }
+                }
+
+                FolderDialog {
+                    id: remove8channelDialog
+                    folder: "file:///"  // Or "." for current working directory
+
+                    onAccepted: {
+                        console.log("Selected folder:", remove8channelDialog.folder)
+                        fileShufflerGui.outputBoxText = "Running 8 Channel Data Remover...\n"
+                        var output = fileShufflerGui.remove_8_channel(remove8channelDialog.folder)
+                        fileShufflerView.outputBoxText += output;
+                        fileShufflerView.unifiedThoughts = false
+                        fileShufflerView.ranShuffle = false
+                        fileShufflerView.outputBoxText += "\n8 Channel Data Files Removed!\n"
+
+                    }
+
+                    onRejected: {
+                        console.log("Folder dialog canceled")
+                    }
+                }
+
+            }
+            // Transfer Data view
+            Rectangle {
+                color: "#64778d"
+                ScrollView {
+                    anchors.centerIn: parent
+                    width: Math.min(parent.width * 0.9, 600)
+                    height: Math.min(parent.height * 0.9, contentHeight)
+                    clip: true
+
+                    ColumnLayout {
+                        id: contentLayout
+                        width: parent.width
+                        spacing: 10
+
+                        Label { text: "Target IP"; color: "white"; font.bold: true}
+                        TextField { Layout.fillWidth: true }
+
+                        Label { text: "Target Username"; color: "white"; font.bold: true }
+                        TextField { Layout.fillWidth: true }
+
+                        Label { text: "Target Password"; color: "white"; font.bold: true }
+                        TextField {
+                            Layout.fillWidth: true
+                            echoMode: TextInput.Password
+                        }
+
+                        Label { text: "Private Key Directory:"; color: "white"; font.bold: true }
+                        RowLayout {
+                            Layout.fillWidth: true
+                            TextField {
+                                id: privateKeyDirInput
+                                Layout.fillWidth: true
+                            }
+                            Button {
+                                text: "Browse"
+                                font.bold: true
+                                onClicked: console.log("Browse for Private Key Directory")
+                            }
+                        }
+
+                        CheckBox {
+                            text: "Ignore Host Key"
+                            font.bold: true
+                            checked: true
+                            contentItem: Text {
+                                text: parent.text
+                                font.bold: true
+                                color: "white"
+                                leftPadding: parent.indicator.width + parent.spacing
+                            }
+                        }
+
+                        Label { text: "Source Directory:"; color: "white"; font.bold: true }
+                        RowLayout {
+                            Layout.fillWidth: true
+                            TextField {
+                                id: sourceDirInput
+                                Layout.fillWidth: true
+                            }
+                            Button {
+                                text: "Browse"
+                                font.bold: true
+                                onClicked: console.log("Browse for Source Directory")
+                            }
+                        }
+
+                        Label { text: "Target Directory:"; color: "white"; font.bold: true }
+                        TextField {
+                            Layout.fillWidth: true
+                            text: "/home/"
+                            placeholderText: "/home/"
+                        }
+
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Button {
+                                text: "Save Config"
+                                font.bold: true
+                                onClicked: console.log("Save Config clicked")
+                            }
+                            Button {
+                                text: "Load Config"
+                                font.bold: true
+                                onClicked: console.log("Load Config clicked")
+                            }
+                            Button {
+                                text: "Clear Config"
+                                font.bold: true
+                                onClicked: console.log("Clear Config clicked")
+                            }
+                            Button {
+                                text: "Upload"
+                                font.bold: true
+                                onClicked: console.log("Upload clicked")
+                            }
+                        }
+                    }
                 }
             }
         }
