@@ -589,3 +589,8 @@ ApplicationWindow {
         }  // end of StackLayout
     }  // end of outer ColumnLayout
 }  // end of ApplicationWindow
+                }
+            }
+        }
+    }
+}
