@@ -1270,27 +1270,26 @@ ApplicationWindow {
 
                 RowLayout {
                     anchors.fill: parent
-                    spacing: 10
-
+                    spacing: 0
                     // ================= LEFT PANEL =================
                     Rectangle {
                         id: leftPanel
-                        Layout.preferredWidth: 500
+                        Layout.preferredWidth: 510
                         Layout.fillHeight: true
-                        color: "white"
-                        radius: 6
+                        color: "#718399"
 
                         ColumnLayout {
                             anchors.fill: parent
                             anchors.margins: 16
-                            spacing: 20
+                            
+                            spacing: 40
 
                             Label {
                                 text: "Nao Robot Control Panel"
                                 horizontalAlignment: Text.AlignHCenter
                                 font.pixelSize: 20
                                 font.bold: true
-                                color: "black"
+                                color: "white"
                                 Layout.alignment: Qt.AlignHCenter
                             }
 
@@ -1386,7 +1385,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             environment: SceneEnvironment {
-                                clearColor: '#718399'
+                                clearColor: '#2e2e2e'
                                 backgroundMode: SceneEnvironment.Color
                             }
 
