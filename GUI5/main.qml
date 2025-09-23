@@ -40,7 +40,7 @@ ApplicationWindow {
 
             // Brainwave Reading view
             Rectangle {
-                color: "#3b4b57" // Background color
+                color: '#74787c' // Background color
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 

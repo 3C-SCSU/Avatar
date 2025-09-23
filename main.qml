@@ -85,7 +85,7 @@ ApplicationWindow {
 
             // Brainwave Reading view
             Rectangle {
-                color: "#64778d" // Background color
+                color: "#718399" // Background color
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
@@ -566,9 +566,10 @@ ApplicationWindow {
                     }
                 }
             }
+
             // Brainwave Visualization
             Rectangle {
-                color: "#64778d"
+                color: "#718399"
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
@@ -729,12 +730,13 @@ ApplicationWindow {
                     }
                 }
             }
+
             // Manual Drone Control view
             Rectangle {
-                color: "#64778d"
+                color: "#718399"
                 Column {
                     anchors.fill: parent
-                      spacing: parent.height * 0.1 // Adjust spacing for layout elements
+                    spacing: parent.height * 0.1 // Adjust spacing for layout elements
 
                 // Top Row - Home, Up, Flight Log
                 Row {
@@ -1246,6 +1248,7 @@ ApplicationWindow {
                         }
                     }
                 }
+                
                 }
                   function getDroneAction(action) {
                 //logModel.append({ action: action + " button pressed" })
@@ -1255,7 +1258,6 @@ ApplicationWindow {
             }
 
             // Manual Controller Tab (Nao Viewer)
-
             Rectangle {
                 id: rootPanel
                 property int rotationStep: 90
@@ -1384,7 +1386,7 @@ ApplicationWindow {
                             anchors.fill: parent
 
                             environment: SceneEnvironment {
-                                clearColor: "#2e2e2e"
+                                clearColor: '#718399'
                                 backgroundMode: SceneEnvironment.Color
                             }
 
@@ -1553,7 +1555,7 @@ ApplicationWindow {
             //File shuffler view
             Rectangle {
                 id: fileShufflerView
-                color: "#2b3a4a"
+                color: "#718399"
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
@@ -1721,9 +1723,10 @@ ApplicationWindow {
                 }
 
             }
+
             // Transfer Data view
             Rectangle {
-                color: "#64778d"
+                color: "#718399"
                 ScrollView {
                     anchors.centerIn: parent
                     width: Math.min(parent.width * 0.9, 600)
