@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.15
 import QtQuick.Window 2.15
 import QtQuick3D 6.7
 import "Nao.mesh"
-
+import "GUI5_ManualDroneControl/cameraview"
 
 ApplicationWindow {
     property bool isRandomForestSelected: false
@@ -734,9 +734,23 @@ ApplicationWindow {
             // Manual Drone Control view
             Rectangle {
                 color: "#718399"
-                Column {
+                
+                Row {
                     anchors.fill: parent
-                    spacing: parent.height * 0.1 // Adjust spacing for layout elements
+                    anchors.margins: 10
+                    spacing: 20
+                    
+                    // Left side - Drone Controls
+                    Rectangle {
+                        width: parent.width * 0.65
+                        height: parent.height
+                        color: "transparent"
+                        
+                        Column {
+                            anchors.fill: parent
+                            spacing: 5
+
+
 
                 // Top Row - Home, Up, Flight Log
                 Row {
@@ -1247,15 +1261,17 @@ ApplicationWindow {
                             }
                         }
                     }
-                }
-                
-                }
-                  function getDroneAction(action) {
-                //logModel.append({ action: action + " button pressed" })
-                // Here you would implement the actual drone control logic
-                console.log(action + " triggered.")
+                    } // End of Column (drone controls)
+                } // End of Rectangle (drone controls container)
             }
-            }
+                // Right side of Camera View
+                CameraView {
+                    width: parent.width * 0.3
+                    height: parent.height
+                    cameraController: cameraController
+                }
+            } // End of Row
+        } // End of Manual Drone Control Rectangle
 
             // Manual Controller Tab (Nao Viewer)
             Rectangle {

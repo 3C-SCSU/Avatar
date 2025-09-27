@@ -14,7 +14,6 @@ import io
 import urllib.parse
 import contextlib
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
-from GUI5_ManualDroneControl.cameraview.camera_controller import CameraController
 
 # Add the parent directory to the Python path for file-shuffler
 sys.path.append(str(Path(__file__).resolve().parent / "file-shuffler"))
@@ -70,11 +69,6 @@ class BrainwavesBackend(QObject):
         except Exception as e:
             print(f"Warning: Failed to initialize Tello drone: {e}")
             self.logMessage.emit(f"Warning: Failed to initialize Tello drone: {e}")
-        
-        # Initialize camera controller with tello instance
-        self.camera_controller = CameraController()
-        if hasattr(self, 'tello'):
-            self.camera_controller.set_tello_instance(self.tello)
 
     @Slot(str)
     def selectModel(self, model_name):
@@ -190,12 +184,6 @@ class BrainwavesBackend(QObject):
                 self.logMessage.emit("Landing")
             elif action == 'go_home':
                 self.go_home()
-            elif action == 'stream':
-                if hasattr(self, 'camera_controller'):
-                    self.camera_controller.start_camera_stream()
-                    self.logMessage.emit("Starting camera stream")
-                else:
-                    self.logMessage.emit("Camera controller not available")
             else:
                 self.logMessage.emit("Unknown action")
         except Exception as e:
@@ -466,7 +454,6 @@ if __name__ == "__main__":
     engine.rootContext().setContextProperty("backend", backend)
     engine.rootContext().setContextProperty("imageModel", [])  # Initialize empty model
     engine.rootContext().setContextProperty("fileShufflerGui", backend)  # For file shuffler
-    engine.rootContext().setContextProperty("cameraController", backend.camera_controller)
     print("Controllers exposed to QML")
     engine.rootContext().setContextProperty("fileShufflerGui", backend)  # For file shuffler
 
