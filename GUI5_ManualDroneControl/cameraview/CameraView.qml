@@ -112,19 +112,25 @@ Rectangle {
                 text: "Start Stream"
 
                 background: Rectangle {
-                    color: "#27AE60"
-                    radius: 5
-                    border.color: "#229954"
+                    color: "#4A5B7B"
+                    radius: 8
                     border.width: 1
+                    border.color: "#3A4B6B"
                 }
 
                 contentItem: Text {
                     text: parent.text
-                    font.pixelSize: 12
+                    font.pixelSize: 14
                     font.bold: true
                     color: "white"
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
+                }
+
+                onClicked: {
+                    if (cameraController) {
+                        cameraController.start_camera_stream()
+                    }
                 }
             }
 
@@ -134,19 +140,25 @@ Rectangle {
                 text: "Stop Stream"
 
                 background: Rectangle {
-                    color: "#E74C3C"
-                    radius: 5
-                    border.color: "#A93226"
+                    color: "#4A5B7B"
+                    radius: 8
                     border.width: 1
+                    border.color: "#3A4B6B"
                 }
 
                 contentItem: Text {
                     text: parent.text
-                    font.pixelSize: 12
+                    font.pixelSize: 14
                     font.bold: true
                     color: "white"
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
+                }
+
+                onClicked: {
+                    if (cameraController) {
+                        cameraController.stop_camera_stream()
+                    }
                 }
             }
 
@@ -156,19 +168,25 @@ Rectangle {
                 text: "Capture"
 
                 background: Rectangle {
-                    color: "#3498DB"
-                    radius: 5
-                    border.color: "#1F618D"
+                    color: "#4A5B7B"
+                    radius: 8
                     border.width: 1
+                    border.color: "#3A4B6B"
                 }
 
                 contentItem: Text {
                     text: parent.text
-                    font.pixelSize: 12
+                    font.pixelSize: 14
                     font.bold: true
                     color: "white"
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
+                }
+
+                onClicked: {
+                    if (cameraController) {
+                        cameraController.capture_photo()
+                    }
                 }
             }
         }
