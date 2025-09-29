@@ -10,6 +10,7 @@ import "GUI5_ManualDroneControl/cameraview"
 
 ApplicationWindow {
     property bool isRandomForestSelected: false
+    property bool isPyTorchSelected: true  // Default to PyTorch
     visible: true
     width: 1200
     height: 800
@@ -448,6 +449,61 @@ ApplicationWindow {
                                     }
                                     onClicked: {
                                         backend.setDataMode("live")
+                                    }
+                                }
+                            }
+
+                               // PyTorch and TensorFlow Framework Buttons
+                            Row {
+                                width: parent.width * 0.5
+                                height: parent.height * 0.3
+                                spacing: height * 0.1
+
+                                // PyTorch Button
+                                Rectangle {
+                                    width: parent.width * 0.5
+                                    height: parent.height
+                                    color: "#6eb109"
+                                    radius: 5
+
+                                    Text {
+                                        text: "PyTorch"
+                                        font.pixelSize: parent.width * 0.08 // Larger font size
+                                        font.bold: true
+                                        color: isPyTorchSelected ? "yellow" : "white"
+                                        anchors.centerIn: parent
+                                    }
+
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: {
+                                            isPyTorchSelected = true;
+                                            backend.selectFramework("PyTorch");
+                                        }
+                                    }
+                                }
+
+                                // TensorFlow Button
+                                Rectangle {
+                                    width: parent.width * 0.5
+                                    height: parent.height
+                                    color: "#6eb109"
+                                    radius: 5
+
+                                    Text {
+                                        text: "TensorFlow"
+                                        font.pixelSize: parent.width * 0.08 // Larger font size
+                                        font.bold: true
+                                        color: !isPyTorchSelected ? "yellow" : "white"
+                                        anchors.centerIn: parent
+                                    }
+
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: {
+                                            isPyTorchSelected = false;
+                                            backend.selectFramework("TensorFlow");
+                                        }
                                     }
                                 }
                             }
