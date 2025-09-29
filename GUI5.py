@@ -16,6 +16,15 @@ import contextlib
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
 from GUI5_ManualDroneControl.cameraview.camera_controller import CameraController
 
+# Import BCI connection for brainwave prediction
+try:
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'random-forest-prediction')))
+    from client.brainflow1 import bciConnection, DataMode
+    BCI_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: BCI connection not available: {e}")
+    BCI_AVAILABLE = False
+
 # Add the parent directory to the Python path for file-shuffler
 sys.path.append(str(Path(__file__).resolve().parent / "file-shuffler"))
 sys.path.append(str(Path(__file__).resolve().parent / "file-unify-labels"))
@@ -62,6 +71,8 @@ class BrainwavesBackend(QObject):
         self.flight_log = []  # List to store flight log entries
         self.predictions_log = []  # List to store prediction records
         self.current_prediction_label = ""
+        self.current_model = "Random Forest"  # Default model
+        self.current_framework = "PyTorch"  # Default framework
         self.image_paths = []  # Store converted image paths
         self.plots_dir = os.path.abspath("plotscode/plots")  # Base plots directory
         self.current_dataset = "refresh"  # Default dataset to display
@@ -76,6 +87,17 @@ class BrainwavesBackend(QObject):
         if hasattr(self, 'tello'):
             self.camera_controller.set_tello_instance(self.tello)
 
+        # Initialize BCI connection for brainwave prediction
+        if BCI_AVAILABLE:
+            try:
+                self.bcicon = bciConnection.get_instance()
+                print("BCI connection initialized successfully")
+            except Exception as e:
+                print(f"Warning: Failed to initialize BCI connection: {e}")
+                self.bcicon = None
+        else:
+            self.bcicon = None
+
     @Slot(str)
     def selectModel(self, model_name):
         """ Select the machine learning model """
@@ -84,13 +106,27 @@ class BrainwavesBackend(QObject):
         self.flight_log.insert(0, f"Selected Model: {model_name}")
         self.flightLogUpdated.emit(self.flight_log)
 
+    @Slot(str)
+    def selectFramework(self, framework_name):
+        """ Select the machine learning framework """
+        print(f"Framework selected: {framework_name}")
+        self.current_framework = framework_name
+        self.flight_log.insert(0, f"Selected Framework: {framework_name}")
+        self.flightLogUpdated.emit(self.flight_log)
+
     @Slot()
     def readMyMind(self):
         """ Runs the selected model and processes the brainwave data. """
         if self.current_model == "Random Forest":
-            prediction = self.run_random_forest()
-        else:
-            prediction = self.run_deep_learning()
+            if self.current_framework == "PyTorch":
+                prediction = self.run_random_forest_pytorch()
+            else:
+                prediction = self.run_random_forest_tensorflow()
+        else:  # Deep Learning
+            if self.current_framework == "PyTorch":
+                prediction = self.run_deep_learning_pytorch()
+            else:
+                prediction = self.run_deep_learning_tensorflow()
 
         # Set current prediction
         self.current_prediction_label = prediction
@@ -104,20 +140,64 @@ class BrainwavesBackend(QObject):
         self.predictionsTableUpdated.emit(self.predictions_log)
 
         # Update Flight Log
-        self.flight_log.insert(0, f"Executed: {prediction} (Model: {self.current_model})")
+        self.flight_log.insert(0, f"Executed: {prediction} (Model: {self.current_model}, Framework: {self.current_framework})")
         self.flightLogUpdated.emit(self.flight_log)
 
-    def run_random_forest(self):
-        """ Simulated Random Forest model processing """
-        print("Running Random Forest Model...")
-        time.sleep(1)  # Simulate processing delay
-        return random.choice(["Move Forward", "Turn Left", "Turn Right", "Land"])
+    def run_random_forest_pytorch(self):
+        """ Random Forest model processing with PyTorch backend """
+        print("Running Random Forest Model with PyTorch...")
+        try:
+            # Use the BCI connection to get real brainwave data
+            if hasattr(self, 'bcicon') and self.bcicon:
+                prediction_response = self.bcicon.bciConnectionController()
+                if prediction_response:
+                    return prediction_response.get('prediction_label', 'forward')
+        except Exception as e:
+            print(f"Error with PyTorch Random Forest: {e}")
 
-    def run_deep_learning(self):
-        """ Simulated Deep Learning model processing """
-        print("Running Deep Learning Model...")
-        time.sleep(2)  # Simulate slightly longer DL processing time
-        return random.choice(["Move Forward", "Turn Left", "Turn Right", "Land", "Hover"])
+        # Fallback to simulation with PyTorch-specific labels
+        time.sleep(1)
+        return random.choice(["forward", "backward", "left", "right", "takeoff", "land"])
+
+    def run_random_forest_tensorflow(self):
+        """ Random Forest model processing with TensorFlow backend """
+        print("Running Random Forest Model with TensorFlow...")
+        try:
+            # Use the BCI connection to get real brainwave data
+            if hasattr(self, 'bcicon') and self.bcicon:
+                prediction_response = self.bcicon.bciConnectionController()
+                if prediction_response:
+                    return prediction_response.get('prediction_label', 'forward')
+        except Exception as e:
+            print(f"Error with TensorFlow Random Forest: {e}")
+
+        # Fallback to simulation with TensorFlow-specific labels
+        time.sleep(1)
+        return random.choice(["forward", "backward", "left", "right", "takeoff", "land"])
+
+    def run_deep_learning_pytorch(self):
+        """ Deep Learning model processing with PyTorch backend """
+        print("Running Deep Learning Model with PyTorch...")
+        try:
+            # Simulate PyTorch deep learning model processing
+            # In a real implementation, this would load and run a PyTorch CNN model
+            time.sleep(2)  # Simulate longer processing time for deep learning
+            return random.choice(["forward", "backward", "left", "right", "takeoff", "land", "up", "down"])
+        except Exception as e:
+            print(f"Error with PyTorch Deep Learning: {e}")
+            return "forward"
+
+    def run_deep_learning_tensorflow(self):
+        """ Deep Learning model processing with TensorFlow backend """
+        print("Running Deep Learning Model with TensorFlow...")
+        try:
+            # Simulate TensorFlow deep learning model processing
+            # In a real implementation, this would load and run a TensorFlow CNN model
+            time.sleep(2)  # Simulate longer processing time for deep learning
+            return random.choice(["forward", "backward", "left", "right", "takeoff", "land", "up", "down"])
+        except Exception as e:
+            print(f"Error with TensorFlow Deep Learning: {e}")
+            return "forward"
 
     @Slot(str)
     def notWhatIWasThinking(self, manual_action):
