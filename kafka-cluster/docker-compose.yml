@@ -24,22 +24,32 @@ services:
       - zookeeper
     ports:
       - "9092:9092"
+      - "9192:9192"
       - "19092:19092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-1:29092,PLAINTEXT_HOST://localhost:9092
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,PLAINTEXT_HOST://0.0.0.0:9092
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,SSL:SSL
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-1:29092,SSL://kafka-broker-1:9192
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,SSL://0.0.0.0:9192
+      KAFKA_INTER_BROKER_LISTENER_NAME: SSL
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_JMX_PORT: 19092
       KAFKA_JMX_HOSTNAME: localhost
+      KAFKA_SSL_KEYSTORE_FILENAME: broker1.keystore.jks
+      KAFKA_SSL_KEYSTORE_CREDENTIALS: broker_creds
+      KAFKA_SSL_KEY_CREDENTIALS: broker_creds
+      KAFKA_SSL_TRUSTSTORE_FILENAME: broker1.truststore.jks
+      KAFKA_SSL_TRUSTSTORE_CREDENTIALS: broker_creds
+      KAFKA_SSL_CLIENT_AUTH: required
     volumes:
       - kafka-1-data:/var/lib/kafka/data
+      - ./ssl-certs/broker1.keystore.jks:/etc/kafka/secrets/broker1.keystore.jks:ro
+      - ./ssl-certs/broker1.truststore.jks:/etc/kafka/secrets/broker1.truststore.jks:ro
+      - ./ssl-certs/broker_creds:/etc/kafka/secrets/broker_creds:ro
     networks:
       - kafka-cluster
 
@@ -51,22 +61,32 @@ services:
       - zookeeper
     ports:
       - "9093:9093"
+      - "9193:9193"
       - "19093:19093"
     environment:
       KAFKA_BROKER_ID: 2
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-2:29093,PLAINTEXT_HOST://localhost:9093
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29093,PLAINTEXT_HOST://0.0.0.0:9093
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,SSL:SSL
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-2:29093,SSL://kafka-broker-2:9193
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29093,SSL://0.0.0.0:9193
+      KAFKA_INTER_BROKER_LISTENER_NAME: SSL
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_JMX_PORT: 19093
       KAFKA_JMX_HOSTNAME: localhost
+      KAFKA_SSL_KEYSTORE_FILENAME: broker2.keystore.jks
+      KAFKA_SSL_KEYSTORE_CREDENTIALS: broker_creds
+      KAFKA_SSL_KEY_CREDENTIALS: broker_creds
+      KAFKA_SSL_TRUSTSTORE_FILENAME: broker2.truststore.jks
+      KAFKA_SSL_TRUSTSTORE_CREDENTIALS: broker_creds
+      KAFKA_SSL_CLIENT_AUTH: required
     volumes:
       - kafka-2-data:/var/lib/kafka/data
+      - ./ssl-certs/broker2.keystore.jks:/etc/kafka/secrets/broker2.keystore.jks:ro
+      - ./ssl-certs/broker2.truststore.jks:/etc/kafka/secrets/broker2.truststore.jks:ro
+      - ./ssl-certs/broker_creds:/etc/kafka/secrets/broker_creds:ro
     networks:
       - kafka-cluster
 
@@ -78,22 +98,32 @@ services:
       - zookeeper
     ports:
       - "9094:9094"
+      - "9194:9194"
       - "19094:19094"
     environment:
       KAFKA_BROKER_ID: 3
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-3:29094,PLAINTEXT_HOST://localhost:9094
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29094,PLAINTEXT_HOST://0.0.0.0:9094
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,SSL:SSL
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-3:29094,SSL://kafka-broker-3:9194
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29094,SSL://0.0.0.0:9194
+      KAFKA_INTER_BROKER_LISTENER_NAME: SSL
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_JMX_PORT: 19094
       KAFKA_JMX_HOSTNAME: localhost
+      KAFKA_SSL_KEYSTORE_FILENAME: broker3.keystore.jks
+      KAFKA_SSL_KEYSTORE_CREDENTIALS: broker_creds
+      KAFKA_SSL_KEY_CREDENTIALS: broker_creds
+      KAFKA_SSL_TRUSTSTORE_FILENAME: broker3.truststore.jks
+      KAFKA_SSL_TRUSTSTORE_CREDENTIALS: broker_creds
+      KAFKA_SSL_CLIENT_AUTH: required
     volumes:
       - kafka-3-data:/var/lib/kafka/data
+      - ./ssl-certs/broker3.keystore.jks:/etc/kafka/secrets/broker3.keystore.jks:ro
+      - ./ssl-certs/broker3.truststore.jks:/etc/kafka/secrets/broker3.truststore.jks:ro
+      - ./ssl-certs/broker_creds:/etc/kafka/secrets/broker_creds:ro
     networks:
       - kafka-cluster
 
@@ -112,6 +142,7 @@ services:
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
     networks:
       - kafka-cluster
+
   vault:
     image: hashicorp/vault:1.15
     container_name: vault
