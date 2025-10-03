@@ -101,7 +101,7 @@ class BrainwavesBackend(QObject):
     @Slot(str)
     def selectModel(self, model_name):
         """ Select the machine learning model """
-        print(f"Model selected: {model_name}")
+        self.logMessage.emit(f"Model selected: {model_name}")
         self.current_model = model_name
         self.flight_log.insert(0, f"Selected Model: {model_name}")
         self.flightLogUpdated.emit(self.flight_log)
@@ -109,7 +109,7 @@ class BrainwavesBackend(QObject):
     @Slot(str)
     def selectFramework(self, framework_name):
         """ Select the machine learning framework """
-        print(f"Framework selected: {framework_name}")
+        self.logMessage.emit(f"Framework selected: {framework_name}")
         self.current_framework = framework_name
         self.flight_log.insert(0, f"Selected Framework: {framework_name}")
         self.flightLogUpdated.emit(self.flight_log)
@@ -127,7 +127,7 @@ class BrainwavesBackend(QObject):
                 prediction = self.run_deep_learning_pytorch()
             else:
                 prediction = self.run_deep_learning_tensorflow()
-
+        self.logMessage.emit(f"Prediction received: {prediction}")
         # Set current prediction
         self.current_prediction_label = prediction
 
@@ -212,6 +212,7 @@ class BrainwavesBackend(QObject):
         # Also update flight log
         self.flight_log.insert(0, f"Manual Action: {manual_action}")
         self.flightLogUpdated.emit(self.flight_log)
+        self.logMessage.emit(f"Manual input: {manual_action}") 
 
     @Slot()
     def executeAction(self):
@@ -219,12 +220,14 @@ class BrainwavesBackend(QObject):
         if self.current_prediction_label:
             self.flight_log.insert(0, f"Executed: {self.current_prediction_label}")
             self.flightLogUpdated.emit(self.flight_log)
+            self.logMessage.emit(f"Executed action: {self.current_prediction_label}")
 
     @Slot()
     def connectDrone(self):
         # Mock function to simulate drone connection
         self.flight_log.insert(0, "Drone connected.")
         self.flightLogUpdated.emit(self.flight_log)
+        self.logMessage.emit("Drone connected.")
 
     @Slot()
     def keepDroneAlive(self):
@@ -508,10 +511,10 @@ class BrainwavesBackend(QObject):
         """
         if mode == "synthetic":
             self.init_synthetic_board()
-            print("Switched to Synthetic Data Mode")
+            self.logMessage.emit("Switched to Synthetic Data Mode")
         elif mode == "live":
             self.init_live_board()
-            print("Switched to Live Data Mode")
+            self.logMessage.emit("Switched to Live Data Mode")
         else:
             print(f"Unknown data mode: {mode}")
 
