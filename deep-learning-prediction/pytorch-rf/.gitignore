@@ -1,8 +1,0 @@
-# Keep training data private
-*.csv
-raw/
-
-# DO commit model artifacts for review
-!artifacts/
-!artifacts/**
-
