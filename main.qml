@@ -25,6 +25,10 @@ ApplicationWindow {
                 imageModel.append(item);
             }
         }
+        function onLogMessage(message) {
+        var timestamp = new Date().toLocaleString()
+        consoleLog.append(message + " at " + timestamp)
+        }
     }
 
     ListModel {
@@ -614,6 +618,7 @@ ApplicationWindow {
                                 anchors.fill: parent
                                 text: "Console output here..."
                                 font.pixelSize:  parent.width * 0.03
+                                color: "black"
                                 background: Rectangle {
                                     color: "white"
                                 }
