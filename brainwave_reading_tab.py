@@ -224,7 +224,7 @@ class BrainwaveReading_Tab(QWidget):
         # Update the server table with the new data
         self.server_table.setItem(0, 0, QTableWidgetItem(str(count)))
         self.server_table.setItem(0, 1, QTableWidgetItem(self.prediction_label))
-
+        self.console_log.append(f"Prediction received: {self.prediction_label} (count: {count})")
     def not_thinking(self):
         """Handle 'Not what I was thinking' button."""
         drone_input = self.drone_input.text() if self.drone_input.text() else "manual input"
@@ -238,7 +238,7 @@ class BrainwaveReading_Tab(QWidget):
         for i, record in enumerate(self.predictions_log):
             for j, data in enumerate(record):
                 self.predictions_table.setItem(i, j, QTableWidgetItem(str(data)))
-
+        self.console_log.append(f"Manual input: {drone_input}")
     def execute_prediction(self):
         """Handle 'Execute' button."""
         self.flight_log.append(self.prediction_label)
@@ -250,9 +250,11 @@ class BrainwaveReading_Tab(QWidget):
         """Handle the 'Connect' button."""
         self.flight_log.append("Connecting to drone...")
         self.flight_log_list.addItem("Connecting to drone...")
+        self.console_log.append("Connecting to drone...") 
         self.get_drone_action("connect")
         self.flight_log.append("Connected.")
         self.flight_log_list.addItem("Connected.")
+        self.console_log.append("Connected.")
 
     def update_data_mode(self) -> None:
         """
@@ -271,7 +273,7 @@ class BrainwaveReading_Tab(QWidget):
         """
         if self.radio_group.isChecked():
             self.bcicon.set_mode(DataMode.SYNTHETIC)
-            print("Switched to Synthetic Data Mode")
+            self.console_log.append("Switched to Synthetic Data Mode")
         elif self.radio_live.isChecked():
             self.bcicon.set_mode(DataMode.LIVE)
-            print("Switched to Live Data Mode")
+            self.console_log.append("Switched to Live Data Mode")
