@@ -16,6 +16,7 @@ import contextlib
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
 from GUI5_ManualDroneControl.cameraview.camera_controller import CameraController
 
+
 # Import BCI connection for brainwave prediction
 try:
     sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'random-forest-prediction')))
