@@ -1,19 +1,16 @@
-// UI/NAOManualControl.qml
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick3D
 
-// Import your NAO component from Nao.mesh/Nao.qml
+// Import NAO component from Nao.mesh/Nao.qml
 import "../Nao.mesh" as NaoMesh
-// (If you later need the camera overlay, you can import it similarly.)
 
 Item {
     id: root
     anchors.fill: parent
     focus: true
 
-    // Images live in project-root/GUI_Pics
     property url imgBase: Qt.resolvedUrl("../GUI_Pics/")
 
     Rectangle {
