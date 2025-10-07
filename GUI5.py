@@ -15,7 +15,7 @@ import urllib.parse
 import contextlib
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
 from GUI5_ManualDroneControl.cameraview.camera_controller import CameraController
-
+from HallofFame.hofCharts import main as hofCharts
 
 # Import BCI connection for brainwave prediction
 try:
@@ -65,6 +65,10 @@ class BrainwavesBackend(QObject):
         # Mock function to simulate drone connection
         self.flight_log.insert(0, "Nao connected.")
         self.flightLogUpdated.emit(self.flight_log)
+
+    def hofChart(self):
+        print("hofCharts main() is running")
+        hofCharts()
 
 
     def __init__(self):
