@@ -72,31 +72,32 @@ def save_csv(rows: list[tuple[str, int, str]], outpath: str):
 
 
 def devList() -> List[str]:
-    """
-    Returns a list of all developers as "Name <email>" strings,
-    based on `git shortlog -sne --all`.
-    If git fails, returns an empty list.
-    """
     try:
         proc = subprocess.run(
             ["git", "shortlog", "-sne", "--all"],
             capture_output=True, text=True, encoding="utf-8", errors="ignore", check=True
         )
     except subprocess.CalledProcessError:
-        # not a git repo or git failed
         return []
 
-    lines = [l.strip() for l in proc.stdout.splitlines() if l.strip()]
-    developers: List[str] = []
-    # Pattern: optional leading spaces, number, spaces, then author (which can contain <email>)
-    re_line = re.compile(r'^\s*\d+\s+(?P<author>.+)$')
-    for ln in lines:
-        m = re_line.match(ln)
-        if not m:
+    exclude = {
+        "3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>",
+        "Some Developer <some@example.com>"  # <-- REMOVE this dev
+    }
+
+    developers = []
+    for line in proc.stdout.splitlines():
+        line = line.strip()
+        if not line:
             continue
-        author = m.group("author").strip()
-        developers.append(author)
+        match = re.match(r'^\s*\d+\s+(?P<author>.+)$', line)
+        if match:
+            author = match.group("author").strip()
+            if author not in exclude:
+                developers.append(author)
     return developers
+
+
 
 
 def ticketsByDev() -> Dict[str, int]:
