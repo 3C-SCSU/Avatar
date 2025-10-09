@@ -8,6 +8,7 @@ from PySide6.QtCore import QObject, Signal, Slot, QProcess, QUrl
 from pdf2image import convert_from_path
 from djitellopy import Tello
 import random
+import re
 import pandas as pd
 import time
 import io
@@ -68,11 +69,31 @@ class BrainwavesBackend(QObject):
 
     @Slot(result=str)
     def getDevList(self):
+        exclude = {
+            "3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>",
+            "Some Developer <some@example.com>"  # Add others as needed
+        }
+
         proc = subprocess.run(
             ["git", "shortlog", "-sne", "--all"],
             capture_output=True, text=True, encoding="utf-8", errors="ignore"
         )
-        return proc.stdout.strip() or "No developers found."
+
+        if proc.returncode != 0:
+            return "No developers found."
+
+        lines = proc.stdout.strip().splitlines()
+        filtered_lines = []
+
+        for line in lines:
+            # Match the author portion
+            match = re.match(r"^\s*\d+\s+(?P<author>.+)$", line)
+            if match:
+                author = match.group("author").strip()
+                if author not in exclude:
+                    filtered_lines.append(line)
+
+        return "\n".join(filtered_lines) if filtered_lines else "No developers found."
 
     @Slot(result=str)
     def getTicketsByDev(self):
