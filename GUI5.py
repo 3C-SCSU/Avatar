@@ -66,6 +66,23 @@ class BrainwavesBackend(QObject):
         self.flight_log.insert(0, "Nao connected.")
         self.flightLogUpdated.emit(self.flight_log)
 
+    @Slot(result=str)
+    def getDevList(self):
+        proc = subprocess.run(
+            ["git", "shortlog", "-sne", "--all"],
+            capture_output=True, text=True, encoding="utf-8", errors="ignore"
+        )
+        return proc.stdout.strip() or "No developers found."
+
+    @Slot(result=str)
+    def getTicketsByDev(self):
+        proc = subprocess.run(
+            ["git", "log", "--pretty=format:%an <%ae>%n%s%n%b%n---"],
+            capture_output=True, text=True, encoding="utf-8", errors="ignore"
+        )
+        return proc.stdout.strip() or "No ticket info found."
+
+
     def hofChart(self):
         print("hofCharts main() is running")
         hofCharts()
