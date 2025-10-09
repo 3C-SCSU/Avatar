@@ -8,14 +8,16 @@ from PySide6.QtCore import QObject, Signal, Slot, QProcess, QUrl
 from pdf2image import convert_from_path
 from djitellopy import Tello
 import random
+import re
 import pandas as pd
 import time
 import io
 import urllib.parse
 import contextlib
+from collections import defaultdict
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
 from GUI5_ManualDroneControl.cameraview.camera_controller import CameraController
-from HallofFame.hofCharts import main as hofCharts
+from HallofFame.hofCharts import main as hofCharts, ticketsByDev_text
 
 # Import BCI connection for brainwave prediction
 try:
@@ -65,6 +67,92 @@ class BrainwavesBackend(QObject):
         # Mock function to simulate drone connection
         self.flight_log.insert(0, "Nao connected.")
         self.flightLogUpdated.emit(self.flight_log)
+
+    @Slot(result=str)
+    def getDevList(self):
+        exclude = {
+            "3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>",
+        }
+
+        proc = subprocess.run(
+            ["git", "shortlog", "-sne", "--all"],
+            capture_output=True, text=True, encoding="utf-8", errors="ignore"
+        )
+
+        if proc.returncode != 0:
+            return "No developers found."
+
+        lines = proc.stdout.strip().splitlines()
+        filtered_lines = []
+
+        for line in lines:
+            # Match the author portion
+            match = re.match(r"^\s*\d+\s+(?P<author>.+)$", line)
+            if match:
+                author = match.group("author").strip()
+                if author not in exclude:
+                    filtered_lines.append(line)
+
+        return "\n".join(filtered_lines) if filtered_lines else "No developers found."
+
+    @Slot(result=str)
+    def getTicketsByDev(self) -> str:
+
+            exclude = {
+                "3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>"
+            }
+
+            pretty = "%x1e%an <%ae>%x1f%s%x1f%b"
+            try:
+                proc = subprocess.run(
+                    ["git", "log", "--all", f"--pretty=format:{pretty}"],
+                    capture_output=True,
+                    text=True,
+                    encoding="utf-8",
+                    errors="ignore",
+                    check=True
+                )
+            except subprocess.CalledProcessError:
+                return "No tickets found."
+
+            raw = proc.stdout or ""
+            commits = raw.split("\x1e")
+
+            jira_re = re.compile(r'\b([A-Za-z]{2,}-\d+)\b')
+            hash_re = re.compile(r'(?<![A-Za-z0-9])#\d+\b')
+            author_to_ticketset = defaultdict(set)
+
+            for entry in commits:
+                entry = entry.strip()
+                if not entry:
+                    continue
+                parts = entry.split("\x1f", 2)
+                author = parts[0].strip()
+                subject = parts[1] if len(parts) > 1 else ""
+                body = parts[2] if len(parts) > 2 else ""
+                msg = (subject + "\n" + body).strip()
+
+                found = set()
+                for m in jira_re.findall(msg):
+                    found.add(m.upper())
+                for m in hash_re.findall(msg):
+                    found.add(m)
+
+                if found:
+                    author_to_ticketset[author].update(found)
+
+            if not author_to_ticketset:
+                return "No tickets found."
+
+            # Sort authors by ticket count descending, then by name
+            lines = []
+            for author, tickets in sorted(author_to_ticketset.items(), key=lambda kv: (-len(kv[1]), kv[0].lower())):
+                if author in exclude:
+                    continue  # skip excluded authors entirely
+                lines.append(f"{author}: {', '.join(sorted(tickets))}")
+
+
+            return "\n".join(lines)
 
     def hofChart(self):
         print("hofCharts main() is running")
