@@ -1707,6 +1707,7 @@ ApplicationWindow {
                                     Layout.preferredHeight: 300
 
                                     Image {
+                                        id: goldImage
                                         anchors.fill: parent
                                         anchors.margins: 10
                                         fillMode: Image.PreserveAspectFit
@@ -1739,6 +1740,7 @@ ApplicationWindow {
                                     Layout.preferredHeight: 300
 
                                     Image {
+                                        id: silverImage
                                         anchors.fill: parent
                                         anchors.margins: 10
                                         fillMode: Image.PreserveAspectFit
@@ -1771,6 +1773,7 @@ ApplicationWindow {
                                     Layout.preferredHeight: 300
 
                                     Image {
+                                        id: bronzeImage
                                         anchors.fill: parent
                                         anchors.margins: 10
                                         fillMode: Image.PreserveAspectFit
@@ -1782,107 +1785,107 @@ ApplicationWindow {
 
                         // Additional container row below bar charts
                         RowLayout {
-    Layout.fillWidth: true
-    spacing: 10
+                            Layout.fillWidth: true
+                            spacing: 10
 
-    // Developer List (below Gold)
-    ColumnLayout {
-        Layout.fillWidth: true
-        Layout.preferredWidth: 1
+                            // Developer List (below Gold)
+                            ColumnLayout {
+                                Layout.fillWidth: true
+                                Layout.preferredWidth: 1
 
-        Text {
-            text: "Developer List"
-            color: "white"
-            font.bold: true
-            font.pixelSize: 24
-            horizontalAlignment: Text.AlignHCenter
-            Layout.alignment: Qt.AlignHCenter
-        }
+                                Text {
+                                    text: "Developer List"
+                                    color: "white"
+                                    font.bold: true
+                                    font.pixelSize: 24
+                                    horizontalAlignment: Text.AlignHCenter
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
 
-        // Scrollable text area
-        ScrollView {
-            Layout.fillWidth: true
-            Layout.preferredHeight: 150
-            clip: true
-            ScrollBar.vertical.policy: ScrollBar.AlwaysOn
+                                // Scrollable text area
+                                ScrollView {
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 150
+                                    clip: true
+                                    ScrollBar.vertical.policy: ScrollBar.AlwaysOn
 
-            TextArea {
-                id: devText
-                text: backend.getDevList()
-                readOnly: true
-                wrapMode: TextArea.Wrap
-                font.pixelSize: 12
-                color: "#000"
-                background: Rectangle {
-                    color: "white"
-                    radius: 4
-                }
-            }
-        }
-    }
+                                    TextArea {
+                                        id: devText
+                                        text: backend.getDevList()
+                                        readOnly: true
+                                        wrapMode: TextArea.Wrap
+                                        font.pixelSize: 12
+                                        color: "#000"
+                                        background: Rectangle {
+                                            color: "white"
+                                            radius: 4
+                                        }
+                                    }
+                                }
+                            }
 
-    // Tickets by Developer (below Bronze)
-    ColumnLayout {
-        Layout.fillWidth: true
-        Layout.preferredWidth: 1
+                            // Tickets by Developer (below Bronze)
+                            ColumnLayout {
+                                Layout.fillWidth: true
+                                Layout.preferredWidth: 1
 
-        Text {
-            text: "Tickets By Developer"
-            color: "white"
-            font.bold: true
-            font.pixelSize: 24
-            horizontalAlignment: Text.AlignHCenter
-            Layout.alignment: Qt.AlignHCenter
-        }
+                                Text {
+                                    text: "Tickets By Developer"
+                                    color: "white"
+                                    font.bold: true
+                                    font.pixelSize: 24
+                                    horizontalAlignment: Text.AlignHCenter
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
 
-        // Scrollable text area
-        ScrollView {
-            Layout.fillWidth: true
-            Layout.preferredHeight: 150
-            clip: true
-            ScrollBar.vertical.policy: ScrollBar.AlwaysOn
+                                // Scrollable text area
+                                ScrollView {
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 150
+                                    clip: true
+                                    ScrollBar.vertical.policy: ScrollBar.AlwaysOn
 
-            TextArea {
-                id: ticketText
-                text: backend.getTicketsByDev()
-                readOnly: true
-                wrapMode: TextArea.Wrap
-                font.pixelSize: 12
-                color: "#000"
-                background: Rectangle {
-                    color: "white"
-                    radius: 4
-                }
-            }
-        }
-    }
+                                    TextArea {
+                                        id: ticketText
+                                        text: backend.getTicketsByDev()
+                                        readOnly: true
+                                        wrapMode: TextArea.Wrap
+                                        font.pixelSize: 12
+                                        color: "#000"
+                                        background: Rectangle {
+                                            color: "white"
+                                            radius: 4
+                                        }
+                                    }
+                                }
+                            }
 
-    // Spacer (keeps layout balanced)
-    Item {
-        Layout.fillHeight: true
-    }
+                            // Spacer (keeps layout balanced)
+                            Item {
+                                Layout.fillHeight: true
+                            }
 
-    // Refresh Button
-    Button {
-        text: "Refresh"
-        font.bold: true
-        implicitWidth: 120
-        implicitHeight: 40
-        Layout.alignment: Qt.AlignHCenter
+                            // Refresh Button
+                            Button {
+                                text: "Refresh"
+                                font.bold: true
+                                implicitWidth: 120
+                                implicitHeight: 40
+                                Layout.alignment: Qt.AlignHCenter
 
-        onClicked: {
-            devText.text = backend.getDevList()
-            ticketText.text = backend.getTicketsByDev()
-        }
-    }
-}
-
+                                onClicked: {
+                                    devText.text = backend.getDevList()
+                                    ticketText.text = backend.getTicketsByDev()
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
     }
 }
+
 
 
 

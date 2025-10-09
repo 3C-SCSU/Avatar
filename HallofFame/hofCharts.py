@@ -7,6 +7,7 @@ import csv
 import argparse
 import re
 from typing import Dict, List
+from collections import defaultdict
 
 try:
     import matplotlib.pyplot as plt
@@ -82,7 +83,6 @@ def devList() -> List[str]:
 
     exclude = {
         "3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>",
-        "Some Developer <some@example.com>"  # <-- REMOVE this dev
     }
 
     developers = []
@@ -98,15 +98,11 @@ def devList() -> List[str]:
     return developers
 
 
-
-
-def ticketsByDev() -> Dict[str, int]:
+def ticketsByDev_map() -> Dict[str, List[str]]:
     """
-    Parses commit messages for ticket references and returns a mapping
-    author_string -> unique_ticket_count (int). Uses a robust commit separator
-    so multiline commit messages don't break parsing.
+    Returns a mapping author -> sorted list of unique ticket IDs.
+    Recognizes JIRA-like (ABC-123) and GitHub issues (#123).
     """
-    # commit separator record: %x1e ensures each commit is clearly separated
     pretty = "%x1e%an <%ae>%x1f%s%x1f%b"
     try:
         proc = subprocess.run(
@@ -117,45 +113,61 @@ def ticketsByDev() -> Dict[str, int]:
         return {}
 
     raw = proc.stdout or ""
-    commits = raw.split("\x1e")  # split by record separator
+    commits = raw.split("\x1e")  # split by commit
 
-    # Patterns to match tickets:
-    # - JIRA-like: ABC-123 (2+ letters, hyphen, digits) -> normalize to UPPER
-    # - GitHub issue: #123  (keep #)
-    jira_re = re.compile(r'\b([A-Za-z]{2,}-\d+)\b')
+    jira_re = re.compile(r'\b([A-Za-z]{2,}-\d+)\b', re.IGNORECASE)
     hash_re = re.compile(r'(?<![A-Za-z0-9])#\d+\b')
 
-    author_to_ticketset = defaultdict(set)  # author -> set(ticket_id)
+    author_to_ticketset = defaultdict(set)
 
     for entry in commits:
         entry = entry.strip()
         if not entry:
             continue
-        # entry format: "Author <email>\x1fSubject\x1fBody"
+
         parts = entry.split("\x1f", 2)
-        if len(parts) < 1:
-            continue
         author = parts[0].strip()
         subject = parts[1] if len(parts) > 1 else ""
         body = parts[2] if len(parts) > 2 else ""
         msg = (subject + "\n" + body).strip()
 
         found = set()
-        # find JIRA-like and normalize to UPPER (PROJ-123)
         for m in jira_re.findall(msg):
             found.add(m.upper())
-        # find #123 issues
         for m in hash_re.findall(msg):
-            found.add(m)  # keep '#123' as-is
+            found.add(m)
 
-        # add unique tickets to author set
-        if found:
-            author_to_ticketset[author].update(found)
+        # ensures author exists even if no tickets
+        author_to_ticketset[author]  # defaultdict auto-inits
+        author_to_ticketset[author].update(found)
 
-    # Convert to counts and sort descending like your original function did
-    tickets_by_author = {a: len(s) for a, s in author_to_ticketset.items()}
-    # return sorted dict by count desc (like your original)
-    return dict(sorted(tickets_by_author.items(), key=lambda x: x[1], reverse=True))
+    # convert sets -> sorted lists
+    result: Dict[str, List[str]] = {a: sorted(list(ts)) for a, ts in author_to_ticketset.items()}
+    return result
+
+
+
+def ticketsByDev_text() -> str:
+    """
+    Return a human-readable text block suitable for TextArea.
+    Format: "Author Name <email>: TICKET-1, #23, TICKET-5"
+    One author per line, authors sorted by number of tickets (desc).
+    """
+    m = ticketsByDev_map()
+    if not m:
+        return "No tickets found."
+
+    exclude = {
+        "3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>"
+    }
+
+    lines = []
+    # sort authors by number of tickets desc, then by name
+    for author, tickets in sorted(m.items(), key=lambda kv: (-len(kv[1]), kv[0].lower())):
+        if author in exclude:
+            continue  # skip this author
+        lines.append(f"{author}: {', '.join(tickets)}")
+    return "\n".join(lines)
 
 
 # ----------------------------
