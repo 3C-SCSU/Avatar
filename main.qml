@@ -55,11 +55,6 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = 0
             }
             TabButton {
-                text: "Brainwave Visualization"
-                font.bold: true
-                onClicked: stackLayout.currentIndex = 1
-            }
-            TabButton {
                 text: "Manual Drone Control"
                 font.bold: true
                 onClicked: stackLayout.currentIndex = 2
@@ -72,22 +67,6 @@ ApplicationWindow {
                     console.log("Manual Controller tab clicked")
                     tabController.startNaoViewer()
                 }
-            }
-            TabButton {
-                text: "File Shuffler"
-                font.bold: true
-                onClicked: stackLayout.currentIndex = 4
-            }
-            TabButton {
-                text: "Transfer Data"
-                font.bold: true
-                onClicked: stackLayout.currentIndex = 5
-            }
-
-            TabButton {
-                text: "Team"
-                font.bold: true
-                onClicked: stackLayout.currentIndex = 6
             }
         }
 
@@ -1881,6 +1860,29 @@ ApplicationWindow {
                         }
                     }
                 }
+            }
+            
+        }
+        TabBar {
+            id: bottomTabBar                  // { changed code }
+            Layout.fillWidth: true
+            height: 40
+            position: tabBar.bottom   // keep bars in sync by binding to the same property
+
+            TabButton {
+                text: "Brainwave Visualization"
+                font.bold: true
+                onClicked: stackLayout.currentIndex = 1
+            }
+            TabButton {
+                text: "File Shuffler"
+                font.bold: true
+                onClicked: stackLayout.currentIndex = 4
+            }
+            TabButton {
+                text: "Transfer Data"
+                font.bold: true
+                onClicked: stackLayout.currentIndex = 5
             }
         }
     }
