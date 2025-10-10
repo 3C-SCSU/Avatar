@@ -85,7 +85,7 @@ ApplicationWindow {
             }
 
             TabButton {
-                text: "Team"
+                text: "Developers"
                 font.bold: true
                 onClicked: stackLayout.currentIndex = 6
             }
@@ -1663,7 +1663,7 @@ ApplicationWindow {
 
             }
 
-            //Team
+            //Developers
             Rectangle {
                 color: "#718399"
                 width: 800
@@ -1711,7 +1711,7 @@ ApplicationWindow {
                                         anchors.fill: parent
                                         anchors.margins: 10
                                         fillMode: Image.PreserveAspectFit
-                                        source: "HallofFame/commit_tiers_output/gold_contributors.png"
+                                        source: "Developers/commit_tiers_output/gold_contributors.png"
                                     }
                                 }
                             }
@@ -1744,7 +1744,7 @@ ApplicationWindow {
                                         anchors.fill: parent
                                         anchors.margins: 10
                                         fillMode: Image.PreserveAspectFit
-                                        source: "HallofFame/commit_tiers_output/silver_contributors.png"
+                                        source: "Developers/commit_tiers_output/silver_contributors.png"
                                     }
                                 }
                             }
@@ -1777,7 +1777,7 @@ ApplicationWindow {
                                         anchors.fill: parent
                                         anchors.margins: 10
                                         fillMode: Image.PreserveAspectFit
-                                        source: "HallofFame/commit_tiers_output/bronze_contributors.png"
+                                        source: "Developers/commit_tiers_output/bronze_contributors.png"
                                     }
                                 }
                             }
@@ -1876,6 +1876,8 @@ ApplicationWindow {
                                 onClicked: {
                                     devText.text = backend.getDevList()
                                     ticketText.text = backend.getTicketsByDev()
+                                     backend.devChart()
+
                                 }
                             }
                         }
