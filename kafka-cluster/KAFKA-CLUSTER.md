@@ -67,6 +67,69 @@ docker exec -it kafka-broker-1 kafka-console-producer --topic eeg-brainwave-data
 docker exec -it kafka-broker-1 kafka-console-consumer --topic eeg-brainwave-data --from-beginning --bootstrap-server kafka-broker-1:29092
 ```
 
+# SSL/TLS Encryption
+
+The Kafka cluster is configured with SSL encryption for secure communication.
+
+## SSL Ports
+
+- **Broker 1**: 9192 (SSL), 9092 (PLAINTEXT)
+- **Broker 2**: 9193 (SSL), 9093 (PLAINTEXT)
+- **Broker 3**: 9194 (SSL), 9094 (PLAINTEXT)
+
+## Certificate Setup
+
+SSL certificates are automatically generated when you run:
+
+```bash
+./scripts/generate-ssl-certs.sh
+```
+
+This creates:
+
+- Self-signed Certificate Authority (CA)
+- Individual keystores for each broker
+- Truststores containing the CA certificate
+
+## Client Connection with SSL
+
+To connect to the encrypted Kafka cluster, clients need the CA certificate.
+
+### Python Example
+
+```python
+from kafka import KafkaProducer
+import ssl
+
+producer = KafkaProducer(
+    bootstrap_servers=['localhost:9192'],
+    security_protocol='SSL',
+    ssl_cafile='kafka-cluster/ssl-certs/ca-cert'
+)
+
+producer.send('eeg-brainwave-data', b'encrypted message')
+```
+
+### Java Example
+
+```java
+Properties props = new Properties();
+props.put("bootstrap.servers", "localhost:9192");
+props.put("security.protocol", "SSL");
+props.put("ssl.truststore.location", "kafka-cluster/ssl-certs/broker1.truststore.jks");
+props.put("ssl.truststore.password", "kafka-broker-password");
+```
+
+## Production Considerations
+
+For production environments:
+
+- Replace self-signed certificates with CA-signed certificates
+- Implement proper certificate rotation policies
+- Use secure password management for keystores and truststores
+
+
+
 ## Kubernetes Deployment
 
 For production deployment on the existing MicroK8s cluster:
