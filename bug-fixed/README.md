@@ -15,14 +15,15 @@ Each subfolder inside this directory contains:
 
 ```
 bug-fixed/
-│
+├── README.md
 ├── linux-mint-login/
 │   ├── README.md
-│   ├── images/
-│   │   ├── commented-code.png
-│   │   └── login-window.png
-│   └── additional-docs/
-│
+│   ├── docs/
+|       ├──images/
+│       |  ├── commented-code.png
+│       |  └── login-window.png
+│       └── (additional if applicable)
+|
 └── (more folders for other issue fixes)
 ```
 
@@ -75,4 +76,5 @@ Please follow the repository’s guidelines for documentation and pull requests.
 ---
 
 > _Documenting fixes today prevents bugs tomorrow._
+
 
