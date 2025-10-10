@@ -7,6 +7,8 @@ import QtQuick.Window 2.15
 import QtQuick3D 6.7
 import "Nao.mesh"
 import "GUI5_ManualDroneControl/cameraview"
+import "UI"
+
 
 ApplicationWindow {
     property bool isRandomForestSelected: false
@@ -24,6 +26,11 @@ ApplicationWindow {
             for (let item of imageData) {
                 imageModel.append(item);
             }
+        }
+
+        function onLogMessage(message) {
+            var timestamp = new Date().toLocaleString()
+            consoleLog.append(message + " at " + timestamp)
         }
     }
 
@@ -97,7 +104,7 @@ ApplicationWindow {
                                 id: manualControl
                                 text: "Manual Control"
                                 checked: true
-                                font.pixelSize:  parent.width * 0.05 // Larger font size
+                                font.pixelSize: parent.width * 0.05 // Larger font size
 
                                 contentItem: Text {
                                     text: manualControl.text
@@ -111,7 +118,7 @@ ApplicationWindow {
                             RadioButton {
                                 id: autopilot
                                 text: "Autopilot"
-                                font.pixelSize:  parent.width * 0.05 // Larger font size
+                                font.pixelSize: parent.width * 0.05 // Larger font size
                                 contentItem: Text {
                                     text: autopilot.text
                                     color: "white"
@@ -138,10 +145,11 @@ ApplicationWindow {
 
                             Button {
                                 anchors.fill: parent
-                                background: Item {} // No background
+                                background: Item {
+                                } // No background
                                 contentItem: Text {
                                     text: "Read my mind..."
-                                    font.pixelSize:parent.width * 0.1 // Larger font size
+                                    font.pixelSize: parent.width * 0.1 // Larger font size
                                     color: "white"
                                     anchors.centerIn: parent
                                 }
@@ -166,41 +174,46 @@ ApplicationWindow {
                                 width: parent.width
                                 height: parent.height * 0.28 // Adjust height as needed
                                 spacing: parent.width * 0.01 // Add spacing between items
-                                        Rectangle {
-                                            color: "white"
-                                            width: parent.width * 0.5
-                                            height: parent.height
-                                            Text {
-                                                text: "Count"
-                                                font.bold: true
-                                                font.pixelSize: parent.width * 0.09 // Ensure a minimum font size
-                                                color: "black"
-                                                anchors.centerIn: parent
-                                            }
-                                        }
-                                        Rectangle {
-                                            color: "white"
-                                            width: parent.width * 0.5
-                                            height: parent.height
-                                            Text {
-                                                text: "Label"
-                                                font.bold: true
-                                                font.pixelSize: parent.width * 0.09 // Ensure a minimum font size
-                                                color: "black"
-                                                anchors.centerIn: parent
-                                            }
-                                        }
+                                Rectangle {
+                                    color: "white"
+                                    width: parent.width * 0.5
+                                    height: parent.height
+                                    Text {
+                                        text: "Count"
+                                        font.bold: true
+                                        font.pixelSize: parent.width * 0.09 // Ensure a minimum font size
+                                        color: "black"
+                                        anchors.centerIn: parent
+                                    }
                                 }
+                                Rectangle {
+                                    color: "white"
+                                    width: parent.width * 0.5
+                                    height: parent.height
+                                    Text {
+                                        text: "Label"
+                                        font.bold: true
+                                        font.pixelSize: parent.width * 0.09 // Ensure a minimum font size
+                                        color: "black"
+                                        anchors.centerIn: parent
+                                    }
+                                }
+                            }
 
-                                    ListView {
+                            ListView {
                                 id: predictionListView
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
-                                model: ListModel {}
+                                model: ListModel {
+                                }
                                 delegate: RowLayout {
                                     spacing: 150
-                                    Text { text: model.count; font.bold: true; color: "white"; width: 80 }
-                                    Text { text: model.label; font.bold: true; color: "white"; width: 80 }
+                                    Text {
+                                        text: model.count; font.bold: true; color: "white"; width: 80
+                                    }
+                                    Text {
+                                        text: model.label; font.bold: true; color: "white"; width: 80
+                                    }
                                 }
                             }
                         }
@@ -213,7 +226,7 @@ ApplicationWindow {
                             Button {
                                 id: notThinking
                                 text: "Not what I was thinking..."
-                                font.pixelSize:  parent.width * 0.03 // Larger font size
+                                font.pixelSize: parent.width * 0.03 // Larger font size
                                 width: parent.width * 0.5
                                 height: parent.height
                                 background: Rectangle {
@@ -232,7 +245,7 @@ ApplicationWindow {
                             Button {
                                 id: executeBtn
                                 text: "Execute"
-                                font.pixelSize:  parent.width * 0.03 // Larger font size
+                                font.pixelSize: parent.width * 0.03 // Larger font size
                                 width: parent.width * 0.5
                                 height: parent.height
                                 background: Rectangle {
@@ -252,14 +265,14 @@ ApplicationWindow {
 
                         // Manual Input and Keep Alive
                         Row {
-                            width: parent.width *.8
+                            width: parent.width * .8
                             height: parent.height * 0.03
                             spacing: parent.width * 0.01
                             anchors.horizontalCenter: parent.horizontalCenter
                             TextField {
                                 id: manualInput
                                 placeholderText: "Manual Command"
-                                font.pixelSize:  parent.width * 0.03 // Larger font size
+                                font.pixelSize: parent.width * 0.03 // Larger font size
                                 width: parent.width * 0.6
                                 height: parent.height
                             }
@@ -288,7 +301,9 @@ ApplicationWindow {
                             width: parent.width * 0.5
                             height: parent.height * 0.2
                             anchors.horizontalCenter: parent.horizontalCenter
-                            label: Text { text: qsTr("Flight Log"); font.bold: true ; color: "white" }
+                            label: Text {
+                                text: qsTr("Flight Log"); font.bold: true; color: "white"
+                            }
 
                             Rectangle {
                                 anchors.fill: parent
@@ -296,10 +311,11 @@ ApplicationWindow {
                                 ListView {
                                     id: flightLogView
                                     anchors.fill: parent
-                                    model: ListModel {}
+                                    model: ListModel {
+                                    }
                                     delegate: Text {
                                         text: log
-                                        font.pixelSize:  parent.width * 0.03
+                                        font.pixelSize: parent.width * 0.03
                                         font.bold: true
                                         color: "white"
                                     }
@@ -327,7 +343,8 @@ ApplicationWindow {
 
                                 Button {
                                     anchors.fill: parent
-                                    background: Item {} // No background
+                                    background: Item {
+                                    } // No background
                                     contentItem: Text {
                                         text: "Connect"
                                         font.pixelSize: parent.width * 0.1 // Larger font size
@@ -402,7 +419,7 @@ ApplicationWindow {
                                 RadioButton {
                                     id: syntheticRadio
                                     text: "Synthetic Data"
-                                        font.pixelSize: parent.width * 0.1 // Larger font size
+                                    font.pixelSize: parent.width * 0.1 // Larger font size
                                     font.bold: true
                                     checked: false
                                     contentItem: Text {
@@ -421,7 +438,7 @@ ApplicationWindow {
                                 RadioButton {
                                     id: liveRadio
                                     text: "Live Data"
-                                        font.pixelSize: parent.width * 0.1 // Larger font size
+                                    font.pixelSize: parent.width * 0.1 // Larger font size
                                     font.bold: true
                                     checked: true
                                     contentItem: Text {
@@ -438,7 +455,7 @@ ApplicationWindow {
                                 }
                             }
 
-                               // PyTorch and TensorFlow Framework Buttons
+                            // PyTorch and TensorFlow Framework Buttons
                             Row {
                                 width: parent.width * 0.5
                                 height: parent.height * 0.3
@@ -500,105 +517,118 @@ ApplicationWindow {
                         width: parent.width * 0.45
                         height: parent.height
                         spacing: parent.height * 0.02
-                            anchors.right: parent.right
+                        anchors.right: parent.right
 
-                    // Predictions Table
-                                    GroupBox {
-                                        title: "Predictions Table"
-                                        width: parent.width * 0.8
-                                        height: parent.height * 0.4
+                        // Predictions Table
+                        GroupBox {
+                            title: "Predictions Table"
+                            width: parent.width * 0.8
+                            height: parent.height * 0.4
 
-                                        label: Text {
-                                            text: qsTr("Predictions Table")
-                                            color: "white"
-                                            font.pixelSize: parent.width * 0.03
-                                            font.bold: true
-                                            anchors.left: parent.left
-                                            anchors.leftMargin: 10    // preserves default left spacing
-                                            anchors.top: parent.top
-                                            anchors.topMargin: 5      // preserves default top spacing
-                                        }
+                            label: Text {
+                                text: qsTr("Predictions Table")
+                                color: "white"
+                                font.pixelSize: parent.width * 0.03
+                                font.bold: true
+                                anchors.left: parent.left
+                                anchors.leftMargin: 10    // preserves default left spacing
+                                anchors.top: parent.top
+                                anchors.topMargin: 5      // preserves default top spacing
+                            }
 
 
-                                        // Header with white background
-                                    Row {
-                                        width: parent.width
-                                        height: parent.height * 0.1 // Adjust height as needed
-                                        spacing: parent.width * 0.001 // Add spacing between items
-                                        Rectangle {
-                                            color: "white"
-                                            width: parent.width * 0.33
-                                            height: parent.height
-                                            Text {
-                                                text: "Predictions Count"
-                                                font.bold: true
-                                                font.pixelSize: parent.width * 0.09 // Ensure a minimum font size
-                                                color: "black"
-                                                anchors.centerIn: parent
-                                            }
-                                        }
-                                        Rectangle {
-                                            color: "white"
-                                            width: parent.width * 0.33
-                                            height: parent.height
-                                            Text {
-                                                text: "Server Predictions"
-                                                font.bold: true
-                                                font.pixelSize: parent.width * 0.09 // Ensure a minimum font size
-                                                color: "black"
-                                                anchors.centerIn: parent
-                                            }
-                                        }
-                                        Rectangle {
-                                            color: "white"
-                                            width: parent.width * 0.33 // Make this responsive
-                                            height: parent.height
-                                            Text {
-                                                text: "Prediction Label"
-                                                font.bold: true
-                                                font.pixelSize: parent.width * 0.09 // Ensure a minimum font size
-                                                color: "black"
-                                                anchors.centerIn: parent
-                                            }
-                                        }
+                            // Header with white background
+                            Row {
+                                width: parent.width
+                                height: parent.height * 0.1 // Adjust height as needed
+                                spacing: parent.width * 0.001 // Add spacing between items
+                                Rectangle {
+                                    color: "white"
+                                    width: parent.width * 0.33
+                                    height: parent.height
+                                    Text {
+                                        text: "Predictions Count"
+                                        font.bold: true
+                                        font.pixelSize: parent.width * 0.09 // Ensure a minimum font size
+                                        color: "black"
+                                        anchors.centerIn: parent
                                     }
+                                }
+                                Rectangle {
+                                    color: "white"
+                                    width: parent.width * 0.33
+                                    height: parent.height
+                                    Text {
+                                        text: "Server Predictions"
+                                        font.bold: true
+                                        font.pixelSize: parent.width * 0.09 // Ensure a minimum font size
+                                        color: "black"
+                                        anchors.centerIn: parent
+                                    }
+                                }
+                                Rectangle {
+                                    color: "white"
+                                    width: parent.width * 0.33 // Make this responsive
+                                    height: parent.height
+                                    Text {
+                                        text: "Prediction Label"
+                                        font.bold: true
+                                        font.pixelSize: parent.width * 0.09 // Ensure a minimum font size
+                                        color: "black"
+                                        anchors.centerIn: parent
+                                    }
+                                }
+                            }
 
-                                    ListView {
-                                        Layout.preferredWidth: 700
-                                        Layout.preferredHeight: 550
-                                        model: ListModel {
-                                            ListElement { count: "1"; server: "Prediction A"; label: "Label A" }
-                                            ListElement { count: "2"; server: "Prediction B"; label: "Label B" }
+                            ListView {
+                                Layout.preferredWidth: 700
+                                Layout.preferredHeight: 550
+                                model: ListModel {
+                                    ListElement {
+                                        count: "1"; server: "Prediction A"; label: "Label A"
+                                    }
+                                    ListElement {
+                                        count: "2"; server: "Prediction B"; label: "Label B"
+                                    }
+                                }
+
+                                delegate: Rectangle {
+                                    width: parent.width
+                                    height: 40
+                                    color: "white"
+
+                                    RowLayout {
+                                        anchors.fill: parent
+                                        spacing: 50
+                                        Text {
+                                            text: model.count; font.bold: true; color: "black"; width: 120
                                         }
-
-                                        delegate: Rectangle {
-                                            width: parent.width
-                                            height: 40
-                                            color: "white"
-
-                                            RowLayout {
-                                                anchors.fill: parent
-                                                spacing: 50
-                                                Text { text: model.count; font.bold: true; color: "black"; width: 120 }
-                                                Text { text: model.server; font.bold: true; color: "black"; width: 200 }
-                                                Text { text: model.label; font.bold: true; color: "black"; width: 120 }
-                                            }
+                                        Text {
+                                            text: model.server; font.bold: true; color: "black"; width: 200
+                                        }
+                                        Text {
+                                            text: model.label; font.bold: true; color: "black"; width: 120
                                         }
                                     }
                                 }
+                            }
+                        }
 
                         // Console Log Section
                         GroupBox {
                             title: "Console Log"
                             width: parent.width * 0.6
                             height: parent.height * 0.3
-                            label: Text { text: qsTr("Console Log"); font.bold: true; color: "white" }
+                            label: Text {
+                                text: qsTr("Console Log"); font.bold: true; color: "white"
+                            }
 
                             TextArea {
                                 id: consoleLog
                                 anchors.fill: parent
                                 text: "Console output here..."
-                                font.pixelSize:  parent.width * 0.03
+                                font.pixelSize: parent.width * 0.03
+                                color: "black"
                                 background: Rectangle {
                                     color: "white"
                                 }
@@ -710,7 +740,9 @@ ApplicationWindow {
 
                                 // Add a smooth color transition
                                 Behavior on color {
-                                    ColorAnimation { duration: 150 }
+                                    ColorAnimation {
+                                        duration: 150
+                                    }
                                 }
                             }
 
@@ -750,7 +782,9 @@ ApplicationWindow {
 
                                 // Add a smooth color transition
                                 Behavior on color {
-                                    ColorAnimation { duration: 150 }
+                                    ColorAnimation {
+                                        duration: 150
+                                    }
                                 }
                             }
 
@@ -775,837 +809,548 @@ ApplicationWindow {
             // Manual Drone Control view
             Rectangle {
                 color: "#718399"
-                
+
                 Row {
                     anchors.fill: parent
                     anchors.margins: 10
                     spacing: 20
-                    
+
                     // Left side - Drone Controls
                     Rectangle {
                         width: parent.width * 0.65
                         height: parent.height
                         color: "transparent"
-                        
+
                         Column {
                             anchors.fill: parent
                             spacing: 5
 
 
+                            // Top Row - Home, Up, Flight Log
+                            Row {
+                                width: parent.width
+                                height: parent.height * 0.19
+                                anchors.top: parent.top
+                                anchors.topMargin: parent.height * 0.0
+                                spacing: parent.width * 0.1
+                                // Home Button
+                                Rectangle {
+                                    width: parent.width * 0.15
+                                    height: parent.height
+                                    anchors.left: parent.left
+                                    color: "#242c4d"
+                                    border.color: "black"
 
-                // Top Row - Home, Up, Flight Log
-                Row {
-                   width: parent.width
-                    height: parent.height * 0.19
-                    anchors.top: parent.top
-                    anchors.topMargin: parent.height * 0.0
-                    spacing: parent.width * 0.1
-                    // Home Button
-                    Rectangle {
-                        width: parent.width * 0.15
-                        height: parent.height
-                        anchors.left: parent.left
-                        color: "#242c4d"
-                        border.color: "black"
+                                    Image {
+                                        source: "GUI_Pics/home.png"
+                                        width: 150
+                                        height: 150
+                                        anchors.centerIn: parent
+                                    }
 
-                        Image {
-                            source: "GUI_Pics/home.png"
-                            width: 150
-                            height: 150
-                            anchors.centerIn: parent
-                        }
+                                    Text {
+                                        text: "Home"
+                                        font.bold: true
+                                        color: "white"
+                                        font.pixelSize: Math.max(12, parent.width * 0.05)
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        anchors.bottom: parent.bottom
+                                        anchors.bottomMargin: 10
+                                    }
 
-                        Text {
-                            text: "Home"
-                            font.bold: true
-                            color: "white"
-                            font.pixelSize: Math.max(12, parent.width * 0.05)
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 10
-                        }
-
-                         MouseArea {
-                                anchors.fill: parent
-                                onEntered: {
-                                    buttonBackground.color = "white"; // Change background to white on hover
-                                    buttonText.color = "black"; // Change text color to black on hover
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onEntered: {
+                                            buttonBackground.color = "white"; // Change background to white on hover
+                                            buttonText.color = "black"; // Change text color to black on hover
+                                        }
+                                        onExited: {
+                                            buttonBackground.color = "#242c4d"; // Revert background color on exit
+                                            buttonText.color = "white"; // Revert text color to white on exit
+                                        }
+                                        onClicked: {
+                                            backend.getDroneAction("home");
+                                        }
+                                    }
                                 }
-                                onExited: {
-                                    buttonBackground.color = "#242c4d"; // Revert background color on exit
-                                    buttonText.color = "white"; // Revert text color to white on exit
+
+                                // Up Button
+                                Rectangle {
+                                    width: parent.width * 0.6
+                                    height: parent.height
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    color: "#242c4d"
+                                    border.color: "black"
+
+                                    Image {
+                                        source: "GUI_Pics/up.png"
+                                        width: 150
+                                        height: 150
+                                        anchors.centerIn: parent
+                                    }
+
+                                    Text {
+                                        text: "Up"
+                                        font.bold: true
+                                        color: "white"
+                                        font.pixelSize: Math.max(12, parent.width * 0.01)
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        anchors.bottom: parent.bottom
+                                        anchors.bottomMargin: 10
+                                    }
+
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onEntered: {
+                                            upButtonBackground.color = "white"; // Change background to white on hover
+                                            upButtonText.color = "black"; // Change text color to black on hover
+                                        }
+                                        onExited: {
+                                            upButtonBackground.color = "#242c4d"; // Revert background color on exit
+                                            upButtonText.color = "white"; // Revert text color to white on exit
+                                        }
+                                        onClicked: {
+                                            backend.getDroneAction("up");
+                                        }
+                                    }
                                 }
-                                onClicked: {
-                                    backend.getDroneAction("home");
+
+                                // Flight Log
+                                Rectangle {
+                                    width: parent.width * 0.2
+                                    height: parent.height
+                                    anchors.right: parent.right
+                                    color: "white"
+                                    border.color: "#2E4053"
+
+                                    Text {
+                                        text: "Flight Log"
+                                        font.bold: true
+                                        font.pixelSize: Math.max(12, parent.width * 0.05)
+                                        color: "black"
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        anchors.top: parent.top
+                                        anchors.topMargin: 10
+                                    }
+
+                                    TextArea {
+                                        anchors.fill: parent
+                                        anchors.topMargin: 30
+                                        font.pixelSize: Math.max(10, parent.width * 0.03)
+                                        color: "black"
+                                    }
                                 }
                             }
-                        }
 
-                    // Up Button
-                    Rectangle {
-                        width: parent.width * 0.6
-                        height: parent.height
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        color: "#242c4d"
-                        border.color: "black"
+                            // Forward Button
+                            Rectangle {
+                                width: parent.width
+                                height: parent.height * 0.19
+                                anchors.top: parent.top
+                                anchors.topMargin: parent.height * 0.20
+                                color: "transparent"
 
-                        Image {
-                            source: "GUI_Pics/up.png"
-                            width: 150
-                            height: 150
-                            anchors.centerIn: parent
-                        }
+                                Rectangle {
+                                    width: parent.width
+                                    height: parent.height
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    color: "#242c4d"
+                                    border.color: "black"
 
-                        Text {
-                            text: "Up"
-                            font.bold: true
-                            color: "white"
-                            font.pixelSize: Math.max(12, parent.width * 0.01)
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 10
-                        }
+                                    Image {
+                                        source: "GUI_Pics/Forward.png"
+                                        width: 150
+                                        height: 150
+                                        anchors.centerIn: parent
+                                    }
 
-                        MouseArea {
-                            anchors.fill: parent
-                            onEntered: {
-                                upButtonBackground.color = "white"; // Change background to white on hover
-                                upButtonText.color = "black"; // Change text color to black on hover
-                            }
-                            onExited: {
-                                upButtonBackground.color = "#242c4d"; // Revert background color on exit
-                                upButtonText.color = "white"; // Revert text color to white on exit
-                            }
-                            onClicked: {
-                                backend.getDroneAction("up");
-                            }
-                        }
-                    }
+                                    Text {
+                                        text: "Forward"
+                                        font.bold: true
+                                        color: "white"
+                                        font.pixelSize: parent.width * 0.01
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        anchors.bottom: parent.bottom
+                                        anchors.bottomMargin: 10
+                                    }
 
-                    // Flight Log
-                    Rectangle {
-                        width: parent.width * 0.2
-                        height: parent.height
-                        anchors.right: parent.right
-                        color: "white"
-                        border.color: "#2E4053"
-
-                        Text {
-                            text: "Flight Log"
-                            font.bold: true
-                            font.pixelSize: Math.max(12, parent.width * 0.05)
-                            color: "black"
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.top: parent.top
-                            anchors.topMargin: 10
-                        }
-
-                        TextArea {
-                            anchors.fill: parent
-                            anchors.topMargin: 30
-                            font.pixelSize: Math.max(10, parent.width * 0.03)
-                            color: "black"
-                        }
-                    }
-                }
-
-                // Forward Button
-                Rectangle {
-                    width: parent.width
-                    height: parent.height * 0.19
-                    anchors.top: parent.top
-                    anchors.topMargin: parent.height * 0.20
-                    color: "transparent"
-
-                    Rectangle {
-                        width: parent.width
-                        height: parent.height
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        color: "#242c4d"
-                        border.color: "black"
-
-                        Image {
-                            source: "GUI_Pics/Forward.png"
-                            width: 150
-                            height: 150
-                            anchors.centerIn: parent
-                        }
-
-                        Text {
-                            text: "Forward"
-                            font.bold: true
-                            color: "white"
-                            font.pixelSize:  parent.width * 0.01
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 10
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onEntered: parent.color = "white"
-                            onExited: parent.color = "#242c4d"
-                            onClicked: backend.getDroneAction("forward")
-                        }
-                    }
-                }
-
-                 // Directional Buttons (Turn Left, Left, Stream, Right, Turn Right)
-                Row {
-                    width: parent.width
-                    height: parent.height * 0.18
-                    anchors.top: parent.top
-                    anchors.topMargin: parent.height * 0.4
-                    spacing: width * 0.065 // Add spacing between buttons
-
-                    // Turn Left Button
-                    Rectangle {
-                        width: parent.width * 0.15
-                        height: parent.height
-                        color: "#242c4d"
-                        border.color: "black"
-
-                        Image {
-                            source: "GUI_Pics/turnLeft.png"
-                            width: 150
-                            height: 150
-                            anchors.centerIn: parent
-                        }
-
-                        Text {
-                            text: "Turn Left"
-                            font.bold: true
-                            color: "white"
-                            font.pixelSize: Math.max(12, width * 0.2)
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 10
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onEntered: parent.color = "white"
-                            onExited: parent.color = "#242c4d"
-                            onClicked: backend.getDroneAction("turn_left")
-                        }
-                    }
-
-                    // Left Button
-                    Rectangle {
-                        width: parent.width * 0.15
-                        height: parent.height
-                        color: "#242c4d"
-                        border.color: "black"
-
-                        Image {
-                            source: "GUI_Pics/left.png"
-                            width: 150
-                            height: 150
-                            anchors.centerIn: parent
-                        }
-
-                        Text {
-                            text: "Left"
-                            font.bold: true
-                            color: "white"
-                            font.pixelSize: Math.max(12, width * 0.2)
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 10
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onEntered: parent.color = "white"
-                            onExited: parent.color = "#242c4d"
-                            onClicked: backend.getDroneAction("left")
-                        }
-                    }
-
-                    // Stream Button
-                    Rectangle {
-                        width: parent.width * 0.15
-                        height: parent.height
-                        color: "#242c4d"
-                        border.color: "black"
-
-                        Image {
-                            source: "GUI_Pics/Stream.png"
-                            width: 150
-                            height: 150
-                            anchors.centerIn: parent
-                        }
-
-                        Text {
-                            text: "Stream"
-                            font.bold: true
-                            color: "white"
-                            font.pixelSize: Math.max(12, width * 0.2)
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 10
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onEntered: parent.color = "white"
-                            onExited: parent.color = "#242c4d"
-                            onClicked: backend.getDroneAction("stream")
-                        }
-                    }
-
-                    // Right Button
-                    Rectangle {
-                        width: parent.width * 0.15
-                        height: parent.height
-                        color: "#242c4d"
-                        border.color: "black"
-
-                        Image {
-                            source: "GUI_Pics/right.png"
-                            width: 150
-                            height: 150
-                            anchors.centerIn: parent
-                        }
-
-                        Text {
-                            text: "Right"
-                            font.bold: true
-                            color: "white"
-                            font.pixelSize: Math.max(12, width * 0.2)
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 10
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onEntered: parent.color = "white"
-                            onExited: parent.color = "#242c4d"
-                            onClicked: backend.getDroneAction("right")
-                        }
-                    }
-
-                    // Turn Right Button
-                    Rectangle {
-                        width: parent.width * 0.15
-                        height: parent.height
-                        color: "#242c4d"
-                        border.color: "black"
-
-                        Image {
-                            source: "GUI_Pics/turnRight.png"
-                            width: 150
-                            height: 150
-                            anchors.centerIn: parent
-                        }
-
-                        Text {
-                            text: "Turn Right"
-                            font.bold: true
-                            color: "white"
-                            font.pixelSize: Math.max(12, width * 0.2)
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 10
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onEntered: parent.color = "white"
-                            onExited: parent.color = "#242c4d"
-                            onClicked: backend.getDroneAction("turn_right")
-                        }
-                    }
-                }
-
-                // Back Button
-                Rectangle {
-                  width: parent.width
-                    height: parent.height * 0.18
-                    anchors.top: parent.top
-                    anchors.topMargin: parent.height * 0.6
-                    color: "transparent"
-
-
-                    Rectangle {
-                        width: parent.width
-                        height: parent.height
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        color: "#242c4d"
-                        border.color: "black"
-
-                        Image {
-                            source: "GUI_Pics/back.png"
-                            width: 150
-                            height: 150
-                            anchors.centerIn: parent
-                        }
-
-                        Text {
-                            text: "Back"
-                            font.bold: true
-                            color: "white"
-                            font.pixelSize:  parent.width * 0.01
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 10
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onEntered: parent.color = "white"
-                            onExited: parent.color = "#242c4d"
-                            onClicked: backend.getDroneAction("backward")
-                        }
-                    }
-                }
-
-                // Connect, Down, Takeoff, Land Buttons
-                Rectangle {
-                    width: parent.width
-                    height: parent.height * 0.20
-                    anchors.top: parent.top
-                    anchors.topMargin: parent.height * 0.8
-                    color: "transparent"
-
-                    Row {
-                        width: parent.width
-                        height: parent.height
-                        spacing: parent.width * 0.0165 // Add spacing between buttons
-
-                        // Connect Button
-                        Rectangle {
-                            width: parent.width * 0.15
-                            height: parent.height
-                            color: "#242c4d"
-                            border.color: "black"
-
-                            Image {
-                                source: "GUI_Pics/connect.png"
-                                width: 150
-                                height: 150
-                                anchors.centerIn: parent
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onEntered: parent.color = "white"
+                                        onExited: parent.color = "#242c4d"
+                                        onClicked: backend.getDroneAction("forward")
+                                    }
+                                }
                             }
 
-                            Text {
-                                text: "Connect"
-                                font.bold: true
-                                color: "white"
-                                font.pixelSize: Math.max(12, parent.width * 0.05)
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                anchors.bottom: parent.bottom
-                                anchors.bottomMargin: 10
+                            // Directional Buttons (Turn Left, Left, Stream, Right, Turn Right)
+                            Row {
+                                width: parent.width
+                                height: parent.height * 0.18
+                                anchors.top: parent.top
+                                anchors.topMargin: parent.height * 0.4
+                                spacing: width * 0.065 // Add spacing between buttons
+
+                                // Turn Left Button
+                                Rectangle {
+                                    width: parent.width * 0.15
+                                    height: parent.height
+                                    color: "#242c4d"
+                                    border.color: "black"
+
+                                    Image {
+                                        source: "GUI_Pics/turnLeft.png"
+                                        width: 150
+                                        height: 150
+                                        anchors.centerIn: parent
+                                    }
+
+                                    Text {
+                                        text: "Turn Left"
+                                        font.bold: true
+                                        color: "white"
+                                        font.pixelSize: Math.max(12, width * 0.2)
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        anchors.bottom: parent.bottom
+                                        anchors.bottomMargin: 10
+                                    }
+
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onEntered: parent.color = "white"
+                                        onExited: parent.color = "#242c4d"
+                                        onClicked: backend.getDroneAction("turn_left")
+                                    }
+                                }
+
+                                // Left Button
+                                Rectangle {
+                                    width: parent.width * 0.15
+                                    height: parent.height
+                                    color: "#242c4d"
+                                    border.color: "black"
+
+                                    Image {
+                                        source: "GUI_Pics/left.png"
+                                        width: 150
+                                        height: 150
+                                        anchors.centerIn: parent
+                                    }
+
+                                    Text {
+                                        text: "Left"
+                                        font.bold: true
+                                        color: "white"
+                                        font.pixelSize: Math.max(12, width * 0.2)
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        anchors.bottom: parent.bottom
+                                        anchors.bottomMargin: 10
+                                    }
+
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onEntered: parent.color = "white"
+                                        onExited: parent.color = "#242c4d"
+                                        onClicked: backend.getDroneAction("left")
+                                    }
+                                }
+
+                                // Stream Button
+                                Rectangle {
+                                    width: parent.width * 0.15
+                                    height: parent.height
+                                    color: "#242c4d"
+                                    border.color: "black"
+
+                                    Image {
+                                        source: "GUI_Pics/Stream.png"
+                                        width: 150
+                                        height: 150
+                                        anchors.centerIn: parent
+                                    }
+
+                                    Text {
+                                        text: "Stream"
+                                        font.bold: true
+                                        color: "white"
+                                        font.pixelSize: Math.max(12, width * 0.2)
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        anchors.bottom: parent.bottom
+                                        anchors.bottomMargin: 10
+                                    }
+
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onEntered: parent.color = "white"
+                                        onExited: parent.color = "#242c4d"
+                                        onClicked: backend.getDroneAction("stream")
+                                    }
+                                }
+
+                                // Right Button
+                                Rectangle {
+                                    width: parent.width * 0.15
+                                    height: parent.height
+                                    color: "#242c4d"
+                                    border.color: "black"
+
+                                    Image {
+                                        source: "GUI_Pics/right.png"
+                                        width: 150
+                                        height: 150
+                                        anchors.centerIn: parent
+                                    }
+
+                                    Text {
+                                        text: "Right"
+                                        font.bold: true
+                                        color: "white"
+                                        font.pixelSize: Math.max(12, width * 0.2)
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        anchors.bottom: parent.bottom
+                                        anchors.bottomMargin: 10
+                                    }
+
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onEntered: parent.color = "white"
+                                        onExited: parent.color = "#242c4d"
+                                        onClicked: backend.getDroneAction("right")
+                                    }
+                                }
+
+                                // Turn Right Button
+                                Rectangle {
+                                    width: parent.width * 0.15
+                                    height: parent.height
+                                    color: "#242c4d"
+                                    border.color: "black"
+
+                                    Image {
+                                        source: "GUI_Pics/turnRight.png"
+                                        width: 150
+                                        height: 150
+                                        anchors.centerIn: parent
+                                    }
+
+                                    Text {
+                                        text: "Turn Right"
+                                        font.bold: true
+                                        color: "white"
+                                        font.pixelSize: Math.max(12, width * 0.2)
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        anchors.bottom: parent.bottom
+                                        anchors.bottomMargin: 10
+                                    }
+
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onEntered: parent.color = "white"
+                                        onExited: parent.color = "#242c4d"
+                                        onClicked: backend.getDroneAction("turn_right")
+                                    }
+                                }
                             }
 
-                            MouseArea {
-                                anchors.fill: parent
-                                onEntered: parent.color = "white"
-                                onExited: parent.color = "#242c4d"
-                                onClicked: backend.getDroneAction("connect")
-                            }
-                        }
+                            // Back Button
+                            Rectangle {
+                                width: parent.width
+                                height: parent.height * 0.18
+                                anchors.top: parent.top
+                                anchors.topMargin: parent.height * 0.6
+                                color: "transparent"
 
-                        // Down Button
-                        Rectangle {
-                            width: parent.width * 0.5
-                            height: parent.height
-                            color: "#242c4d"
-                            border.color: "black"
 
-                            Image {
-                                source: "GUI_Pics/down.png"
-                                width: 150
-                                height: 150
-                                anchors.centerIn: parent
-                            }
+                                Rectangle {
+                                    width: parent.width
+                                    height: parent.height
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    color: "#242c4d"
+                                    border.color: "black"
 
-                            Text {
-                                text: "Down"
-                                font.bold: true
-                                color: "white"
-                                font.pixelSize: Math.max(12, parent.width * 0.01)
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                anchors.bottom: parent.bottom
-                                anchors.bottomMargin: 10
-                            }
+                                    Image {
+                                        source: "GUI_Pics/back.png"
+                                        width: 150
+                                        height: 150
+                                        anchors.centerIn: parent
+                                    }
 
-                            MouseArea {
-                                anchors.fill: parent
-                                onEntered: parent.color = "white"
-                                onExited: parent.color = "#242c4d"
-                                onClicked: backend.getDroneAction("down")
-                            }
-                        }
+                                    Text {
+                                        text: "Back"
+                                        font.bold: true
+                                        color: "white"
+                                        font.pixelSize: parent.width * 0.01
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        anchors.bottom: parent.bottom
+                                        anchors.bottomMargin: 10
+                                    }
 
-                        // Takeoff Button
-                        Rectangle {
-                            width: parent.width * 0.15
-                            height: parent.height
-                            color: "#242c4d"
-                            border.color: "black"
-
-                            Image {
-                                source: "GUI_Pics/takeoff.png"
-                                width: 150
-                                height: 150
-                                anchors.centerIn: parent
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onEntered: parent.color = "white"
+                                        onExited: parent.color = "#242c4d"
+                                        onClicked: backend.getDroneAction("backward")
+                                    }
+                                }
                             }
 
-                            Text {
-                                text: "Takeoff"
-                                font.bold: true
-                                color: "white"
-                                font.pixelSize: Math.max(12, parent.width * 0.05)
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                anchors.bottom: parent.bottom
-                                anchors.bottomMargin: 10
-                            }
+                            // Connect, Down, Takeoff, Land Buttons
+                            Rectangle {
+                                width: parent.width
+                                height: parent.height * 0.20
+                                anchors.top: parent.top
+                                anchors.topMargin: parent.height * 0.8
+                                color: "transparent"
 
-                            MouseArea {
-                                anchors.fill: parent
-                                onEntered: parent.color = "white"
-                                onExited: parent.color = "#242c4d"
-                                onClicked: backend.getDroneAction("takeoff")
-                            }
-                        }
+                                Row {
+                                    width: parent.width
+                                    height: parent.height
+                                    spacing: parent.width * 0.0165 // Add spacing between buttons
 
-                        // Land Button
-                        Rectangle {
-                            width: parent.width * 0.15
-                            height: parent.height
-                            color: "#242c4d"
-                            border.color: "black"
+                                    // Connect Button
+                                    Rectangle {
+                                        width: parent.width * 0.15
+                                        height: parent.height
+                                        color: "#242c4d"
+                                        border.color: "black"
 
-                            Image {
-                                source: "GUI_Pics/land.png"
-                                width: 150
-                                height: 150
-                                anchors.centerIn: parent
-                            }
-
-                            Text {
-                                text: "Land"
-                                font.bold: true
-                                color: "white"
-                                font.pixelSize: Math.max(12, parent.width * 0.05)
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                anchors.bottom: parent.bottom
-                                anchors.bottomMargin: 10
-                            }
-
-                            MouseArea {
-                                anchors.fill: parent
-                                onEntered: parent.color = "white"
-                                onExited: parent.color = "#242c4d"
-                                onClicked: backend.getDroneAction("land")
-                            }
-                        }
-                    }
-                    } // End of Column (drone controls)
-                } // End of Rectangle (drone controls container)
-            }
-                // Right side of Camera View
-                CameraView {
-                    width: parent.width * 0.3
-                    height: parent.height
-                    cameraController: cameraController
-                }
-            } // End of Row
-        } // End of Manual Drone Control Rectangle
-
-            // Manual Controller Tab (Nao Viewer)
-            Rectangle {
-                id: rootPanel
-                property int rotationStep: 90
-                property real moveDistance: 50
-                property real verticalStep: 50
-                property int verticalState: 0
-                property int maxVerticalState: 3
-                property bool animationInProgress: false
-                property int modelRotationY: 0
-
-                RowLayout {
-                    anchors.fill: parent
-                    spacing: 0
-                    // ================= LEFT PANEL =================
-                    Rectangle {
-                        id: leftPanel
-                        Layout.preferredWidth: 510
-                        Layout.fillHeight: true
-                        color: "#718399"
-
-                        ColumnLayout {
-                            anchors.fill: parent
-                            anchors.margins: 16
-                            
-                            spacing: 40
-
-                            Label {
-                                text: "Nao Robot Control Panel"
-                                horizontalAlignment: Text.AlignHCenter
-                                font.pixelSize: 20
-                                font.bold: true
-                                color: "white"
-                                Layout.alignment: Qt.AlignHCenter
-                            }
-
-                            GridLayout {
-                                id: buttonGrid
-                                columns: 2
-                                columnSpacing: 20
-                                rowSpacing: 20
-                                Layout.alignment: Qt.AlignHCenter
-                                Layout.fillWidth: true
-                                Layout.preferredHeight: 400
-
-                                Repeater {
-                                    model: [
-                                        {label: "Backward", icon: "GUI_Pics/back.png", fn: "moveBackward"},
-                                        {label: "Forward",  icon: "GUI_Pics/forward.png", fn: "moveForward"},
-                                        {label: "Right",    icon: "GUI_Pics/right.png", fn: "turnRight"},
-                                        {label: "Left",     icon: "GUI_Pics/left.png", fn: "turnLeft"},
-                                        {label: "Takeoff",  icon: "GUI_Pics/takeoff.png", fn: "moveUp"},
-                                        {label: "Land",     icon: "GUI_Pics/land.png", fn: "moveDown"}
-                                    ]
-
-                                    delegate: Rectangle {
-                                        Layout.preferredWidth: 150
-                                        Layout.preferredHeight: 150
-                                        color: "#2c3e50"
-                                        radius: 10
-
-                                        Column {
+                                        Image {
+                                            source: "GUI_Pics/connect.png"
+                                            width: 150
+                                            height: 150
                                             anchors.centerIn: parent
-                                            spacing: 8
+                                        }
 
-                                            Image {
-                                                source: modelData.icon
-                                                width: 80; height: 80
-                                                fillMode: Image.PreserveAspectFit
-                                                onStatusChanged: if (status === Image.Error) console.log("❌ Image not found:", source)
-                                            }
-
-                                            Text {
-                                                text: modelData.label
-                                                color: "white"
-                                                font.pixelSize: 16
-                                                horizontalAlignment: Text.AlignHCenter
-                                            }
+                                        Text {
+                                            text: "Connect"
+                                            font.bold: true
+                                            color: "white"
+                                            font.pixelSize: Math.max(12, parent.width * 0.05)
+                                            anchors.horizontalCenter: parent.horizontalCenter
+                                            anchors.bottom: parent.bottom
+                                            anchors.bottomMargin: 10
                                         }
 
                                         MouseArea {
                                             anchors.fill: parent
-                                            onClicked: {
-                                                rootPanel.appendLog(modelData.label + " Button Clicked!")
-                                                if (typeof rootPanel[modelData.fn] === "function") {
-                                                    rootPanel[modelData.fn]()
-                                                }
-                                            }
+                                            onEntered: parent.color = "white"
+                                            onExited: parent.color = "#242c4d"
+                                            onClicked: backend.getDroneAction("connect")
+                                        }
+                                    }
+
+                                    // Down Button
+                                    Rectangle {
+                                        width: parent.width * 0.5
+                                        height: parent.height
+                                        color: "#242c4d"
+                                        border.color: "black"
+
+                                        Image {
+                                            source: "GUI_Pics/down.png"
+                                            width: 150
+                                            height: 150
+                                            anchors.centerIn: parent
+                                        }
+
+                                        Text {
+                                            text: "Down"
+                                            font.bold: true
+                                            color: "white"
+                                            font.pixelSize: Math.max(12, parent.width * 0.01)
+                                            anchors.horizontalCenter: parent.horizontalCenter
+                                            anchors.bottom: parent.bottom
+                                            anchors.bottomMargin: 10
+                                        }
+
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            onEntered: parent.color = "white"
+                                            onExited: parent.color = "#242c4d"
+                                            onClicked: backend.getDroneAction("down")
+                                        }
+                                    }
+
+                                    // Takeoff Button
+                                    Rectangle {
+                                        width: parent.width * 0.15
+                                        height: parent.height
+                                        color: "#242c4d"
+                                        border.color: "black"
+
+                                        Image {
+                                            source: "GUI_Pics/takeoff.png"
+                                            width: 150
+                                            height: 150
+                                            anchors.centerIn: parent
+                                        }
+
+                                        Text {
+                                            text: "Takeoff"
+                                            font.bold: true
+                                            color: "white"
+                                            font.pixelSize: Math.max(12, parent.width * 0.05)
+                                            anchors.horizontalCenter: parent.horizontalCenter
+                                            anchors.bottom: parent.bottom
+                                            anchors.bottomMargin: 10
+                                        }
+
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            onEntered: parent.color = "white"
+                                            onExited: parent.color = "#242c4d"
+                                            onClicked: backend.getDroneAction("takeoff")
+                                        }
+                                    }
+
+                                    // Land Button
+                                    Rectangle {
+                                        width: parent.width * 0.15
+                                        height: parent.height
+                                        color: "#242c4d"
+                                        border.color: "black"
+
+                                        Image {
+                                            source: "GUI_Pics/land.png"
+                                            width: 150
+                                            height: 150
+                                            anchors.centerIn: parent
+                                        }
+
+                                        Text {
+                                            text: "Land"
+                                            font.bold: true
+                                            color: "white"
+                                            font.pixelSize: Math.max(12, parent.width * 0.05)
+                                            anchors.horizontalCenter: parent.horizontalCenter
+                                            anchors.bottom: parent.bottom
+                                            anchors.bottomMargin: 10
+                                        }
+
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            onEntered: parent.color = "white"
+                                            onExited: parent.color = "#242c4d"
+                                            onClicked: backend.getDroneAction("land")
                                         }
                                     }
                                 }
-                            }
-
-                            GroupBox {
-                                title: "Console Log"
-                                Layout.fillWidth: true
-                                Layout.fillHeight: true
-                                Layout.preferredHeight: 200
-
-                                ScrollView {
-                                    anchors.fill: parent
-                                    ScrollBar.vertical.policy: ScrollBar.AlwaysOn
-
-                                    TextArea {
-                                        id: consoleLog1
-                                        readOnly: true
-                                        wrapMode: Text.Wrap
-                                        color: "white"
-                                        font.pixelSize: 10
-                                        background: Rectangle { color: "black" }
-                                    }
-                                }
-                            }
-                        }
+                            } // End of Column (drone controls)
+                        } // End of Rectangle (drone controls container)
                     }
-
-                    // ================= RIGHT PANEL (3D Viewer) =================
-                    Rectangle {
-                        id: rightPanel
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        color: "#2f2f2f"
-                        radius: 6
-
-                        View3D {
-                            anchors.fill: parent
-
-                            environment: SceneEnvironment {
-                                clearColor: '#2e2e2e'
-                                backgroundMode: SceneEnvironment.Color
-                            }
-
-                            PerspectiveCamera {
-                                id: camera
-                                position: Qt.vector3d(0, 250, 800)
-                                eulerRotation.x: -10
-                                clipFar: 5000
-                            }
-
-                            DirectionalLight {
-                                eulerRotation.x: -45
-                                eulerRotation.y: 45
-                                brightness: 1.5
-                                castsShadow: true
-                            }
-
-                            DirectionalLight {
-                                eulerRotation.x: 30
-                                eulerRotation.y: -60
-                                brightness: 1.2
-                            }
-
-                            PointLight {
-                                position: Qt.vector3d(0, 400, 400)
-                                brightness: 800
-                            }
-
-                            // Load NAO model
-                            Nao {
-                                id: naoModel
-                                scale: Qt.vector3d(100, 100, 100)
-                                position: Qt.vector3d(0, -100, 0)
-                            }
-
-                            // Connect Button with Image in bottom-right corner
-                            Rectangle {
-                                anchors.right: parent.right
-                                anchors.bottom: parent.bottom
-                                width: parent.width * 0.2
-                                height: parent.height * 0.2
-                                color: "#242c4d"
-
-                                Image {
-                                    id: connectImage
-                                    source: "GUI_Pics/connect.png"
-                                    anchors.fill: parent
-                                    fillMode: Image.PreserveAspectFit
-                                }
-
-                                Text {
-                                    text: "Connect"
-                                    anchors.centerIn: parent
-                                    font.pixelSize: 20
-                                    font.bold: true
-                                    color: "white"
-                                }
-
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        rootPanel.appendLog("Connect button clicked!")
-                                        backend.connectNao()
-                                    }
-                                }
-                            }
-                        }
+                    // Right side of Camera View
+                    CameraView {
+                        width: parent.width * 0.3
+                        height: parent.height
+                        cameraController: cameraController
                     }
-                }
+                } // End of Row
+            } // End of Manual Drone Control Rectangle
 
-                // ================= Animations =================
-                PropertyAnimation {
-                    id: moveAnim
-                    target: naoModel
-                    property: "position"
-                    duration: 1000
-                    onStopped: rootPanel.animationInProgress = false
-                }
-
-                PropertyAnimation {
-                    id: rotateAnim
-                    target: naoModel
-                    property: "eulerRotation"
-                    duration: 800
-                    onStopped: rootPanel.animationInProgress = false
-                }
-
-                // ================= Movement functions =================
-                function moveForward() {
-                    if (animationInProgress) { rootPanel.appendLog("Cannot move Forward - action already in progress!"); return }
-                    var angleRad = modelRotationY * Math.PI/180.0
-                    var dirX = Math.sin(angleRad)
-                    var dirZ = Math.cos(angleRad)
-                    var start = naoModel.position
-                    var end = Qt.vector3d(start.x + moveDistance*dirX, start.y, start.z + moveDistance*dirZ)
-                    animationInProgress = true
-                    moveAnim.from = start
-                    moveAnim.to = end
-                    moveAnim.start()
-                }
-
-                function moveBackward() {
-                    if (animationInProgress) { rootPanel.appendLog("Cannot move Backward - action already in progress!"); return }
-                    var angleRad = modelRotationY * Math.PI/180.0
-                    var dirX = Math.sin(angleRad)
-                    var dirZ = Math.cos(angleRad)
-                    var start = naoModel.position
-                    var end = Qt.vector3d(start.x - moveDistance*dirX, start.y, start.z - moveDistance*dirZ)
-                    animationInProgress = true
-                    moveAnim.from = start
-                    moveAnim.to = end
-                    moveAnim.start()
-                }
-
-                function turnLeft() {
-                    if (animationInProgress) { rootPanel.appendLog("Cannot turn Left - action already in progress!"); return }
-                    modelRotationY = (modelRotationY - rotationStep) % 360
-                    var start = naoModel.eulerRotation
-                    var end = Qt.vector3d(start.x, start.y + rotationStep, start.z)
-                    animationInProgress = true
-                    rotateAnim.from = start
-                    rotateAnim.to = end
-                    rotateAnim.start()
-                }
-
-                function turnRight() {
-                    if (animationInProgress) { rootPanel.appendLog("Cannot turn Right - action already in progress!"); return }
-                    modelRotationY = (modelRotationY + rotationStep) % 360
-                    var start = naoModel.eulerRotation
-                    var end = Qt.vector3d(start.x, start.y - rotationStep, start.z)
-                    animationInProgress = true
-                    rotateAnim.from = start
-                    rotateAnim.to = end
-                    rotateAnim.start()
-                }
-
-                function moveUp() {
-                    if (animationInProgress || verticalState >= maxVerticalState) { rootPanel.appendLog("Cannot Takeoff - already at max height!"); return }
-                    var start = naoModel.position
-                    var end = Qt.vector3d(start.x, start.y + verticalStep, start.z)
-                    animationInProgress = true
-                    moveAnim.from = start
-                    moveAnim.to = end
-                    moveAnim.start()
-                    verticalState++
-                }
-
-                function moveDown() {
-                    if (animationInProgress || verticalState <= 0) { rootPanel.appendLog("Cannot Land - already at ground!"); return }
-                    var start = naoModel.position
-                    var end = Qt.vector3d(start.x, start.y - verticalStep, start.z)
-                    animationInProgress = true
-                    moveAnim.from = start
-                    moveAnim.to = end
-                    moveAnim.start()
-                    verticalState--
-                }
-
-                // ================= Console Logger =================
-                function appendLog(msg) {
-                    var timestamp = new Date().toLocaleString()
-                    consoleLog1.append(msg + " at " + timestamp)
-                }
+            // Manual Controller Tab (Nao Viewer)
+            NAOManualControl {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
             }
 
             //File shuffler view
@@ -1794,19 +1539,31 @@ ApplicationWindow {
                         width: parent.width
                         spacing: 10
 
-                        Label { text: "Target IP"; color: "white"; font.bold: true}
-                        TextField { Layout.fillWidth: true }
+                        Label {
+                            text: "Target IP"; color: "white"; font.bold: true
+                        }
+                        TextField {
+                            Layout.fillWidth: true
+                        }
 
-                        Label { text: "Target Username"; color: "white"; font.bold: true }
-                        TextField { Layout.fillWidth: true }
+                        Label {
+                            text: "Target Username"; color: "white"; font.bold: true
+                        }
+                        TextField {
+                            Layout.fillWidth: true
+                        }
 
-                        Label { text: "Target Password"; color: "white"; font.bold: true }
+                        Label {
+                            text: "Target Password"; color: "white"; font.bold: true
+                        }
                         TextField {
                             Layout.fillWidth: true
                             echoMode: TextInput.Password
                         }
 
-                        Label { text: "Private Key Directory:"; color: "white"; font.bold: true }
+                        Label {
+                            text: "Private Key Directory:"; color: "white"; font.bold: true
+                        }
                         RowLayout {
                             Layout.fillWidth: true
                             TextField {
@@ -1832,7 +1589,9 @@ ApplicationWindow {
                             }
                         }
 
-                        Label { text: "Source Directory:"; color: "white"; font.bold: true }
+                        Label {
+                            text: "Source Directory:"; color: "white"; font.bold: true
+                        }
                         RowLayout {
                             Layout.fillWidth: true
                             TextField {
@@ -1846,7 +1605,9 @@ ApplicationWindow {
                             }
                         }
 
-                        Label { text: "Target Directory:"; color: "white"; font.bold: true }
+                        Label {
+                            text: "Target Directory:"; color: "white"; font.bold: true
+                        }
                         TextField {
                             Layout.fillWidth: true
                             text: "/home/"
@@ -1878,6 +1639,227 @@ ApplicationWindow {
                         }
                     }
                 }
+
+            }
+
+            //Team
+            Rectangle {
+                color: "#718399"
+                width: 800
+                height: 600
+
+                ColumnLayout {
+                    anchors.fill: parent
+                    spacing: 20
+                    anchors.margins: 20
+
+                    // Main contributor tier row
+                    ColumnLayout {
+                        spacing: 10
+
+                        // Titles + Bar Graphs in Columns
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 10
+
+                            // Gold Section
+                            ColumnLayout {
+                                Layout.fillWidth: true
+                                Layout.preferredWidth: 1
+                                Layout.alignment: Qt.AlignHCenter
+
+                                Text {
+                                    text: "Gold"
+                                    color: "yellow"
+                                    font.bold: true
+                                    font.pixelSize: 35
+                                    horizontalAlignment: Text.AlignHCenter
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
+                                Rectangle {
+                                    color: "white"
+                                    border.color: "#d0d0d8"
+                                    border.width: 1
+                                    radius: 4
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 300
+
+                                    Image {
+                                        id: goldImage
+                                        anchors.fill: parent
+                                        anchors.margins: 10
+                                        fillMode: Image.PreserveAspectFit
+                                        source: "HallofFame/commit_tiers_output/gold_contributors.png"
+                                    }
+                                }
+                            }
+
+                            // Silver Section
+                            ColumnLayout {
+                                Layout.fillWidth: true
+                                Layout.preferredWidth: 1
+                                Layout.alignment: Qt.AlignHCenter
+
+                                Text {
+                                    text: "Silver"
+                                    color: "white"
+                                    font.bold: true
+                                    font.pixelSize: 35
+                                    horizontalAlignment: Text.AlignHCenter
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
+                                Rectangle {
+                                    color: "white"
+                                    border.color: "#d0d0d8"
+                                    border.width: 1
+                                    radius: 4
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 300
+
+                                    Image {
+                                        id: silverImage
+                                        anchors.fill: parent
+                                        anchors.margins: 10
+                                        fillMode: Image.PreserveAspectFit
+                                        source: "HallofFame/commit_tiers_output/silver_contributors.png"
+                                    }
+                                }
+                            }
+
+                            // Bronze Section
+                            ColumnLayout {
+                                Layout.fillWidth: true
+                                Layout.preferredWidth: 1
+                                Layout.alignment: Qt.AlignHCenter
+
+                                Text {
+                                    text: "Bronze"
+                                    color: "brown"
+                                    font.bold: true
+                                    font.pixelSize: 35
+                                    horizontalAlignment: Text.AlignHCenter
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
+                                Rectangle {
+                                    color: "white"
+                                    border.color: "#d0d0d8"
+                                    border.width: 1
+                                    radius: 4
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 300
+
+                                    Image {
+                                        id: bronzeImage
+                                        anchors.fill: parent
+                                        anchors.margins: 10
+                                        fillMode: Image.PreserveAspectFit
+                                        source: "HallofFame/commit_tiers_output/bronze_contributors.png"
+                                    }
+                                }
+                            }
+                        }
+
+                        // Additional container row below bar charts
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 10
+
+                            // Developer List (below Gold)
+                            ColumnLayout {
+                                Layout.fillWidth: true
+                                Layout.preferredWidth: 1
+
+                                Text {
+                                    text: "Developer List"
+                                    color: "white"
+                                    font.bold: true
+                                    font.pixelSize: 24
+                                    horizontalAlignment: Text.AlignHCenter
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
+                                // Scrollable text area
+                                ScrollView {
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 150
+                                    clip: true
+                                    ScrollBar.vertical.policy: ScrollBar.AlwaysOn
+
+                                    TextArea {
+                                        id: devText
+                                        text: backend.getDevList()
+                                        readOnly: true
+                                        wrapMode: TextArea.Wrap
+                                        font.pixelSize: 12
+                                        color: "#000"
+                                        background: Rectangle {
+                                            color: "white"
+                                            radius: 4
+                                        }
+                                    }
+                                }
+                            }
+
+                            // Tickets by Developer (below Bronze)
+                            ColumnLayout {
+                                Layout.fillWidth: true
+                                Layout.preferredWidth: 1
+
+                                Text {
+                                    text: "Tickets By Developer"
+                                    color: "white"
+                                    font.bold: true
+                                    font.pixelSize: 24
+                                    horizontalAlignment: Text.AlignHCenter
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
+                                // Scrollable text area
+                                ScrollView {
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 150
+                                    clip: true
+                                    ScrollBar.vertical.policy: ScrollBar.AlwaysOn
+
+                                    TextArea {
+                                        id: ticketText
+                                        text: backend.getTicketsByDev()
+                                        readOnly: true
+                                        wrapMode: TextArea.Wrap
+                                        font.pixelSize: 12
+                                        color: "#000"
+                                        background: Rectangle {
+                                            color: "white"
+                                            radius: 4
+                                        }
+                                    }
+                                }
+                            }
+
+                            // Spacer (keeps layout balanced)
+                            Item {
+                                Layout.fillHeight: true
+                            }
+
+                            // Refresh Button
+                            Button {
+                                text: "Refresh"
+                                font.bold: true
+                                implicitWidth: 120
+                                implicitHeight: 40
+                                Layout.alignment: Qt.AlignHCenter
+
+                                onClicked: {
+                                    devText.text = backend.getDevList()
+                                    ticketText.text = backend.getTicketsByDev()
+                                }
+                            }
+                        }
+                    }
+                }
             }
             
         }
@@ -1905,3 +1887,10 @@ ApplicationWindow {
         }
     }
 }
+
+
+
+
+
+
+
