@@ -85,7 +85,7 @@ ApplicationWindow {
             }
 
             TabButton {
-                text: "Team"
+                text: "Developers"
                 font.bold: true
                 onClicked: stackLayout.currentIndex = 6
             }
@@ -1663,7 +1663,7 @@ ApplicationWindow {
 
             }
 
-            //Team
+            //Developers
             Rectangle {
                 color: "#718399"
                 width: 800
