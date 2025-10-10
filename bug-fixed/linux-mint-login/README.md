@@ -48,8 +48,9 @@ Specifically, the configuration file contained parameters that enabled automatic
 
 Below are screenshots showing the configuration and results of the fix:
 
-![Commented Code Lines](./docs/images/commented-code.jpg)
-![Login Window Configuration](./docs/images/login-window.jpg)
+<img src="./docs/images/commented-code.jpg" width="500" />
+&nbsp;
+<img src="./docs/images/login-window.jpg" width="500" />
 
 ---
 
@@ -87,3 +88,4 @@ The login screen now consistently prompts for password authentication.
 
 **Fix implemented and verified.**  
 This pull request documents the resolution of the login bypass bug described in Issue #359.
+
