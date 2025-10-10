@@ -70,8 +70,9 @@ If you’ve fixed a bug and want to document it:
 ## 🧾 Maintainers
 
 This section is maintained by members of the **Avatar Project Development Team**.  
-Please follow the repository’s [CONTRIBUTING.md](../CONTRIBUTING.md) guidelines for documentation and pull requests.
+Please follow the repository’s guidelines for documentation and pull requests.
 
 ---
 
 > _Documenting fixes today prevents bugs tomorrow._
+
