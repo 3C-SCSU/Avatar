@@ -17,7 +17,9 @@ import contextlib
 from collections import defaultdict
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
 from GUI5_ManualDroneControl.cameraview.camera_controller import CameraController
-from HallofFame.hofCharts import main as hofCharts, ticketsByDev_text
+# from Developers.hofCharts import main as hofCharts, ticketsByDev_text
+
+from Developers import devCharts
 
 # Import BCI connection for brainwave prediction
 try:
@@ -154,9 +156,14 @@ class BrainwavesBackend(QObject):
 
             return "\n".join(lines)
 
-    def hofChart(self):
-        print("hofCharts main() is running")
-        hofCharts()
+    @Slot()
+    def devChart(self):
+        print("hofChart() SLOT CALLED")
+        try:
+            devCharts.main()
+            print("hofCharts.main() COMPLETED")
+        except Exception as e:
+            print(f"hofCharts.main() ERROR: {e}")
 
 
     def __init__(self):
