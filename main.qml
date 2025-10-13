@@ -69,17 +69,6 @@ ApplicationWindow {
                 }
             }
             TabButton {
-                text: "File Shuffler"
-                font.bold: true
-                onClicked: stackLayout.currentIndex = 4
-            }
-            TabButton {
-                text: "Transfer Data"
-                font.bold: true
-                onClicked: stackLayout.currentIndex = 5
-            }
-
-            TabButton {
                 text: "Developers"
                 font.bold: true
                 onClicked: stackLayout.currentIndex = 6
@@ -1890,6 +1879,16 @@ ApplicationWindow {
                 text: "Brainwave Visualization"
                 font.bold: true
                 onClicked: stackLayout.currentIndex = 1
+            }
+            TabButton {
+                text: "File Shuffler"
+                font.bold: true
+                onClicked: stackLayout.currentIndex = 4
+            }
+            TabButton {
+                text: "Transfer Data"
+                font.bold: true
+                onClicked: stackLayout.currentIndex = 5
             }
         }
     }
