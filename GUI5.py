@@ -19,6 +19,8 @@ from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
 from GUI5_ManualDroneControl.cameraview.camera_controller import CameraController
 from HallofFame.hofCharts import main as hofCharts, ticketsByDev_text
 
+								
+
 # Import BCI connection for brainwave prediction
 try:
     sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'random-forest-prediction')))
@@ -154,8 +156,13 @@ class BrainwavesBackend(QObject):
 
             return "\n".join(lines)
 
+		   
     def hofChart(self):
         print("hofCharts main() is running")
+			
+							
+											   
+							  
         hofCharts()
 
 
@@ -648,6 +655,7 @@ if __name__ == "__main__":
 
     # Load QML
     qml_file = Path(__file__).resolve().parent / "main.qml"
+
     engine.load(str(qml_file))
 
     # Convert PDFs after engine load
