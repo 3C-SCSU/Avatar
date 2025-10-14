@@ -21,6 +21,8 @@ from GUI5_ManualDroneControl.cameraview.camera_controller import CameraControlle
 
 from Developers import devCharts
 
+								
+
 # Import BCI connection for brainwave prediction
 try:
     sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'random-forest-prediction')))
@@ -655,6 +657,7 @@ if __name__ == "__main__":
 
     # Load QML
     qml_file = Path(__file__).resolve().parent / "main.qml"
+
     engine.load(str(qml_file))
 
     # Convert PDFs after engine load
