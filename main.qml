@@ -55,11 +55,6 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = 0
             }
             TabButton {
-                text: "Brainwave Visualization"
-                font.bold: true
-                onClicked: stackLayout.currentIndex = 1
-            }
-            TabButton {
                 text: "Manual Drone Control"
                 font.bold: true
                 onClicked: stackLayout.currentIndex = 2
@@ -73,17 +68,6 @@ ApplicationWindow {
                     tabController.startNaoViewer()
                 }
             }
-            TabButton {
-                text: "File Shuffler"
-                font.bold: true
-                onClicked: stackLayout.currentIndex = 4
-            }
-            TabButton {
-                text: "Transfer Data"
-                font.bold: true
-                onClicked: stackLayout.currentIndex = 5
-            }
-
             TabButton {
                 text: "Developers"
                 font.bold: true
@@ -1883,6 +1867,28 @@ ApplicationWindow {
                         }
                     }
                 }
+            }
+        }
+        // Bottom Tab
+        TabBar {
+            id: bottomTabBar
+            Layout.fillWidth: true
+            height: 40
+            position: TabBar.Footer
+            TabButton {
+                text: "Brainwave Visualization"
+                font.bold: true
+                onClicked: stackLayout.currentIndex = 1
+            }
+            TabButton {
+                text: "File Shuffler"
+                font.bold: true
+                onClicked: stackLayout.currentIndex = 4
+            }
+            TabButton {
+                text: "Transfer Data"
+                font.bold: true
+                onClicked: stackLayout.currentIndex = 5
             }
         }
     }
