@@ -2,7 +2,7 @@ import PySimpleGUI as sg
 import os
 import configparser
 import sys
-sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "..", "..", "file-transfer"))
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "..", "file-transfer"))
 from sftp import fileTransfer
 
 config = configparser.ConfigParser() # Used for saving and loading login data for the target
