@@ -1,10 +1,10 @@
 import QtQuick.Dialogs
 import Qt.labs.platform
-import QtQuick 6.5
+import QtQuick 6.6
 import QtQuick.Controls 6.4
 import QtQuick.Layouts 1.15
 import QtQuick.Window 2.15
-import QtQuick3D 6.7
+import QtQuick3D 6.6
 import "Nao.mesh"
 import "GUI5_ManualDroneControl/cameraview"
 import "UI"
