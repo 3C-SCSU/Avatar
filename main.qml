@@ -57,7 +57,7 @@ ApplicationWindow {
             ManualNaoControl { Layout.fillWidth: true; Layout.fillHeight: true }
             FileShuffler { Layout.fillWidth: true; Layout.fillHeight: true }
             TransferData { Layout.fillWidth: true; Layout.fillHeight: true }
-            Team { Layout.fillWidth: true; Layout.fillHeight: true }
+            Developers { Layout.fillWidth: true; Layout.fillHeight: true }
         }
 
         // ===== BOTTOM TAB BAR =====
@@ -83,7 +83,7 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = 5
             }
             TabButton {
-                text: "Team"
+                text: "Developers"
                 font.bold: true
                 onClicked: stackLayout.currentIndex = 6
             }
