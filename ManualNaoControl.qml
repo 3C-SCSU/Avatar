@@ -139,6 +139,12 @@ Rectangle {
                                                 if (typeof rootPanel[modelData.fn] === "function") {
                                                     rootPanel[modelData.fn]()
                                                 }
+                                                if (modelData.label == "Takeoff") {
+								                    backend.nao_stand_up()
+							                    }  else if (modelData.label == "Land") {
+                                                    backend.nao_sit_down()
+						                        }
+
                                             }
                                         }
                                     }
