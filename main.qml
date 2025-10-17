@@ -35,12 +35,12 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = 2
             }
             TabButton {
-                text: "Manual NAO Control"
+                text: "Manual NAO6 Control"
                 font.bold: true
                 onClicked: {
                     stackLayout.currentIndex = 3
-                    console.log("Manual Controller tab clicked")
-                    tabController.startNaoViewer()
+                    //console.log("Manual Controller tab clicked")
+                    //tabController.startNaoViewer()
                 }
             }
         }
