@@ -23,6 +23,7 @@ from NAO6.nao_connection import send_command
 from Developers import devCharts
 
 								
+from Manual_NAO6_Control.Manual_NAO6_Control import ManualNAOController
 
 # Import BCI connection for brainwave prediction
 try:
@@ -705,6 +706,21 @@ if __name__ == "__main__":
     engine.rootContext().setContextProperty("cameraController", backend.camera_controller)
     print("Controllers exposed to QML")
     engine.rootContext().setContextProperty("fileShufflerGui", backend)  # For file shuffler
+
+    # create and expose controller to QML
+
+    print("Starting app, creating controllers")
+    try:
+        manual_nao_controller = ManualNAOController()
+        engine.rootContext().setContextProperty("manualNaoController", manual_nao_controller)
+        print("ManualNAOController created and exposed")
+    except Exception as e:
+        print("Failed to create ManualNAOController:", e)
+    # manual_nao_controller = ManualNAOController()
+    # engine.rootContext().setContextProperty("manualNaoController", manual_nao_controller)
+
+    # Optionally also expose a Connections-friendly name used in QML (if you prefer)
+    # engine.rootContext().setContextProperty("manualNaoBackend", manual_nao_controller)
 
     # Load QML
     qml_file = Path(__file__).resolve().parent / "main.qml"
