@@ -16,3 +16,7 @@ __pycache__/
 plotscode/plots/
 plotscode/.Rhistory
 plotscode/.RData
+
+#IDE Files
+.idea/
+.qtcreator/
