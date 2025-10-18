@@ -8,6 +8,7 @@ import QtQuick3D 6.7
 import "Nao.mesh"
 
 
+
 Rectangle {
     // Proper connection handling
     Connections {
@@ -139,9 +140,9 @@ Rectangle {
                                                 if (typeof rootPanel[modelData.fn] === "function") {
                                                     rootPanel[modelData.fn]()
                                                 }
-                                                if (modelData.label == "Takeoff") {
+                                                if (modelData.label === "Takeoff") {
 								                    backend.nao_stand_up()
-							                    }  else if (modelData.label == "Land") {
+                                                }  else if (modelData.label === "Land") {
                                                     backend.nao_sit_down()
 						                        }
 
