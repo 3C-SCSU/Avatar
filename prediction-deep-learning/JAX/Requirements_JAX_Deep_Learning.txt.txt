@@ -1,0 +1,14 @@
+# JAX framework
+jax>=0.4.20
+jaxlib>=0.4.20
+
+# Deep learning libraries
+flax>=0.8.0
+optax>=0.1.9
+
+# Data processing
+numpy>=1.24.0
+pandas>=2.0.0
+
+# Visualization
+matplotlib>=3.7.0
