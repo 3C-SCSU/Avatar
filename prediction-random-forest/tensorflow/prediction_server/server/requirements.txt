@@ -1,0 +1,5 @@
+flask
+pandas
+tensorflow==2.12.0
+numpy
+tensorflow_decision_forests==1.3.0
