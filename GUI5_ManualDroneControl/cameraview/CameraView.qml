@@ -11,14 +11,16 @@ Rectangle {
     border.width: 2
     radius: 10
 
+    // Python backend controller
     property var cameraController: null
+    property string latestFrame: ""  // holds the current frame path
 
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 10
         spacing: 10
 
-        // Header
+        // ===== HEADER =====
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 40
@@ -34,7 +36,7 @@ Rectangle {
             }
         }
 
-        // Video Display Area
+        // ===== VIDEO DISPLAY AREA =====
         Rectangle {
             id: videoContainer
             Layout.fillWidth: true
@@ -49,7 +51,7 @@ Rectangle {
                 anchors.fill: parent
                 anchors.margins: 5
                 fillMode: Image.PreserveAspectFit
-                source: ""
+                source: latestFrame   // bound to latest frame emitted from Python
                 
                 // Placeholder when no video
                 Rectangle {
@@ -57,7 +59,7 @@ Rectangle {
                     width: 200
                     height: 100
                     color: "transparent"
-                    visible: videoFrame.source == ""
+                    visible: videoFrame.source === ""
 
                     Column {
                         anchors.centerIn: parent
@@ -96,11 +98,11 @@ Rectangle {
                 width: 20
                 height: 20
                 radius: 10
-                color: "#E74C3C"
+                color: cameraController && cameraController.is_streaming ? "#2ECC71" : "#E74C3C"
             }
         }
 
-        // Control Buttons
+        // ===== CONTROL BUTTONS =====
         RowLayout {
             Layout.fillWidth: true
             Layout.preferredHeight: 50
@@ -189,6 +191,23 @@ Rectangle {
                     }
                 }
             }
+        }
+    }
+
+    // ===== SIGNAL CONNECTIONS TO PYTHON =====
+    Connections {
+        target: cameraController
+
+        function onFrameReady(path) {
+            latestFrame = path
+        }
+
+        function onLogMessage(msg) {
+            console.log("[CameraLog]", msg)
+        }
+
+        function onStreamStatusChanged(active) {
+            console.log("Camera stream active:", active)
         }
     }
 }
