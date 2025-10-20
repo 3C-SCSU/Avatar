@@ -11,6 +11,7 @@ ApplicationWindow {
     width: 1200
     height: 800
     title: "AVATAR - BCI"   // ✅ Updated title
+    title: "Avatar - Brainwave Reading"
 
     ListModel { id: imageModel }
 
@@ -19,6 +20,7 @@ ApplicationWindow {
         spacing: 10
 
         // ===== SINGLE TOP TAB BAR =====
+        // ===== TOP TAB BAR =====
         TabBar {
             id: topTabBar
             Layout.fillWidth: true
@@ -174,3 +176,51 @@ ApplicationWindow {
     }
 }
 
+            }
+        }
+
+        // ===== MAIN STACK LAYOUT =====
+        StackLayout {
+            id: stackLayout
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            BrainwaveReading { Layout.fillWidth: true; Layout.fillHeight: true }
+            BrainwaveVisualization { Layout.fillWidth: true; Layout.fillHeight: true }
+            ManualDroneControl { Layout.fillWidth: true; Layout.fillHeight: true }
+            ManualNaoControl { Layout.fillWidth: true; Layout.fillHeight: true }
+            FileShuffler { Layout.fillWidth: true; Layout.fillHeight: true }
+            TransferData { Layout.fillWidth: true; Layout.fillHeight: true }
+            Developers { Layout.fillWidth: true; Layout.fillHeight: true }
+        }
+
+        // ===== BOTTOM TAB BAR =====
+        TabBar {
+            id: bottomTabBar
+            Layout.fillWidth: true
+            height: 40
+            position: TabBar.Footer
+
+            TabButton {
+                text: "Brainwave Visualization"
+                font.bold: true
+                onClicked: stackLayout.currentIndex = 1
+            }
+            TabButton {
+                text: "File Shuffler"
+                font.bold: true
+                onClicked: stackLayout.currentIndex = 4
+            }
+            TabButton {
+                text: "Transfer Data"
+                font.bold: true
+                onClicked: stackLayout.currentIndex = 5
+            }
+            TabButton {
+                text: "Developers"
+                font.bold: true
+                onClicked: stackLayout.currentIndex = 6
+            }
+        }
+    }
+}
