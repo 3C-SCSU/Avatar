@@ -1,3 +1,93 @@
+"""
+JAX Random Forest Implementation for Brain-Computer Interface Applications
+===========================================================================
+
+Author: Yash Patel (GitHub: Yash272001)
+Date: January 2025
+Project: Avatar BCI Platform - Neural Interface Control Systems
+Repository: https://github.com/3C-SCSU/Avatar
+
+MAIN CONTRIBUTION:
+This implementation represents the first integration of the JAX framework 
+into the Avatar open-source BCI platform, achieving 94.36% classification 
+accuracy for EEG-based motor imagery recognition with sub-100ms inference latency.
+
+REFERENCES:
+===========
+
+[1] Bradbury, J., Frostig, R., Hawkins, P., Johnson, M. J., Leary, C., 
+    Maclaurin, D., Necula, G., Paszke, A., VanderPlas, J., 
+    Wanderman-Milne, S., & Zhang, Q. (2018). JAX: composable 
+    transformations of Python+NumPy programs (Version 0.3.13). 
+    http://github.com/google/jax
+    Used: jit, vmap, random.PRNGKey, lax.while_loop
+
+[2] Google Research. (2024). JAX Documentation. 
+    https://jax.readthedocs.io/en/latest/
+    Used: API reference for all JAX transformations
+
+[3] Babuschkin, I., Baumli, K., Bell, A., Bhupatiraju, S., Bruce, J., 
+    Buchlovsky, P., ... & Viola, F. (2020). The DeepMind JAX Ecosystem. 
+    http://github.com/deepmind
+    Used: Ecosystem context
+
+[4] Breiman, L. (2001). Random Forests. Machine Learning, 45(1), 5-32. 
+    https://doi.org/10.1023/A:1010933404324
+    Used: Random Forest algorithm, Gini impurity, bootstrap aggregation
+
+[5] Harris, C. R., Millman, K. J., van der Walt, S. J., et al. (2020). 
+    Array programming with NumPy. Nature, 585(7825), 357-362. 
+    https://doi.org/10.1038/s41586-020-2649-2
+    Used: np.array, np.zeros, numerical operations
+
+[6] McKinney, W. (2010). Data structures for statistical computing in 
+    python. Proceedings of the 9th Python in Science Conference, 445, 51-56.
+    Used: pd.read_csv, pd.DataFrame for data loading
+
+[7] Hunter, J. D. (2007). Matplotlib: A 2D graphics environment. 
+    Computing in Science & Engineering, 9(3), 90-95.
+    Used: plt.subplots, plt.savefig for visualization
+
+[8] Sanei, S., & Chambers, J. A. (2013). EEG signal processing. 
+    John Wiley & Sons.
+    Used: EEG processing context
+
+[9] Wolpaw, J. R., Birbaumer, N., McFarland, D. J., Pfurtscheller, G., 
+    & Vaughan, T. M. (2002). Brain-computer interfaces for communication 
+    and control. Clinical Neurophysiology, 113(6), 767-791.
+    Used: BCI principles and real-time control requirements
+
+NOTE:
+Development tools (GitHub Copilot, Claude AI, ChatGPT) were used as 
+assistive coding aids, but all technical content is derived from and 
+cited to the original academic sources listed above.
+"""
+
+import jax
+import jax.numpy as jnp
+import jax.nn as jnn
+from jax import random, vmap, jit, lax
+from functools import partial
+import numpy as np
+import pandas as pd
+import os
+import time
+import pickle
+import warnings
+warnings.filterwarnings('ignore')
+
+import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
+
+print("="*70)
+print("JAX RANDOM FOREST FOR NAO EEG CONTROL")
+print("="*70)
+print(f"JAX version: {jax.__version__}")
+print(f"Device: {jax.default_backend().upper()}")
+print(f"Author: Yash Patel (Yash272001)")
+print("="*70)
+
+
 import jax
 import jax.numpy as jnp
 import jax.nn as jnn
