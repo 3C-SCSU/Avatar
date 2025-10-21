@@ -95,6 +95,7 @@ class CameraController(QObject):
             # Write frame to temp file
             cv2.imwrite(str(temp_path), frame_rgb)
 
+
             # Use platform-independent file URI
             file_url = temp_path.as_uri()
 
