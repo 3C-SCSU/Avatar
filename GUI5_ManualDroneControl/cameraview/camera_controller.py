@@ -94,6 +94,7 @@ class CameraController(QObject):
                 bytes_per_line = 3 * width
                 qt_image = QImage(frame_rgb.data, width, height, bytes_per_line, QImage.Format_RGB888)
                 
+                
                 # Convert to base64 for QML
                 pixmap = QPixmap.fromImage(qt_image)
                 byte_array = pixmap.toImage().bits().asstring(pixmap.toImage().sizeInBytes())
