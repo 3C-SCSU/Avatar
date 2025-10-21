@@ -1,219 +1,307 @@
-import QtQuick.Dialogs
-import Qt.labs.platform
 import QtQuick 6.5
 import QtQuick.Controls 6.4
 import QtQuick.Layouts 1.15
-import QtQuick.Window 2.15
-import QtQuick3D 6.7
 
-// Team
 Rectangle {
     color: "#718399"
-    width: 800
-    height: 600
+    width: 1100
+    height: 700
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: 20
-        anchors.margins: 20
+        spacing: 20         
+        anchors.margins: 10
 
-        // Main contributor tier row
-        ColumnLayout {
-            spacing: 10
+        // ===================== TOP SECTION =====================
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.preferredHeight: parent.height / 2   // 🔹 Top half of the window
+            spacing: 15
 
-            // Titles + Bar Graphs in Columns
-            RowLayout {
+            // ---------- GOLD PANEL ----------
+            Rectangle {
+                color: "#1A2B48"
+                radius: 10
+                border.color: "white"
                 Layout.fillWidth: true
-                spacing: 10
+                Layout.fillHeight: true
 
-                // Gold Section
                 ColumnLayout {
-                    Layout.fillWidth: true
-                    Layout.preferredWidth: 1
-                    Layout.alignment: Qt.AlignHCenter
+                    anchors.fill: parent
+                    anchors.margins: 10
+                    spacing: 8
 
                     Text {
-                        text: "Gold"
-                        color: "yellow"
+                        text: "Golden"
+                        color: "white"
                         font.bold: true
-                        font.pixelSize: 35
+                        font.pixelSize: 26
                         horizontalAlignment: Text.AlignHCenter
                         Layout.alignment: Qt.AlignHCenter
                     }
 
                     Rectangle {
                         color: "white"
-                        border.color: "#d0d0d8"
-                        border.width: 1
-                        radius: 4
+                        radius: 8
                         Layout.fillWidth: true
-                        Layout.preferredHeight: 300
+                        Layout.fillHeight: true
 
                         Image {
-                            id: goldImage
                             anchors.fill: parent
                             anchors.margins: 10
                             fillMode: Image.PreserveAspectFit
                             source: "Developers/commit_tiers_output/gold_contributors.png"
                         }
-                    }
-                }
 
-                // Silver Section
-                ColumnLayout {
-                    Layout.fillWidth: true
-                    Layout.preferredWidth: 1
-                    Layout.alignment: Qt.AlignHCenter
-
-                    Text {
-                        text: "Silver"
-                        color: "white"
-                        font.bold: true
-                        font.pixelSize: 35
-                        horizontalAlignment: Text.AlignHCenter
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    Rectangle {
-                        color: "white"
-                        border.color: "#d0d0d8"
-                        border.width: 1
-                        radius: 4
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 300
-
-                        Image {
-                            id: silverImage
-                            anchors.fill: parent
-                            anchors.margins: 10
-                            fillMode: Image.PreserveAspectFit
-                            source: "Developers/commit_tiers_output/silver_contributors.png"
-                        }
-                    }
-                }
-
-                // Bronze Section
-                ColumnLayout {
-                    Layout.fillWidth: true
-                    Layout.preferredWidth: 1
-                    Layout.alignment: Qt.AlignHCenter
-
-                    Text {
-                        text: "Bronze"
-                        color: "brown"
-                        font.bold: true
-                        font.pixelSize: 35
-                        horizontalAlignment: Text.AlignHCenter
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    Rectangle {
-                        color: "white"
-                        border.color: "#d0d0d8"
-                        border.width: 1
-                        radius: 4
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 300
-
-                        Image {
-                            id: bronzeImage
-                            anchors.fill: parent
-                            anchors.margins: 10
-                            fillMode: Image.PreserveAspectFit
-                            source: "Developers/commit_tiers_output/bronze_contributors.png"
+                        Text {
+                            text: "Top developer"
+                            color: "red"
+                            font.bold: true
+                            font.pixelSize: 18
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            anchors.top: parent.top
+                            anchors.topMargin: 8
                         }
                     }
                 }
             }
 
-            // Additional container row below bar charts
-            RowLayout {
+            // ---------- SILVER PANEL ----------
+            Rectangle {
+                color: "#1A2B48"
+                radius: 10
+                border.color: "white"
                 Layout.fillWidth: true
-                spacing: 10
+                Layout.fillHeight: true
 
-                // Developer List (below Gold)
                 ColumnLayout {
-                    Layout.fillWidth: true
-                    Layout.preferredWidth: 1
+                    anchors.fill: parent
+                    anchors.margins: 10
+                    spacing: 8
 
                     Text {
-                        text: "Developer List"
+                        text: "Silver"
                         color: "white"
                         font.bold: true
-                        font.pixelSize: 24
+                        font.pixelSize: 26
+                        horizontalAlignment: Text.AlignHCenter
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    Rectangle {
+                        color: "white"
+                        radius: 8
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+
+                        Image {
+                            anchors.fill: parent
+                            anchors.margins: 10
+                            fillMode: Image.PreserveAspectFit
+                            source: "Developers/commit_tiers_output/silver_contributors.png"
+                        }
+
+                        Text {
+                            text: "Top developer"
+                            color: "red"
+                            font.bold: true
+                            font.pixelSize: 18
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            anchors.top: parent.top
+                            anchors.topMargin: 8
+                        }
+                    }
+                }
+            }
+
+            // ---------- BRONZE PANEL ----------
+            Rectangle {
+                color: "#1A2B48"
+                radius: 10
+                border.color: "white"
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                ColumnLayout {
+                    anchors.fill: parent
+                    anchors.margins: 10
+                    spacing: 8
+
+                    Text {
+                        text: "Bronze"
+                        color: "white"
+                        font.bold: true
+                        font.pixelSize: 26
+                        horizontalAlignment: Text.AlignHCenter
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    Rectangle {
+                        color: "white"
+                        radius: 8
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+
+                        Image {
+                            anchors.fill: parent
+                            anchors.margins: 10
+                            fillMode: Image.PreserveAspectFit
+                            source: "Developers/commit_tiers_output/bronze_contributors.png"
+                        }
+
+                        Text {
+                            text: "Top developer"
+                            color: "red"
+                            font.bold: true
+                            font.pixelSize: 18
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            anchors.top: parent.top
+                            anchors.topMargin: 8
+                        }
+                    }
+                }
+            }
+        }
+
+        // ===================== BOTTOM SECTION =====================
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.preferredHeight: parent.height / 2    // Bottom half of the window
+            spacing: 10
+
+            // ---------- DEVELOPERS LOG ----------
+            Rectangle {
+                color: "#1A2B48"
+                radius: 10
+                border.color: "white"
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                ColumnLayout {
+                    anchors.fill: parent
+                    anchors.margins: 10
+                    spacing: 8
+
+                    Text {
+                        text: "Developers Log"
+                        color: "white"
+                        font.bold: true
+                        font.pixelSize: 22
                         horizontalAlignment: Text.AlignHCenter
                         Layout.alignment: Qt.AlignHCenter
                     }
 
                     ScrollView {
                         Layout.fillWidth: true
-                        Layout.preferredHeight: 150
+                        Layout.fillHeight: true
                         clip: true
                         ScrollBar.vertical.policy: ScrollBar.AlwaysOn
 
                         TextArea {
                             id: devText
-                            text: backend.getDevList()
+                            text: "Console output here..."
                             readOnly: true
                             wrapMode: TextArea.Wrap
                             font.pixelSize: 12
-                            color: "#000"
-                            background: Rectangle {
-                                color: "white"
-                                radius: 4
-                            }
+                            color: "black"
+                            background: Rectangle { color: "white"; radius: 6 }
                         }
                     }
                 }
+            }
 
-                // Tickets by Developer (below Bronze)
+            // ---------- MEDAL + REFRESH ----------
+            Rectangle {
+                color: "#718399"
+                Layout.preferredWidth: 230
+                Layout.fillHeight: true
+                radius: 10
+                border.color: "transparent"
+
+                Column {
+                    anchors.centerIn: parent
+                    spacing: 1   // minimal space between image and button
+
+                    // Medal Image
+                    Image {
+                        source: "Developers/commit_tiers_output/Medal.png"
+                        width: 225
+                        height: 325
+                        fillMode: Image.PreserveAspectFit
+                        smooth: true
+                        antialiasing: true
+                        anchors.horizontalCenter: parent.horizontalCenter
+                    }
+
+                    Button {
+                        text: "Refresh"
+                        font.bold: true
+                        width: 200
+                        height: 50
+                        anchors.horizontalCenter: parent.horizontalCenter
+
+                        background: Rectangle {
+                            color: "#003366"
+                            radius: 5
+                            border.color: "#001F3F"
+                        }
+
+                        contentItem: Text {
+                            text: qsTr("Refresh")
+                            font.bold: true
+                            color: "white"
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                        }
+
+                        onClicked: {
+                            devText.text = backend.getDevList()
+                            ticketText.text = backend.getTicketsByDev()
+                        }
+                    }
+                }
+            }
+
+
+            // ---------- TICKET BY DEVELOPER LOG ----------
+            Rectangle {
+                color: "#1A2B48"
+                radius: 10
+                border.color: "white"
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
                 ColumnLayout {
-                    Layout.fillWidth: true
-                    Layout.preferredWidth: 1
+                    anchors.fill: parent
+                    anchors.margins: 10
+                    spacing: 8
 
                     Text {
-                        text: "Tickets By Developer"
+                        text: "Ticket by Developer Log"
                         color: "white"
                         font.bold: true
-                        font.pixelSize: 24
+                        font.pixelSize: 22
                         horizontalAlignment: Text.AlignHCenter
                         Layout.alignment: Qt.AlignHCenter
                     }
 
                     ScrollView {
                         Layout.fillWidth: true
-                        Layout.preferredHeight: 150
+                        Layout.fillHeight: true
                         clip: true
                         ScrollBar.vertical.policy: ScrollBar.AlwaysOn
 
                         TextArea {
                             id: ticketText
-                            text: backend.getTicketsByDev()
+                            text: "Console output here..."
                             readOnly: true
                             wrapMode: TextArea.Wrap
                             font.pixelSize: 12
-                            color: "#000"
-                            background: Rectangle {
-                                color: "white"
-                                radius: 4
-                            }
+                            color: "black"
+                            background: Rectangle { color: "white"; radius: 6 }
                         }
-                    }
-                }
-
-                // Spacer (keeps layout balanced)
-                Item { Layout.fillHeight: true }
-
-                // Refresh Button
-                Button {
-                    text: "Refresh"
-                    font.bold: true
-                    implicitWidth: 120
-                    implicitHeight: 40
-                    Layout.alignment: Qt.AlignHCenter
-                    onClicked: {
-                        devText.text = backend.getDevList()
-                        ticketText.text = backend.getTicketsByDev()
                     }
                 }
             }

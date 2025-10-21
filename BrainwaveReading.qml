@@ -9,7 +9,7 @@ import QtQuick3D 6.7
 // Brainwave Reading view
 Rectangle {
     property bool isRandomForestSelected: false
-    property bool isPyTorchSelected: true  // Default to PyTorch
+    property bool isPyTorchSelected: true
     color: "#718399"
     Layout.fillWidth: true
     Layout.fillHeight: true

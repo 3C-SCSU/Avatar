@@ -142,7 +142,6 @@ Rectangle {
                     color: parent.isHovering ? "#3e4e7a" : "#2e3a5c"
                     radius: 4
                     
-                    // Add a smooth color transition
                     Behavior on color { 
                         ColorAnimation { 
                             duration: 150 
