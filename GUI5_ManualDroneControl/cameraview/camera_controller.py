@@ -85,23 +85,28 @@ class CameraController(QObject):
 
         try:
             frame = self.tello.get_frame_read().frame
-            if frame is None:
-                return
-
-            # Convert BGR → RGB for proper display
-            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            temp_path = pathlib.Path("/tmp/drone_frame.jpg")
-
-            # Write frame to temp file
-            cv2.imwrite(str(temp_path), frame_rgb)
-
-
-            # Use platform-independent file URI
-            file_url = temp_path.as_uri()
-
-            # Emit to QML
-            self.frameReady.emit(file_url)
-
+            
+            if frame is not None:
+                # Convert BGR to RGB
+                frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                
+                # Convert to QImage
+                height, width, channel = frame_rgb.shape
+                bytes_per_line = 3 * width
+                qt_image = QImage(frame_rgb.data, width, height, bytes_per_line, QImage.Format_RGB888)
+                
+                
+                # Convert to base64 for QML
+                pixmap = QPixmap.fromImage(qt_image)
+                byte_array = pixmap.toImage().bits().asstring(pixmap.toImage().sizeInBytes())
+                
+                # For QML, we'll use a simpler approach - save frame as temp file
+                temp_path = "/tmp/drone_frame.jpg"
+                cv2.imwrite(temp_path, frame)
+                
+                # Emit the file path
+                self.frameReady.emit(f"file://{temp_path}")
+                
         except Exception as e:
             self.logMessage.emit(f"Error processing frame: {e}")
 
