@@ -7,7 +7,7 @@ import QtQuick.Dialogs
 import Qt.labs.platform
 import "GUI5_ManualDroneControl/cameraview"
 
-// Manual Drone Control view
+// Manual Drone Control Tab view
 Rectangle {
     color: "#718399"
 

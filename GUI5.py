@@ -18,7 +18,7 @@ from collections import defaultdict
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
 from GUI5_ManualDroneControl.cameraview.camera_controller import CameraController
 from NAO6.nao_connection import send_command
-# from Developers.hofCharts import main as hofCharts, ticketsByDev_text
+# from Developers.hofCharts import main as hofCharts, ticketsByDev_text NA
 
 from Developers import devCharts
 
