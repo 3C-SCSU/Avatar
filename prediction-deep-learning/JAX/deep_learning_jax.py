@@ -1,3 +1,92 @@
+"""
+JAX Deep Learning Implementation for Brain-Computer Interface Applications
+===========================================================================
+
+Author: Yash Patel (GitHub: Yash272001)
+Date: January 2025
+Project: Avatar BCI Platform - Neural Interface Control Systems
+Repository: https://github.com/3C-SCSU/Avatar
+
+MAIN CONTRIBUTION:
+This implementation demonstrates a neural network approach using JAX and Flax 
+for EEG-based brain-computer interface control, providing a deep learning 
+alternative to the Random Forest implementation.
+
+REFERENCES:
+===========
+
+[1] Bradbury, J., Frostig, R., Hawkins, P., Johnson, M. J., Leary, C., 
+    Maclaurin, D., Necula, G., Paszke, A., VanderPlas, J., 
+    Wanderman-Milne, S., & Zhang, Q. (2018). JAX: composable 
+    transformations of Python+NumPy programs (Version 0.3.13). 
+    http://github.com/google/jax
+    Used: jit, random, value_and_grad
+
+[2] Google Research. (2024). JAX Documentation. 
+    https://jax.readthedocs.io/en/latest/
+    Used: API reference for all JAX transformations
+
+[3] Babuschkin, I., Baumli, K., Bell, A., Bhupatiraju, S., Bruce, J., 
+    Buchlovsky, P., ... & Viola, F. (2020). The DeepMind JAX Ecosystem. 
+    http://github.com/deepmind
+    Used: Ecosystem context
+
+[4] Heek, J., Levskaya, A., Oliver, A., Ritter, M., Rondepierre, B., 
+    Steiner, A., & van Zee, M. (2020). Flax: A neural network library 
+    and ecosystem for JAX (Version 0.8.0). http://github.com/google/flax
+    Used: nn.Dense, nn.BatchNorm, nn.Dropout, nn.relu
+
+[5] Babuschkin, I., Hennigan, T., Norman, M., et al. (2020). Optax: 
+    composable gradient transformation and optimisation, in JAX. 
+    http://github.com/deepmind/optax
+    Used: optax.adam, optax.exponential_decay, optax.clip_by_global_norm
+
+[6] Ioffe, S., & Szegedy, C. (2015). Batch Normalization: Accelerating 
+    Deep Network Training by Reducing Internal Covariate Shift. 
+    Proceedings of the 32nd International Conference on Machine Learning, 
+    448-456.
+    Used: nn.BatchNorm implementation in MLPClassifier
+
+[7] Srivastava, N., Hinton, G., Krizhevsky, A., Sutskever, I., & 
+    Salakhutdinov, R. (2014). Dropout: A Simple Way to Prevent Neural 
+    Networks from Overfitting. Journal of Machine Learning Research, 
+    15(1), 1929-1958.
+    Used: nn.Dropout implementation in MLPClassifier
+
+[8] Kingma, D. P., & Ba, J. (2014). Adam: A Method for Stochastic 
+    Optimization. arXiv preprint arXiv:1412.6980.
+    Used: optax.adam optimizer in create_train_state
+
+[9] Harris, C. R., Millman, K. J., van der Walt, S. J., et al. (2020). 
+    Array programming with NumPy. Nature, 585(7825), 357-362. 
+    https://doi.org/10.1038/s41586-020-2649-2
+    Used: np.array, np.mean, standardization
+
+[10] McKinney, W. (2010). Data structures for statistical computing in 
+     python. Proceedings of the 9th Python in Science Conference, 445, 51-56.
+     Used: pd.read_csv, pd.DataFrame
+
+[11] Hunter, J. D. (2007). Matplotlib: A 2D graphics environment. 
+     Computing in Science & Engineering, 9(3), 90-95.
+     Used: plt.subplots, plt.savefig
+
+[12] Sanei, S., & Chambers, J. A. (2013). EEG signal processing. 
+     John Wiley & Sons.
+     Used: EEG processing context
+
+[13] Wolpaw, J. R., Birbaumer, N., McFarland, D. J., Pfurtscheller, G., 
+     & Vaughan, T. M. (2002). Brain-computer interfaces for communication 
+     and control. Clinical Neurophysiology, 113(6), 767-791.
+     Used: BCI principles
+
+NOTE:
+Development tools (GitHub Copilot, Claude AI, ChatGPT) were used as 
+assistive coding aids, but all technical content is derived from and 
+cited to the original academic sources listed above.
+"""
+
+
+
 import jax
 import jax.numpy as jnp
 from jax import random
