@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.15
 import QtQuick.Window 2.15
 import QtQuick3D 6.7
 
-// File shuffler view
+// File shuffler Tab view
 Rectangle {
     id: fileShufflerView
     color: "#718399"

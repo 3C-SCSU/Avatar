@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.15
 import QtQuick.Window 2.15
 import QtQuick3D 6.7
 
-// Transfer Data view
+// Transfer Data Tab view
 Rectangle {
     color: "#718399"
 

@@ -10,7 +10,7 @@ ApplicationWindow {
     visible: true
     width: 1200
     height: 800
-    title: "Avatar - Brainwave Reading"
+    title: "Avatar - BCI"
 
     ListModel { id: imageModel }
 

@@ -7,6 +7,7 @@ import QtQuick.Window 2.15
 import QtQuick3D 6.7
 import "Nao.mesh"
 
+// Manual Nao Control Tab view
 
 
 Rectangle {
