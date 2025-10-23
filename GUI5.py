@@ -109,16 +109,6 @@ class BrainwavesBackend(QObject):
             self.fligt_log.insert(0, "Nao failed to stand up.")
         self.flightLogUpdated.emit(self.flight_log)
 
-    def get_is_connected(self):
-        return self.isConnectedChanged
-
-    def set_is_connected(self, value):
-        if self.is_connected != value:
-            self.is_connected = value
-            self.isConnectedChanged.emit()
-
-    is_connected_prop = Property(bool, get_is_connected, set_is_connected, notify=isConnectedChanged)
-
     @Slot(result=str)
     def getDevList(self):
         exclude = {
@@ -216,6 +206,16 @@ class BrainwavesBackend(QObject):
             print("hofCharts.main() COMPLETED")
         except Exception as e:
             print(f"hofCharts.main() ERROR: {e}")
+
+    def get_is_connected(self):
+        return self.isConnectedChanged
+
+    def set_is_connected(self, value):
+        if self.is_connected != value:
+            self.is_connected = value
+            self.isConnectedChanged.emit()
+
+    is_connected_prop = Property(bool, get_is_connected, set_is_connected, notify=isConnectedChanged)
 
     def __init__(self):
         super().__init__()
