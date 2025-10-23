@@ -1,6 +1,6 @@
 # 👋 START HERE - Avatar BCI Project
 
-**Version: v1.0.0** | [Changelog](CHANGELOG.md) | [Full Documentation](README.md)
+**Version: v1.0.0** 🤖 *Auto-versioned* | [Changelog](CHANGELOG.md) | [Contributing](CONTRIBUTING.md)
 
 ## 🎯 Quick Start (2 Steps)
 
@@ -98,10 +98,17 @@ Enjoy the Avatar BCI project! 🧠🤖✨
 
 ---
 
+## 🤖 New: Automated Versioning!
+
+This project now uses **automated versioning**! When you contribute:
+- Use conventional commits (e.g., `feat(bci): add new feature`)
+- Versions and changelogs are generated automatically
+- See [CONTRIBUTING.md](CONTRIBUTING.md) for commit format
+
 ## 🆘 Need Help?
 
-1. **Check**: QUICKSTART.md for quick answers
-2. **Read**: SETUP_GUIDE.md for detailed help
+1. **Contributing**: [CONTRIBUTING.md](CONTRIBUTING.md) for commit guidelines
+2. **Setup**: [SETUP_GUIDE.md](SETUP_GUIDE.md) for detailed installation
 3. **Contact**:
    - Discord: https://discord.gg/mxbQ7HpPjq
    - Email: 3c.scsu@gmail.com
