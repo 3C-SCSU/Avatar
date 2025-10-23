@@ -1,5 +1,7 @@
 # Avatar Project Setup Guide
 
+**Version: v1.0.0** | [Changelog](CHANGELOG.md)
+
 ## Overview
 This guide helps you set up and run the Avatar BCI project correctly with all dependencies and proper paths.
 
@@ -172,6 +174,28 @@ See [README.md](README.md) for contribution guidelines.
 
 ## License
 MIT License - See [LICENSE](LICENSE) for details.
+
+## Versioning
+
+### Version Information
+- **Current Version**: v1.0.0 (see [VERSION](VERSION) file)
+- **Versioning Scheme**: [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH)
+- **Changelog**: See [CHANGELOG.md](CHANGELOG.md) for detailed version history
+
+### Understanding Version Numbers
+- **MAJOR**: Incompatible API changes or major feature overhauls
+- **MINOR**: New functionality added in a backwards compatible manner
+- **PATCH**: Backwards compatible bug fixes and small improvements
+
+### Checking Your Version
+```bash
+cat VERSION
+```
+
+### Version Compatibility
+- BCI Hardware: OpenBCI headsets with Cyton boards
+- Python: 3.13 or higher required
+- Dependencies: See [requirements.txt](requirements.txt) for exact versions
 
 ## Support
 - Discord: https://discord.gg/mxbQ7HpPjq

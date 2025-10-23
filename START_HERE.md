@@ -1,5 +1,7 @@
 # 👋 START HERE - Avatar BCI Project
 
+**Version: v1.0.0** | [Changelog](CHANGELOG.md) | [Full Documentation](README.md)
+
 ## 🎯 Quick Start (2 Steps)
 
 ### Step 1: Make sure you're in the project directory
