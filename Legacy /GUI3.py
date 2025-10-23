@@ -1,15 +1,26 @@
-import sys
-import cv2
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTabWidget, QWidget, QDesktopWidget, QVBoxLayout
-from PyQt5.QtCore import Qt
-from djitellopy import Tello
 import importlib
+import sys
+
+import cv2
+from djitellopy import Tello
+from PyQt5.QtWidgets import (
+    QApplication,
+    QDesktopWidget,
+    QMainWindow,
+    QTabWidget,
+    QVBoxLayout,
+    QWidget,
+)
 
 # The folder path has hyphens, so we have to load the pages with importlib
-manual_drone_control_module = importlib.import_module("brainwave-prediction-app3.gui_windows3.manual_drone_control_window3")
+manual_drone_control_module = importlib.import_module(
+    "brainwave-prediction-app3.gui_windows3.manual_drone_control_window3"
+)
 ManDroneCont_Tab = manual_drone_control_module.ManDroneCont_Tab
 
-transfer_files_module = importlib.import_module("brainwave-prediction-app3.gui_windows3.transfer_files_window3")
+transfer_files_module = importlib.import_module(
+    "brainwave-prediction-app3.gui_windows3.transfer_files_window3"
+)
 TransferFilesWindow = transfer_files_module.TransferFilesWindow
 
 # Import the new BrainwaveReading_Tab class
@@ -18,47 +29,48 @@ from brainwave_reading_tab import BrainwaveReading_Tab
 # Ensure QMainWindow is imported
 tello = Tello()
 
+
 def get_drone_action(action):
-    if action == 'Connect':
+    if action == "Connect":
         tello.connect()
         print("tello.connect()")
-    elif action == 'Back':
+    elif action == "Back":
         tello.move_back(30)
-        print('tello.move_back(30)')
-    elif action == 'Down':
+        print("tello.move_back(30)")
+    elif action == "Down":
         tello.move_down(30)
-        print('tello.move_down(30)')
-    elif action == 'Forward':
+        print("tello.move_down(30)")
+    elif action == "Forward":
         tello.move_forward(30)
-        print('tello.move_forward(30)')
-    elif action == 'Land':
+        print("tello.move_forward(30)")
+    elif action == "Land":
         tello.land()
-        print('tello.land')
-    elif action == 'Left':
+        print("tello.land")
+    elif action == "Left":
         tello.move_left(30)
-        print('tello.move_left(30)')
-    elif action == 'Right':
+        print("tello.move_left(30)")
+    elif action == "Right":
         tello.move_right(30)
-        print('tello.move_right(30)')
-    elif action == 'Takeoff':
+        print("tello.move_right(30)")
+    elif action == "Takeoff":
         tello.takeoff()
-        print('tello.takeoff')
-    elif action == 'Up':
+        print("tello.takeoff")
+    elif action == "Up":
         tello.move_up(30)
-        print('tello.move_up(30)')
-    elif action == 'Turn Left':
+        print("tello.move_up(30)")
+    elif action == "Turn Left":
         tello.rotate_counter_clockwise(45)
-        print('tello.rotate_counter_clockwise(45)')
-    elif action == 'Turn Right':
+        print("tello.rotate_counter_clockwise(45)")
+    elif action == "Turn Right":
         tello.rotate_clockwise(45)
-        print('tello.rotate_clockwise(45)')
-    elif action == 'Flip':
+        print("tello.rotate_clockwise(45)")
+    elif action == "Flip":
         tello.flip_back()
         print("tello.flip('b')")
-    elif action == 'Keep Alive':
+    elif action == "Keep Alive":
         bat = tello.query_battery()
         print(bat)
-    elif action == 'Stream':
+    elif action == "Stream":
         tello.streamon()
         frame_read = tello.get_frame_read()
         while True:
@@ -66,7 +78,8 @@ def get_drone_action(action):
             img = frame_read.frame
             cv2.imshow("drone", img)
 
-    return ("Done")
+    return "Done"
+
 
 # Creates the Main Window
 class MainWindow(QMainWindow):
@@ -85,7 +98,8 @@ class MainWindow(QMainWindow):
         self.tabWidget = QTabWidget()
 
         # Set blue background color for the tab widget
-        self.tabWidget.setStyleSheet("""
+        self.tabWidget.setStyleSheet(
+            """
                 QTabWidget::pane {
                     background-color: #64778D;
                     border: none;
@@ -93,7 +107,8 @@ class MainWindow(QMainWindow):
                 QTabBar {
                     background-color: white;
                 }
-                                """)
+                                """
+        )
 
         # Create tab widgets
         # Brainwave Reading Tab
@@ -130,18 +145,18 @@ class MainWindow(QMainWindow):
 
     # Slot to handle Brainwave Tab actions
     def handle_brainwave_action(self, action):
-        if action == 'read_mind':
+        if action == "read_mind":
             # Handle starting brainwave reading (e.g., initiate brainflow connection)
             self.use_brainflow()
             print("Brainwave Reading Started")
-        elif action == 'not_thinking':
+        elif action == "not_thinking":
             # Handle "Not what I was thinking" action
             print("Not what I was thinking triggered")
-        elif action == 'execute':
+        elif action == "execute":
             # Handle the execute action
             print("Executing prediction")
-        elif action == 'keep_drone_alive':
-            self.get_drone_action('keep alive')
+        elif action == "keep_drone_alive":
+            self.get_drone_action("keep alive")
 
     # Placeholder function for brainwave connection
     def use_brainflow(self):
@@ -151,6 +166,7 @@ class MainWindow(QMainWindow):
     # Slot to go to the Home tab
     def go_home(self):
         self.tabWidget.setCurrentIndex(0)
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

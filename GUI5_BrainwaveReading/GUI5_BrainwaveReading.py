@@ -1,10 +1,12 @@
 # This Python file uses the following encoding: utf-8
-import sys
 import os
+import sys
 from pathlib import Path
+
+from PySide6.QtCore import QObject, Signal, Slot
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
-from PySide6.QtCore import QObject, Signal, Slot
+
 
 class BrainwavesBackend(QObject):
     # Define signals to update QML components
@@ -22,21 +24,21 @@ class BrainwavesBackend(QObject):
         # Mock function to simulate brainwave reading
         self.current_prediction_label = "Move Forward"
         # Update the predictions log
-        self.predictions_log.append({
-            "count": "1",
-            "server": "Prediction Server",
-            "label": self.current_prediction_label
-        })
+        self.predictions_log.append(
+            {
+                "count": "1",
+                "server": "Prediction Server",
+                "label": self.current_prediction_label,
+            }
+        )
         self.predictionsTableUpdated.emit(self.predictions_log)
 
     @Slot(str)
     def notWhatIWasThinking(self, manual_action):
         # Handle manual action input
-        self.predictions_log.append({
-            "count": "manual",
-            "server": "manual",
-            "label": manual_action
-        })
+        self.predictions_log.append(
+            {"count": "manual", "server": "manual", "label": manual_action}
+        )
         self.predictionsTableUpdated.emit(self.predictions_log)
 
     @Slot()
@@ -57,6 +59,7 @@ class BrainwavesBackend(QObject):
         # Mock function to simulate sending keep-alive signal
         self.flight_log.insert(0, "Keep alive signal sent.")
         self.flightLogUpdated.emit(self.flight_log)
+
 
 if __name__ == "__main__":
     # Set the Quick Controls style to "Fusion"

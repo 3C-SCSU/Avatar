@@ -1,8 +1,9 @@
-from naoqi import ALProxy
-import time
-import subprocess
-import paramiko
 import os
+import subprocess
+import time
+
+import paramiko
+from naoqi import ALProxy
 
 # --- Config ---
 NAO_IP = "192.168.43.100"
@@ -16,6 +17,7 @@ tts = ALProxy("ALTextToSpeech", NAO_IP, PORT)
 asr = ALProxy("ALSpeechRecognition", NAO_IP, PORT)
 memory = ALProxy("ALMemory", NAO_IP, PORT)
 manager = ALProxy("ALBehaviorManager", NAO_IP, PORT)
+
 
 def setup_speech_recognition():
     # Unsubscribe from all previous apps
@@ -40,7 +42,9 @@ def setup_speech_recognition():
     asr.pause(True)
     asr.setLanguage("English")
     asr.setAudioExpression(False)
-    asr.setVocabulary(["Do Gangnam Style", "NAO guess my age", "Stand Up", "Sit Down"], False)
+    asr.setVocabulary(
+        ["Do Gangnam Style", "NAO guess my age", "Stand Up", "Sit Down"], False
+    )
     tts.say("I'm listening. Say")
     asr.pause(False)
     try:
@@ -105,7 +109,6 @@ def setup_exit_continue(activity):
     asr.unsubscribe("GuessAgeApp")
     return exit_flag
 
-    
 
 def wait_for_phrase(max_attempts):
     activity = ""
@@ -132,19 +135,19 @@ def wait_for_phrase(max_attempts):
                     asr.unsubscribe("GuessAgeApp")
                     activity = "Gangnam"
                     return True, activity
-                
+
                 elif current_word == "Stand Up" and confidence > 0.3:
                     tts.say("Okay, let me Stand Up.")
                     asr.unsubscribe("GuessAgeApp")
                     activity = "standup"
                     return True, activity
-                
+
                 elif current_word == "Sit Down" and confidence > 0.3:
                     tts.say("Okay, let me Sit Down")
                     asr.unsubscribe("GuessAgeApp")
                     activity = "sitdown"
                     return True, activity
-                
+
                 last_word = current_word
         except:
             pass
@@ -154,6 +157,7 @@ def wait_for_phrase(max_attempts):
         tts.say("I did not understand. Please try again.")
     asr.unsubscribe("GuessAgeApp")
     return False, activity
+
 
 def capture_and_download_nao_photo(nao_ip, port, local_path, photo_name):
     photo_dir = "/home/nao/recordings/cameras/"
@@ -173,7 +177,7 @@ def capture_and_download_nao_photo(nao_ip, port, local_path, photo_name):
         tts.say("Something went wrong with the countdown.")
 
     try:
-        camera = ALProxy("ALPhotoCapture", nao_ip, port)       
+        camera = ALProxy("ALPhotoCapture", nao_ip, port)
         camera.setResolution(2)
         camera.setPictureFormat(pic_format)  # use global format
         motion.setStiffnesses("Head", 1.0)
@@ -200,6 +204,7 @@ def capture_and_download_nao_photo(nao_ip, port, local_path, photo_name):
 
     return True
 
+
 def run_age_estimation_script(image_path):
     try:
         print("Running Python 3 script to estimate age...")
@@ -211,6 +216,7 @@ def run_age_estimation_script(image_path):
         return False
     return True
 
+
 def speak_estimated_age():
     try:
         with open(ESTIMATED_AGE_FILE, "r") as f:
@@ -221,6 +227,7 @@ def speak_estimated_age():
     except Exception as e:
         print("Error reading age:", e)
         tts.say("Sorry, I could not read your age.")
+
 
 def do_gangnam_style(nao_ip, port):
     # Behavior name
@@ -275,6 +282,7 @@ def nao_sit_down(nao_ip, port):
 
     return False
 
+
 def nao_stand_up(nao_ip, port):
     # Behavior name
     behavior_name = "standup-80f5e5/Stand up"
@@ -301,6 +309,7 @@ def nao_stand_up(nao_ip, port):
 
     return False
 
+
 def choose_activity(NAO_IP, PORT, local_path, photo_filename, activity):
     if activity == "Age":
         if not capture_and_download_nao_photo(NAO_IP, PORT, local_path, photo_filename):
@@ -317,17 +326,18 @@ def choose_activity(NAO_IP, PORT, local_path, photo_filename, activity):
     elif activity == "Gangnam":
         if not do_gangnam_style(NAO_IP, PORT):
             tts.say("Sorry, I could not do Gangnam style.")
-        
+
         return
     elif activity == "sitdown":
         if not nao_sit_down(NAO_IP, PORT):
             tts.say("Sorry, I could not do sit down, I have pain in my knees.")
         return
-    
+
     elif activity == "standup":
         if not nao_stand_up(NAO_IP, PORT):
             tts.say("Sorry, I could not do stand up, because I'm lazy.")
         return
+
 
 def main():
     try:
@@ -342,8 +352,7 @@ def main():
         photo_filename = "nao_photo." + pic_format
         local_filename = photo_base_name + "." + pic_format
         local_path = os.path.join(output_dir, local_filename)
-        
-    
+
         # Start voice interaction
         while activity_flag:
             setup_speech_recognition()
@@ -354,7 +363,7 @@ def main():
                     continue
                 else:
                     tts.say("Thank you for your time. Goodbye!")
-                    break  
+                    break
             else:
                 tts.say("Let's try that again.")
                 time.sleep(1)
@@ -362,7 +371,6 @@ def main():
     except Exception as e:
         print("An error occurred:", e)
         tts.say("Sorry, an error occurred.")
-
 
         # if activity == "Age":
         #     if not capture_and_download_nao_photo(NAO_IP, PORT, local_path, photo_filename):
@@ -378,17 +386,18 @@ def main():
         # elif activity == "Gangnam":
         #     if not do_gangnam_style(NAO_IP, PORT):
         #         tts.say("Sorry, I could not do Gangnam style.")
-            
+
         #     return
         # elif activity == "sitdown":
         #     if not nao_sit_down(NAO_IP, PORT):
         #         tts.say("Sorry, I could not do sit down, I have pain in my knees.")
         #     return
-        
+
         # elif activity == "standup":
         #     if not nao_stand_up(NAO_IP, PORT):
         #         tts.say("Sorry, I could not do stand up, because I'm lazy.")
         #     return
+
 
 if __name__ == "__main__":
     main()
