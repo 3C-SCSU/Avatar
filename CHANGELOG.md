@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [1.0.1] - 2025-10-23
+
+### Changed
+- Release automation(versioning) (01fe4ae)
+- Versioning (b940516)
+- Format and sort (7aaa615)
+- Format files (9e87fe9)
+- Working ci (47cf405)
+- Faster ci (d73d988)
+- Ci (c5f61c3)
+- Ci (1c2cc35)
+- Py version (477382d)
+- Ignore ds_store (03134a2)
+- Create python-app.yml (83cbd04)
+- Delete .qtcreator directory (3b1eb24)
+- Delete .idea directory (efd1902)
+- Delete .ds_store (2c23cd2)
+- Fix (f8c5c78)
+- Qt creator (7ef1198)
+- Git ignore (2b2e70b)
+- Fixing paths (dae7130)
+- Fixgui5 (9fd55ad)
+- Fixuideveloperstab (85373b9)
+- Revert "fix/drone camera view 371 v2" (5e3342b)
+- Revert "fix/drone flightlog 370 v2" (6eb7714)
+- Replaced old jax model files and updated notebooks (9916ef9)
+- Revert "add jax random forest for nao control" (90d2e25)
+- Enhance run.sh with error handling and python detection (349e05d)
+- Correct main block execution flow (bd79133)
+- Ux fix (#418): updated window title to 'avatar - bci', moved all tabs to top, and added active tab highlighting (green background, yellow text) (3430879)
+- Fix nao control panel ui (#419): resolved log overlap and unified button icon sizing (7a54f20)
+- Drone cameraview integration and windows-safe frame path (#371) (807344c)
+- Gui v5: drone flight log — backend bridge + qml model; sim fallback + shorter timeouts (fixes #370) (62aa2a5)
+- Added new jax deep learning files and cleaned up old versions (f970ced)
+
 ## [1.0.0] - 2024-10-23
 
 ### Added
