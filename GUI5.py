@@ -26,7 +26,7 @@ from Developers import devCharts
 
 # Import BCI connection for brainwave prediction
 try:
-    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'random-forest-prediction')))
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'prediction-random-forest/tensorflow')))
     from client.brainflow1 import bciConnection, DataMode
     BCI_AVAILABLE = True
 except ImportError as e:
