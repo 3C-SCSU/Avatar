@@ -13,7 +13,7 @@ from pathlib import Path
 from brainflow.board_shim import BoardIds, BoardShim, BrainFlowInputParams
 from djitellopy import Tello
 from pdf2image import convert_from_path
-from PySide6.QtCore import QObject, QUrl, Signal, Slot
+from PySide6.QtCore import QObject, QUrl, Signal, Slot, Property
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtWidgets import QApplication
 
@@ -63,6 +63,7 @@ class BrainwavesBackend(QObject):
     logMessage = Signal(str)
     naoStarted = Signal()
     naoEnded = Signal()
+    isConnectedChanged = Signal()
 
     @Slot()
     def startNaoManual(self):
@@ -107,6 +108,16 @@ class BrainwavesBackend(QObject):
         else:
             self.fligt_log.insert(0, "Nao failed to stand up.")
         self.flightLogUpdated.emit(self.flight_log)
+
+    def get_is_connected(self):
+        return self.isConnectedChanged
+
+    def set_is_connected(self, value):
+        if self.is_connected != value:
+            self.is_connected = value
+            self.isConnectedChanged.emit()
+
+    is_connected_prop = Property(bool, get_is_connected, set_is_connected, notify=isConnectedChanged)
 
     @Slot(result=str)
     def getDevList(self):
@@ -216,6 +227,7 @@ class BrainwavesBackend(QObject):
         self.image_paths = []  # Store converted image paths
         self.plots_dir = os.path.abspath("plotscode/plots")  # Base plots directory
         self.current_dataset = "refresh"  # Default dataset to display
+        self.is_connected = False
         try:
             self.tello = Tello()
         except Exception as e:
@@ -406,11 +418,20 @@ class BrainwavesBackend(QObject):
 
     @Slot(str)
     def getDroneAction(self, action):
-        try:
-            if action == "connect":
+        if action == 'connect':
+            try:
                 self.tello.connect()
+                self.is_connected = True
                 self.logMessage.emit("Connected to Tello Drone")
-            elif action == "up":
+            except:
+                self.is_connected = False
+                self.logMessage.emit("Error during connect: {e}")
+            return
+        elif not self.is_connected:
+            self.logMessage.emit(f"Drone not connected. Aborting command '{action}'.")
+            return
+        try:
+            if action == 'up':
                 self.tello.move_up(30)
                 self.logMessage.emit("Moving up")
             elif action == "down":
@@ -453,6 +474,7 @@ class BrainwavesBackend(QObject):
         except Exception as e:
             self.logMessage.emit(f"Error during {action}: {e}")
 
+	
     # Method for returning to home (an approximation)
     def go_home(self):
         # Assuming the home action means moving backward and upwards
