@@ -337,27 +337,43 @@ For version information and semantic versioning details, see our [VERSION](VERSI
 <!-- CONTRIBUTING -->
 ## Contributing
 
-### University Contributions
-If you have been informed that your submission for contribution was selected and approved by the Cloud Computing Club, follow the below steps to add it to the project and receive the bounty. 
-1. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-2. Name the feature branch using format `feature-bounty` ex. `file_shuffler-bounty` 
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request and select a review from the list of Collaborators.
-6. Update the  <a href="https://github.com/3C-SCSU/Avatar/wiki">Wiki </a> with an explanation of your added feature. 
+**🤖 We use automated versioning and changelog generation!** 
 
+This project automatically manages versions and creates changelogs based on your commit messages. Please read our [**Contributing Guide (CONTRIBUTING.md)**](CONTRIBUTING.md) for the complete workflow.
+
+### Quick Start for Contributors
+
+#### 1. Use Conventional Commits
+```bash
+feat(bci): add support for 32-channel OpenBCI boards
+fix(drone): resolve connection timeout issues  
+docs: update setup guide with new requirements
+```
+
+#### 2. Automated Release Process
+- 📝 Your commits determine version bumps (major/minor/patch)
+- 📋 Changelog entries are generated automatically
+- 🏷️ GitHub releases are created on merge to main
+- 🚀 No manual version management needed!
+
+### University Contributions (Bounty Program)
+If your submission was approved by the Cloud Computing Club:
+1. Create Feature Branch: `git checkout -b feature-bounty` (e.g., `file_shuffler-bounty`)
+2. Use Conventional Commits: `git commit -m 'feat(scope): add amazing feature'`
+3. Push and create Pull Request with bounty label
+4. Update the [Wiki](https://github.com/3C-SCSU/Avatar/wiki) after merge
+5. Automation handles versioning and releases!
 
 ### External Contributions
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+We welcome all contributions! The process is now streamlined with automation:
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
+1. **Fork the Project**
+2. **Create Feature Branch**: `git checkout -b feature/AmazingFeature`
+3. **Use Conventional Commits**: `git commit -m 'feat: add amazing feature'`
+4. **Push Branch**: `git push origin feature/AmazingFeature`
+5. **Open Pull Request** - automation does the rest!
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+**📚 Read [CONTRIBUTING.md](CONTRIBUTING.md) for detailed commit message format and examples.**
 
 
 Pull requests will be rieviewed and merged: 
