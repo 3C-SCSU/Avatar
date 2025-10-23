@@ -10,7 +10,6 @@ import "GUI5_ManualDroneControl/cameraview"
 // Manual Drone Control Tab view
 Rectangle {
     color: "#718399"
-    property bool is_connected: backend.is_connected_prop
 
     Row {
         anchors.fill: parent
@@ -62,7 +61,6 @@ Rectangle {
                         MouseArea {
                             anchors.fill: parent
                             onEntered: {
-                                enabled: root.is_connected
                                 buttonBackground.color = "white";
                                 buttonText.color = "black";
                             }
@@ -103,7 +101,6 @@ Rectangle {
 
                         MouseArea {
                             anchors.fill: parent
-                            enabled: root.is_connected
                             onEntered: {
                                 upButtonBackground.color = "white";
                                 upButtonText.color = "black";
@@ -179,7 +176,6 @@ Rectangle {
 
                         MouseArea {
                             anchors.fill: parent
-                            enabled: root.is_connected
                             onEntered: parent.color = "white"
                             onExited: parent.color = "#242c4d"
                             onClicked: backend.getDroneAction("forward")
@@ -221,7 +217,6 @@ Rectangle {
 
                         MouseArea {
                             anchors.fill: parent
-                            enabled: root.is_connected
                             onEntered: parent.color = "white"
                             onExited: parent.color = "#242c4d"
                             onClicked: backend.getDroneAction("turn_left")
@@ -254,7 +249,6 @@ Rectangle {
 
                         MouseArea {
                             anchors.fill: parent
-                            enabled: root.is_connected
                             onEntered: parent.color = "white"
                             onExited: parent.color = "#242c4d"
                             onClicked: backend.getDroneAction("left")
@@ -287,7 +281,6 @@ Rectangle {
 
                         MouseArea {
                             anchors.fill: parent
-                            enabled: root.is_connected
                             onEntered: parent.color = "white"
                             onExited: parent.color = "#242c4d"
                             onClicked: backend.getDroneAction("stream")
@@ -320,7 +313,6 @@ Rectangle {
 
                         MouseArea {
                             anchors.fill: parent
-                            enabled: root.is_connected
                             onEntered: parent.color = "white"
                             onExited: parent.color = "#242c4d"
                             onClicked: backend.getDroneAction("right")
@@ -353,7 +345,6 @@ Rectangle {
 
                         MouseArea {
                             anchors.fill: parent
-                            enabled: root.is_connected
                             onEntered: parent.color = "white"
                             onExited: parent.color = "#242c4d"
                             onClicked: backend.getDroneAction("turn_right")
@@ -395,7 +386,6 @@ Rectangle {
 
                         MouseArea {
                             anchors.fill: parent
-                            enabled: root.is_connected
                             onEntered: parent.color = "white"
                             onExited: parent.color = "#242c4d"
                             onClicked: backend.getDroneAction("backward")
@@ -442,7 +432,6 @@ Rectangle {
 
                             MouseArea {
                                 anchors.fill: parent
-                                enabled: !root.is_connected
                                 onEntered: parent.color = "white"
                                 onExited: parent.color = "#242c4d"
                                 onClicked: backend.getDroneAction("connect")
@@ -475,7 +464,6 @@ Rectangle {
 
                             MouseArea {
                                 anchors.fill: parent
-                                enabled: root.is_connected
                                 onEntered: parent.color = "white"
                                 onExited: parent.color = "#242c4d"
                                 onClicked: backend.getDroneAction("down")
@@ -508,7 +496,6 @@ Rectangle {
 
                             MouseArea {
                                 anchors.fill: parent
-                                enabled: root.is_connected
                                 onEntered: parent.color = "white"
                                 onExited: parent.color = "#242c4d"
                                 onClicked: backend.getDroneAction("takeoff")
@@ -541,7 +528,6 @@ Rectangle {
 
                             MouseArea {
                                 anchors.fill: parent
-                                enabled: root.is_connected
                                 onEntered: parent.color = "white"
                                 onExited: parent.color = "#242c4d"
                                 onClicked: backend.getDroneAction("land")
