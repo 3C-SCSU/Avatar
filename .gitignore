@@ -1,6 +1,6 @@
 LICENSE
 README.md
-.DS_Store
+**/.DS_Store
 .qtcreator
 .idea
 # Environments
