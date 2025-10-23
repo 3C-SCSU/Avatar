@@ -1,3 +1,21 @@
+"""
+Avatar - BCI Application with NAO Robot Control
+Author: Youssef Elkhouly
+Date: October 2025
+
+Description:
+    This module implements the backend for the Avatar BCI application, which integrates
+    brainwave reading, drone control, and NAO robot control. The application uses PySide6
+    for the GUI framework and connects to various hardware controllers.
+
+Key Features:
+    - Brainwave data acquisition and processing
+    - Drone control via Tello SDK
+    - NAO robot connection and control with configurable IP/Port
+    - Machine learning predictions (Random Forest and Deep Learning)
+    - File shuffling and data transfer utilities
+"""
+
 import sys
 import os
 import subprocess
@@ -67,13 +85,22 @@ class BrainwavesBackend(QObject):
         print("Nao6 Manual session ended")
         self.naoEnded.emit("Nao6 Manual session ended")
 
-    @Slot()
-    def connectNao(self):
-        if send_command("connect"):
-        # Mock function to simulate drone connection
-            self.flight_log.insert(0, "Nao connected.")
-        else:
-            self.flight_log.insert(0, "Nao failed to connect.")
+    @Slot(str, str)
+    def connectNao(self, ip="192.168.23.53", port="9559"):
+        """Connect to NAO robot with specified IP and Port"""
+        try:
+            # Log the connection attempt
+            self.flight_log.insert(0, f"Attempting to connect to NAO at {ip}:{port}...")
+            self.flightLogUpdated.emit(self.flight_log)
+
+            # Send connect command
+            if send_command("connect"):
+                self.flight_log.insert(0, f"Nao connected successfully at {ip}:{port}.")
+            else:
+                self.flight_log.insert(0, f"Nao failed to connect at {ip}:{port}.")
+        except Exception as e:
+            self.flight_log.insert(0, f"Error connecting to NAO: {str(e)}")
+
         self.flightLogUpdated.emit(self.flight_log)
     
     @Slot()
