@@ -26,6 +26,7 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
+[![Version][version-shield]][changelog-url]
 
 
 
@@ -84,6 +85,7 @@
     </li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#changelog">Changelog</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -317,6 +319,21 @@ See the [open issues](https://github.com/3C-SCSU/Avatar/issues) for a full list 
 
 
 
+<!-- CHANGELOG -->
+## Changelog
+
+We maintain a detailed changelog following the [Keep a Changelog](https://keepachangelog.com/) format.
+
+**Current Version: v1.0.0**
+
+See [CHANGELOG.md](CHANGELOG.md) for a complete list of changes, additions, fixes, and improvements in each version.
+
+For version information and semantic versioning details, see our [VERSION](VERSION) file.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
 <!-- CONTRIBUTING -->
 ## Contributing
 
@@ -407,6 +424,8 @@ Cloud Computing Club: [Huskies-Connect](https://huskiesconnect.stcloudstate.edu/
 [issues-url]: https://github.com/3C-SCSU/Avatar/issues
 [license-shield]: https://img.shields.io/github/license/3C-SCSU/Avatar.svg?style=for-the-badge
 [license-url]: https://github.com/3C-SCSU/Avatar/blob/master/LICENSE
+[version-shield]: https://img.shields.io/badge/version-v1.0.0-blue.svg?style=for-the-badge
+[changelog-url]: https://github.com/3C-SCSU/Avatar/blob/main/CHANGELOG.md
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-screenshot]: images/screenshot.png
