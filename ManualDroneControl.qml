@@ -11,6 +11,18 @@ import "GUI5_ManualDroneControl/cameraview"
 Rectangle {
     color: "#718399"
 
+    // connection
+    Connections {
+        target: backend
+        function onLogMessage(message){
+            if(flightLogTextArea.text = ""){
+                flightLogTextArea.text =message;
+            } else{
+                flightLogTextArea.text = message + "\n" + flightLogTextArea.text;
+            }
+        }
+    }
+
     Row {
         anchors.fill: parent
         anchors.margins: 10
@@ -35,6 +47,7 @@ Rectangle {
                     spacing: parent.width * 0.1
                     // Home Button
                     Rectangle {
+                        id: homeButton
                         width: parent.width * 0.15
                         height: parent.height
                         anchors.left: parent.left
@@ -59,23 +72,18 @@ Rectangle {
                         }
 
                         MouseArea {
-                            anchors.fill: parent
-                            onEntered: {
-                                buttonBackground.color = "white";
-                                buttonText.color = "black";
+                            anchors.fill:parent
+                            onEntered: homeButton.color ="white"
+                            onExited: homeButton.color = "#242c4d"
+                            onClicked: backend.getDroneAction("home")
                             }
-                            onExited: {
-                                buttonBackground.color = "#242c4d";
-                                buttonText.color = "white";
-                            }
-                            onClicked: {
-                                backend.getDroneAction("home");
-                            }
-                        }
+                            
+                            
                     }
 
                     // Up Button
                     Rectangle {
+                        id: upButton
                         width: parent.width * 0.6
                         height: parent.height
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -101,49 +109,61 @@ Rectangle {
 
                         MouseArea {
                             anchors.fill: parent
-                            onEntered: {
-                                upButtonBackground.color = "white";
-                                upButtonText.color = "black";
-                            }
-                            onExited: {
-                                upButtonBackground.color = "#242c4d";
-                                upButtonText.color = "white";
-                            }
-                            onClicked: {
-                                backend.getDroneAction("up");
-                            }
+                            onEntered: upButton.color = "white"
+                            onExited: upButton.color = "#242c4d"
+                            onClicked: backend.getDroneAction("up");
+                            
+                            
+                            
                         }
                     }
 
                     // Flight Log
                     Rectangle {
-                        width: parent.width * 0.2
+                        width: parent.width * 0.4
                         height: parent.height
                         anchors.right: parent.right
-                        color: "white"
+                        color: "black"
                         border.color: "#2E4053"
+
+                        Column{
+                            anchors.fill:parent
+                            anchors.margins:5
+                        
 
                         Text {
                             text: "Flight Log"
                             font.bold: true
                             font.pixelSize: Math.max(12, parent.width * 0.05)
-                            color: "black"
+                            color: "white"
                             anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.top: parent.top
-                            anchors.topMargin: 10
+                            
                         }
 
+                        ScrollView {
+                            width: parent.width
+                            height:parent.height - 30
+                            clip: true
+                        
+
                         TextArea {
-                            anchors.fill: parent
-                            anchors.topMargin: 30
+                            id: flightLogTextArea
                             font.pixelSize: Math.max(10, parent.width * 0.03)
-                            color: "black"
+                            color: "white"
+                            readOnly: true
+                            wrapMode: TextArea.Wrap
+                            selectByMouse: true
                         }
                     }
+                        
+                    }
+                        
                 }
+            }
 
                 // Forward Button
                 Rectangle {
+                     
                     width: parent.width
                     height: parent.height * 0.19
                     anchors.top: parent.top
@@ -151,6 +171,7 @@ Rectangle {
                     color: "transparent"
 
                     Rectangle {
+                        id: forwardButton
                         width: parent.width
                         height: parent.height
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -176,8 +197,8 @@ Rectangle {
 
                         MouseArea {
                             anchors.fill: parent
-                            onEntered: parent.color = "white"
-                            onExited: parent.color = "#242c4d"
+                            onEntered: forwardButton.color = "white"
+                            onExited: forwardButton.color = "#242c4d"
                             onClicked: backend.getDroneAction("forward")
                         }
                     }
@@ -193,6 +214,7 @@ Rectangle {
 
                     // Turn Left Button
                     Rectangle {
+                        id: turnLeftButton
                         width: parent.width * 0.15
                         height: parent.height
                         color: "#242c4d"
@@ -217,14 +239,15 @@ Rectangle {
 
                         MouseArea {
                             anchors.fill: parent
-                            onEntered: parent.color = "white"
-                            onExited: parent.color = "#242c4d"
+                            onEntered: turnLeftButton.color = "white"
+                            onExited: turnLeftButton.color = "#242c4d"
                             onClicked: backend.getDroneAction("turn_left")
                         }
                     }
 
                     // Left Button
                     Rectangle {
+                        id: leftButton
                         width: parent.width * 0.15
                         height: parent.height
                         color: "#242c4d"
@@ -249,14 +272,15 @@ Rectangle {
 
                         MouseArea {
                             anchors.fill: parent
-                            onEntered: parent.color = "white"
-                            onExited: parent.color = "#242c4d"
+                            onEntered: leftButton.color = "white"
+                            onExited: leftButton.color = "#242c4d"
                             onClicked: backend.getDroneAction("left")
                         }
                     }
 
                     // Stream Button
                     Rectangle {
+                        id: streamButton
                         width: parent.width * 0.15
                         height: parent.height
                         color: "#242c4d"
@@ -281,14 +305,15 @@ Rectangle {
 
                         MouseArea {
                             anchors.fill: parent
-                            onEntered: parent.color = "white"
-                            onExited: parent.color = "#242c4d"
+                            onEntered: streamButton.color = "white"
+                            onExited: streamButton.color = "#242c4d"
                             onClicked: backend.getDroneAction("stream")
                         }
                     }
 
                     // Right Button
                     Rectangle {
+                        id: rightButton
                         width: parent.width * 0.15
                         height: parent.height
                         color: "#242c4d"
@@ -313,14 +338,15 @@ Rectangle {
 
                         MouseArea {
                             anchors.fill: parent
-                            onEntered: parent.color = "white"
-                            onExited: parent.color = "#242c4d"
+                            onEntered: rightButton.color = "white"
+                            onExited: rightButton.color = "#242c4d"
                             onClicked: backend.getDroneAction("right")
                         }
                     }
 
                     // Turn Right Button
                     Rectangle {
+                        id: turnRightButton
                         width: parent.width * 0.15
                         height: parent.height
                         color: "#242c4d"
@@ -345,8 +371,8 @@ Rectangle {
 
                         MouseArea {
                             anchors.fill: parent
-                            onEntered: parent.color = "white"
-                            onExited: parent.color = "#242c4d"
+                            onEntered:turnRightButton.color = "white"
+                            onExited: turnRightButton.color = "#242c4d"
                             onClicked: backend.getDroneAction("turn_right")
                         }
                     }
@@ -361,6 +387,7 @@ Rectangle {
                     color: "transparent"
 
                     Rectangle {
+                        id: backButton
                         width: parent.width
                         height: parent.height
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -386,8 +413,8 @@ Rectangle {
 
                         MouseArea {
                             anchors.fill: parent
-                            onEntered: parent.color = "white"
-                            onExited: parent.color = "#242c4d"
+                            onEntered: backButton.color = "white"
+                            onExited: backButton.color = "#242c4d"
                             onClicked: backend.getDroneAction("backward")
                         }
                     }
@@ -408,6 +435,7 @@ Rectangle {
 
                         // Connect Button
                         Rectangle {
+                            id: connectButton
                             width: parent.width * 0.15
                             height: parent.height
                             color: "#242c4d"
@@ -432,14 +460,15 @@ Rectangle {
 
                             MouseArea {
                                 anchors.fill: parent
-                                onEntered: parent.color = "white"
-                                onExited: parent.color = "#242c4d"
+                                onEntered: connectButton.color = "white"
+                                onExited: connectButton.color = "#242c4d"
                                 onClicked: backend.getDroneAction("connect")
                             }
                         }
 
                         // Down Button
                         Rectangle {
+                            id: downButton
                             width: parent.width * 0.5
                             height: parent.height
                             color: "#242c4d"
@@ -464,14 +493,15 @@ Rectangle {
 
                             MouseArea {
                                 anchors.fill: parent
-                                onEntered: parent.color = "white"
-                                onExited: parent.color = "#242c4d"
+                                onEntered: downButton.color = "white"
+                                onExited: downButton.color = "#242c4d"
                                 onClicked: backend.getDroneAction("down")
                             }
                         }
 
                         // Takeoff Button
                         Rectangle {
+                            id: takeoffButton
                             width: parent.width * 0.15
                             height: parent.height
                             color: "#242c4d"
@@ -496,14 +526,15 @@ Rectangle {
 
                             MouseArea {
                                 anchors.fill: parent
-                                onEntered: parent.color = "white"
-                                onExited: parent.color = "#242c4d"
+                                onEntered:takeoffButton.color = "white"
+                                onExited: takeoffButton.color = "#242c4d"
                                 onClicked: backend.getDroneAction("takeoff")
                             }
                         }
 
                         // Land Button
                         Rectangle {
+                            id: landButton
                             width: parent.width * 0.15
                             height: parent.height
                             color: "#242c4d"
@@ -528,8 +559,8 @@ Rectangle {
 
                             MouseArea {
                                 anchors.fill: parent
-                                onEntered: parent.color = "white"
-                                onExited: parent.color = "#242c4d"
+                                onEntered: landButton.color = "white"
+                                onExited: landButton.color = "#242c4d"
                                 onClicked: backend.getDroneAction("land")
                             }
                         }
