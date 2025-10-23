@@ -6,6 +6,10 @@ This document outlines the versioning process and guidelines for the Avatar BCI 
 
 The Avatar BCI project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) and maintains a detailed [changelog](CHANGELOG.md) using the [Keep a Changelog](https://keepachangelog.com/) format.
 
+**🤖 AUTOMATED VERSIONING IS NOW ACTIVE!**
+
+This project uses automated versioning based on [Conventional Commits](https://www.conventionalcommits.org/). Version numbers and changelog entries are generated automatically from your commit messages.
+
 ## Version Number Format
 
 **Format**: `MAJOR.MINOR.PATCH` (e.g., `1.2.3`)
@@ -53,34 +57,46 @@ def get_version():
         return f.read().strip()
 ```
 
-## Release Process
+## 🚀 Automated Release Process
 
-### 1. Prepare Release
-1. **Update VERSION file** with new version number
-2. **Update CHANGELOG.md**:
-   - Move items from `[Unreleased]` to new version section
-   - Add release date
-   - Create new empty `[Unreleased]` section
-3. **Update version references** in documentation if needed
+### How Releases Work Now
+**✅ Fully Automated! No manual steps required.**
 
-### 2. Commit and Tag
+1. **Make Changes**: Use conventional commits for your work
+2. **Create PR**: Push to feature branch, create pull request  
+3. **Merge to Main**: PR gets merged to main branch
+4. **Automation Triggers**: GitHub Actions runs automatically
+5. **Release Created**: Version bumped, changelog updated, tag created
+
+### Conventional Commit Examples
 ```bash
-# Commit version changes
-git add VERSION CHANGELOG.md
-git commit -m "Release v1.2.3"
+# Minor version bump (new features)
+git commit -m "feat(bci): add support for 32-channel headsets"
+git commit -m "feat(drone): add autonomous flight mode"
 
-# Create version tag
-git tag -a v1.2.3 -m "Release v1.2.3"
+# Patch version bump (bug fixes)
+git commit -m "fix(gui): resolve brainwave chart rendering"
+git commit -m "fix(nao): fix robot connection timeout"
 
-# Push changes and tags
-git push origin main
-git push origin v1.2.3
+# Major version bump (breaking changes)  
+git commit -m "feat(api)!: redesign prediction interface"
+# or
+git commit -m "feat(api): redesign prediction interface
+
+BREAKING CHANGE: The prediction API now returns different format"
 ```
 
-### 3. Update Documentation
-- Ensure README.md version badge is updated
-- Update any version-specific documentation
-- Update hardware compatibility notes if needed
+### Manual Testing (Optional)
+Test automation locally before pushing:
+```bash
+python scripts/auto_version.py
+```
+
+### Override Automation
+Add `[skip ci]` to commit message to skip automation:
+```bash
+git commit -m "docs: fix typo [skip ci]"
+```
 
 ## Changelog Management
 
@@ -141,19 +157,36 @@ For development and testing purposes, use pre-release identifiers:
 - Special branch for versioning system setup
 - Can be merged to main once versioning system is established
 
-## Integration with CI/CD
+## 🤖 Automated Versioning System
 
-### Automated Checks
-Consider adding automated checks for:
-- Version number format validation
-- Changelog entry requirements for PRs
-- Version consistency across files
+### Current Implementation
+✅ **Active Features:**
+- Automatic version bumping based on conventional commits
+- Automated changelog generation from commit history  
+- GitHub Actions workflow for releases
+- Git tagging and GitHub releases
+- Semantic versioning enforcement
 
-### Build Automation
-Future enhancements could include:
-- Automatic version bumping based on commit messages
-- Automated changelog generation from commit history
-- Version-specific build artifacts
+### How It Works
+1. **Commit Analysis**: `scripts/auto_version.py` analyzes commits since last release
+2. **Version Determination**: Determines bump type based on conventional commit types
+3. **File Updates**: Updates `VERSION` and `CHANGELOG.md` automatically
+4. **Release Creation**: GitHub Actions creates tags and releases
+
+### Commit Type → Version Mapping
+| Commit Type | Version Bump | Example |
+|-------------|--------------|---------|
+| `feat` | minor (1.1.0) | `feat(bci): add new headset support` |
+| `fix` | patch (1.0.1) | `fix(drone): resolve timeout issue` |
+| `feat!` or `BREAKING CHANGE` | major (2.0.0) | `feat(api)!: change interface` |
+| `docs`, `chore`, etc. | patch (1.0.1) | `docs: update README` |
+
+### GitHub Actions Workflow
+Located in `.github/workflows/release.yml`:
+- Triggers on push to `main` branch
+- Runs `scripts/auto_version.py`
+- Commits version updates with `[skip ci]`
+- Creates git tags and GitHub releases
 
 ## Hardware Compatibility Matrix
 
