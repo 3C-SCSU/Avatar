@@ -20,3 +20,4 @@ plotscode/.RData
 #IDE Files
 .idea/
 .qtcreator/
+.qmlproject
