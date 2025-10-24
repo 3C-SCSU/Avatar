@@ -251,6 +251,31 @@ class VersionManager:
         self.changelog_file.write_text(content)
         print(f"Updated {self.changelog_file}")
 
+    def create_release_notes(self, version: semantic_version.Version, entries: Dict[str, List[str]]):
+        """Create release notes file for GitHub release"""
+        if not entries:
+            return
+        
+        release_notes = f"# Release v{version}\n\n"
+        
+        for section, items in entries.items():
+            if items:
+                release_notes += f"## {section}\n\n"
+                for item in items:
+                    # Remove the leading "- " since GitHub will format it
+                    clean_item = item[2:] if item.startswith("- ") else item
+                    release_notes += f"- {clean_item}\n"
+                release_notes += "\n"
+        
+        release_notes += "---\n\n"
+        release_notes += f"**Full Changelog**: [CHANGELOG.md](https://github.com/3C-SCSU/Avatar/blob/main/CHANGELOG.md)\n"
+        release_notes += f"**Installation**: See [SETUP_GUIDE.md](https://github.com/3C-SCSU/Avatar/blob/main/SETUP_GUIDE.md)\n"
+        
+        # Write to release notes file
+        release_notes_file = self.repo_path / "RELEASE_NOTES.md"
+        release_notes_file.write_text(release_notes)
+        print(f"Created release notes: {release_notes_file}")
+
     def create_initial_changelog(self, version: semantic_version.Version, entries: Dict[str, List[str]]) -> str:
         """Create initial changelog file"""
         today = datetime.now().strftime("%Y-%m-%d")
@@ -307,6 +332,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
         # Apply updates
         self.update_version_file(new_version)
         self.update_changelog(new_version, changelog_entries)
+        self.create_release_notes(new_version, changelog_entries)
         
         print("✅ Automation completed successfully!")
         print(f"🎉 New version: {new_version}")
