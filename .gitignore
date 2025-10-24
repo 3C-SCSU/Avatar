@@ -12,6 +12,7 @@ ENV/
 env.bak/
 venv.bak/
 __pycache__/
+token.env
 
 
 plotscode/plots/
