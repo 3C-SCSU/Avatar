@@ -1,18 +1,21 @@
 """
 Camera Controller for Tello Drone
 Handles camera streaming and video capture functionality
+Compatible with Windows, macOS, and Linux using pathlib for path handling.
 """
 
-import time
-
 import cv2
-from PySide6.QtCore import QObject, QTimer, Signal, Slot
-from PySide6.QtGui import QImage, QPixmap
+import time
+from PySide6.QtCore import QObject, Signal, Slot, QTimer
+from PySide6.QtGui import QImage
+from djitellopy import Tello
+import numpy as np
+import pathlib
 
 
 class CameraController(QObject):
     # Signals for QML communication
-    frameReady = Signal(str)  # Send base64 encoded frame to QML
+    frameReady = Signal(str)  # Send image file path to QML
     streamStatusChanged = Signal(bool)  # Stream on/off status
     logMessage = Signal(str)  # Log messages
 
@@ -20,8 +23,6 @@ class CameraController(QObject):
         super().__init__()
         self.tello = tello_instance
         self.is_streaming = False
-        self.stream_thread = None
-        self.current_frame = None
         self.frame_timer = QTimer()
         self.frame_timer.timeout.connect(self.process_frame)
 
@@ -29,6 +30,9 @@ class CameraController(QObject):
         """Set the Tello drone instance"""
         self.tello = tello_instance
 
+    # ---------------------------------------------------------
+    # Stream Control
+    # ---------------------------------------------------------
     @Slot()
     def start_camera_stream(self):
         """Start the camera stream from Tello drone"""
@@ -45,10 +49,7 @@ class CameraController(QObject):
             self.tello.streamon()
             self.is_streaming = True
             self.streamStatusChanged.emit(True)
-
-            # Start frame processing timer
             self.frame_timer.start(33)  # ~30 FPS
-
             self.logMessage.emit("Camera stream started")
 
         except Exception as e:
@@ -64,7 +65,6 @@ class CameraController(QObject):
 
         try:
             self.frame_timer.stop()
-
             if self.tello:
                 self.tello.streamoff()
 
@@ -75,42 +75,39 @@ class CameraController(QObject):
         except Exception as e:
             self.logMessage.emit(f"Error stopping camera stream: {e}")
 
+    # ---------------------------------------------------------
+    # Frame Processing
+    # ---------------------------------------------------------
     def process_frame(self):
         """Process and emit video frames"""
         if not self.is_streaming or not self.tello:
             return
 
         try:
-            # Get frame from Tello
             frame = self.tello.get_frame_read().frame
+            if frame is None:
+                return
 
-            if frame is not None:
-                # Convert BGR to RGB
-                frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            # Convert BGR → RGB for proper display
+            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            temp_path = pathlib.Path("/tmp/drone_frame.jpg")
 
-                # Convert to QImage
-                height, width, channel = frame_rgb.shape
-                bytes_per_line = 3 * width
-                qt_image = QImage(
-                    frame_rgb.data, width, height, bytes_per_line, QImage.Format_RGB888
-                )
+            # Write frame to temp file
+            cv2.imwrite(str(temp_path), frame_rgb)
 
-                # Convert to base64 for QML
-                pixmap = QPixmap.fromImage(qt_image)
-                byte_array = (
-                    pixmap.toImage().bits().asstring(pixmap.toImage().sizeInBytes())
-                )
 
-                # For QML, we'll use a simpler approach - save frame as temp file
-                temp_path = "/tmp/drone_frame.jpg"
-                cv2.imwrite(temp_path, frame)
+            # Use platform-independent file URI
+            file_url = temp_path.as_uri()
 
-                # Emit the file path
-                self.frameReady.emit(f"file://{temp_path}")
+            # Emit to QML
+            self.frameReady.emit(file_url)
 
         except Exception as e:
             self.logMessage.emit(f"Error processing frame: {e}")
 
+    # ---------------------------------------------------------
+    # Photo Capture
+    # ---------------------------------------------------------
     @Slot()
     def capture_photo(self):
         """Capture a single photo from the stream"""
@@ -122,8 +119,8 @@ class CameraController(QObject):
             frame = self.tello.get_frame_read().frame
             if frame is not None:
                 timestamp = int(time.time())
-                filename = f"drone_photo_{timestamp}.jpg"
-                cv2.imwrite(filename, frame)
+                filename = pathlib.Path(f"drone_photo_{timestamp}.jpg")
+                cv2.imwrite(str(filename), frame)
                 self.logMessage.emit(f"Photo captured: {filename}")
             else:
                 self.logMessage.emit("No frame available for capture")
