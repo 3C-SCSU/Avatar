@@ -5,7 +5,7 @@ name: Automated Release
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, ci/cd-release-workflow ]  # Added current branch for testing
   workflow_dispatch:
 
 permissions:
