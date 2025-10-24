@@ -10,6 +10,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+
+
+
+## [1.0.7] - 2025-10-24
+
+### Changed
+- Ci cd changelog (#8) (1f8bfa8)
+
+## [1.0.6] - 2025-10-24
+
+### Fixed
+- Auto adds the changes to the release description(changelog) (e5d5b0a)
+
+## [1.0.5] - 2025-10-24
+
+### Changed
+- Update readme.md (2d2c676)
+- Fix (#371): restored functional drone camera view with linux-compatible path handling (363dfb9)
+
+### Fixed
+- Release token from github token to release token pat(ci/cd) (79ce9e8)
+
+## [1.0.4] - 2025-10-24
+
+### Changed
+- Remove summary (d121bcf)
+
 ## [1.0.3] - 2025-10-24
 
 ### Changed
