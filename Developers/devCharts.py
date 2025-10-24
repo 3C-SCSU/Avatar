@@ -175,7 +175,7 @@ def ticketsByDev_text() -> str:
 # ----------------------------
 def plot_single_tier(rows: list[tuple[str, int, str]], tier: str, outpath: str):
 
-    color_map = {"Gold": "#D4AF37", "Silver": "#C0C0C0", "Bronze": "#CD7F32"}
+    
     data = [r for r in rows if r[2] == tier]
 
     if not data:
@@ -190,29 +190,22 @@ def plot_single_tier(rows: list[tuple[str, int, str]], tier: str, outpath: str):
 
     names = [extract_name(r[0]) for r in data]
     counts = [r[1] for r in data]
-    color = color_map.get(tier, "#888888")
+    
+   
+    colors = ["#2B67BA", "#98652A", "#187657", "#A93709", "#852C88"]
 
     plt.figure(figsize=(max(10, len(data) * 2.2), 7))
 
-    bars = plt.bar(names, counts, color=color, width=0.6)
+    bars = plt.bar(names, counts, color=colors, width=0.6)
 
     plt.xticks(rotation=24, ha="right", fontsize=20)   # Smaller font for names
     plt.yticks(fontsize=14)
-    plt.ylabel("Number of Commits", fontsize=18)
+    plt.ylabel("Contributions", fontsize=18, fontweight='bold', color='red', labelpad=15)
     plt.xlabel("Top Contributors", fontsize=14, labelpad=40)
     #plt.title(f"{tier} Tier", fontsize=36, weight="bold")
 
     # Add value labels with more vertical padding and smaller font size
-    for i, b in enumerate(bars):
-        h = b.get_height()
-        plt.text(
-            b.get_x() + b.get_width() / 2,
-            h - 0.05 * h,  # slightly below the top
-            str(counts[i]),
-            ha="center", va="top",
-            fontsize=16, weight="bold", color="white"
-        )
-
+    
     plt.tight_layout(pad=2.0)  # Add padding to avoid clipping
     plt.savefig(outpath, dpi=150)
     plt.close()
