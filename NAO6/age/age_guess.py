@@ -1,13 +1,13 @@
-import cv2
-import torch
-import matplotlib.pyplot as plt
-from facenet_pytorch import MTCNN
-from deepface import DeepFace
 import sys
 
+import cv2
+import matplotlib.pyplot as plt
+import torch
+from deepface import DeepFace
+from facenet_pytorch import MTCNN
 
 # Initialize MTCNN for face detection
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
+device = "cuda" if torch.cuda.is_available() else "cpu"
 mtcnn = MTCNN(keep_all=True, device=device)
 
 # Path to your input image
@@ -31,12 +31,12 @@ if boxes is not None and len(boxes) > 0:
     # Display the detected face
     plt.imshow(face_img)
     plt.title("Detected Face")
-    plt.axis('off')
+    plt.axis("off")
     plt.show()
 
     # Estimate age using DeepFace on the cropped face image
     # Note: We set enforce_detection=False since we already detected the face.
-    analysis = DeepFace.analyze(face_img, actions=['age'], enforce_detection=False)
+    analysis = DeepFace.analyze(face_img, actions=["age"], enforce_detection=False)
     if isinstance(analysis, list):
         analysis = analysis[0]
     estimated_age = analysis.get("age", "Age not found")

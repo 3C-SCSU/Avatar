@@ -1,6 +1,7 @@
-import pandas as pd
 import os
 import sys
+
+import pandas as pd
 
 # INFO:
 # This script will count the total number of columns in each csv file in a directory
@@ -12,12 +13,13 @@ non_csv_count = 0
 
 # Get folderpath from commandline
 folderpath = None
-if sys.argv[1] == None: 
+if sys.argv[1] == None:
     folderpath = "./"
-    print ("Using script's current directory")
+    print("Using script's current directory")
 else:
     folderpath = sys.argv[1]
-    print ("Using " + folderpath)
+    print("Using " + folderpath)
+
 
 def count_columns(filepath):
     try:
@@ -32,15 +34,15 @@ def count_columns(filepath):
     except Exception as e:
         print(f"Error processing file {file_path}: {e}")
 
+
 # Start processing files at folderpath
 # Walking through the directory and its subdirectories
 for dirpath, dirnames, files in os.walk(folderpath):
-
     foldername = os.path.basename(dirpath)
 
     # Check if there are any csv files in the folderpath
-    csv_files = [f for f in files if f.endswith('.csv')]
-    non_csv_files = [f for f in files if not f.endswith('.csv')]
+    csv_files = [f for f in files if f.endswith(".csv")]
+    non_csv_files = [f for f in files if not f.endswith(".csv")]
     csv_count += len(csv_files)
     non_csv_count += len(non_csv_files)
     if csv_files:
@@ -51,17 +53,17 @@ for dirpath, dirnames, files in os.walk(folderpath):
         print(f"Finished processing folder: {foldername}")
         print(f"Processed {len(csv_files)} files")
     if non_csv_files:
-        print (f"+++Found {len(non_csv_files)} non-CSV files+++")
+        print(f"+++Found {len(non_csv_files)} non-CSV files+++")
         for file_name in non_csv_files:
-            print (file_name)
-        print ("+++++++++++++++++")
+            print(file_name)
+        print("+++++++++++++++++")
 
 # Print results
-print ("==========================")
+print("==========================")
 for key, value in column_count.items():
-    print (f"{key}: {value}")
-print ("==========================")
-print (f"Total files found: {csv_count+non_csv_count}")
-print (f"CSV files processed: {csv_count}")
-print (f"Non-CSV files skipped: {non_csv_count}")
-print ("==========================")
+    print(f"{key}: {value}")
+print("==========================")
+print(f"Total files found: {csv_count + non_csv_count}")
+print(f"CSV files processed: {csv_count}")
+print(f"Non-CSV files skipped: {non_csv_count}")
+print("==========================")
