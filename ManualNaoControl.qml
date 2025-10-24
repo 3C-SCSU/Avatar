@@ -1,3 +1,21 @@
+/*
+    Avatar - Manual NAO Control Interface
+    Author: Youssef Elkhouly
+    Date: October 2025
+
+    Description:
+        This QML file implements the Manual NAO Control tab, providing a user interface
+        for controlling the NAO robot. It includes a 3D viewer of the NAO model and
+        a connection panel with configurable IP and Port settings.
+
+    Features:
+        - 3D NAO robot visualization
+        - Movement controls (Forward, Backward, Left, Right, Takeoff, Land)
+        - Configurable IP address and Port input fields
+        - Console logging for debugging
+        - Real-time animation of robot movements
+*/
+
 import QtQuick.Dialogs
 import Qt.labs.platform
 import QtQuick 6.5
@@ -227,34 +245,117 @@ Rectangle {
                                 position: Qt.vector3d(0, -100, 0)
                             }
 
-                            // Connect Button with Image in bottom-right corner
+                            // Connection Panel with IP and Port input fields
                             Rectangle {
                                 anchors.right: parent.right
                                 anchors.bottom: parent.bottom
-                                width: parent.width * 0.2
-                                height: parent.height * 0.2
+                                width: parent.width * 0.25
+                                height: parent.height * 0.25
                                 color: "#242c4d"
+                                radius: 8
+                                border.color: "#3a4a6d"
+                                border.width: 2
 
-                                Image {
-                                    id: connectImage
-                                    source: "GUI_Pics/connect.png"
+                                ColumnLayout {
                                     anchors.fill: parent
-                                    fillMode: Image.PreserveAspectFit
-                                }
+                                    anchors.margins: 12
+                                    spacing: 10
 
-                                Text {
-                                    text: "Connect"
-                                    anchors.centerIn: parent
-                                    font.pixelSize: 20
-                                    font.bold: true
-                                    color: "white"
-                                }
+                                    Text {
+                                        text: "NAO Connection"
+                                        font.pixelSize: 14
+                                        font.bold: true
+                                        color: "white"
+                                        Layout.alignment: Qt.AlignHCenter
+                                    }
 
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        rootPanel.appendLog("Connect button clicked!")
-                                        backend.connectNao()
+                                    // IP Address Input
+                                    RowLayout {
+                                        Layout.fillWidth: true
+                                        spacing: 8
+
+                                        Text {
+                                            text: "IP:"
+                                            color: "white"
+                                            font.pixelSize: 12
+                                            Layout.preferredWidth: 30
+                                        }
+
+                                        TextField {
+                                            id: ipInput
+                                            Layout.fillWidth: true
+                                            placeholderText: "192.168.23.53"
+                                            text: "192.168.23.53"
+                                            font.pixelSize: 11
+                                            background: Rectangle {
+                                                color: "#1a1f3a"
+                                                border.color: "#4a5a7d"
+                                                border.width: 1
+                                                radius: 4
+                                            }
+                                            color: "white"
+                                        }
+                                    }
+
+                                    // Port Input
+                                    RowLayout {
+                                        Layout.fillWidth: true
+                                        spacing: 8
+
+                                        Text {
+                                            text: "Port:"
+                                            color: "white"
+                                            font.pixelSize: 12
+                                            Layout.preferredWidth: 30
+                                        }
+
+                                        TextField {
+                                            id: portInput
+                                            Layout.fillWidth: true
+                                            placeholderText: "9559"
+                                            text: "9559"
+                                            font.pixelSize: 11
+                                            background: Rectangle {
+                                                color: "#1a1f3a"
+                                                border.color: "#4a5a7d"
+                                                border.width: 1
+                                                radius: 4
+                                            }
+                                            color: "white"
+                                        }
+                                    }
+
+                                    // Connect Button
+                                    Button {
+                                        Layout.fillWidth: true
+                                        Layout.preferredHeight: 36
+                                        text: "Connect"
+                                        font.bold: true
+                                        font.pixelSize: 12
+
+                                        background: Rectangle {
+                                            color: parent.pressed ? "#1a4d2e" : "#2d7a4a"
+                                            radius: 4
+                                            border.color: "#4a9d6f"
+                                            border.width: 1
+                                        }
+
+                                        contentItem: Text {
+                                            text: parent.text
+                                            color: "white"
+                                            horizontalAlignment: Text.AlignHCenter
+                                            verticalAlignment: Text.AlignVCenter
+                                            font: parent.font
+                                        }
+
+                                        onClicked: {
+                                            var ip = ipInput.text.trim()
+                                            var port = portInput.text.trim()
+                                            rootPanel.appendLog("Connecting to NAO at " + ip + ":" + port)
+                                            if (typeof backend !== "undefined" && backend.connectNao) {
+                                                backend.connectNao(ip, port)
+                                            }
+                                        }
                                     }
                                 }
                             }
