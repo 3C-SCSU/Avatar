@@ -7,6 +7,7 @@ from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtCore import QObject, Signal, Slot, QProcess, QUrl
 from pdf2image import convert_from_path
 from djitellopy import Tello
+import threading
 import random
 import re
 import pandas as pd
@@ -22,6 +23,8 @@ from PySide6.QtCore import Property
 # from Developers.hofCharts import main as hofCharts, ticketsByDev_text NA
 
 from Developers import devCharts
+from dotenv import load_dotenv
+from Developers.devCharts import GitHubClient, PRAnalyzer, CacheManager, TicketListManager
 
 								
 
@@ -102,94 +105,201 @@ class BrainwavesBackend(QObject):
         else:
             self.fligt_log.insert(0, "Nao failed to stand up.")
         self.flightLogUpdated.emit(self.flight_log)
-            
+
 
     @Slot(result=str)
-    def getDevList(self):
-        exclude = {
-            "3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>",
-        }
+    def getApprovedPRsByAuthor(self) -> str:
+        """
+        Uses the new OOP classes to return a text list of approved PR counts by author.
+        """
+        try:
+            # Import classes from the refactor
 
-        proc = subprocess.run(
-            ["git", "shortlog", "-sne", "--all"],
-            capture_output=True, text=True, encoding="utf-8", errors="ignore"
-        )
+            # Ensure we load the Developers/token.env (so Config.from_env equivalent)
+            env_path = Path(__file__).resolve().parent / "Developers" / "token.env"
+            if env_path.exists():
+                load_dotenv(dotenv_path=env_path)
 
-        if proc.returncode != 0:
-            return "No developers found."
+            repo = os.getenv("GITHUB_REPO")
+            token = os.getenv("GITHUB_TOKEN")
+            if not repo or not token:
+                return "Missing GitHub credentials."
 
-        lines = proc.stdout.strip().splitlines()
-        filtered_lines = []
+            # Build GH client and analyzer
+            gh = GitHubClient(repo=repo, token=token)
+            analyzer = PRAnalyzer(gh)
 
-        for line in lines:
-            # Match the author portion
-            match = re.match(r"^\s*\d+\s+(?P<author>.+)$", line)
-            if match:
-                author = match.group("author").strip()
-                if author not in exclude:
-                    filtered_lines.append(line)
+            # Cache file next to Developers/pr_tier_analysis (keeps original location)
+            cache_file = Path(__file__).resolve().parent / "Developers" / "approved_prs_cache.json"
+            cache = CacheManager(cache_file, ttl_seconds=60 * 60)
 
-        return "\n".join(filtered_lines) if filtered_lines else "No developers found."
+            # Try cache first
+            cached = cache.load()
+            if cached:
+                # cached is List[Tuple[author,count]]
+                return "\n".join(f"{author}: {count} approved tickets/PR(s)" for author, count in cached)
+
+            # Fetch closed PRs and filter merged
+            closed_prs = gh.list_closed_pulls()
+            if not isinstance(closed_prs, list):
+                return "Error fetching PRs."
+
+            merged_prs = [pr for pr in closed_prs if pr.get("merged_at")]
+
+            # For each merged PR, check reviews for approval via GitHubClient
+            approved_prs = []
+            for pr in merged_prs:
+                try:
+                    number = pr.get("number")
+                    if number is None:
+                        continue
+                    if gh.pr_has_approval(number):
+                        approved_prs.append(pr)
+                except Exception:
+                    # conservative: skip PRs we can't verify
+                    continue
+
+            author_counts = analyzer.count_approved_prs_by_author(approved_prs)
+            if not author_counts:
+                # save empty cache for consistency with previous behavior
+                cache.save([])
+                return "No approved pull requests found."
+
+            # Save cache and return nicely formatted text
+            cache.save(author_counts)
+            return "\n".join(f"{author}: {count} approved tickets/PR(s)" for author, count in author_counts)
+
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return f"Error fetching PR data: {e}"
+
+    @Slot(result=str)
+    def refreshDevTickList(self) -> str:
+        """
+        Run the existing devCharts.py script as a subprocess so we reuse its working code
+        (plots, CSV, JSON). Runs in current environment; intended to be called from a worker thread.
+        """
+
+        # Resolve the developer script path
+        script_path = Path(__file__).resolve().parent / "Developers" / "devCharts.py"
+        if not script_path.exists():
+            return f"devCharts.py not found at {script_path}"
+
+        # Ensure token.env is loaded for local env (optional — subprocess will load it if its cwd is Developers)
+        env_path = script_path.parent / "token.env"
+        if env_path.exists():
+            load_dotenv(dotenv_path=env_path)  # keeps os.environ set for subprocess inherit (not strictly required)
+
+        # Build the command: run using the same python executable
+        cmd = [sys.executable, str(script_path)]
+
+        try:
+            # Run subprocess in the Developers directory so token.env and relative paths work
+            # Use explicit UTF-8 decoding and replace invalid bytes (prevents UnicodeDecodeError on Windows)
+            proc = subprocess.run(
+                cmd,
+                cwd=str(script_path.parent),
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                check=False
+            )
+
+            # be defensive: proc.stdout/stderr can be None in some edge cases
+            stdout = (proc.stdout or "").strip()
+            stderr = (proc.stderr or "").strip()
+            rc = proc.returncode
+
+            if rc == 0:
+                msg_lines = []
+                if stdout:
+                    msg_lines.append("Output:\n" + stdout)
+                msg_lines.append("Refresh completed successfully.")
+                return "\n\n".join(msg_lines)
+            else:
+                # On failure include stderr for debugging (already utf-8 decoded with replacement)
+                return f"devCharts.py failed (code {rc}).\n\nStdout:\n{stdout}\n\nStderr:\n{stderr}"
+
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return f"Error launching devCharts.py: {e}"
+
+
 
     @Slot(result=str)
     def getTicketsByDev(self) -> str:
+        """
+        Return a human-readable ticket list per developer using the new OOP classes.
+        """
+        try:
 
-            exclude = {
-                "3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>"
-            }
+            env_path = Path(__file__).resolve().parent / "Developers" / "token.env"
+            if env_path.exists():
+                load_dotenv(dotenv_path=env_path)
 
-            pretty = "%x1e%an <%ae>%x1f%s%x1f%b"
-            try:
-                proc = subprocess.run(
-                    ["git", "log", "--all", f"--pretty=format:{pretty}"],
-                    capture_output=True,
-                    text=True,
-                    encoding="utf-8",
-                    errors="ignore",
-                    check=True
-                )
-            except subprocess.CalledProcessError:
-                return "No tickets found."
+            repo = os.getenv("GITHUB_REPO")
+            token = os.getenv("GITHUB_TOKEN")
+            if not repo or not token:
+                return "Missing GitHub credentials."
 
-            raw = proc.stdout or ""
-            commits = raw.split("\x1e")
+            gh = GitHubClient(repo=repo, token=token)
+            analyzer = PRAnalyzer(gh)
 
-            jira_re = re.compile(r'\b([A-Za-z]{2,}-\d+)\b')
-            hash_re = re.compile(r'(?<![A-Za-z0-9])#\d+\b')
-            author_to_ticketset = defaultdict(set)
+            # Ticket list file location (same as the refactor)
+            ticket_list_path = Path(__file__).resolve().parent / "Developers" / "authorTicketList.json"
+            ticket_mgr = TicketListManager(ticket_list_path, ttl_seconds=60 * 60)
 
-            for entry in commits:
-                entry = entry.strip()
-                if not entry:
-                    continue
-                parts = entry.split("\x1f", 2)
-                author = parts[0].strip()
-                subject = parts[1] if len(parts) > 1 else ""
-                body = parts[2] if len(parts) > 2 else ""
-                msg = (subject + "\n" + body).strip()
+            # Try cached ticket list first
+            cached = ticket_mgr.load()
+            if cached:
+                lines = []
+                for entry in cached:
+                    name = entry.get("author_name", "Unknown")
+                    tickets = entry.get("tickets", [])
+                    ticket_str = ", ".join(t.replace("PR#", "#") for t in tickets)
+                    lines.append(f"{name}. Tickets: {ticket_str if ticket_str else 'None'}")
+                return "\n".join(lines)
 
-                found = set()
-                for m in jira_re.findall(msg):
-                    found.add(m.upper())
-                for m in hash_re.findall(msg):
-                    found.add(m)
+            # No cache => fetch closed PRs and build list
+            closed_prs = gh.list_closed_pulls()
+            if not isinstance(closed_prs, list):
+                return "Error fetching PRs."
 
-                if found:
-                    author_to_ticketset[author].update(found)
+            merged_prs = [pr for pr in closed_prs if pr.get("merged_at")]
+            if not merged_prs:
+                return "No merged PRs found."
 
-            if not author_to_ticketset:
-                return "No tickets found."
+            author_ticket_list = analyzer.ticket_list_by_author(merged_prs)
+            if not author_ticket_list:
+                return "No tickets found in PRs."
 
-            # Sort authors by ticket count descending, then by name
+            out_path = ticket_mgr.save(author_ticket_list)
+
+            # Create nicely formatted lines (filter out the '3C-SCSU' as original)
+            filtered = [e for e in author_ticket_list if e.get("author_name") != "3C-SCSU"]
             lines = []
-            for author, tickets in sorted(author_to_ticketset.items(), key=lambda kv: (-len(kv[1]), kv[0].lower())):
-                if author in exclude:
-                    continue  # skip excluded authors entirely
-                lines.append(f"{author}: {', '.join(sorted(tickets))}")
+            for entry in sorted(filtered, key=lambda e: e.get("author_name", "").lower()):
+                name = entry.get("author_name", "Unknown")
+                tickets = entry.get("tickets", [])
+                ticket_str = ", ".join(t for t in tickets)
+                lines.append(f"{name}. Tickets: {ticket_str if ticket_str else 'None'}")
 
+            if out_path:
+                lines.append(f"Saved ticket list to: {out_path}")
+            else:
+                lines.append("Ticket list file path not available.")
 
             return "\n".join(lines)
 
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return f"Error fetching tickets: {e}"
+
+    '''
     @Slot()
     def devChart(self):
         print("hofChart() SLOT CALLED")
@@ -198,6 +308,7 @@ class BrainwavesBackend(QObject):
             print("hofCharts.main() COMPLETED")
         except Exception as e:
             print(f"hofCharts.main() ERROR: {e}")
+    '''
 
     def get_is_connected(self):
         return self.isConnectedChanged
@@ -223,10 +334,11 @@ class BrainwavesBackend(QObject):
         self.is_connected = False
         try:
             self.tello = Tello()
+            self.connected = False
         except Exception as e:
             print(f"Warning: Failed to initialize Tello drone: {e}")
             self.logMessage.emit(f"Warning: Failed to initialize Tello drone: {e}")
-        
+
         # Initialize camera controller with tello instance
         self.camera_controller = CameraController()
         if hasattr(self, 'tello'):
@@ -382,19 +494,18 @@ class BrainwavesBackend(QObject):
 
     @Slot(str)
     def getDroneAction(self, action):
-        if action == 'connect':
-            try:
-                self.tello.connect()
-                self.is_connected = True
-                self.logMessage.emit("Connected to Tello Drone")
-            except:
-                self.is_connected = False
-                self.logMessage.emit("Error during connect: {e}")
-            return
-        elif not self.is_connected:
-            self.logMessage.emit(f"Drone not connected. Aborting command '{action}'.")
-            return
+        threading.Thread(target=self._doAction, args=(action,), daemon=True).start()
+
+    def _doAction(self, action):
         try:
+            if action == 'connect':
+                self.tello.connect()
+                self.connected = True
+                self.logMessage.emit("Connected to Tello Drone")
+            elif self.connected:
+                self.logMessage.emit("Drone did not connect.")
+                return
+
             if action == 'up':
                 self.tello.move_up(30)
                 self.logMessage.emit("Moving up")
@@ -408,7 +519,7 @@ class BrainwavesBackend(QObject):
                 self.tello.move_back(30)
                 self.logMessage.emit("Moving backward")
             elif action == 'left':
-                self.tello.move_lef(30)
+                self.tello.move_left(30)
                 self.logMessage.emit("Moving left")
             elif action == 'right':
                 self.tello.move_right(30)
@@ -418,7 +529,7 @@ class BrainwavesBackend(QObject):
                 self.logMessage.emit("Rotating left")
             elif action == 'turn_right':
                 self.tello.rotate_clockwise(45)
-                self.logMessage.emit("Rotationg right")
+                self.logMessage.emit("Rotating right")
             elif action == 'takeoff':
                 self.tello.takeoff()
                 self.logMessage.emit("Taking off")
@@ -438,7 +549,7 @@ class BrainwavesBackend(QObject):
         except Exception as e:
             self.logMessage.emit(f"Error during {action}: {e}")
 
-	
+
     # Method for returning to home (an approximation)
     def go_home(self):
         # Assuming the home action means moving backward and upwards
