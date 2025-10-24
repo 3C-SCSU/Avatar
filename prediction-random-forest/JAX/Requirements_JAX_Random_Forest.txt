@@ -1,0 +1,15 @@
+# Core JAX dependencies
+jax>=0.4.20
+jaxlib>=0.4.20
+
+# Data processing
+numpy>=1.24.0
+pandas>=2.0.0
+
+# Visualization
+matplotlib>=3.7.0
+
+# Note: For GPU support, install JAX with CUDA:
+# pip install --upgrade "jax[cuda12]"
+# or
+# pip install --upgrade "jax[cuda11_local]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
