@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [1.0.3] - 2025-10-24
+
+### Changed
+- Refactor is_connected property and signals (b619946)
+- Enable/disable is_connected boolean flag based on connection status (3aa6b64)
+- Add connection status handling for tello drone (5bdf4d5)
+- Add ip/port to ui #395 (10967dd)
+- Fix (#370): replaced windows-style path formatting with pathlib.path.as_uri() for full cross-platform compatibility (8ae6553)
+- Fix (#370, #371): replaced windows-style path formatting with pathlib.path.as_uri() for full cross-platform compatibility (417aea1)
+
 ## [1.0.2] - 2025-10-23
 
 ### Changed
