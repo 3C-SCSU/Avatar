@@ -1,6 +1,6 @@
 """
 Camera view module for Tello drone control
 """
-from .camera_controller import CameraController
+from .drone_camera_controller import DroneCameraController
 
-__all__ = ['CameraController']
+__all__ = ['DroneCameraController']

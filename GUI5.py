@@ -16,6 +16,7 @@ import contextlib
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
 from GUI5_ManualDroneControl.cameraview.camera_controller import CameraController
 from Manual_NAO6_Control.Manual_NAO6_Control import ManualNAOController
+from Manual_NAO6_Control.camera_view.drone_camera_controller import DroneCameraController
 
 # Import BCI connection for brainwave prediction
 try:
@@ -529,9 +530,6 @@ class BrainwavesBackend(QObject):
         self.board = BoardShim(BoardIds.CYTON_DAISY_BOARD.value, params)
         print("\nLive headset board initialized.")
 
-
-
-
 if __name__ == "__main__":
     os.environ["QT_QUICK_CONTROLS_STYLE"] = "Fusion"
     app = QApplication(sys.argv)
@@ -539,7 +537,8 @@ if __name__ == "__main__":
 
     # Create our controllers
     tab_controller = TabController()
-    print("TabController created")
+    manual_nao_controller = ManualNAOController()
+    drone_camera_controller = DroneCameraController()
 
     # Initialize backend before loading QML
     backend = BrainwavesBackend()
@@ -548,23 +547,10 @@ if __name__ == "__main__":
     engine.rootContext().setContextProperty("imageModel", [])  # Initialize empty model
     engine.rootContext().setContextProperty("fileShufflerGui", backend)  # For file shuffler
     engine.rootContext().setContextProperty("cameraController", backend.camera_controller)
-    print("Controllers exposed to QML")
     engine.rootContext().setContextProperty("fileShufflerGui", backend)  # For file shuffler
 
-    # create and expose controller to QML
-
-    print("Starting app, creating controllers")
-    try:
-        manual_nao_controller = ManualNAOController()
-        engine.rootContext().setContextProperty("manualNaoController", manual_nao_controller)
-        print("ManualNAOController created and exposed")
-    except Exception as e:
-        print("Failed to create ManualNAOController:", e)
-    # manual_nao_controller = ManualNAOController()
-    # engine.rootContext().setContextProperty("manualNaoController", manual_nao_controller)
-
-    # Optionally also expose a Connections-friendly name used in QML (if you prefer)
-    # engine.rootContext().setContextProperty("manualNaoBackend", manual_nao_controller)
+    engine.rootContext().setContextProperty("manualNaoController", manual_nao_controller)
+    engine.rootContext().setContextProperty("droneCameraController", drone_camera_controller)
 
     # Load QML
     qml_file = Path(__file__).resolve().parent / "main.qml"

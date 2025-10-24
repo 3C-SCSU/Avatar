@@ -7,6 +7,7 @@ import "../Nao.mesh"
 
 Rectangle {
     id: rootPanel
+    anchors.fill: parent
     property int rotationStep: 90
     property real moveDistance: 50
     property real verticalStep: 50
@@ -18,10 +19,11 @@ Rectangle {
     RowLayout {
         anchors.fill: parent
         spacing: 0
-        // ================= LEFT PANEL =================
+
+        // LEFT PANEL (unchanged)
         Rectangle {
             id: leftPanel
-            Layout.preferredWidth: 510
+            Layout.preferredWidth: 410
             Layout.fillHeight: true
             color: "#718399"
 
@@ -120,9 +122,9 @@ Rectangle {
             }
         }
 
-        // ================= RIGHT PANEL (3D Viewer) =================
+        // CENTER PANEL (was previous rightPanel / 3D viewer)
         Rectangle {
-            id: rightPanel
+            id: centerPanel
             Layout.fillWidth: true
             Layout.fillHeight: true
             color: "#2f2f2f"
@@ -130,49 +132,19 @@ Rectangle {
 
             View3D {
                 anchors.fill: parent
+                environment: SceneEnvironment { clearColor: '#2e2e2e'; backgroundMode: SceneEnvironment.Color }
+                PerspectiveCamera { id: camera; position: Qt.vector3d(0,250,800); eulerRotation.x: -10; clipFar: 5000 }
+                DirectionalLight { eulerRotation.x: -45; eulerRotation.y: 45; brightness: 1.5; castsShadow: true }
+                DirectionalLight { eulerRotation.x: 30; eulerRotation.y: -60; brightness: 1.2 }
+                PointLight { position: Qt.vector3d(0,400,400); brightness: 800 }
 
-                environment: SceneEnvironment {
-                    clearColor: '#2e2e2e'
-                    backgroundMode: SceneEnvironment.Color
-                }
+                Nao { id: naoModel; scale: Qt.vector3d(100,100,100); position: Qt.vector3d(0,-100,0) }
 
-                PerspectiveCamera {
-                    id: camera
-                    position: Qt.vector3d(0, 250, 800)
-                    eulerRotation.x: -10
-                    clipFar: 5000
-                }
-
-                DirectionalLight {
-                    eulerRotation.x: -45
-                    eulerRotation.y: 45
-                    brightness: 1.5
-                    castsShadow: true
-                }
-
-                DirectionalLight {
-                    eulerRotation.x: 30
-                    eulerRotation.y: -60
-                    brightness: 1.2
-                }
-
-                PointLight {
-                    position: Qt.vector3d(0, 400, 400)
-                    brightness: 800
-                }
-
-                // Load NAO model
-                Nao {
-                    id: naoModel
-                    scale: Qt.vector3d(100, 100, 100)
-                    position: Qt.vector3d(0, -100, 0)
-                }
-
-                // Connect Button with Image in bottom-right corner
+                // Connect Button (unchanged)
                 Rectangle {
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
-                    width: parent.width * 0.2
+                    width: parent.width * 0.3
                     height: parent.height * 0.2
                     color: "#242c4d"
 
@@ -195,7 +167,78 @@ Rectangle {
                         anchors.fill: parent
                         onClicked: {
                             rootPanel.appendLog("Connect button clicked!")
-                            manualNaoController.connectNao()    // was backend.connectNao()
+                            manualNaoController.connectNao()
+                        }
+                    }
+                }
+            }
+        }
+
+        // RIGHT PANEL (new) — drone camera view loaded here
+        Rectangle {
+            id: rightPanel
+            Layout.preferredWidth: parent.width * 0.30
+            Layout.fillHeight: true
+            color: "#111"
+            radius: 6
+
+            /* Loader {
+                id: droneCameraLoader
+                anchors.fill: parent
+                source: "camera_view/DroneCameraView.qml"
+                asynchronous: true
+                onLoaded: {
+                    console.log("droneCameraLoader: loaded, item:", droneCameraLoader.item)
+                    if (droneCameraLoader.item) {
+                        droneCameraLoader.item.cameraController = droneCameraController
+                        console.log("assigned droneCameraController ->", droneCameraController)
+                    }
+                }
+                onStatusChanged: console.log("droneCameraLoader.status ->", status)
+            } */
+
+            // ...existing code...
+            Loader {
+                id: droneCameraLoader
+                anchors.fill: parent
+                source: "camera_view/DroneCameraView.qml"
+                asynchronous: true
+
+                onLoaded: {
+                    console.log("droneCameraLoader.onLoaded - item:", droneCameraLoader.item)
+                    if (droneCameraLoader.item) {
+                        droneCameraLoader.item.cameraController = droneCameraController
+                        console.log("Assigned controller ->", droneCameraController)
+                    } else {
+                        console.log("droneCameraLoader.item is null")
+                    }
+                }
+                onStatusChanged: {
+                    console.log("droneCameraLoader.status ->", status)
+                }
+            }
+
+            // visible debug fallback displayed only when loader hasn't produced an item
+            Item {
+                anchors.fill: parent
+                visible: droneCameraLoader.item === null
+                Rectangle {
+                    anchors.fill: parent
+                    color: "#111"
+                    border.color: "red"
+                    border.width: 2
+                }
+                Column {
+                    anchors.centerIn: parent
+                    spacing: 6
+                    Text { text: "Camera view status: " + (droneCameraLoader.status === Loader.Ready ? "Ready" : droneCameraLoader.status) ; color: "white" }
+                    Text { text: "Item: " + (droneCameraLoader.item ? "loaded" : "null"); color: "lightgray" }
+                    Button {
+                        text: "Reload Camera QML"
+                        onClicked: {
+                            droneCameraLoader.active = false
+                            droneCameraLoader.active = true
+                            droneCameraLoader.source = "camera_view/DroneCameraView.qml"
                         }
                     }
                 }
