@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+
+## [1.0.6] - 2025-10-24
+
+### Fixed
+- Auto adds the changes to the release description(changelog) (e5d5b0a)
+
 ## [1.0.5] - 2025-10-24
 
 ### Changed
