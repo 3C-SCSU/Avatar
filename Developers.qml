@@ -264,7 +264,6 @@ Rectangle {
                 }
             }
 
-
             // ---------- TICKET BY DEVELOPER LOG ----------
             Rectangle {
                 color: "#1A2B48"

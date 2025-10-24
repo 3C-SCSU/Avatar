@@ -1,27 +1,24 @@
-from flask import Flask, render_template, request
-import pandas as pd
 import json
-import tensorflow as tf
+
 import numpy as np
+import pandas as pd
+import tensorflow as tf
 import tensorflow_decision_forests as tfdf
+from flask import Flask, render_template, request
 
-
-new_model = tf.keras.models.load_model(
-    "../will_modelv3")
+new_model = tf.keras.models.load_model("../will_modelv3")
 prediction_cache = []
-labels = ['backward', 'down', 'forward',
-          'land', 'left', 'right', 'takeoff', 'up']
+labels = ["backward", "down", "forward", "land", "left", "right", "takeoff", "up"]
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
-@app.route('/eegrandomforestprediction', methods=['POST'])
+@app.route("/eegrandomforestprediction", methods=["POST"])
 def eegprediction():
-
     # import and process the data to feed to ML model
     data = request.data
     dict = json.loads(data)
@@ -41,18 +38,24 @@ def eegprediction():
 
     prediction_cache.append(predicted_label)
 
-    return {"prediction_label": predicted_label, "prediction_count": len(prediction_cache)}
+    return {
+        "prediction_label": predicted_label,
+        "prediction_count": len(prediction_cache),
+    }
 
 
-@app.route('/lastprediction', methods=['GET'])
+@app.route("/lastprediction", methods=["GET"])
 def lastprediction():
     try:
         if prediction_cache:
-            return {"prediction_label": str(prediction_cache[-1]), "prediction_count": len(prediction_cache)}
+            return {
+                "prediction_label": str(prediction_cache[-1]),
+                "prediction_count": len(prediction_cache),
+            }
     except:
         print("Error reading cache")
-        return {"prediction_label": 'flip'}
+        return {"prediction_label": "flip"}
 
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+if __name__ == "__main__":
+    app.run(host="0.0.0.0")
