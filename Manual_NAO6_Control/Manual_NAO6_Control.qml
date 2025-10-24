@@ -178,70 +178,16 @@ Rectangle {
         Rectangle {
             id: rightPanel
             Layout.preferredWidth: parent.width * 0.30
+            Layout.minimumWidth: 300
             Layout.fillHeight: true
             color: "#111"
             radius: 6
 
-            /* Loader {
-                id: droneCameraLoader
-                anchors.fill: parent
-                source: "camera_view/DroneCameraView.qml"
-                asynchronous: true
-                onLoaded: {
-                    console.log("droneCameraLoader: loaded, item:", droneCameraLoader.item)
-                    if (droneCameraLoader.item) {
-                        droneCameraLoader.item.cameraController = droneCameraController
-                        console.log("assigned droneCameraController ->", droneCameraController)
-                    }
-                }
-                onStatusChanged: console.log("droneCameraLoader.status ->", status)
-            } */
-
-            // ...existing code...
             Loader {
                 id: droneCameraLoader
                 anchors.fill: parent
                 source: "camera_view/DroneCameraView.qml"
                 asynchronous: true
-
-                onLoaded: {
-                    console.log("droneCameraLoader.onLoaded - item:", droneCameraLoader.item)
-                    if (droneCameraLoader.item) {
-                        droneCameraLoader.item.cameraController = droneCameraController
-                        console.log("Assigned controller ->", droneCameraController)
-                    } else {
-                        console.log("droneCameraLoader.item is null")
-                    }
-                }
-                onStatusChanged: {
-                    console.log("droneCameraLoader.status ->", status)
-                }
-            }
-
-            // visible debug fallback displayed only when loader hasn't produced an item
-            Item {
-                anchors.fill: parent
-                visible: droneCameraLoader.item === null
-                Rectangle {
-                    anchors.fill: parent
-                    color: "#111"
-                    border.color: "red"
-                    border.width: 2
-                }
-                Column {
-                    anchors.centerIn: parent
-                    spacing: 6
-                    Text { text: "Camera view status: " + (droneCameraLoader.status === Loader.Ready ? "Ready" : droneCameraLoader.status) ; color: "white" }
-                    Text { text: "Item: " + (droneCameraLoader.item ? "loaded" : "null"); color: "lightgray" }
-                    Button {
-                        text: "Reload Camera QML"
-                        onClicked: {
-                            droneCameraLoader.active = false
-                            droneCameraLoader.active = true
-                            droneCameraLoader.source = "camera_view/DroneCameraView.qml"
-                        }
-                    }
-                }
             }
         }
     }
