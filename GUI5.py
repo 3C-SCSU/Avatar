@@ -1,20 +1,3 @@
-"""
-Avatar - BCI Application with NAO Robot Control
-Author: Youssef Elkhouly
-Date: October 2025
-
-Description:
-    This module implements the backend for the Avatar BCI application, which integrates
-    brainwave reading, drone control, and NAO robot control. The application uses PySide6
-    for the GUI framework and connects to various hardware controllers.
-
-Key Features:
-    - Brainwave data acquisition and processing
-    - Drone control via Tello SDK
-    - NAO robot connection and control with configurable IP/Port
-    - Machine learning predictions (Random Forest and Deep Learning)
-    - File shuffling and data transfer utilities
-"""
 
 import sys
 import os
@@ -25,6 +8,7 @@ from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtCore import QObject, Signal, Slot, QProcess, QUrl
 from pdf2image import convert_from_path
 from djitellopy import Tello
+import threading
 import random
 import re
 import pandas as pd
@@ -217,6 +201,7 @@ class BrainwavesBackend(QObject):
         except Exception as e:
             print(f"hofCharts.main() ERROR: {e}")
 
+    #might be useless because is.connected is defined already in the def__init method
     def get_is_connected(self):
         return self.isConnectedChanged
 
@@ -241,6 +226,7 @@ class BrainwavesBackend(QObject):
         self.is_connected = False
         try:
             self.tello = Tello()
+            self.connected = False
         except Exception as e:
             print(f"Warning: Failed to initialize Tello drone: {e}")
             self.logMessage.emit(f"Warning: Failed to initialize Tello drone: {e}")
@@ -400,19 +386,18 @@ class BrainwavesBackend(QObject):
 
     @Slot(str)
     def getDroneAction(self, action):
-        if action == 'connect':
-            try:
-                self.tello.connect()
-                self.is_connected = True
-                self.logMessage.emit("Connected to Tello Drone")
-            except:
-                self.is_connected = False
-                self.logMessage.emit("Error during connect: {e}")
-            return
-        elif not self.is_connected:
-            self.logMessage.emit(f"Drone not connected. Aborting command '{action}'.")
-            return
+        threading.Thread(target=self._doAction, args=(action,), daemon=True).start()
+
+    def _doAction(self, action):
         try:
+            if action == 'connect':
+                self.tello.connect()
+                self.connected = True
+                self.logMessage.emit("Connected to Tello Drone")
+            elif self.connected:
+                self.logMessage.emit("Drone did not connect.")
+                return
+
             if action == 'up':
                 self.tello.move_up(30)
                 self.logMessage.emit("Moving up")
@@ -436,7 +421,7 @@ class BrainwavesBackend(QObject):
                 self.logMessage.emit("Rotating left")
             elif action == 'turn_right':
                 self.tello.rotate_clockwise(45)
-                self.logMessage.emit("Rotationg right")
+                self.logMessage.emit("Rotating right")
             elif action == 'takeoff':
                 self.tello.takeoff()
                 self.logMessage.emit("Taking off")
