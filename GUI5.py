@@ -478,7 +478,7 @@ class BrainwavesBackend(QObject):
             elif action == "backward":
                 self.tello.move_back(30)
                 self.logMessage.emit("Moving backward")
-            elif action == "left":
+            elif action == 'left':
                 self.tello.move_left(30)
                 self.logMessage.emit("Moving left")
             elif action == "right":
