@@ -3,14 +3,8 @@ import QtQuick.Controls 6.4
 import QtQuick.Layouts 1.15
 import QtQuick.Window 2.15
 import QtQuick3D 6.7
-<<<<<<< HEAD
 import QtQuick.Dialogs
 import Qt.labs.platform
-=======
-import "Nao.mesh"
-import "GUI5_ManualDroneControl/cameraview"
-import "Manual_NAO6_Control"
->>>>>>> 88c67a8 (moved NA06_Manual_Control ui code and added camera controller)
 
 ApplicationWindow {
     visible: true
@@ -43,11 +37,7 @@ ApplicationWindow {
             TabButton {
                 text: "Manual NAO6 Control"
                 font.bold: true
-                onClicked: {
-                    stackLayout.currentIndex = 3
-                    //console.log("Manual Controller tab clicked")
-                    //tabController.startNaoViewer()
-                }
+                onClicked: stackLayout.currentIndex = 3
             }
         }
 
@@ -77,6 +67,11 @@ ApplicationWindow {
                 text: "Brainwave Visualization"
                 font.bold: true
                 onClicked: stackLayout.currentIndex = 1
+            }
+            TabButton {
+                text: "Manual NAO6 Control"
+                font.bold: true
+                onClicked: stackLayout.currentIndex = 3
             }
             TabButton {
                 text: "File Shuffler"
