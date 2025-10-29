@@ -13,6 +13,8 @@ Rectangle {
     property bool recording: false
     property string latestFrameDebug: ""
 
+    signal logToParent(string message)
+
     Connections {
         target: cameraController
         onVideoFrame: function(data) {
@@ -25,7 +27,8 @@ Rectangle {
             }
         }
         onLogMessage: function(msg) {
-            console.log("droneCameraController:", msg)
+            console.log("drone camera log:", msg)
+            logToParent(msg)
         }
     }
 
@@ -166,6 +169,7 @@ Rectangle {
                 }
                 onClicked: {
                     recording = true
+                    logToParent("Starting camera stream")
                     if (cameraController && cameraController.start_camera_stream) {
                         cameraController.start_camera_stream()
                     }
@@ -194,6 +198,7 @@ Rectangle {
                 }
                 onClicked: {
                     recording = false
+                    logToParent("Stopping camera stream")
                     if (cameraController && cameraController.stop_camera_stream) {
                         cameraController.stop_camera_stream()
                     }
