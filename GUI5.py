@@ -2,7 +2,6 @@ import contextlib
 import io
 
 import os
-import threading
 import random
 import re
 import subprocess
