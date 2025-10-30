@@ -511,7 +511,7 @@ Rectangle {
                                 enabled: root.is_connected
                                 onEntered: parent.color = "white"
                                 onExited: parent.color = "#242c4d"
-                                onClicked: backend.getDroneAction("takeoff")
+                                onClicked: backend.takeoff()
                             }
                         }
 
