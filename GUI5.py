@@ -276,19 +276,13 @@ class BrainwavesBackend(QObject):
         if self.current_model == "Random Forest":
             if self.current_framework == "PyTorch":
                 prediction = self.run_random_forest_pytorch()
-            elif self.current_framework == "TensorFlow":
+            else:
                 prediction = self.run_random_forest_tensorflow()
-            elif self.current_framework == "JAX":
-                prediction = self.run_random_forest_jax()
-
         else:  # Deep Learning
             if self.current_framework == "PyTorch":
                 prediction = self.run_deep_learning_pytorch()
-            elif self.current_framework == "TensorFlow":
+            else:
                 prediction = self.run_deep_learning_tensorflow()
-            elif self.current_framework == "JAX":
-                prediction = self.run_deep_learning_jax()
-
         self.logMessage.emit(f"Prediction received: {prediction}")
         # Set current prediction
         self.current_prediction_label = prediction
@@ -343,23 +337,7 @@ class BrainwavesBackend(QObject):
         # Fallback to simulation with TensorFlow-specific labels
         time.sleep(1)
         return random.choice(["forward", "backward", "left", "right", "takeoff", "land"])
-    
-    def run_random_forest_jax(self):
-        """ Random Forest model processing with JAX backend """
-        print("Running Random Forest Model with JAX...")
-        try:
-            #use the BCI connection to get real brainwave data
-            if hasattr(self, 'bcicon') and self.bcicon:
-                prediction_response = self.bcicon.bciConnectionController()
-                if prediction_response:
-                    return prediction_response.get('prediction_label', 'forward')
-        except Exception as e:
-            print(f"Error with Jax Random Forest: {e}")
 
-        # Fallback to simulation with Jax-specific labels
-        time.sleep(1)
-        return random.choice(["forward", "backward", "left", "right", "takeoff", "land"])
-              
     def run_deep_learning_pytorch(self):
         """Deep Learning model processing with PyTorch backend"""
         print("Running Deep Learning Model with PyTorch...")
@@ -405,18 +383,6 @@ class BrainwavesBackend(QObject):
         except Exception as e:
             print(f"Error with TensorFlow Deep Learning: {e}")
             return "forward"
-        
-    def run_deep_learning_jax(self):
-        """ Deep Learning model processing with Jax """
-        print("Running Deep Learning Model with Jax...")
-        try:
-            # Simulate Jax deep learning model processing
-            # In a real implementation, this would load and run a Jax CNN model
-            time.sleep(2) # Simulate longer processing time for deep learning
-            return random.choice(["forward", "backward", "left", "right", "takeoff", "land", "up", "down"])
-        except Exception as e:
-            print(f"Error with Jax Deep Learning: {e}")
-            return "forward"     
 
     @Slot(str)
     def notWhatIWasThinking(self, manual_action):
