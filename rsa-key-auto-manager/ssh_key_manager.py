@@ -9,7 +9,7 @@ import sys
 import argparse
 from datetime import datetime, timedelta
 import pwd
-from filelock import FileLock
+import fcntl
 import subprocess
 import tempfile
 import shutil
@@ -20,7 +20,7 @@ import re
 # -----------------------------
 home_root = "/home"  # Home directories root (on Linux, usually /home)
 additional_users = ["/root"]  # For root user, we also check /root
-log_file = "/var/log/ssh_key_cleanup.log"  # record information of all expired key
+log_file = os.path.join(os.getcwd(), "ssh_key_cleanup.log")  # record information of all expired key
 DEFAULT_EXPIRY = "2025-12-12T23:59"  # default expiry: 2025-12-12T23:59
 
 # -----------------------------
@@ -159,50 +159,55 @@ def process_key_file(user_dir):
         return
 
     lock_path = key_file + ".lock"  # Create a lock file path for the authorized_keys file to prevent race condition
-    with FileLock(lock_path):
-        with open(key_file, "r") as f:
-            lines = f.readlines()  # Read all lines of the file and return them as a list
+    with open(lock_path, "w") as lock_file:
+        try:
+            fcntl.flock(lock_file, fcntl.LOCK_EX)  # acquire exclusive file lock
+            with open(key_file, "r") as f:
+                lines = f.readlines()  # Read all lines of the file and return them as a list
 
-        new_lines = []  # used to store unexpired key and other information in the key_file
-        now =datetime.now()
+            new_lines = []  # used to store unexpired key and other information in the key_file
+            now = datetime.now()
 
-        for line in lines:
-            stripped = line.strip()
-            # Keep comments and empty lines
-            if stripped.startswith("#") or not stripped:  # "not stripped" means this line is a blank line
+            for line in lines:
+                stripped = line.strip()
+                # Keep comments and empty lines
+                if stripped.startswith("#") or not stripped:  # "not stripped" means this line is a blank line
+                    new_lines.append(line)
+                    continue
+
+                # Check for expiry JSON {"expiry":"..."}
+                expiry_match = re.search(r'{"expiry":"([^"]+)"}', stripped)
+                if expiry_match:
+                    try:
+                        expiry_str = expiry_match.group(1)
+                        expiry_date = parse_expiry(expiry_str)
+
+                        # if expired, do not append to new_lines which means expired key is deleted
+                        if expiry_date and expiry_date < now:
+                            print(f"[CLEANUP] Removed expired key from {user_dir}: {stripped}", file=sys.stdout)
+                            with open(log_file, "a") as log:  # adding expired key information to log_file
+                                log.write(f"{ts()} - Expired key removed for {user_dir}: {stripped}\n")
+                            continue
+                    except Exception:  # including ValueError、IndexError、KeyError、TypeError etc.
+                        pass
                 new_lines.append(line)
-                continue
 
-            # Check for expiry JSON {"expiry":"..."}
-            expiry_match = re.search(r'{"expiry":"([^"]+)"}', stripped)
-            if expiry_match:
-                try:
-                    expiry_str = expiry_match.group(1)
-                    expiry_date = parse_expiry(expiry_str)
+            # Save original ownership and permissions
+            st = os.stat(key_file)
+            uid, gid, mode = st.st_uid, st.st_gid, st.st_mode
 
-                    # if expired, do not append to new_lines which means expired key is deleted
-                    if expiry_date and expiry_date < now:
-                        print(f"[CLEANUP] Removed expired key from {user_dir}: {stripped}", file=sys.stdout)
-                        with open(log_file, "a") as log:  # adding expired key information to log_file
-                            log.write(f"{ts()} - Expired key removed for {user_dir}: {stripped}\n")
-                        continue
-                except Exception:  # including ValueError、IndexError、KeyError、TypeError etc.
-                    pass
-            new_lines.append(line)
+            # Atomic write,"tmp_fd" is file descriptor, "tmp_path" is the full path of the temporary file
+            tmp_fd, tmp_path = tempfile.mkstemp(dir=os.path.dirname(key_file))  # create a temp file that has same path as key_file
+            with os.fdopen(tmp_fd, 'w') as tmp_file:
+                tmp_file.writelines(new_lines)  # write new_lines into temp file
+            shutil.move(tmp_path, key_file)  # Atomically replace key_file with tmp_path; cleaning is finished
 
-        # Save original ownership and permissions
-        st = os.stat(key_file)
-        uid, gid, mode = st.st_uid, st.st_gid, st.st_mode
+            # Restore original ownership and permissions
+            os.chown(key_file, uid, gid)
+            os.chmod(key_file, mode)
+        finally:
+            fcntl.flock(lock_file, fcntl.LOCK_UN)  # release file lock
 
-        # Atomic write,"tmp_fd" is file descriptor, "tmp_path" is the full path of the temporary file
-        tmp_fd, tmp_path = tempfile.mkstemp(dir=os.path.dirname(key_file))  # create a temp file that has same path as key_file
-        with os.fdopen(tmp_fd, 'w') as tmp_file:
-            tmp_file.writelines(new_lines)  # write new_lines into temp file
-        shutil.move(tmp_path, key_file)  # Atomically replace key_file with tmp_path; cleaning is finished
-
-        # Restore original ownership and permissions
-        os.chown(key_file, uid, gid)
-        os.chmod(key_file, mode)
 
 
 # -----------------------------
@@ -273,7 +278,7 @@ def main():
         init_keys(expiry_str=args.expiry, users=user_dirs, force=args.force)
     elif args.mode == "cleanup":
         for user_dir in user_dirs:
-            process_key_file(user_dir)
+            process_key_file(use)
     elif args.mode == "register-cron":
         register_cron()
     else:
