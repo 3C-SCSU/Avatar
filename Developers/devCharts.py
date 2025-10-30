@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # Author: Jason D, 10/06/2025
 
-import argparse
-import csv
-import os
-import re
 import subprocess
-from collections import defaultdict
+import os
+import csv
+import argparse
+import re
 from typing import Dict, List
+from collections import defaultdict
 
 try:
     import matplotlib.pyplot as plt
@@ -25,7 +25,7 @@ def run_shortlog_all() -> list[tuple[str, int]]:
         text=True,
         encoding="utf-8",
         errors="ignore",
-        check=True,
+        check=True
     )
     lines = [l.strip() for l in proc.stdout.splitlines() if l.strip()]
     out = []
@@ -37,8 +37,8 @@ def run_shortlog_all() -> list[tuple[str, int]]:
         try:
             cnt = int(cnt_str)
         except ValueError:
-            if "\t" in ln:
-                left, right = ln.split("\t", 1)
+            if '\t' in ln:
+                left, right = ln.split('\t', 1)
                 try:
                     cnt = int(left.strip())
                     name = right.strip()
@@ -76,11 +76,7 @@ def devList() -> List[str]:
     try:
         proc = subprocess.run(
             ["git", "shortlog", "-sne", "--all"],
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="ignore",
-            check=True,
+            capture_output=True, text=True, encoding="utf-8", errors="ignore", check=True
         )
     except subprocess.CalledProcessError:
         return []
@@ -94,7 +90,7 @@ def devList() -> List[str]:
         line = line.strip()
         if not line:
             continue
-        match = re.match(r"^\s*\d+\s+(?P<author>.+)$", line)
+        match = re.match(r'^\s*\d+\s+(?P<author>.+)$', line)
         if match:
             author = match.group("author").strip()
             if author not in exclude:
@@ -111,11 +107,7 @@ def ticketsByDev_map() -> Dict[str, List[str]]:
     try:
         proc = subprocess.run(
             ["git", "log", "--all", f"--pretty=format:{pretty}"],
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="ignore",
-            check=True,
+            capture_output=True, text=True, encoding="utf-8", errors="ignore", check=True
         )
     except subprocess.CalledProcessError:
         return {}
@@ -123,8 +115,8 @@ def ticketsByDev_map() -> Dict[str, List[str]]:
     raw = proc.stdout or ""
     commits = raw.split("\x1e")  # split by commit
 
-    jira_re = re.compile(r"\b([A-Za-z]{2,}-\d+)\b", re.IGNORECASE)
-    hash_re = re.compile(r"(?<![A-Za-z0-9])#\d+\b")
+    jira_re = re.compile(r'\b([A-Za-z]{2,}-\d+)\b', re.IGNORECASE)
+    hash_re = re.compile(r'(?<![A-Za-z0-9])#\d+\b')
 
     author_to_ticketset = defaultdict(set)
 
@@ -150,10 +142,9 @@ def ticketsByDev_map() -> Dict[str, List[str]]:
         author_to_ticketset[author].update(found)
 
     # convert sets -> sorted lists
-    result: Dict[str, List[str]] = {
-        a: sorted(list(ts)) for a, ts in author_to_ticketset.items()
-    }
+    result: Dict[str, List[str]] = {a: sorted(list(ts)) for a, ts in author_to_ticketset.items()}
     return result
+
 
 
 def ticketsByDev_text() -> str:
@@ -166,13 +157,13 @@ def ticketsByDev_text() -> str:
     if not m:
         return "No tickets found."
 
-    exclude = {"3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>"}
+    exclude = {
+        "3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>"
+    }
 
     lines = []
     # sort authors by number of tickets desc, then by name
-    for author, tickets in sorted(
-        m.items(), key=lambda kv: (-len(kv[1]), kv[0].lower())
-    ):
+    for author, tickets in sorted(m.items(), key=lambda kv: (-len(kv[1]), kv[0].lower())):
         if author in exclude:
             continue  # skip this author
         lines.append(f"{author}: {', '.join(tickets)}")
@@ -183,6 +174,7 @@ def ticketsByDev_text() -> str:
 # Plot individual tier bar chart
 # ----------------------------
 def plot_single_tier(rows: list[tuple[str, int, str]], tier: str, outpath: str):
+
     color_map = {"Gold": "#D4AF37", "Silver": "#C0C0C0", "Bronze": "#CD7F32"}
     data = [r for r in rows if r[2] == tier]
 
@@ -204,11 +196,11 @@ def plot_single_tier(rows: list[tuple[str, int, str]], tier: str, outpath: str):
 
     bars = plt.bar(names, counts, color=color, width=0.6)
 
-    plt.xticks(rotation=24, ha="right", fontsize=20)  # Smaller font for names
+    plt.xticks(rotation=24, ha="right", fontsize=20)   # Smaller font for names
     plt.yticks(fontsize=14)
     plt.ylabel("Number of Commits", fontsize=18)
     plt.xlabel("Top Contributors", fontsize=14, labelpad=40)
-    # plt.title(f"{tier} Tier", fontsize=36, weight="bold")
+    #plt.title(f"{tier} Tier", fontsize=36, weight="bold")
 
     # Add value labels with more vertical padding and smaller font size
     for i, b in enumerate(bars):
@@ -217,11 +209,8 @@ def plot_single_tier(rows: list[tuple[str, int, str]], tier: str, outpath: str):
             b.get_x() + b.get_width() / 2,
             h - 0.05 * h,  # slightly below the top
             str(counts[i]),
-            ha="center",
-            va="top",
-            fontsize=16,
-            weight="bold",
-            color="white",
+            ha="center", va="top",
+            fontsize=16, weight="bold", color="white"
         )
 
     plt.tight_layout(pad=2.0)  # Add padding to avoid clipping
@@ -229,19 +218,14 @@ def plot_single_tier(rows: list[tuple[str, int, str]], tier: str, outpath: str):
     plt.close()
 
 
+
+
 # ----------------------------
 # Main
 # ----------------------------
 def main():
-    parser = argparse.ArgumentParser(
-        description="Generate Gold, Silver, and Bronze contributor charts."
-    )
-    parser.add_argument(
-        "--out-dir",
-        type=str,
-        default="commit_tiers_output",
-        help="Directory to save outputs.",
-    )
+    parser = argparse.ArgumentParser(description="Generate Gold, Silver, and Bronze contributor charts.")
+    parser.add_argument("--out-dir", type=str, default="commit_tiers_output", help="Directory to save outputs.")
     args = parser.parse_args()
 
     data = run_shortlog_all()

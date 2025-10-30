@@ -1,17 +1,17 @@
 import time
-from enum import Enum
-
 import numpy as np
 import pandas as pd
 import requests
-from brainflow.board_shim import BoardIds, BoardShim, BrainFlowInputParams, LogLevels
+from brainflow.board_shim import BoardShim, BrainFlowInputParams, LogLevels, BoardIds
+from brainflow.data_filter import DataFilter
+from enum import Enum
 
 
 class DataMode(Enum):
     """
     Enum representing the mode of data used in the BCI application
 
-    This enum defines two modes of data: synthetic and live.
+    This enum defines two modes of data: synthetic and live. 
     It is used to specify the source of data that the application will use
     for processing and analysis
 
@@ -25,12 +25,13 @@ class DataMode(Enum):
     LIVE = "Live"
 
 
-class bciConnection:
+class bciConnection():
+
     """
     A singleton class for managing connections to Brain-Computer Interface (BCI) devices
 
     This class provides functionality to establish a connection to a BCI device,
-    either in live mode or synthetic mode. It ensures that only one instance of the
+    either in live mode or synthetic mode. It ensures that only one instance of the 
     connection is created throughout the application (singleton pattern)
 
     Attributes:
@@ -41,16 +42,12 @@ class bciConnection:
 
     __instance = None
 
-    def __init__(
-        self,
-        serial_port: str = "/dev/cu.usbserial-D200PMA1",
-        mode: DataMode = DataMode.SYNTHETIC,
-    ):
+    def __init__(self, serial_port : str = "/dev/cu.usbserial-D200PMA1", mode: DataMode = DataMode.SYNTHETIC):
         """
         Initializes a new instance of the bciConnection class
 
         Parameters:
-            serial_port (str): The serial port for connecting to the BCI device.
+            serial_port (str): The serial port for connecting to the BCI device. 
                                Defaults to "/dev/cu.usbserial-D200PMA1"
             mode (DataMode): The mode of operation for the connection.
                              Defaults to DataMode.SYNTHETIC
@@ -61,21 +58,18 @@ class bciConnection:
 
         if bciConnection.__instance != None:
             raise Exception("This should be a singleton class")
-
+        
         bciConnection.__instance = self
         self.__params = BrainFlowInputParams()
         self.__serial_port = serial_port
         self.__mode = mode
 
     @staticmethod
-    def get_instance(
-        serial_port: str = "/dev/cu.usbserial-D200PMA1",
-        mode: DataMode = DataMode.SYNTHETIC,
-    ) -> "bciConnection":
+    def get_instance(serial_port : str = "/dev/cu.usbserial-D200PMA1",  mode: DataMode = DataMode.SYNTHETIC) -> "bciConnection":
         """
         Retrieves the singleton instance of the bciConnection class
 
-        If an instance does not already exist, a new instance is created
+        If an instance does not already exist, a new instance is created 
         with the specified serial port and mode
 
         Parameters:
@@ -113,7 +107,8 @@ class bciConnection:
 
         board.prepare_session()
         board.start_stream(streamer_params="streaming_board://225.1.1.1:6677")
-        BoardShim.log_message(LogLevels.LEVEL_INFO, "start sleeping in the main thread")
+        BoardShim.log_message(LogLevels.LEVEL_INFO,
+                              'start sleeping in the main thread')
         time.sleep(10)
         data = board.get_board_data()
         board.stop_stream()
@@ -122,16 +117,16 @@ class bciConnection:
 
     def send_data_to_server(self, data):
         # eeg_channels = BoardShim.get_eeg_channels(BoardIds.SYNTHETIC_BOARD.value)
-        print("Transposed Data From the Board")
+        print('Transposed Data From the Board')
         df = pd.DataFrame(np.transpose(data), columns=self.column_labels)
 
         data_json = df.to_json()
 
         # Define the API endpoint URL
-        url = "http://127.0.0.1:5000/eegrandomforestprediction"
+        url = 'http://127.0.0.1:5000/eegrandomforestprediction'
 
         # Set the request headers
-        headers = {"Content-Type": "application/json"}
+        headers = {'Content-Type': 'application/json'}
 
         # Send the POST request with the data in the request body
         response = requests.post(url, data=data_json, headers=headers)
@@ -144,7 +139,7 @@ class bciConnection:
             # format data cols.
             self.column_labels = []
             for num in range(32):
-                self.column_labels.append("c" + str(num))
+                self.column_labels.append("c"+str(num))
 
             # read eeg data from the board -- will start a bci session with your current board
             # allowing it to stream to BCI Gui App and collect 10 second data sample
