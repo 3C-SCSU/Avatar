@@ -1,21 +1,3 @@
-"""
-Avatar - BCI Application with NAO Robot Control
-Author: Youssef Elkhouly
-Date: October 2025
-
-Description:
-    This module implements the backend for the Avatar BCI application, which integrates
-    brainwave reading, drone control, and NAO robot control. The application uses PySide6
-    for the GUI framework and connects to various hardware controllers.
-
-Key Features:
-    - Brainwave data acquisition and processing
-    - Drone control via Tello SDK
-    - NAO robot connection and control with configurable IP/Port
-    - Machine learning predictions (Random Forest and Deep Learning)
-    - File shuffling and data transfer utilities
-"""
-
 import sys
 import os
 import subprocess
