@@ -34,7 +34,8 @@ This script is developed as part of the Avatar Open-Source Project (3C-SCSU) at 
 
 - **Thread-Safe File Access**
 
-  - Uses Python’s `filelock.FileLock` to prevent race conditions during writes.
+  - Uses Python’s built-in fcntl module for low-level file locking, ensuring that no two processes modify the same key file at the same time.
+  - This eliminates race conditions during concurrent cron executions without requiring external packages.
 
 - **Comprehensive Logging**
   - Records all actions in `/var/log/ssh_key_cleanup.log`.
@@ -57,10 +58,6 @@ Follow these steps to install and configure the program:
 3. **Set file permissions**
    ```bash
    chmod +x ssh_key_manager.py
-   ```
-4. **Install dependency**
-   ```bash
-   pip install filelock
    ```
 
 ## Usage
@@ -163,7 +160,6 @@ You can change this by modifying the DEFAULT_EXPIRY variable in the script.
 -Python 3.8+
 -Linux (Debian-based)
 -cron service enabled
--filelock Python library
 
 ## License
 
