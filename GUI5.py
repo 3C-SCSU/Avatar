@@ -5,7 +5,7 @@ import subprocess
 from pathlib import Path
 from PySide6.QtWidgets import QApplication
 from PySide6.QtQml import QQmlApplicationEngine
-from PySide6.QtCore import QObject, Signal, Slot, QProcess, QUrl
+from PySide6.QtCore import QObject, Signal, Slot, QProcess, QUrl, QTimer
 from pdf2image import convert_from_path
 from djitellopy import Tello
 import threading
@@ -224,6 +224,14 @@ class BrainwavesBackend(QObject):
         self.plots_dir = os.path.abspath("plotscode/plots")  # Base plots directory
         self.current_dataset = "refresh"  # Default dataset to display
         self.is_connected = False
+        
+        # Timer to send periodic hover signals
+        self.hover_timer = QTimer()
+        self.hover_timer.timeout.connect(self.hover_loop)
+
+        self.tello = Tello()
+        self.is_flying = False
+
         try:
             self.tello = Tello()
             self.connected = False
@@ -246,6 +254,13 @@ class BrainwavesBackend(QObject):
                 self.bcicon = None
         else:
             self.bcicon = None
+
+    @Slot()
+    def takeoff(self):
+        self.tello.takeoff()
+        self.is_flying = True
+        self.hover_timer.start(200)
+        self.logMessage.emit("Hovering")
 
     @Slot(str)
     def selectModel(self, model_name):
@@ -418,6 +433,11 @@ class BrainwavesBackend(QObject):
         self.flight_log.insert(0, "Keep alive signal sent.")
         self.flightLogUpdated.emit(self.flight_log)
 
+    @Slot()
+    def hover(self):
+        self.tello.send_rc_control(0, 0, 0, 0)
+        self.logMessage.emit("Hovering")
+
     @Slot(str)
     def getDroneAction(self, action):
         threading.Thread(target=self._doAction, args=(action,), daemon=True).start()
@@ -475,6 +495,9 @@ class BrainwavesBackend(QObject):
         except Exception as e:
             self.logMessage.emit(f"Error during {action}: {e}")
 
+    def hover_loop(self):
+        if self.is_flying:
+            self.tello.send_rc_control(0, 0, 0, 0)
 	
     # Method for returning to home (an approximation)
     def go_home(self):
