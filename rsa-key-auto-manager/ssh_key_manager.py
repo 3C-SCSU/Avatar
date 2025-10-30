@@ -278,7 +278,7 @@ def main():
         init_keys(expiry_str=args.expiry, users=user_dirs, force=args.force)
     elif args.mode == "cleanup":
         for user_dir in user_dirs:
-            process_key_file(use)
+            process_key_file(user_dir)
     elif args.mode == "register-cron":
         register_cron()
     else:
