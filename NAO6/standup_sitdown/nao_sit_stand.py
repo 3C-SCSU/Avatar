@@ -1,7 +1,6 @@
+from naoqi import ALProxy
 import sys
 import time
-
-from naoqi import ALProxy
 
 # --- Config ---
 NAO_IP = "192.168.23.53"
@@ -30,11 +29,11 @@ def nao_sit_down(nao_ip, port):
         else:
             print("Starting behavior:", behavior_name)
             behavior_mng.startBehavior(behavior_name)
-
+            
             # Wait for behavior to complete
             while behavior_mng.isBehaviorRunning(behavior_name):
                 time.sleep(1)
-
+            
             return True
     else:
         print("Behavior not found on robot.")
@@ -60,11 +59,11 @@ def nao_stand_up(nao_ip, port):
         else:
             print("Starting behavior:", behavior_name)
             behavior_mng.startBehavior(behavior_name)
-
+            
             # Wait for behavior to complete
             while behavior_mng.isBehaviorRunning(behavior_name):
                 time.sleep(1)
-
+            
             return True
     else:
         print("Behavior not found on robot.")
