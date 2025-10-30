@@ -75,7 +75,7 @@ class BrainwavesBackend(QObject):
     logMessage = Signal(str)
     naoStarted = Signal()
     naoEnded = Signal()
-    isConnectedChanged = Signal()
+	isConnectedChanged = Signal()
 
     @Slot()
     def startNaoManual(self):
@@ -120,6 +120,16 @@ class BrainwavesBackend(QObject):
         else:
             self.fligt_log.insert(0, "Nao failed to stand up.")
         self.flightLogUpdated.emit(self.flight_log)
+
+	def get_is_connected(self):
+		return self.isConnectedChanged
+
+	def set_is_connected(self, value):
+		if self.is_connected != value:
+			self.is_connected = value
+			self.isConnectedChanged.emit()
+
+	is_connected_prop = Property(bool, get_is_connected, set_is_connected, notify=isConnectedChanged)
             
 
     @Slot(result=str)
@@ -217,16 +227,6 @@ class BrainwavesBackend(QObject):
         except Exception as e:
             print(f"hofCharts.main() ERROR: {e}")
 
-    def get_is_connected(self):
-        return self.isConnectedChanged
-
-    def set_is_connected(self, value):
-        if self.is_connected != value:
-            self.is_connected = value
-            self.isConnectedChanged.emit()
-
-    is_connected_prop = Property(bool, get_is_connected, set_is_connected, notify=isConnectedChanged)
-
 
     def __init__(self):
         super().__init__()
@@ -238,7 +238,7 @@ class BrainwavesBackend(QObject):
         self.image_paths = []  # Store converted image paths
         self.plots_dir = os.path.abspath("plotscode/plots")  # Base plots directory
         self.current_dataset = "refresh"  # Default dataset to display
-        self.is_connected = False
+		self.is_connected = False
         try:
             self.tello = Tello()
         except Exception as e:
@@ -741,3 +741,7 @@ if __name__ == "__main__":
     backend.imagesReady.connect(lambda images: engine.rootContext().setContextProperty("imageModel", images))
 
     sys.exit(app.exec())
+
+
+
+
