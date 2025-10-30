@@ -27,13 +27,12 @@ def do_gangnam_style(nao_ip, port):
         else:
             print("Starting behavior:", behavior_name)
             behavior_mng.startBehavior(behavior_name)
-
+            
             # Wait for behavior to complete
             import time
-
             while behavior_mng.isBehaviorRunning(behavior_name):
                 time.sleep(1)
-
+            
             return True
     else:
         print("Behavior not found on robot.")

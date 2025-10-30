@@ -1,34 +1,16 @@
-import os
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QTableWidget, QTableWidgetItem, QListWidget, QLineEdit, QTextEdit, QRadioButton, QGroupBox, QSizePolicy
+from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtGui import QPixmap, QIcon
 
 # Workaround to import DataMode and bciConnection classes from brainwave-prediction-app/client/brainflow1
 import sys
-
-from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtWidgets import (
-    QGroupBox,
-    QHBoxLayout,
-    QLabel,
-    QLineEdit,
-    QListWidget,
-    QPushButton,
-    QRadioButton,
-    QTableWidget,
-    QTableWidgetItem,
-    QTextEdit,
-    QVBoxLayout,
-    QWidget,
-)
-
-sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), "brainwave-prediction-app"))
-)
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'brainwave-prediction-app')))
 from client.brainflow1 import DataMode, bciConnection
-
 
 class BrainwaveReading_Tab(QWidget):
     button_pressed = pyqtSignal(str)
-
+    
     def __init__(self, get_drone_action, use_brainflow):
         super(BrainwaveReading_Tab, self).__init__()
         self.get_drone_action = get_drone_action
@@ -51,8 +33,8 @@ class BrainwaveReading_Tab(QWidget):
         # Left Area - Control Mode, Brainwave Prediction, and Actions
         left_layout = QVBoxLayout()
 
-        # Synthetic data & Live data radio buttons
-
+        #Synthetic data & Live data radio buttons
+        
         synthetic_live_radios_box = QGroupBox()
         synthetic_live_radios_layout = QVBoxLayout()
         # Create radio button group
@@ -65,18 +47,16 @@ class BrainwaveReading_Tab(QWidget):
 
         # Switch to live data
         self.radio_live.toggled.connect(self.update_data_mode)
-
+        
         synthetic_live_radios_layout.addWidget(self.radio_group)
         synthetic_live_radios_layout.addWidget(self.radio_live)
-
+        
         synthetic_live_radios_box.setLayout(synthetic_live_radios_layout)
 
         # Control Mode with Radio Buttons
         control_group_box = QGroupBox("")
         control_group_box.setMaximumWidth(300)
-        control_group_box.setStyleSheet(
-            "color: white; background-color: #64778D; border: none;"
-        )
+        control_group_box.setStyleSheet("color: white; background-color: #64778D; border: none;")
         radio_layout = QHBoxLayout()  # Set radio buttons side by side
         self.manual_control_radio = QRadioButton("Manual Control")
         self.autopilot_radio = QRadioButton("Autopilot")
@@ -99,9 +79,7 @@ class BrainwaveReading_Tab(QWidget):
         read_mind_button = QPushButton("Read my mind...")
         read_mind_button.setIcon(QIcon(pixmap))  # Set icon as brain image
         read_mind_button.setFixedSize(160, 40)
-        read_mind_button.setStyleSheet(
-            "background-color: #1b3a4b; color: white; border-radius: 5px;"
-        )
+        read_mind_button.setStyleSheet("background-color: #1b3a4b; color: white; border-radius: 5px;")
         read_mind_button.clicked.connect(self.read_mind)
 
         brainwave_button_layout.addWidget(brainwave_image, alignment=Qt.AlignCenter)
@@ -114,12 +92,10 @@ class BrainwaveReading_Tab(QWidget):
 
         # Server Response Table
         self.server_table = QTableWidget(1, 2)
-        self.server_table.setHorizontalHeaderLabels(["Count", "Label"])
+        self.server_table.setHorizontalHeaderLabels(['Count', 'Label'])
         self.server_table.setFixedHeight(100)
         self.server_table.setFixedWidth(400)
-        self.server_table.setStyleSheet(
-            "background-color: #1b3a4b; color: white; border: 1px solid white;"
-        )
+        self.server_table.setStyleSheet("background-color: #1b3a4b; color: white; border: 1px solid white;")
 
         # Model Prediction Section Layout with Reduced Gap
         model_prediction_layout = QVBoxLayout()
@@ -133,13 +109,9 @@ class BrainwaveReading_Tab(QWidget):
         execute_button = QPushButton("Execute")
 
         not_thinking_button.setFixedSize(180, 40)
-        not_thinking_button.setStyleSheet(
-            "background-color: #1b3a4b; color: white; border-radius: 5px;"
-        )
+        not_thinking_button.setStyleSheet("background-color: #1b3a4b; color: white; border-radius: 5px;")
         execute_button.setFixedSize(160, 40)
-        execute_button.setStyleSheet(
-            "background-color: #1b3a4b; color: white; border-radius: 5px;"
-        )
+        execute_button.setStyleSheet("background-color: #1b3a4b; color: white; border-radius: 5px;")
 
         not_thinking_button.clicked.connect(self.not_thinking)
         execute_button.clicked.connect(self.execute_prediction)
@@ -152,25 +124,15 @@ class BrainwaveReading_Tab(QWidget):
         empty_input = QLineEdit()
         empty_input.setPlaceholderText("Manual Command (Optional)")
         empty_input.setFixedWidth(300)
-        empty_input.setStyleSheet(
-            "background-color: #1b3a4b; color: white; border: 1px solid white;"
-        )
+        empty_input.setStyleSheet("background-color: #1b3a4b; color: white; border: 1px solid white;")
 
         keep_drone_alive_button = QPushButton("Keep Drone Alive")
         keep_drone_alive_button.setFixedSize(160, 40)
-        keep_drone_alive_button.setStyleSheet(
-            "background-color: #1b3a4b; color: white; border-radius: 5px;"
-        )
-        keep_drone_alive_button.clicked.connect(
-            lambda: self.get_drone_action("keep alive")
-        )
+        keep_drone_alive_button.setStyleSheet("background-color: #1b3a4b; color: white; border-radius: 5px;")
+        keep_drone_alive_button.clicked.connect(lambda: self.get_drone_action('keep alive'))
 
-        manual_input_and_keep_alive_layout.addWidget(
-            empty_input, alignment=Qt.AlignLeft
-        )
-        manual_input_and_keep_alive_layout.addWidget(
-            keep_drone_alive_button, alignment=Qt.AlignLeft
-        )
+        manual_input_and_keep_alive_layout.addWidget(empty_input, alignment=Qt.AlignLeft)
+        manual_input_and_keep_alive_layout.addWidget(keep_drone_alive_button, alignment=Qt.AlignLeft)
 
         # Flight Log Section
         flight_log_label = QLabel("Flight Log")
@@ -180,18 +142,14 @@ class BrainwaveReading_Tab(QWidget):
 
         self.flight_log_list = QListWidget()
         self.flight_log_list.setFixedSize(250, 150)
-        self.flight_log_list.setStyleSheet(
-            "background-color: #1b3a4b; color: white; border: 1px solid white;"
-        )
+        self.flight_log_list.setStyleSheet("background-color: #1b3a4b; color: white; border: 1px solid white;")
 
         # Connect Button Section
         connect_button = QPushButton("Connect")
         connect_pixmap = QPixmap("GUI_Pics/connect.png")  # Set connect image
         connect_button.setIcon(QIcon(connect_pixmap))
         connect_button.setFixedSize(150, 50)
-        connect_button.setStyleSheet(
-            "background-color: #1b3a4b; color: white; border-radius: 5px;"
-        )
+        connect_button.setStyleSheet("background-color: #1b3a4b; color: white; border-radius: 5px;")
         connect_button.clicked.connect(self.connect_drone)
 
         # Add all components to left layout in the given order
@@ -199,10 +157,8 @@ class BrainwaveReading_Tab(QWidget):
         left_layout.addLayout(brainwave_button_layout)
         left_layout.addLayout(model_prediction_layout)
         left_layout.addLayout(button_layout)
-        left_layout.addLayout(
-            manual_input_and_keep_alive_layout
-        )  # Add manual input and keep alive button layout
-
+        left_layout.addLayout(manual_input_and_keep_alive_layout)  # Add manual input and keep alive button layout
+        
         # Container to display the flight log list and synthetic live radios
         flight_log_and_radios_horizontal_layout = QHBoxLayout()
         flight_log_and_radios_horizontal_layout.setAlignment(Qt.AlignLeft)
@@ -210,34 +166,28 @@ class BrainwaveReading_Tab(QWidget):
         # Vertical layout for flight log label and list
         flight_log_vertical_layout = QVBoxLayout()
         flight_log_vertical_layout.addWidget(flight_log_label)
-        flight_log_vertical_layout.addWidget(
-            self.flight_log_list, alignment=Qt.AlignTop
-        )  # Align the flight log list to the top
+        flight_log_vertical_layout.addWidget(self.flight_log_list, alignment=Qt.AlignTop) # Align the flight log list to the top
+
 
         # Add flight log controls to the horizontal layout
         flight_log_and_radios_horizontal_layout.addLayout(flight_log_vertical_layout)
         flight_log_and_radios_horizontal_layout.addWidget(synthetic_live_radios_box)
         # Align the synthetic live radios to the top
-        flight_log_and_radios_horizontal_layout.setAlignment(
-            synthetic_live_radios_box, Qt.AlignTop | Qt.AlignCenter
-        )
+        flight_log_and_radios_horizontal_layout.setAlignment(synthetic_live_radios_box, Qt.AlignTop | Qt.AlignCenter)
         # Add the horizontal layout to the left layout
         left_layout.addLayout(flight_log_and_radios_horizontal_layout)
 
         left_layout.addWidget(connect_button, alignment=Qt.AlignLeft)
+
 
         # Right Area - Predictions Table and Console Log
         right_layout = QVBoxLayout()
 
         # Predictions Table
         self.predictions_table = QTableWidget(0, 3)
-        self.predictions_table.setHorizontalHeaderLabels(
-            ["Predictions Count", "Server Predictions", "Prediction Label"]
-        )
+        self.predictions_table.setHorizontalHeaderLabels(['Predictions Count', 'Server Predictions', 'Prediction Label'])
         self.predictions_table.setFixedSize(800, 600)
-        self.predictions_table.setStyleSheet(
-            "background-color: #1b3a4b; color: white; border: 1px solid white;"
-        )
+        self.predictions_table.setStyleSheet("background-color: #1b3a4b; color: white; border: 1px solid white;")
 
         # Console Log
         console_log_layout = QVBoxLayout()
@@ -246,9 +196,7 @@ class BrainwaveReading_Tab(QWidget):
         console_log_label.setStyleSheet("color: white;")
         self.console_log = QTextEdit()
         self.console_log.setFixedSize(400, 200)
-        self.console_log.setStyleSheet(
-            "background-color: #1b3a4b; color: white; border: 1px solid white;"
-        )
+        self.console_log.setStyleSheet("background-color: #1b3a4b; color: white; border: 1px solid white;")
 
         # Add console log label and text box to console log layout
         console_log_layout.addWidget(console_log_label, alignment=Qt.AlignRight)
@@ -270,21 +218,16 @@ class BrainwaveReading_Tab(QWidget):
     def read_mind(self):
         """Handle the 'Read my mind' action."""
         prediction_response = self.use_brainflow()
-        self.prediction_label = prediction_response["prediction_label"]
-        count = prediction_response["prediction_count"]
+        self.prediction_label = prediction_response['prediction_label']
+        count = prediction_response['prediction_count']
 
         # Update the server table with the new data
         self.server_table.setItem(0, 0, QTableWidgetItem(str(count)))
         self.server_table.setItem(0, 1, QTableWidgetItem(self.prediction_label))
-        self.console_log.append(
-            f"Prediction received: {self.prediction_label} (count: {count})"
-        )
-
+        self.console_log.append(f"Prediction received: {self.prediction_label} (count: {count})")
     def not_thinking(self):
         """Handle 'Not what I was thinking' button."""
-        drone_input = (
-            self.drone_input.text() if self.drone_input.text() else "manual input"
-        )
+        drone_input = self.drone_input.text() if self.drone_input.text() else "manual input"
         self.get_drone_action(drone_input)
 
         prediction_record = [len(self.predictions_log) + 1, "manual", drone_input]
@@ -296,7 +239,6 @@ class BrainwaveReading_Tab(QWidget):
             for j, data in enumerate(record):
                 self.predictions_table.setItem(i, j, QTableWidgetItem(str(data)))
         self.console_log.append(f"Manual input: {drone_input}")
-
     def execute_prediction(self):
         """Handle 'Execute' button."""
         self.flight_log.append(self.prediction_label)
@@ -308,7 +250,7 @@ class BrainwaveReading_Tab(QWidget):
         """Handle the 'Connect' button."""
         self.flight_log.append("Connecting to drone...")
         self.flight_log_list.addItem("Connecting to drone...")
-        self.console_log.append("Connecting to drone...")
+        self.console_log.append("Connecting to drone...") 
         self.get_drone_action("connect")
         self.flight_log.append("Connected.")
         self.flight_log_list.addItem("Connected.")
@@ -316,11 +258,11 @@ class BrainwaveReading_Tab(QWidget):
 
     def update_data_mode(self) -> None:
         """
-        Switches to either synthetic or live data based on the
+        Switches to either synthetic or live data based on the 
         state of the radio button
 
-        This method is triggered when the state of either the
-        'Synthetic Data' or 'Live Data' radio button changes.
+        This method is triggered when the state of either the 
+        'Synthetic Data' or 'Live Data' radio button changes. 
         It sets the data mode in the bcicon instance accordingly
 
         Parameters:

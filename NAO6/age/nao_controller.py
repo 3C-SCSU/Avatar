@@ -1,7 +1,6 @@
-import subprocess
-import time
-
 from naoqi import ALProxy
+import time
+import subprocess
 
 # --- Config ---
 NAO_IP = "192.168.23.53"
@@ -12,7 +11,6 @@ tts = ALProxy("ALTextToSpeech", NAO_IP, PORT)
 asr = ALProxy("ALSpeechRecognition", NAO_IP, PORT)
 memory = ALProxy("ALMemory", NAO_IP, PORT)
 manager = ALProxy("ALBehaviorManager", NAO_IP, PORT)
-
 
 def setup_speech_recognition():
     """Initialize speech recognition with available commands"""
@@ -38,9 +36,7 @@ def setup_speech_recognition():
     asr.pause(True)
     asr.setLanguage("English")
     asr.setAudioExpression(False)
-    asr.setVocabulary(
-        ["Do Gangnam Style", "NAO guess my age", "Stand Up", "Sit Down"], False
-    )
+    asr.setVocabulary(["Do Gangnam Style", "NAO guess my age", "Stand Up", "Sit Down"], False)
     tts.say("I'm listening. Say a command.")
     asr.pause(False)
     try:
@@ -75,11 +71,11 @@ def setup_exit_continue():
 
     asr.subscribe("GuessAgeApp")
     time.sleep(2)
-
+    
     exit_flag = False
     attempts = 0
     max_attempts = 10
-
+    
     while attempts < max_attempts:
         try:
             val = memory.getData("WordRecognized")
@@ -98,10 +94,10 @@ def setup_exit_continue():
                     break
         except RuntimeError:
             pass
-
+        
         attempts += 1
         time.sleep(0.3)
-
+    
     if attempts >= max_attempts:
         print("No clear response received.")
         tts.say("I did not hear anything clearly.")
@@ -110,20 +106,21 @@ def setup_exit_continue():
     asr.unsubscribe("GuessAgeApp")
     return exit_flag
 
+    
 
 def wait_for_phrase(max_attempts):
     """Wait for user to say a command"""
     activity = ""
     attempts = 0
     last_word = ""
-
+    
     while attempts < max_attempts:
         try:
             data = memory.getData("WordRecognized")
             if isinstance(data, list) and len(data) >= 2:
                 current_word = data[0]
                 confidence = data[1]
-
+                
                 if current_word != last_word:
                     print("Heard:", current_word, "| Confidence:", confidence)
                     attempts += 1
@@ -139,19 +136,19 @@ def wait_for_phrase(max_attempts):
                     asr.unsubscribe("GuessAgeApp")
                     activity = "Gangnam"
                     return True, activity
-
+                
                 elif current_word == "Stand Up" and confidence > 0.3:
                     tts.say("Okay, let me Stand Up.")
                     asr.unsubscribe("GuessAgeApp")
                     activity = "standup"
                     return True, activity
-
+                
                 elif current_word == "Sit Down" and confidence > 0.3:
                     tts.say("Okay, let me Sit Down")
                     asr.unsubscribe("GuessAgeApp")
                     activity = "sitdown"
                     return True, activity
-
+                
                 last_word = current_word
         except:
             pass
@@ -159,7 +156,7 @@ def wait_for_phrase(max_attempts):
 
     if attempts >= max_attempts:
         tts.say("I did not understand. Please try again.")
-
+    
     asr.unsubscribe("GuessAgeApp")
     return False, activity
 
@@ -179,14 +176,14 @@ def execute_activity(activity):
 def main():
     try:
         tts.say("Hello! I am NAO robot.")
-
+        
         while True:
             setup_speech_recognition()
             success, activity = wait_for_phrase(max_attempts=10)
-
+            
             if success:
                 execute_activity(activity)
-
+                
                 if setup_exit_continue():
                     tts.say("Thank you for your time. Goodbye!")
                     break

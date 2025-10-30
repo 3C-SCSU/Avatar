@@ -1,21 +1,3 @@
-"""
-Avatar - BCI Application with NAO Robot Control
-Author: Youssef Elkhouly
-Date: October 2025
-
-Description:
-    This module implements the backend for the Avatar BCI application, which integrates
-    brainwave reading, drone control, and NAO robot control. The application uses PySide6
-    for the GUI framework and connects to various hardware controllers.
-
-Key Features:
-    - Brainwave data acquisition and processing
-    - Drone control via Tello SDK
-    - NAO robot connection and control with configurable IP/Port
-    - Machine learning predictions (Random Forest and Deep Learning)
-    - File shuffling and data transfer utilities
-"""
-
 import sys
 import os
 import subprocess
@@ -217,6 +199,16 @@ class BrainwavesBackend(QObject):
         except Exception as e:
             print(f"hofCharts.main() ERROR: {e}")
 
+    def get_is_connected(self):
+        return self.isConnectedChanged
+
+    def set_is_connected(self, value):
+        if self.is_connected != value:
+            self.is_connected = value
+            self.isConnectedChanged.emit()
+
+    is_connected_prop = Property(bool, get_is_connected, set_is_connected, notify=isConnectedChanged)
+
 
     def __init__(self):
         super().__init__()
@@ -389,11 +381,20 @@ class BrainwavesBackend(QObject):
 
     @Slot(str)
     def getDroneAction(self, action):
-        try:
-            if action == 'connect':
+        if action == 'connect':
+            try:
                 self.tello.connect()
+                self.is_connected = True
                 self.logMessage.emit("Connected to Tello Drone")
-            elif action == 'up':
+            except:
+                self.is_connected = False
+                self.logMessage.emit("Error during connect: {e}")
+            return
+        elif not self.is_connected:
+            self.logMessage.emit(f"Drone not connected. Aborting command '{action}'.")
+            return
+        try:
+            if action == 'up':
                 self.tello.move_up(30)
                 self.logMessage.emit("Moving up")
             elif action == 'down':
@@ -416,7 +417,7 @@ class BrainwavesBackend(QObject):
                 self.logMessage.emit("Rotating left")
             elif action == 'turn_right':
                 self.tello.rotate_clockwise(45)
-                self.logMessage.emit("Rotating right")
+                self.logMessage.emit("Rotationg right")
             elif action == 'takeoff':
                 self.tello.takeoff()
                 self.logMessage.emit("Taking off")

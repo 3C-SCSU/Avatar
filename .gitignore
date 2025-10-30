@@ -1,8 +1,7 @@
 LICENSE
 README.md
-**/.DS_Store
-.qtcreator
-.idea
+
+
 # Environments
 .env
 .venv
