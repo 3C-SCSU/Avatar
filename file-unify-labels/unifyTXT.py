@@ -1,14 +1,11 @@
-import glob  # For matching file patterns ('*.txt')
-import os  # For interacting with the operating system (files, dirs, paths)
-import shutil  # For moving files
-import stat  # For changing file permissions
-
+import os          # For interacting with the operating system (files, dirs, paths)
+import shutil      # For moving files
+import glob        # For matching file patterns ('*.txt')
+import stat        # For changing file permissions
 
 # Function to determine category from the folder name
 def get_category_from_folder(folder_name):
-    folder_name = (
-        folder_name.lower()
-    )  # Converts folder name to lowercase for case-insensitive matching
+    folder_name = folder_name.lower()  # Converts folder name to lowercase for case-insensitive matching
     if "takeoff" in folder_name or "take_off" in folder_name:
         return "takeoff"
     elif "backward" in folder_name or "backwards" in folder_name:
@@ -25,7 +22,6 @@ def get_category_from_folder(folder_name):
         # Prints a warning if the folder name doesn't match any known category
         print(f"Category not found: {folder_name}")
         return None  # Returns None to indicate an unmatched folder
-
 
 # Function to change permissions to ensure files/folders are writable and accessible
 def change_permissions(path):
@@ -52,31 +48,21 @@ def change_permissions(path):
         flags |= stat.S_IXUSR
     os.chmod(path, top_mode | flags)
 
-
 # Function to check if a given path is inside the 'processed/' folder
 def is_inside_processed(path, base_dir):
     relative_path = os.path.relpath(path, base_dir)  # Get path relative to base_dir
-    return relative_path.startswith(
-        "processed" + os.sep
-    )  # Check if it starts with "processed/"
-
+    return relative_path.startswith("processed" + os.sep)  # Check if it starts with "processed/"
 
 # Main function that organizes all .txt files into categorized folders inside "processed"
 def move_any_txt_files(base_dir):
-    change_permissions(
-        base_dir
-    )  # Ensure files and folders are writable before processing
+    change_permissions(base_dir)  # Ensure files and folders are writable before processing
 
-    processed_dir = os.path.join(
-        base_dir, "processed"
-    )  # Define the path to the 'processed' directory
-    os.makedirs(
-        processed_dir, exist_ok=True
-    )  # Create the 'processed' folder if it doesn't exist
+    processed_dir = os.path.join(base_dir, "processed")  # Define the path to the 'processed' directory
+    os.makedirs(processed_dir, exist_ok=True)  # Create the 'processed' folder if it doesn't exist
 
     # Define glob pattern to find all .txt files recursively
-    pattern = os.path.join(base_dir, "**", "*.txt")
-
+    pattern = os.path.join(base_dir, '**', '*.txt')
+    
     # Iterate through all matched .txt files
     for txt_path in glob.glob(pattern, recursive=True):
         if is_inside_processed(txt_path, base_dir):
@@ -87,16 +73,12 @@ def move_any_txt_files(base_dir):
         category = get_category_from_folder(parent_folder)  # Determine the category
 
         if not category:
-            print(
-                f"Skipping (no category match): {txt_path}"
-            )  # Skip if no valid category found
+            print(f"Skipping (no category match): {txt_path}")  # Skip if no valid category found
             continue
 
         # Build the target folder path within 'processed/'
         target_dir = os.path.join(processed_dir, category)
-        os.makedirs(
-            target_dir, exist_ok=True
-        )  # Create category folder if not already present
+        os.makedirs(target_dir, exist_ok=True)  # Create category folder if not already present
 
         # Build destination path for the file
         original_name = os.path.basename(txt_path)
@@ -108,9 +90,7 @@ def move_any_txt_files(base_dir):
             i = 1
             new_name = f"{base}_{i}{ext}"  # Create new name with _1
             dest = os.path.join(target_dir, new_name)
-            while os.path.exists(
-                dest
-            ):  # Increment until a non-conflicting name is found
+            while os.path.exists(dest):  # Increment until a non-conflicting name is found
                 i += 1
                 new_name = f"{base}_{i}{ext}"
                 dest = os.path.join(target_dir, new_name)
@@ -127,7 +107,7 @@ def move_any_txt_files(base_dir):
             continue  # Skip cleanup inside the 'processed' folder
 
         for fname in files:
-            if not fname.lower().endswith(".txt"):
+            if not fname.lower().endswith('.txt'):
                 path = os.path.join(root, fname)
                 os.remove(path)  # Delete non-text files
                 print(f"Removed non-text file: {path}")
@@ -138,7 +118,6 @@ def move_any_txt_files(base_dir):
 
     print("Cleanup complete.")
     print(f"Finished processing directory: {base_dir}")
-
 
 # Script entry point
 if __name__ == "__main__":
