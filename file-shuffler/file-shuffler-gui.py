@@ -1,8 +1,8 @@
 # This Python file uses the following encoding: utf-8
 import sys
 from pathlib import Path
-
 import pandas as pd
+
 from PySide6.QtCore import QObject, Slot
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
@@ -21,7 +21,7 @@ class FileShufflerGui(QObject):
         print("Received file path:", file_path)
 
         try:
-            if not file_path.endswith(".csv"):
+            if not file_path.endswith('.csv'):
                 print("Not a CSV file. Ignored.")
                 return
 
@@ -64,3 +64,4 @@ if __name__ == "__main__":
         sys.exit(-1)
 
     sys.exit(app.exec())
+
