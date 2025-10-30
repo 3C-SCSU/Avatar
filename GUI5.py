@@ -18,7 +18,6 @@ from collections import defaultdict
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
 from GUI5_ManualDroneControl.cameraview.camera_controller import CameraController
 from NAO6.nao_connection import send_command
-from PySide6.QtCore import Property
 # from Developers.hofCharts import main as hofCharts, ticketsByDev_text NA
 
 from Developers import devCharts
@@ -57,7 +56,6 @@ class BrainwavesBackend(QObject):
     logMessage = Signal(str)
     naoStarted = Signal()
     naoEnded = Signal()
-    isConnectedChanged = Signal()
 
     @Slot()
     def startNaoManual(self):
@@ -102,6 +100,8 @@ class BrainwavesBackend(QObject):
         else:
             self.fligt_log.insert(0, "Nao failed to stand up.")
         self.flightLogUpdated.emit(self.flight_log)
+
+
             
 
     @Slot(result=str)
@@ -220,7 +220,6 @@ class BrainwavesBackend(QObject):
         self.image_paths = []  # Store converted image paths
         self.plots_dir = os.path.abspath("plotscode/plots")  # Base plots directory
         self.current_dataset = "refresh"  # Default dataset to display
-        self.is_connected = False
         try:
             self.tello = Tello()
         except Exception as e:
@@ -438,7 +437,6 @@ class BrainwavesBackend(QObject):
         except Exception as e:
             self.logMessage.emit(f"Error during {action}: {e}")
 
-	
     # Method for returning to home (an approximation)
     def go_home(self):
         # Assuming the home action means moving backward and upwards
@@ -723,3 +721,7 @@ if __name__ == "__main__":
     backend.imagesReady.connect(lambda images: engine.rootContext().setContextProperty("imageModel", images))
 
     sys.exit(app.exec())
+
+
+
+
