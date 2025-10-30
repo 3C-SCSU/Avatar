@@ -18,7 +18,7 @@ import urllib.parse
 import contextlib
 from collections import defaultdict
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
-from GUI5_ManualDroneControl.cameraview.camera_controller import CameraController
+from cameraview.camera_controller import CameraController
 from NAO6.nao_connection import send_command
 from PySide6.QtCore import Property
 # from Developers.hofCharts import main as hofCharts, ticketsByDev_text NA
