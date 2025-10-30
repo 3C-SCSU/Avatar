@@ -8,29 +8,6 @@ ApplicationWindow {
     height: 800 
     title: "Avatar - Brainwave Reading"
 
-    // Connect backend signals to update UI
-    Connections {
-        target: backend
-        
-        function onFlightLogUpdated(logEntries) {
-            flightLogView.model.clear()
-            for (var i = 0; i < logEntries.length; i++) {
-                flightLogView.model.append({"log": logEntries[i]})
-            }
-        }
-        
-        function onPredictionsTableUpdated(predictions) {
-            predictionsTableView.model.clear()
-            for (var i = 0; i < predictions.length; i++) {
-                predictionsTableView.model.append(predictions[i])
-            }
-        }
-        
-        function onLogMessage(message) {
-            consolelog.model.append({"log": message})
-        }
-    }
-
     ColumnLayout {
         anchors.fill: parent
         spacing: 10
@@ -251,7 +228,6 @@ ApplicationWindow {
                             }
                             onClicked: backend.keepDroneAlive()
                         }
-                        }  // end of GridLayout
 
                         // Flight Log
                         GroupBox {
@@ -271,33 +247,32 @@ ApplicationWindow {
                                     Layout.alignment: Qt.AlignHCenter
                                 }
 
-                                // Background Rectangle inside the ListView
-                                Rectangle {
-                                    color: "white"  // Set only the box area color to white
-                                    anchors.fill: parent
+                            // Background Rectangle inside the ListView
+                            Rectangle {
+                                color: "white"  // Set only the box area color to white
+                                anchors.fill: parent
 
-                                    ListView {
-                                        id: flightLogView
-                                        anchors.fill: parent  // Fill the Rectangle background with ListView content
-                                        model: ListModel {
-                                            
-                                        }
-                                        delegate: Text {
-                                            text: log
-                                            color: "black"  // Set text color for readability
-                                            anchors.horizontalCenter: parent.horizontalCenter
-                                        }
+                                ListView {
+                                    id: flightLogView
+                                    anchors.fill: parent  // Fill the Rectangle background with ListView content
+                                    model: ListModel {
+                                        
+                                    }
+                                    delegate: Text {
+                                        text: log
+                                        color: "black"  // Set text color for readability
+                                        anchors.horizontalCenter: parent.horizontalCenter
                                     }
                                 }
                             }
-                        }  // end of Flight Log GroupBox
+                        }
+
 
                         // Connect Image with Transparent Button
                         Rectangle {
                             width: 150
                             height: 150
                             color: "#1b3a4b" // Dark blue background
-                            Layout.alignment: Qt.AlignHCenter
 
                             Image {
                                 source: "GUI_Pics/connect.png"
@@ -321,7 +296,7 @@ ApplicationWindow {
                                 onClicked: backend.connectDrone()
                             }
                         }
-                    }  // end of Left Column ColumnLayout
+
 
                     // Right Column (Prediction Table and Console Log)
                     ColumnLayout {
@@ -387,10 +362,11 @@ ApplicationWindow {
                             }
 
                             ListView {
-                                id: predictionsTableView
                                 Layout.preferredWidth: 700
                                 Layout.preferredHeight: 550
                                 model: ListModel {
+                                    ListElement { count: "1"; server: "Prediction A"; label: "Label A" }
+                                    ListElement { count: "2"; server: "Prediction B"; label: "Label B" }
                                 }
                                 delegate: RowLayout {
                                     spacing: 50
@@ -422,29 +398,30 @@ ApplicationWindow {
                                     Layout.alignment: Qt.AlignHCenter
                                 }
 
-                                // Background Rectangle inside the ListView
-                                Rectangle {
-                                    color: "white"  // Set only the box area color to white
-                                    anchors.fill: parent
+                            // Background Rectangle inside the ListView
+                            Rectangle {
+                                color: "white"  // Set only the box area color to white
+                                anchors.fill: parent
 
-                                    ListView {
-                                        id: consolelog
-                                        anchors.fill: parent  // Fill the Rectangle background with ListView content
-                                        model: ListModel {
-                                            
-                                        }
-                                        delegate: Text {
-                                            text: log
-                                            color: "black"  // Set text color for readability
-                                            anchors.horizontalCenter: parent.horizontalCenter
-                                        }
+                                ListView {
+                                    id: consolelog
+                                    anchors.fill: parent  // Fill the Rectangle background with ListView content
+                                    model: ListModel {
+                                        
+                                    }
+                                    delegate: Text {
+                                        text: log
+                                        color: "black"  // Set text color for readability
+                                        anchors.horizontalCenter: parent.horizontalCenter
                                     }
                                 }
                             }
-                        }  // end of Console Log GroupBox
-                    }  // end of Right Column ColumnLayout
-                }  // end of RowLayout
-            }  // end of Brainwave Reading Rectangle
+                        }
+                    }
+                }
+            }  
+                    
+                                                       
 
             // Transfer Data view
             Rectangle {
@@ -612,3 +589,8 @@ ApplicationWindow {
         }  // end of StackLayout
     }  // end of outer ColumnLayout
 }  // end of ApplicationWindow
+                }
+            }
+        }
+    }
+}
