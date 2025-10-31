@@ -36,6 +36,6 @@ def main(directory):
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python python.py <directory>")
-    else:
-        main(sys.argv[1])
+        sys.exit(1)
+    main(sys.argv[1])
 
