@@ -8,14 +8,21 @@ from PySide6.QtCore import QObject, Signal, Slot, QProcess, QUrl
 from pdf2image import convert_from_path
 from djitellopy import Tello
 import random
+import re
 import pandas as pd
 import time
 import io
 import urllib.parse
 import contextlib
+from collections import defaultdict
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
 from GUI5_ManualDroneControl.cameraview.camera_controller import CameraController
-from HallofFame.hofCharts import main as hofCharts
+from NAO6.nao_connection import send_command
+# from Developers.hofCharts import main as hofCharts, ticketsByDev_text NA
+
+from Developers import devCharts
+
+								
 
 # Import BCI connection for brainwave prediction
 try:
@@ -60,15 +67,147 @@ class BrainwavesBackend(QObject):
         print("Nao6 Manual session ended")
         self.naoEnded.emit("Nao6 Manual session ended")
 
+    @Slot(str, str)
+    def connectNao(self, ip="192.168.23.53", port="9559"):
+        """Connect to NAO robot with specified IP and Port"""
+        try:
+            # Log the connection attempt
+            self.flight_log.insert(0, f"Attempting to connect to NAO at {ip}:{port}...")
+            self.flightLogUpdated.emit(self.flight_log)
+
+            # Send connect command
+            if send_command("connect"):
+                self.flight_log.insert(0, f"Nao connected successfully at {ip}:{port}.")
+            else:
+                self.flight_log.insert(0, f"Nao failed to connect at {ip}:{port}.")
+        except Exception as e:
+            self.flight_log.insert(0, f"Error connecting to NAO: {str(e)}")
+
+        self.flightLogUpdated.emit(self.flight_log)
+    
     @Slot()
-    def connectNao(self):
-        # Mock function to simulate drone connection
-        self.flight_log.insert(0, "Nao connected.")
+    def nao_sit_down(self):
+        if send_command("sit_down"):
+            self.flight_log.insert(0, "Sitting down.")
+        else:
+            self.flight_log.insert(0, "Nao failed to sit.")
+        self.flightLogUpdated.emit(self.flight_log)
+    
+    @Slot()
+    def nao_stand_up(self):
+        if send_command("stand_up"):
+            self.flight_log.insert(0, "Standing Up.")
+        else:
+            self.fligt_log.insert(0, "Nao failed to stand up.")
         self.flightLogUpdated.emit(self.flight_log)
 
-    def hofChart(self):
-        print("hofCharts main() is running")
-        hofCharts()
+
+            
+
+    @Slot(result=str)
+    def getDevList(self):
+        exclude = {
+            "3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>",
+        }
+
+        proc = subprocess.run(
+            ["git", "shortlog", "-sne", "--all"],
+            capture_output=True, text=True, encoding="utf-8", errors="ignore"
+        )
+
+        if proc.returncode != 0:
+            return "No developers found."
+
+        lines = proc.stdout.strip().splitlines()
+        filtered_lines = []
+
+        for line in lines:
+            # Match the author portion
+            match = re.match(r"^\s*\d+\s+(?P<author>.+)$", line)
+            if match:
+                author = match.group("author").strip()
+                if author not in exclude:
+                    filtered_lines.append(line)
+
+        return "\n".join(filtered_lines) if filtered_lines else "No developers found."
+
+    @Slot(result=str)
+    def getTicketsByDev(self) -> str:
+
+            exclude = {
+                "3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>"
+            }
+
+            pretty = "%x1e%an <%ae>%x1f%s%x1f%b"
+            try:
+                proc = subprocess.run(
+                    ["git", "log", "--all", f"--pretty=format:{pretty}"],
+                    capture_output=True,
+                    text=True,
+                    encoding="utf-8",
+                    errors="ignore",
+                    check=True
+                )
+            except subprocess.CalledProcessError:
+                return "No tickets found."
+
+            raw = proc.stdout or ""
+            commits = raw.split("\x1e")
+
+            jira_re = re.compile(r'\b([A-Za-z]{2,}-\d+)\b')
+            hash_re = re.compile(r'(?<![A-Za-z0-9])#\d+\b')
+            author_to_ticketset = defaultdict(set)
+
+            for entry in commits:
+                entry = entry.strip()
+                if not entry:
+                    continue
+                parts = entry.split("\x1f", 2)
+                author = parts[0].strip()
+                subject = parts[1] if len(parts) > 1 else ""
+                body = parts[2] if len(parts) > 2 else ""
+                msg = (subject + "\n" + body).strip()
+
+                found = set()
+                for m in jira_re.findall(msg):
+                    found.add(m.upper())
+                for m in hash_re.findall(msg):
+                    found.add(m)
+
+                if found:
+                    author_to_ticketset[author].update(found)
+
+            if not author_to_ticketset:
+                return "No tickets found."
+
+            # Sort authors by ticket count descending, then by name
+            lines = []
+            for author, tickets in sorted(author_to_ticketset.items(), key=lambda kv: (-len(kv[1]), kv[0].lower())):
+                if author in exclude:
+                    continue  # skip excluded authors entirely
+                lines.append(f"{author}: {', '.join(sorted(tickets))}")
+
+
+            return "\n".join(lines)
+
+    @Slot()
+    def devChart(self):
+        print("hofChart() SLOT CALLED")
+        try:
+            devCharts.main()
+            print("hofCharts.main() COMPLETED")
+        except Exception as e:
+            print(f"hofCharts.main() ERROR: {e}")
+
+    def get_is_connected(self):
+        return self.isConnectedChanged
+
+    def set_is_connected(self, value):
+        if self.is_connected != value:
+            self.is_connected = value
+            self.isConnectedChanged.emit()
+
+    is_connected_prop = Property(bool, get_is_connected, set_is_connected, notify=isConnectedChanged)
 
 
     def __init__(self):
@@ -242,11 +381,20 @@ class BrainwavesBackend(QObject):
 
     @Slot(str)
     def getDroneAction(self, action):
-        try:
-            if action == 'connect':
+        if action == 'connect':
+            try:
                 self.tello.connect()
+                self.is_connected = True
                 self.logMessage.emit("Connected to Tello Drone")
-            elif action == 'up':
+            except:
+                self.is_connected = False
+                self.logMessage.emit("Error during connect: {e}")
+            return
+        elif not self.is_connected:
+            self.logMessage.emit(f"Drone not connected. Aborting command '{action}'.")
+            return
+        try:
+            if action == 'up':
                 self.tello.move_up(30)
                 self.logMessage.emit("Moving up")
             elif action == 'down':
@@ -269,7 +417,7 @@ class BrainwavesBackend(QObject):
                 self.logMessage.emit("Rotating left")
             elif action == 'turn_right':
                 self.tello.rotate_clockwise(45)
-                self.logMessage.emit("Rotating right")
+                self.logMessage.emit("Rotationg right")
             elif action == 'takeoff':
                 self.tello.takeoff()
                 self.logMessage.emit("Taking off")
@@ -560,6 +708,7 @@ if __name__ == "__main__":
 
     # Load QML
     qml_file = Path(__file__).resolve().parent / "main.qml"
+
     engine.load(str(qml_file))
 
     # Convert PDFs after engine load
