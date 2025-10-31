@@ -1,4 +1,3 @@
-
 import sys
 import os
 import subprocess
@@ -8,7 +7,6 @@ from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtCore import QObject, Signal, Slot, QProcess, QUrl
 from pdf2image import convert_from_path
 from djitellopy import Tello
-import threading
 import random
 import re
 import pandas as pd
@@ -20,7 +18,6 @@ from collections import defaultdict
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
 from GUI5_ManualDroneControl.cameraview.camera_controller import CameraController
 from NAO6.nao_connection import send_command
-from PySide6.QtCore import Property
 # from Developers.hofCharts import main as hofCharts, ticketsByDev_text NA
 
 from Developers import devCharts
@@ -59,7 +56,6 @@ class BrainwavesBackend(QObject):
     logMessage = Signal(str)
     naoStarted = Signal()
     naoEnded = Signal()
-    isConnectedChanged = Signal()
 
     @Slot()
     def startNaoManual(self):
@@ -104,6 +100,8 @@ class BrainwavesBackend(QObject):
         else:
             self.fligt_log.insert(0, "Nao failed to stand up.")
         self.flightLogUpdated.emit(self.flight_log)
+
+
             
 
     @Slot(result=str)
@@ -201,7 +199,6 @@ class BrainwavesBackend(QObject):
         except Exception as e:
             print(f"hofCharts.main() ERROR: {e}")
 
-    #might be useless because is.connected is defined already in the def__init method
     def get_is_connected(self):
         return self.isConnectedChanged
 
@@ -223,10 +220,8 @@ class BrainwavesBackend(QObject):
         self.image_paths = []  # Store converted image paths
         self.plots_dir = os.path.abspath("plotscode/plots")  # Base plots directory
         self.current_dataset = "refresh"  # Default dataset to display
-        self.is_connected = False
         try:
             self.tello = Tello()
-            self.connected = False
         except Exception as e:
             print(f"Warning: Failed to initialize Tello drone: {e}")
             self.logMessage.emit(f"Warning: Failed to initialize Tello drone: {e}")
@@ -269,19 +264,13 @@ class BrainwavesBackend(QObject):
         if self.current_model == "Random Forest":
             if self.current_framework == "PyTorch":
                 prediction = self.run_random_forest_pytorch()
-            elif self.current_framework == "TensorFlow":
+            else:
                 prediction = self.run_random_forest_tensorflow()
-            elif self.current_framework == "JAX":
-                prediction = self.run_random_forest_jax()
-
         else:  # Deep Learning
             if self.current_framework == "PyTorch":
                 prediction = self.run_deep_learning_pytorch()
-            elif self.current_framework == "TensorFlow":
+            else:
                 prediction = self.run_deep_learning_tensorflow()
-            elif self.current_framework == "JAX":
-                prediction = self.run_deep_learning_jax()
-
         self.logMessage.emit(f"Prediction received: {prediction}")
         # Set current prediction
         self.current_prediction_label = prediction
@@ -329,23 +318,7 @@ class BrainwavesBackend(QObject):
         # Fallback to simulation with TensorFlow-specific labels
         time.sleep(1)
         return random.choice(["forward", "backward", "left", "right", "takeoff", "land"])
-    
-    def run_random_forest_jax(self):
-        """ Random Forest model processing with JAX backend """
-        print("Running Random Forest Model with JAX...")
-        try:
-            #use the BCI connection to get real brainwave data
-            if hasattr(self, 'bcicon') and self.bcicon:
-                prediction_response = self.bcicon.bciConnectionController()
-                if prediction_response:
-                    return prediction_response.get('prediction_label', 'forward')
-        except Exception as e:
-            print(f"Error with Jax Random Forest: {e}")
 
-        # Fallback to simulation with Jax-specific labels
-        time.sleep(1)
-        return random.choice(["forward", "backward", "left", "right", "takeoff", "land"])
-              
     def run_deep_learning_pytorch(self):
         """ Deep Learning model processing with PyTorch backend """
         print("Running Deep Learning Model with PyTorch...")
@@ -369,18 +342,6 @@ class BrainwavesBackend(QObject):
         except Exception as e:
             print(f"Error with TensorFlow Deep Learning: {e}")
             return "forward"
-        
-    def run_deep_learning_jax(self):
-        """ Deep Learning model processing with Jax """
-        print("Running Deep Learning Model with Jax...")
-        try:
-            # Simulate Jax deep learning model processing
-            # In a real implementation, this would load and run a Jax CNN model
-            time.sleep(2) # Simulate longer processing time for deep learning
-            return random.choice(["forward", "backward", "left", "right", "takeoff", "land", "up", "down"])
-        except Exception as e:
-            print(f"Error with Jax Deep Learning: {e}")
-            return "forward"     
 
     @Slot(str)
     def notWhatIWasThinking(self, manual_action):
@@ -420,18 +381,19 @@ class BrainwavesBackend(QObject):
 
     @Slot(str)
     def getDroneAction(self, action):
-        threading.Thread(target=self._doAction, args=(action,), daemon=True).start()
-
-    def _doAction(self, action):
-        try:
-            if action == 'connect':
+        if action == 'connect':
+            try:
                 self.tello.connect()
-                self.connected = True
+                self.is_connected = True
                 self.logMessage.emit("Connected to Tello Drone")
-            elif self.connected:
-                self.logMessage.emit("Drone did not connect.")
-                return
-
+            except:
+                self.is_connected = False
+                self.logMessage.emit("Error during connect: {e}")
+            return
+        elif not self.is_connected:
+            self.logMessage.emit(f"Drone not connected. Aborting command '{action}'.")
+            return
+        try:
             if action == 'up':
                 self.tello.move_up(30)
                 self.logMessage.emit("Moving up")
@@ -455,7 +417,7 @@ class BrainwavesBackend(QObject):
                 self.logMessage.emit("Rotating left")
             elif action == 'turn_right':
                 self.tello.rotate_clockwise(45)
-                self.logMessage.emit("Rotating right")
+                self.logMessage.emit("Rotationg right")
             elif action == 'takeoff':
                 self.tello.takeoff()
                 self.logMessage.emit("Taking off")
@@ -475,7 +437,6 @@ class BrainwavesBackend(QObject):
         except Exception as e:
             self.logMessage.emit(f"Error during {action}: {e}")
 
-	
     # Method for returning to home (an approximation)
     def go_home(self):
         # Assuming the home action means moving backward and upwards
@@ -760,3 +721,7 @@ if __name__ == "__main__":
     backend.imagesReady.connect(lambda images: engine.rootContext().setContextProperty("imageModel", images))
 
     sys.exit(app.exec())
+
+
+
+

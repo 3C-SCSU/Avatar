@@ -10,7 +10,6 @@ import QtQuick3D 6.7
 Rectangle {
     property bool isRandomForestSelected: false
     property bool isPyTorchSelected: true
-    property bool isJaxSelected: false
     color: "#718399"
     Layout.fillWidth: true
     Layout.fillHeight: true
@@ -304,7 +303,7 @@ Rectangle {
                     }
                 }
 
-                // Random Forest, Deep Learning Buttons
+                // Random Forest and Deep Learning Buttons
                 Row {
                     width: parent.width * 0.5
                     height: parent.height * 0.3
@@ -400,7 +399,7 @@ Rectangle {
                     }
                 }
 
-                // PyTorch, TensorFlow and jax Framework Buttons
+                // PyTorch and TensorFlow Framework Buttons
                 Row {
                     width: parent.width * 0.5
                     height: parent.height * 0.3
@@ -425,7 +424,6 @@ Rectangle {
                             anchors.fill: parent
                             onClicked: {
                                 isPyTorchSelected = true
-                                isJaxSelected = false
                                 backend.selectFramework("PyTorch")
                             }
                         }
@@ -442,7 +440,7 @@ Rectangle {
                             text: "TensorFlow"
                             font.pixelSize: parent.width * 0.08
                             font.bold: true
-                            color: (!isPyTorchSelected && !isJaxSelected) ? "yellow" : "white"
+                            color: !isPyTorchSelected ? "yellow" : "white"
                             anchors.centerIn: parent
                         }
 
@@ -450,36 +448,10 @@ Rectangle {
                             anchors.fill: parent
                             onClicked: {
                                 isPyTorchSelected = false
-                                isJaxSelected = false
                                 backend.selectFramework("TensorFlow")
                             }
                         }
                     }
-                    // jax button
-                    Rectangle{
-                        width: parent.width *0.5
-                        height: parent.height
-                        color: "#6eb109"
-                        radius:5
-
-                        Text{
-                            text: "JAX"
-                            font.pixelSize:parent.width *0.08
-                            font.bold: true
-                            color: isJaxSelected ? "yellow" : "white"
-                            anchors.centerIn: parent
-                        }
-
-                        MouseArea{
-                            anchors.fill:parent
-                            onClicked: {
-                                isJaxSelected = true
-                                isPyTorchSelected = false
-                                backend.selectFramework("JAX")
-                            }
-                        }
-                    }
-
                 }
             }
         }
