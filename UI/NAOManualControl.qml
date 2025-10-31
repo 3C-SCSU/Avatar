@@ -10,14 +10,14 @@ Item {
     id: root
     anchors.fill: parent
     focus: true
-
     property url imgBase: Qt.resolvedUrl("../GUI_Pics/")
 
     Rectangle {
         id: rootPanel
         anchors.fill: parent
+        color: "transparent"
 
-        // --- UI state / movement params ---
+        // --- State / movement parameters ---
         property int  rotationStep: 90
         property real moveDistance: 50
         property real verticalStep: 50
@@ -28,37 +28,38 @@ Item {
 
         RowLayout {
             anchors.fill: parent
-            spacing: 0
+            spacing: parent.width * 0.01
 
             // ================= LEFT PANEL =================
             Rectangle {
                 id: leftPanel
-                Layout.preferredWidth: 510
                 Layout.fillHeight: true
+                Layout.preferredWidth: parent.width * 0.38
                 color: "#718399"
+                radius: 8
 
                 ColumnLayout {
                     anchors.fill: parent
-                    anchors.margins: 16
-                    spacing: 40
+                    anchors.margins: parent.width * 0.015
+                    spacing: parent.height * 0.025
 
                     Label {
                         text: "Nao Robot Control Panel"
                         horizontalAlignment: Text.AlignHCenter
-                        font.pixelSize: 20
+                        font.pixelSize: parent.height * 0.05
                         font.bold: true
                         color: "white"
                         Layout.alignment: Qt.AlignHCenter
                     }
 
+                    // ---------- CONTROL GRID ----------
                     GridLayout {
                         id: buttonGrid
                         columns: 2
-                        columnSpacing: 20
-                        rowSpacing: 20
-                        Layout.alignment: Qt.AlignHCenter
                         Layout.fillWidth: true
-                        Layout.preferredHeight: 400
+                        Layout.fillHeight: true
+                        columnSpacing: parent.width * 0.03
+                        rowSpacing: parent.height * 0.03
 
                         Repeater {
                             model: [
@@ -71,26 +72,26 @@ Item {
                             ]
 
                             delegate: Rectangle {
-                                Layout.preferredWidth: 150
-                                Layout.preferredHeight: 150
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
                                 color: "#2c3e50"
                                 radius: 10
 
                                 Column {
                                     anchors.centerIn: parent
-                                    spacing: 8
+                                    spacing: parent.height * 0.05
 
                                     Image {
                                         source: imgBase + modelData.icon
-                                        width: 80; height: 80
+                                        width: parent.width * 0.7
+                                        height: parent.width * 0.7
                                         fillMode: Image.PreserveAspectFit
-                                        onStatusChanged: if (status === Image.Error) console.log("❌ Image not found:", source)
                                     }
 
                                     Text {
                                         text: modelData.label
                                         color: "white"
-                                        font.pixelSize: 16
+                                        font.pixelSize: leftPanel.height * 0.03
                                         horizontalAlignment: Text.AlignHCenter
                                     }
                                 }
@@ -108,30 +109,42 @@ Item {
                         }
                     }
 
+                    // ---------- RESPONSIVE CONSOLE LOG ----------
                     GroupBox {
                         title: "Console Log"
                         Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        Layout.preferredHeight: 200
+                        Layout.preferredHeight: parent.height * 0.25
+                        Layout.minimumHeight: 150
+                        Layout.maximumHeight: parent.height * 0.35
 
                         ScrollView {
                             anchors.fill: parent
-                            ScrollBar.vertical.policy: ScrollBar.AlwaysOn
+                            clip: true
+                            ScrollBar.vertical.policy: ScrollBar.AsNeeded
 
-                            TextArea {
-                                id: consoleLog1
-                                readOnly: true
-                                wrapMode: Text.Wrap
-                                color: "white"
-                                font.pixelSize: 10
-                                background: Rectangle { color: "black" }
+                            Rectangle {
+                                anchors.fill: parent
+                                color: "#0D1117"
+                                radius: 6
+                                border.color: "#2E2E2E"
+
+                                TextArea {
+                                    id: consoleLog1
+                                    anchors.fill: parent
+                                    readOnly: true
+                                    wrapMode: Text.Wrap
+                                    color: "white"
+                                    font.family: "Consolas"
+                                    font.pixelSize: leftPanel.height * 0.025
+                                    background: null
+                                }
                             }
                         }
                     }
                 }
             }
 
-            // ================= RIGHT PANEL (3D Viewer) =================
+            // ================= RIGHT PANEL (3D VIEW) =================
             Rectangle {
                 id: rightPanel
                 Layout.fillWidth: true
@@ -139,80 +152,61 @@ Item {
                 color: "#2f2f2f"
                 radius: 6
 
-                // 3D scene
                 View3D {
-                    id: v3d
                     anchors.fill: parent
-
                     environment: SceneEnvironment {
                         backgroundMode: SceneEnvironment.Color
                         clearColor: "#2e2e2e"
-                        aoStrength: 0.2
-                        probeExposure: -0.25
                     }
 
                     PerspectiveCamera {
                         id: camera
-                        position: Qt.vector3d(0, 300, 900)
-                        eulerRotation.x: -20
-                        clipNear: 1
-                        clipFar: 10000
+                        position: Qt.vector3d(0, 250, 800)
+                        eulerRotation.x: -15
+                        clipFar: 5000
                     }
 
-                    // Lights
                     DirectionalLight {
-                        eulerRotation.x: -35
-                        eulerRotation.y: 35
-                        brightness: 1.2   // was 2.5
-                        castsShadow: true
+                        eulerRotation.x: -45
+                        eulerRotation.y: 45
+                        brightness: 1.2
                     }
                     DirectionalLight {
-                        eulerRotation.x: 25
-                        eulerRotation.y: -45
-                        brightness: 0.8   // was 1.5
+                        eulerRotation.x: 30
+                        eulerRotation.y: -60
+                        brightness: 1.0
                     }
                     PointLight {
-                        position: Qt.vector3d(0, 250, 350)
-                        brightness: 500    // was 1200
+                        position: Qt.vector3d(0, 400, 400)
+                        brightness: 800
                     }
 
-                    // >>> NAO model from ../Nao.mesh/Nao.qml
                     NaoMesh.Nao {
                         id: naoModel
                         scale: Qt.vector3d(100, 100, 100)
                         position: Qt.vector3d(0, -100, 0)
-                        eulerRotation: Qt.vector3d(0, 0, 0)
-                    }
-
-                    // Ground plane
-                    Model {
-                        source: "#Cube"
-                        scale: Qt.vector3d(2000, 10, 2000)
-                        position: Qt.vector3d(0, -200, 0)
                     }
                 }
 
-                // Connect button overlay (outside View3D)
+                // ---------- CONNECT BUTTON ----------
                 Rectangle {
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
-                    width: parent.width * 0.2
-                    height: parent.height * 0.2
-                    color: "#242c4d" // Dark blue background
+                    width: parent.width * 0.15
+                    height: parent.height * 0.15
+                    color: "#242c4d"
+                    radius: 6
 
                     Image {
                         source: imgBase + "connect.png"
                         anchors.fill: parent
                         fillMode: Image.PreserveAspectFit
-                        onStatusChanged: if (status === Image.Error) console.log("❌ Image not found:", source)
                     }
 
                     Text {
                         text: "Connect"
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.bottom: parent.bottom
-                        anchors.bottomMargin: 10
-                        font.pixelSize: 18
+                        anchors.centerIn: parent
+                        font.pixelSize: parent.height * 0.3
                         font.bold: true
                         color: "white"
                     }
@@ -224,20 +218,18 @@ Item {
                             if (typeof backend !== "undefined" && backend.connectNao) backend.connectNao()
                         }
                     }
-      
                 }
             }
         }
 
-        // ================= Animations =================
+        // ---------- ANIMATIONS ----------
         PropertyAnimation {
             id: moveAnim
             target: naoModel
             property: "position"
-            duration: 1000
+            duration: 800
             onStopped: rootPanel.animationInProgress = false
         }
-
         PropertyAnimation {
             id: rotateAnim
             target: naoModel
@@ -246,91 +238,53 @@ Item {
             onStopped: rootPanel.animationInProgress = false
         }
 
-        // ================= Movement functions =================
-        function moveForward() {
-            if (animationInProgress) { rootPanel.appendLog("Cannot move Forward - action already in progress!"); return }
+        // ---------- MOVEMENT FUNCTIONS ----------
+        function moveForward()  { if (!animationInProgress) animateMove(1) }
+        function moveBackward() { if (!animationInProgress) animateMove(-1) }
+        function turnLeft()     { if (!animationInProgress) animateRotate(-rotationStep) }
+        function turnRight()    { if (!animationInProgress) animateRotate(rotationStep) }
+        function moveUp()       { if (!animationInProgress && verticalState < maxVerticalState) animateVertical(verticalStep) }
+        function moveDown()     { if (!animationInProgress && verticalState > 0) animateVertical(-verticalStep) }
+
+        function animateMove(direction) {
             var angleRad = modelRotationY * Math.PI / 180.0
-            var dirX = Math.sin(angleRad)
-            var dirZ = Math.cos(angleRad)
             var start = naoModel.position
-            var end = Qt.vector3d(start.x + moveDistance * dirX, start.y, start.z + moveDistance * dirZ)
-            animationInProgress = true
+            var end = Qt.vector3d(start.x + direction * moveDistance * Math.sin(angleRad),
+                                  start.y,
+                                  start.z + direction * moveDistance * Math.cos(angleRad))
             moveAnim.from = start
-            moveAnim.to   = end
+            moveAnim.to = end
+            animationInProgress = true
             moveAnim.start()
         }
 
-        function moveBackward() {
-            if (animationInProgress) { rootPanel.appendLog("Cannot move Backward - action already in progress!"); return }
-            var angleRad = modelRotationY * Math.PI / 180.0
-            var dirX = Math.sin(angleRad)
-            var dirZ = Math.cos(angleRad)
-            var start = naoModel.position
-            var end = Qt.vector3d(start.x - moveDistance * dirX, start.y, start.z - moveDistance * dirZ)
-            animationInProgress = true
-            moveAnim.from = start
-            moveAnim.to   = end
-            moveAnim.start()
-        }
-
-        function turnLeft() {
-            if (animationInProgress) { rootPanel.appendLog("Cannot turn Left - action already in progress!"); return }
-            modelRotationY = (modelRotationY - rotationStep) % 360
+        function animateRotate(deg) {
+            modelRotationY += deg
             var start = naoModel.eulerRotation
-            var end   = Qt.vector3d(start.x, start.y + rotationStep, start.z)
-            animationInProgress = true
+            var end = Qt.vector3d(start.x, start.y + deg, start.z)
             rotateAnim.from = start
-            rotateAnim.to   = end
+            rotateAnim.to = end
+            animationInProgress = true
             rotateAnim.start()
         }
 
-        function turnRight() {
-            if (animationInProgress) { rootPanel.appendLog("Cannot turn Right - action already in progress!"); return }
-            modelRotationY = (modelRotationY + rotationStep) % 360
-            var start = naoModel.eulerRotation
-            var end   = Qt.vector3d(start.x, start.y - rotationStep, start.z)
-            animationInProgress = true
-            rotateAnim.from = start
-            rotateAnim.to   = end
-            rotateAnim.start()
-        }
-
-        function moveUp() {
-            if (animationInProgress || verticalState >= maxVerticalState) {
-                rootPanel.appendLog("Cannot Takeoff - already at max height!")
-                return
-            }
+        function animateVertical(step) {
             var start = naoModel.position
-            var end   = Qt.vector3d(start.x, start.y + verticalStep, start.z)
-            animationInProgress = true
+            var end = Qt.vector3d(start.x, start.y + step, start.z)
             moveAnim.from = start
-            moveAnim.to   = end
+            moveAnim.to = end
+            animationInProgress = true
             moveAnim.start()
-            verticalState++
+            verticalState += step > 0 ? 1 : -1
         }
 
-        function moveDown() {
-            if (animationInProgress || verticalState <= 0) {
-                rootPanel.appendLog("Cannot Land - already at ground!")
-                return
-            }
-            var start = naoModel.position
-            var end   = Qt.vector3d(start.x, start.y - verticalStep, start.z)
-            animationInProgress = true
-            moveAnim.from = start
-            moveAnim.to   = end
-            moveAnim.start()
-            verticalState--
-        }
-
-        // ================= Console Logger =================
         function appendLog(msg) {
-            var timestamp = new Date().toLocaleString()
-            consoleLog1.append(msg + " at " + timestamp)
+            var timestamp = new Date().toLocaleTimeString()
+            consoleLog1.append(`[${timestamp}] ${msg}`)
         }
     }
 
-    // Optional keyboard shortcuts
+    // ---------- KEYBOARD SHORTCUTS ----------
     Keys.onPressed: (e) => {
         switch (e.key) {
         case Qt.Key_W: case Qt.Key_Up:     rootPanel.moveForward();  break
