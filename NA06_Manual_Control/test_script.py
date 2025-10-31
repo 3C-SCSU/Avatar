@@ -4,20 +4,20 @@ Test script for Nao6Viewer.py
 Focuses specifically on the Nao robot controller functionality
 """
 
-import sys
-import os
-import unittest
 import math
-from unittest.mock import MagicMock, patch
-from pathlib import Path
+import os
+import sys
+import unittest
+from unittest.mock import MagicMock
 
 # Add the parent directory to the Python path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Try to import the Qt modules (with fallbacks if needed)
 try:
-    from PySide6.QtCore import Qt, QVector3D, QQuaternion
+    from PySide6.QtCore import QQuaternion, Qt, QVector3D
     from PySide6.QtWidgets import QApplication
+
     qt_available = True
 except ImportError:
     # Create mock Qt classes for testing without Qt
@@ -32,16 +32,27 @@ except ImportError:
         def __init__(self, x=0, y=0, z=0):
             self._x, self._y, self._z = x, y, z
 
-        def x(self): return self._x
-        def y(self): return self._y
-        def z(self): return self._z
-        def setY(self, y): self._y = y
+        def x(self):
+            return self._x
+
+        def y(self):
+            return self._y
+
+        def z(self):
+            return self._z
+
+        def setY(self, y):
+            self._y = y
 
         def __add__(self, other):
-            return QVector3D(self._x + other.x(), self._y + other.y(), self._z + other.z())
+            return QVector3D(
+                self._x + other.x(), self._y + other.y(), self._z + other.z()
+            )
 
         def __sub__(self, other):
-            return QVector3D(self._x - other.x(), self._y - other.y(), self._z - other.z())
+            return QVector3D(
+                self._x - other.x(), self._y - other.y(), self._z - other.z()
+            )
 
         def __repr__(self):
             return f"QVector3D({self._x}, {self._y}, {self._z})"
@@ -54,9 +65,11 @@ except ImportError:
     class QApplication:
         def __init__(self, *args):
             pass
+
         @staticmethod
         def exec():
             return 0
+
 
 # Create a QApplication instance early if Qt is available
 if qt_available:
@@ -69,16 +82,20 @@ if qt_available:
 try:
     if qt_available:
         from Nao6Viewer import NaoViewerWidget
+
         nao_viewer_available = True
     else:
         # Skip actual import if Qt is not available
         raise ImportError("Qt not available, using mock implementation")
 except ImportError:
     nao_viewer_available = False
-    print("WARNING: Nao6Viewer.py not available or Qt not available. Using mock implementation.")
+    print(
+        "WARNING: Nao6Viewer.py not available or Qt not available. Using mock implementation."
+    )
 
     class NaoViewerWidget:
         """Mock implementation of NaoViewerWidget for testing"""
+
         def __init__(self, obj_file_path=None):
             self.model_position = QVector3D(0, 0, 0)
             self.model_rotation_y = 0
@@ -98,7 +115,9 @@ except ImportError:
             angle_rad = math.radians(self.model_rotation_y)
             direction_x = math.sin(angle_rad)
             direction_z = math.cos(angle_rad)
-            self.model_position += QVector3D(direction_x * self.move_step, 0, direction_z * self.move_step)
+            self.model_position += QVector3D(
+                direction_x * self.move_step, 0, direction_z * self.move_step
+            )
             print(f"Mock: Moving forward to {self.model_position}")
             return True
 
@@ -107,7 +126,9 @@ except ImportError:
             angle_rad = math.radians(self.model_rotation_y)
             direction_x = math.sin(angle_rad)
             direction_z = math.cos(angle_rad)
-            self.model_position -= QVector3D(direction_x * self.move_step, 0, direction_z * self.move_step)
+            self.model_position -= QVector3D(
+                direction_x * self.move_step, 0, direction_z * self.move_step
+            )
             print(f"Mock: Moving backward to {self.model_position}")
             return True
 
@@ -148,7 +169,7 @@ except ImportError:
             return {
                 "position": (0, 0, 10),
                 "view_center": (0, 0, 0),
-                "up_vector": (0, 1, 0)
+                "up_vector": (0, 1, 0),
             }
 
 
@@ -203,7 +224,11 @@ class TestNaoViewerWidget(unittest.TestCase):
     def tearDown(self):
         """Clean up after each test"""
         # Clean up the test OBJ file
-        if hasattr(self, 'obj_path') and os.path.exists(self.obj_path) and os.path.basename(self.obj_path) == "test_nao.obj":
+        if (
+            hasattr(self, "obj_path")
+            and os.path.exists(self.obj_path)
+            and os.path.basename(self.obj_path) == "test_nao.obj"
+        ):
             os.remove(self.obj_path)
 
     def test_initial_state(self):
@@ -347,7 +372,9 @@ class TestNaoViewerWidget(unittest.TestCase):
 
         # After 90 degree rotation, forward should be along positive X axis
         self.assertGreater(self.viewer.model_position.x(), 0)
-        self.assertEqual(round(self.viewer.model_position.z(), 10), 0)  # Account for floating point precision
+        self.assertEqual(
+            round(self.viewer.model_position.z(), 10), 0
+        )  # Account for floating point precision
 
     def test_camera_info(self):
         """Test getting camera information"""

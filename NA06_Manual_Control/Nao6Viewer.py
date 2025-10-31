@@ -1,16 +1,33 @@
-import sys
-import os
-import math
 import datetime
-from PySide6.QtCore import QObject, QUrl, Qt, Signal, QSize, Property, QPropertyAnimation, QTimer
-from PySide6.QtGui import QColor, QVector3D, QPixmap, QQuaternion, QMatrix4x4
-from PySide6.QtWidgets import (
-    QApplication, QWidget, QHBoxLayout, QVBoxLayout,
-    QLabel, QFrame, QGridLayout, QTextEdit
-)
+import math
+import os
+import sys
+
 from PySide6.Qt3DCore import Qt3DCore
 from PySide6.Qt3DExtras import Qt3DExtras
 from PySide6.Qt3DRender import Qt3DRender
+from PySide6.QtCore import (
+    Property,
+    QObject,
+    QPropertyAnimation,
+    QSize,
+    Qt,
+    QTimer,
+    QUrl,
+    Signal,
+)
+from PySide6.QtGui import QColor, QMatrix4x4, QPixmap, QVector3D
+from PySide6.QtWidgets import (
+    QApplication,
+    QFrame,
+    QGridLayout,
+    QHBoxLayout,
+    QLabel,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
+
 
 class ObjectTransformController(QObject):
     def __init__(self, parent):
@@ -60,7 +77,12 @@ class ObjectTransformController(QObject):
 
 
 class NaoViewerWidget(QWidget):
-    def __init__(self, obj_file_path="NA06_Manual_Control/Nao/Nao.obj", mtl_file_path="NA06_Manual_Control/Nao/Nao.mtl", parent=None):
+    def __init__(
+        self,
+        obj_file_path="NA06_Manual_Control/Nao/Nao.obj",
+        mtl_file_path="NA06_Manual_Control/Nao/Nao.mtl",
+        parent=None,
+    ):
         super().__init__(parent)
 
         # Set up layout
@@ -121,7 +143,6 @@ class NaoViewerWidget(QWidget):
         self._animation_timer.timeout.connect(self._update_animation_frame)
         self.animation_in_progress = False
 
-
         # Load the robot
         self.load_robot(mtl_file_path)
 
@@ -137,42 +158,54 @@ class NaoViewerWidget(QWidget):
         material_properties = {}
 
         try:
-            with open(mtl_file_path, 'r') as mtl_file:
+            with open(mtl_file_path, "r") as mtl_file:
                 current_material = None
                 for line in mtl_file:
                     line = line.strip()
 
-                    if line.startswith('newmtl '):
-                        current_material = line.split(' ')[1]
+                    if line.startswith("newmtl "):
+                        current_material = line.split(" ")[1]
                         material_properties[current_material] = {}
 
                     # Parse specular exponent (Ns)
-                    elif line.startswith('Ns '):
-                        material_properties[current_material]['Ns'] = float(line.split(' ')[1])
+                    elif line.startswith("Ns "):
+                        material_properties[current_material]["Ns"] = float(
+                            line.split(" ")[1]
+                        )
 
                     # Parse ambient color (Ka)
-                    elif line.startswith('Ka '):
-                        color_values = line.split(' ')[1:]
-                        material_properties[current_material]['Ka'] = [float(v) for v in color_values]
+                    elif line.startswith("Ka "):
+                        color_values = line.split(" ")[1:]
+                        material_properties[current_material]["Ka"] = [
+                            float(v) for v in color_values
+                        ]
 
                     # Parse diffuse color (Kd)
-                    elif line.startswith('Kd '):
-                        color_values = line.split(' ')[1:]
-                        material_properties[current_material]['Kd'] = [float(v) for v in color_values]
+                    elif line.startswith("Kd "):
+                        color_values = line.split(" ")[1:]
+                        material_properties[current_material]["Kd"] = [
+                            float(v) for v in color_values
+                        ]
 
                     # Parse specular color (Ks)
-                    elif line.startswith('Ks '):
-                        color_values = line.split(' ')[1:]
-                        material_properties[current_material]['Ks'] = [float(v) for v in color_values]
+                    elif line.startswith("Ks "):
+                        color_values = line.split(" ")[1:]
+                        material_properties[current_material]["Ks"] = [
+                            float(v) for v in color_values
+                        ]
 
                     # Parse emissive color (Ke)
-                    elif line.startswith('Ke '):
-                        color_values = line.split(' ')[1:]
-                        material_properties[current_material]['Ke'] = [float(v) for v in color_values]
+                    elif line.startswith("Ke "):
+                        color_values = line.split(" ")[1:]
+                        material_properties[current_material]["Ke"] = [
+                            float(v) for v in color_values
+                        ]
 
                     # Parse optical density (Ni)
-                    elif line.startswith('Ni '):
-                        material_properties[current_material]['Ni'] = float(line.split(' ')[1])
+                    elif line.startswith("Ni "):
+                        material_properties[current_material]["Ni"] = float(
+                            line.split(" ")[1]
+                        )
 
         except FileNotFoundError:
             print(f"ERROR: MTL file does not exist: {mtl_file_path}")
@@ -200,29 +233,35 @@ class NaoViewerWidget(QWidget):
             return [], [], [], [], []
 
         try:
-            with open(obj_file_path, 'r') as obj_file:
+            with open(obj_file_path, "r") as obj_file:
                 for line in obj_file:
                     line = line.strip()
-                    if line.startswith('v '):  # Vertex positions
+                    if line.startswith("v "):  # Vertex positions
                         parts = line.split()[1:]
                         vertices.append([float(x) for x in parts])
-                    elif line.startswith('vn '):  # Vertex normals
+                    elif line.startswith("vn "):  # Vertex normals
                         parts = line.split()[1:]
                         normals.append([float(x) for x in parts])
-                    elif line.startswith('vt '):  # Texture coordinates
+                    elif line.startswith("vt "):  # Texture coordinates
                         parts = line.split()[1:]
                         textures.append([float(x) for x in parts])
-                    elif line.startswith('f '):  # Faces
+                    elif line.startswith("f "):  # Faces
                         face_data = line.split()[1:]
                         face_vertices = []
                         for face in face_data:
-                            indices = face.split('/')
+                            indices = face.split("/")
                             vertex_idx = int(indices[0]) - 1  # OBJ indices start at 1
-                            texture_idx = int(indices[1]) - 1 if len(indices) > 1 and indices[1] else None
-                            normal_idx = int(indices[2]) - 1 if len(indices) > 2 else None
+                            texture_idx = (
+                                int(indices[1]) - 1
+                                if len(indices) > 1 and indices[1]
+                                else None
+                            )
+                            normal_idx = (
+                                int(indices[2]) - 1 if len(indices) > 2 else None
+                            )
                             face_vertices.append((vertex_idx, texture_idx, normal_idx))
                         faces.append(face_vertices)
-                    elif line.startswith('usemtl '):  # Material
+                    elif line.startswith("usemtl "):  # Material
                         material_name = line.split()[1]
 
                         if current_material is not None:
@@ -247,10 +286,10 @@ class NaoViewerWidget(QWidget):
     def get_first_material_name_from_obj(self, obj_file_path):
         """Extracts the first material name from an .obj file."""
         try:
-            with open(obj_file_path, 'r') as obj_file:
+            with open(obj_file_path, "r") as obj_file:
                 for line in obj_file:
                     # Look for the line containing 'usemtl', which defines the material
-                    if line.startswith('usemtl'):
+                    if line.startswith("usemtl"):
                         # Extract the material name (after the 'usemtl' keyword)
                         material_name = line.split()[1]
                         return material_name
@@ -276,11 +315,13 @@ class NaoViewerWidget(QWidget):
         """Searches a list of material names for a specific material name. Returns Qt3DExtras.QPhongMaterial"""
 
         for nao6_materials in self.material_list:
-            material_name_without_decimals = material.split('.')[0]
+            material_name_without_decimals = material.split(".")[0]
             if nao6_materials[0] == material_name_without_decimals:
-                return(nao6_materials[1])
+                return nao6_materials[1]
 
-        print(f"No corresponding material found for {file_name}. Using default color {self.material_list[10][0]}")
+        print(
+            f"No corresponding material found for {file_name}. Using default color {self.material_list[10][0]}"
+        )
         return self.material_list[10][1]
 
     def load_robot(self, mtl_file_path):
@@ -309,19 +350,35 @@ class NaoViewerWidget(QWidget):
         # Create a mesh component from the OBJ file
         self.parent_mesh = Qt3DRender.QMesh()
         self.gray_mesh = Qt3DRender.QMesh()
-        self.gray_mesh.setSource(QUrl.fromLocalFile("NA06_Manual_Control/Nao/nao6_forward_animation/face_forward/gray/nao6_forward_gray0001.obj"))
+        self.gray_mesh.setSource(
+            QUrl.fromLocalFile(
+                "NA06_Manual_Control/Nao/nao6_forward_animation/face_forward/gray/nao6_forward_gray0001.obj"
+            )
+        )
         self.orange_mesh = Qt3DRender.QMesh()
-        self.orange_mesh.setSource(QUrl.fromLocalFile("NA06_Manual_Control/Nao/nao6_forward_animation/face_forward/orange/nao6_forward_orange0001.obj"))
+        self.orange_mesh.setSource(
+            QUrl.fromLocalFile(
+                "NA06_Manual_Control/Nao/nao6_forward_animation/face_forward/orange/nao6_forward_orange0001.obj"
+            )
+        )
         self.teal_mesh = Qt3DRender.QMesh()
-        self.teal_mesh.setSource(QUrl.fromLocalFile("NA06_Manual_Control/Nao/nao6_forward_animation/face_forward/teal/nao6_forward_teal0001.obj"))
+        self.teal_mesh.setSource(
+            QUrl.fromLocalFile(
+                "NA06_Manual_Control/Nao/nao6_forward_animation/face_forward/teal/nao6_forward_teal0001.obj"
+            )
+        )
         self.white_mesh = Qt3DRender.QMesh()
-        self.white_mesh.setSource(QUrl.fromLocalFile("NA06_Manual_Control/Nao/nao6_forward_animation/face_forward/white/nao6_forward_white0001.obj"))
+        self.white_mesh.setSource(
+            QUrl.fromLocalFile(
+                "NA06_Manual_Control/Nao/nao6_forward_animation/face_forward/white/nao6_forward_white0001.obj"
+            )
+        )
 
         entity_dict = {
             "gray": self.gray_entity,
             "orange": self.orange_entity,
             "teal": self.teal_entity,
-            "white": self.white_entity
+            "white": self.white_entity,
         }
 
         # Load material properties from .mtl file
@@ -336,19 +393,25 @@ class NaoViewerWidget(QWidget):
             material = Qt3DExtras.QPhongMaterial(self.parent_entity)
 
             # Set ambient color (Ka)
-            ambient_color = material_data.get('Ka', [0.2, 0.2, 0.2])
-            material.setAmbient(QColor(*[int(c * 255) for c in ambient_color]))  # Convert to 0-255 range
+            ambient_color = material_data.get("Ka", [0.2, 0.2, 0.2])
+            material.setAmbient(
+                QColor(*[int(c * 255) for c in ambient_color])
+            )  # Convert to 0-255 range
 
             # Set diffuse color (Kd)
-            diffuse_color = material_data.get('Kd', [1.0, 1.0, 1.0])
-            material.setDiffuse(QColor(*[int(c * 255) for c in diffuse_color]))  # Convert to 0-255 range
+            diffuse_color = material_data.get("Kd", [1.0, 1.0, 1.0])
+            material.setDiffuse(
+                QColor(*[int(c * 255) for c in diffuse_color])
+            )  # Convert to 0-255 range
 
             # Set specular color (Ks)
-            specular_color = material_data.get('Ks', [0.8, 0.8, 0.8])
-            material.setSpecular(QColor(*[int(c * 255) for c in specular_color]))  # Convert to 0-255 range
+            specular_color = material_data.get("Ks", [0.8, 0.8, 0.8])
+            material.setSpecular(
+                QColor(*[int(c * 255) for c in specular_color])
+            )  # Convert to 0-255 range
 
             # Set specular exponent (Ns)
-            specular_exponent = material_data.get('Ns', 0.0)
+            specular_exponent = material_data.get("Ns", 0.0)
             material.setShininess(specular_exponent / 1000.0)  # Normalized to 0-1 range
 
             # # Print the material properties (Ka, Kd, Ks, Ns)
@@ -361,10 +424,8 @@ class NaoViewerWidget(QWidget):
             # Add this material to the list
             self.material_list.append((material_name, material))
 
-
         self.controller = ObjectTransformController(self.parent_transform)
         self.controller.setTarget(self.parent_transform)
-
 
         # Iterate over file paths and add the corresponding component based on the material name
         for color_name, entity in entity_dict.items():
@@ -382,7 +443,6 @@ class NaoViewerWidget(QWidget):
                 print(f"Material used on {color_name} is {self.material_list[8][0]}")
                 entity.addComponent(self.material_list[8][1])
 
-
         self.parent_entity.addComponent(self.parent_mesh)
         self.parent_entity.addComponent(self.parent_transform)
 
@@ -398,7 +458,7 @@ class NaoViewerWidget(QWidget):
             entity_info.addComponent(mesh_loader)
             entity_info.addComponent(transform)
 
-        print(f"Loaded robot")
+        print("Loaded robot")
 
     def _update_animation_frame(self):
         """Timer callback to update animation frames"""
@@ -462,7 +522,7 @@ class NaoViewerWidget(QWidget):
             if os.path.isdir(animation_folder):
                 # Get all OBJ files in the folder
                 for file in sorted(os.listdir(animation_folder)):
-                    if file.lower().endswith('.obj'):
+                    if file.lower().endswith(".obj"):
                         frames.append(os.path.join(animation_folder, file))
         except Exception as e:
             print(f"Error finding animation frames: {e}")
@@ -476,10 +536,18 @@ class NaoViewerWidget(QWidget):
             self._animation_timer.stop()
 
         # Find all frames
-        self._animation_frames_gray = self._find_animation_frames(animation_folder+"gray/")
-        self._animation_frames_orange = self._find_animation_frames(animation_folder+"orange/")
-        self._animation_frames_teal = self._find_animation_frames(animation_folder+"teal/")
-        self._animation_frames_white = self._find_animation_frames(animation_folder+"white/")
+        self._animation_frames_gray = self._find_animation_frames(
+            animation_folder + "gray/"
+        )
+        self._animation_frames_orange = self._find_animation_frames(
+            animation_folder + "orange/"
+        )
+        self._animation_frames_teal = self._find_animation_frames(
+            animation_folder + "teal/"
+        )
+        self._animation_frames_white = self._find_animation_frames(
+            animation_folder + "white/"
+        )
 
         if not self._animation_frames_white:
             print(f"No animation frames found in {animation_folder}")
@@ -498,7 +566,9 @@ class NaoViewerWidget(QWidget):
 
         return True
 
-    def _create_movement_animation(self, property_name, start_value, end_value, duration=1000):
+    def _create_movement_animation(
+        self, property_name, start_value, end_value, duration=1000
+    ):
         if self._current_animation:
             self._current_animation.stop()
 
@@ -512,13 +582,12 @@ class NaoViewerWidget(QWidget):
         self._current_animation = animation
         return animation
 
-
     def moveForward(self):
         """Move the model forward in its current direction"""
 
         if self.animation_in_progress:
-                print("Animation in progress, movement command ignored")
-                return False
+            print("Animation in progress, movement command ignored")
+            return False
 
         # Calculate direction vector based on current rotation
         angle_rad = math.radians(self.model_rotation_y)
@@ -533,7 +602,7 @@ class NaoViewerWidget(QWidget):
         forward_vector = QVector3D(
             5 * math.sin(math.radians(current_rot.y())),
             0,
-            5 * math.cos(math.radians(current_rot.y()))
+            5 * math.cos(math.radians(current_rot.y())),
         )
 
         print("Current rotation: " + str(current_rot.y()))
@@ -544,20 +613,26 @@ class NaoViewerWidget(QWidget):
         new_pos = current_pos + forward_vector
 
         # Create and start the position animation
-        pos_anim = self._create_movement_animation("position", current_pos, new_pos, 3000)
+        pos_anim = self._create_movement_animation(
+            "position", current_pos, new_pos, 3000
+        )
         pos_anim.start()
 
-        animation_folder = f"NA06_Manual_Control/Nao/nao6_forward_animation/face_forward/"
+        animation_folder = (
+            "NA06_Manual_Control/Nao/nao6_forward_animation/face_forward/"
+        )
         self._play_obj_animation(animation_folder)
 
-        print(f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}")
+        print(
+            f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}"
+        )
 
     def moveBackward(self):
         """Move the model backward from its current direction"""
 
         if self.animation_in_progress:
-                print("Animation in progress, movement command ignored")
-                return False
+            print("Animation in progress, movement command ignored")
+            return False
 
         # Calculate direction vector based on current rotation
         angle_rad = math.radians(self.model_rotation_y)
@@ -571,73 +646,91 @@ class NaoViewerWidget(QWidget):
         forward_vector = QVector3D(
             5 * math.sin(math.radians(current_rot.y())),
             0,
-            5 * math.cos(math.radians(current_rot.y()))
+            5 * math.cos(math.radians(current_rot.y())),
         )
 
         # Calculate the new position
         new_pos = current_pos - forward_vector
 
         # Create and start the position animation
-        pos_anim = self._create_movement_animation("position", current_pos, new_pos, 3000)
+        pos_anim = self._create_movement_animation(
+            "position", current_pos, new_pos, 3000
+        )
         pos_anim.start()
 
-        animation_folder = f"NA06_Manual_Control/Nao/nao6_forward_animation/face_forward/"
+        animation_folder = (
+            "NA06_Manual_Control/Nao/nao6_forward_animation/face_forward/"
+        )
         self._play_obj_animation(animation_folder)
 
-        print(f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}")
+        print(
+            f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}"
+        )
 
     def turnLeft(self):
         """Rotate the model to the left (counter-clockwise)"""
 
         if self.animation_in_progress:
-                print("Animation in progress, movement command ignored")
-                return False
+            print("Animation in progress, movement command ignored")
+            return False
 
         # CORRECTED: Decrease the Y rotation angle for left turn
         self.model_rotation_y = (self.model_rotation_y - self.rotation_step) % 360
         # Update rotation
         current_rot = self.controller.getRotation()
         new_rot = QVector3D(current_rot.x(), current_rot.y() + 90, current_rot.z())
-        rot_anim = self._create_movement_animation("rotation", current_rot, new_rot, 2500)
+        rot_anim = self._create_movement_animation(
+            "rotation", current_rot, new_rot, 2500
+        )
 
         # Start the rotation animation
         rot_anim.start()
 
         # Start OBJ animation sequence for turning left
-        animation_folder = f"NA06_Manual_Control/Nao/nao6_turn_left_animation/face_forward/"
+        animation_folder = (
+            "NA06_Manual_Control/Nao/nao6_turn_left_animation/face_forward/"
+        )
         self._play_obj_animation(animation_folder)
 
-        print(f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}")
+        print(
+            f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}"
+        )
 
     def turnRight(self):
         """Rotate the model to the right (clockwise)"""
 
         if self.animation_in_progress:
-                print("Animation in progress, movement command ignored")
-                return False
+            print("Animation in progress, movement command ignored")
+            return False
 
         # CORRECTED: Increase the Y rotation angle for right turn
         self.model_rotation_y = (self.model_rotation_y + self.rotation_step) % 360
         # Update rotation
         current_rot = self.controller.getRotation()
         new_rot = QVector3D(current_rot.x(), current_rot.y() - 90, current_rot.z())
-        rot_anim = self._create_movement_animation("rotation", current_rot, new_rot, 2500)
+        rot_anim = self._create_movement_animation(
+            "rotation", current_rot, new_rot, 2500
+        )
 
         # Start the rotation animation
         rot_anim.start()
 
         # Start OBJ animation sequence for turning right
-        animation_folder = f"NA06_Manual_Control/Nao/nao6_turn_right_animation/face_forward/"
+        animation_folder = (
+            "NA06_Manual_Control/Nao/nao6_turn_right_animation/face_forward/"
+        )
         self._play_obj_animation(animation_folder)
 
-        print(f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}")
+        print(
+            f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}"
+        )
 
     def moveUp(self):
         """Move the model upward along the Y axis (takeoff)"""
 
         if self.animation_in_progress:
-                print("Animation in progress, movement command ignored")
-                return False
+            print("Animation in progress, movement command ignored")
+            return False
 
         # Only allow takeoff if not already at max height
         if self.vertical_state < self.max_vertical_state:
@@ -646,17 +739,23 @@ class NaoViewerWidget(QWidget):
             new_pos = current_pos + QVector3D(0, self.vertical_step, 0)
 
             # Create and start the position animation
-            pos_anim = self._create_movement_animation("position", current_pos, new_pos, 3200)
+            pos_anim = self._create_movement_animation(
+                "position", current_pos, new_pos, 3200
+            )
             pos_anim.start()
 
             # Increment vertical state
             self.vertical_state += 1
 
             # Start OBJ animation sequence for taking off
-            animation_folder = f"NA06_Manual_Control/Nao/nao6_take_off_animation/face_forward/"
+            animation_folder = (
+                "NA06_Manual_Control/Nao/nao6_take_off_animation/face_forward/"
+            )
             self._play_obj_animation(animation_folder)
 
-            print(f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}")
+            print(
+                f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}"
+            )
         else:
             print(f"Already at maximum takeoff height (state: {self.vertical_state})")
 
@@ -664,8 +763,8 @@ class NaoViewerWidget(QWidget):
         """Move the model downward along the Y axis (land)"""
 
         if self.animation_in_progress:
-                print("Animation in progress, movement command ignored")
-                return False
+            print("Animation in progress, movement command ignored")
+            return False
 
         # Only allow landing if currently in the air
         if self.vertical_state > 0:
@@ -674,18 +773,23 @@ class NaoViewerWidget(QWidget):
             new_pos = current_pos - QVector3D(0, self.vertical_step, 0)
 
             # Create and start the position animation
-            pos_anim = self._create_movement_animation("position", current_pos, new_pos, 1200)
+            pos_anim = self._create_movement_animation(
+                "position", current_pos, new_pos, 1200
+            )
             pos_anim.start()
-
 
             # Decrement vertical state
             self.vertical_state -= 1
-            
+
             # Start OBJ animation sequence for taking off
-            animation_folder = f"NA06_Manual_Control/Nao/nao6_landing_animation/face_forward/"
+            animation_folder = (
+                "NA06_Manual_Control/Nao/nao6_landing_animation/face_forward/"
+            )
             self._play_obj_animation(animation_folder)
 
-            print(f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}")
+            print(
+                f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}"
+            )
         else:
             print("Cannot land - already on the ground (state: 0)")
 
@@ -698,7 +802,7 @@ class NaoViewerWidget(QWidget):
         camera_info = {
             "position": (position.x(), position.y(), position.z()),
             "view_center": (view_center.x(), view_center.y(), view_center.z()),
-            "up_vector": (up_vector.x(), up_vector.y(), up_vector.z())
+            "up_vector": (up_vector.x(), up_vector.y(), up_vector.z()),
         }
 
         return camera_info
@@ -735,7 +839,9 @@ def main():
     grid_layout.setSpacing(10)
 
     # Create and add the Nao viewer widget first so we can reference it
-    nao_viewer = NaoViewerWidget("NA06_Manual_Control/Nao/Nao.obj", "NA06_Manual_Control/Nao/Nao.mtl")
+    nao_viewer = NaoViewerWidget(
+        "NA06_Manual_Control/Nao/Nao.obj", "NA06_Manual_Control/Nao/Nao.mtl"
+    )
 
     # Create button references
     button_refs = {}
@@ -751,7 +857,9 @@ def main():
         # Add image (you'll need to have these image files in your project directory)
         image_label = QLabel()
         # If you have the images, uncomment the next line:
-        image_label.setPixmap(QPixmap(f"{image_name}.png").scaled(90, 90, Qt.KeepAspectRatio))
+        image_label.setPixmap(
+            QPixmap(f"{image_name}.png").scaled(90, 90, Qt.KeepAspectRatio)
+        )
         image_label.setAlignment(Qt.AlignCenter)
         button_layout.addWidget(image_label)
 
@@ -767,15 +875,21 @@ def main():
 
             # Check if this is the Land button and if it should be disabled
             if action_method == "moveDown" and nao_viewer.vertical_state == 0:
-                text_field.append(f"Cannot land - already on the ground! at {timestamp}")
+                text_field.append(
+                    f"Cannot land - already on the ground! at {timestamp}"
+                )
                 return
             # Check if robot is in the air (vertical_state > 0) and this isn't the Land button
             if nao_viewer.vertical_state > 0 and action_method != "moveDown":
-                text_field.append(f"Cannot perform {label} while in the air - please land first! at {timestamp}")
+                text_field.append(
+                    f"Cannot perform {label} while in the air - please land first! at {timestamp}"
+                )
                 return
 
             if nao_viewer.animation_in_progress:
-                text_field.append(f"Cannot call {label} -- action already in progress! at {timestamp}")
+                text_field.append(
+                    f"Cannot call {label} -- action already in progress! at {timestamp}"
+                )
             else:
                 text_field.append(f"{label} Button Clicked! at {timestamp}")
 
@@ -795,12 +909,24 @@ def main():
         return button_frame
 
     # Create all buttons
-    backward_btn = create_button("Backward", "NA06_Manual_Control/controllerImages/back", "moveBackward", 0, 0)
-    forward_btn = create_button("Forward", "NA06_Manual_Control/controllerImages/forward", "moveForward", 0, 1)
-    right_btn = create_button("Right", "NA06_Manual_Control/controllerImages/right", "turnRight", 1, 0)
-    left_btn = create_button("Left", "NA06_Manual_Control/controllerImages/left", "turnLeft", 1, 1)
-    takeoff_btn = create_button("Takeoff", "NA06_Manual_Control/controllerImages/takeoff", "moveUp", 2, 0)
-    land_btn = create_button("Land", "NA06_Manual_Control/controllerImages/land", "moveDown", 2, 1)
+    backward_btn = create_button(
+        "Backward", "NA06_Manual_Control/controllerImages/back", "moveBackward", 0, 0
+    )
+    forward_btn = create_button(
+        "Forward", "NA06_Manual_Control/controllerImages/forward", "moveForward", 0, 1
+    )
+    right_btn = create_button(
+        "Right", "NA06_Manual_Control/controllerImages/right", "turnRight", 1, 0
+    )
+    left_btn = create_button(
+        "Left", "NA06_Manual_Control/controllerImages/left", "turnLeft", 1, 1
+    )
+    takeoff_btn = create_button(
+        "Takeoff", "NA06_Manual_Control/controllerImages/takeoff", "moveUp", 2, 0
+    )
+    land_btn = create_button(
+        "Land", "NA06_Manual_Control/controllerImages/land", "moveDown", 2, 1
+    )
 
     # Add the grid layout to the left panel
     left_layout.addLayout(grid_layout)
@@ -809,7 +935,9 @@ def main():
     text_field = QTextEdit()
     text_field.setReadOnly(True)  # Make it read-only since it's just for logs
     text_field.setText("Control log:")
-    text_field.setStyleSheet("background-color: #f0f0f0; padding: 10px; border-radius: 4px; color: black;")
+    text_field.setStyleSheet(
+        "background-color: #f0f0f0; padding: 10px; border-radius: 4px; color: black;"
+    )
     text_field.setMinimumHeight(100)
     left_layout.addWidget(text_field)
 
@@ -848,6 +976,7 @@ def main():
     main_window.show()
 
     return app.exec()
+
 
 if __name__ == "__main__":
     sys.exit(main())

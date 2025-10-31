@@ -1,5 +1,5 @@
-import time
 import threading
+import time
 
 
 class signalling_system:
@@ -30,10 +30,9 @@ class signalling_system:
             # Wait for 2 seconds
             time.sleep(2)
 
-           # Check the state before sending the signal
+            # Check the state before sending the signal
             if self.state:
                 self.callback(self.signal)
-
 
     def start(self):
         self.state = True

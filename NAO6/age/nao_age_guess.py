@@ -1,8 +1,9 @@
-from naoqi import ALProxy
-import time
-import paramiko
 import os
 import subprocess
+import time
+
+import paramiko
+from naoqi import ALProxy
 
 # --- Config ---
 NAO_IP = "192.168.23.53"
@@ -34,7 +35,7 @@ def capture_and_download_nao_photo(nao_ip, port, local_path, photo_name):
         tts.say("Something went wrong with the countdown.")
 
     try:
-        camera = ALProxy("ALPhotoCapture", nao_ip, port)       
+        camera = ALProxy("ALPhotoCapture", nao_ip, port)
         camera.setResolution(2)
         camera.setPictureFormat(pic_format)
         motion.setStiffnesses("Head", 1.0)
