@@ -207,7 +207,7 @@ class BrainwavesBackend(QObject):
             self.is_connected = value
             self.isConnectedChanged.emit()
 
-    is_connected_prop = Property(bool, get_is_connected, set_is_connected, notify=isConnectedChanged)
+    is_connected_prop = property(bool, get_is_connected, set_is_connected)
 
 
     def __init__(self):
