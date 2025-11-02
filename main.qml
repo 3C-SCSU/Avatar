@@ -78,7 +78,7 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = 4
             }
             TabButton {
-                text: "Transfer Data"
+                text: "Cloud Computing"
                 font.bold: true
                 onClicked: stackLayout.currentIndex = 5
             }
