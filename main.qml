@@ -43,6 +43,11 @@ ApplicationWindow {
                     tabController.startNaoViewer()
                 }
             }
+            TabButton {
+                text: "Artificial Intelligence"
+                font.bold: true
+                onClicked: stackLayout.currentIndex = 7
+            }
         }
 
         // ===== MAIN STACK LAYOUT =====
@@ -88,14 +93,7 @@ ApplicationWindow {
                 text: "Developers"
                 font.bold: true
                 onClicked: stackLayout.currentIndex = 6
-            } 
-            // 🤡
-            TabButton {
-                text: "Artificial Intelligence"
-                font.bold: true
-                onClicked: stackLayout.currentIndex = 7
             }
-            // 🤡
         }
     }
 }
