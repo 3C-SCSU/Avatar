@@ -19,7 +19,7 @@ Rectangle {
         spacing: 20
 
         Text {
-            text: "Artificial Intelligence"
+            text: "Machine Learning"
             color: "white"
             font.bold: true
             font.pixelSize: 32
