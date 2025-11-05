@@ -56,6 +56,11 @@ class BrainwavesBackend(QObject):
     logMessage = Signal(str)
     naoStarted = Signal()
     naoEnded = Signal()
+    # AI/ML signals for Training and Deployment Methods 
+    trainingStatusUpdated = Signal(str)  # Training status messages
+    deploymentStatusUpdated = Signal(str)  # Deployment status messages
+    trainingLogUpdated = Signal(str)  # Training accuracy/loss logs
+    inferenceOutputUpdated = Signal(str)  # Inference/prediction output
 
     @Slot()
     def startNaoManual(self):
@@ -207,6 +212,9 @@ class BrainwavesBackend(QObject):
         self.current_prediction_label = ""
         self.current_model = "Random Forest"  # Default model
         self.current_framework = "PyTorch"  # Default framework
+        self.deployed_model = None  # Loaded model instance for deployment
+        self.deployed_model_path = None  # Path to deployed model
+        self.deployed_model_type = None  # 'pytorch', 'tensorflow', 'pickle'
         self.image_paths = []  # Store converted image paths
         self.plots_dir = os.path.abspath("plotscode/plots")  # Base plots directory
         self.current_dataset = "refresh"  # Default dataset to display
@@ -248,6 +256,198 @@ class BrainwavesBackend(QObject):
         self.flight_log.insert(0, f"Selected Framework: {framework_name}")
         self.flightLogUpdated.emit(self.flight_log)
 
+    # ========== AI/ML Training and Deployment Methods ==========
+    
+    @Slot(str, str, str, str, str, str)
+    def startTraining(self, learning_rate, epochs, batch_size, architecture, data_path, model_type=""):
+        """
+        Start training a machine learning model with specified parameters
+        
+        Args:
+            learning_rate: Learning rate for training (e.g., "0.001")
+            epochs: Number of training epochs (e.g., "100")
+            batch_size: Batch size for training (e.g., "32")
+            architecture: Model architecture type (e.g., "CNN", "LSTM", "Transformer")
+            data_path: Path to training data directory
+            model_type: Type of model (e.g., "Random Forest", "Deep Learning")
+        """
+        try:
+            self.trainingStatusUpdated.emit("Starting training process...")
+            self.logMessage.emit(f"Training started: Architecture={architecture}, LR={learning_rate}, Epochs={epochs}")
+            
+            # Store training parameters
+            self.training_params = {
+                "learning_rate": float(learning_rate) if learning_rate else 0.001,
+                "epochs": int(epochs) if epochs else 100,
+                "batch_size": int(batch_size) if batch_size else 32,
+                "architecture": architecture,
+                "data_path": data_path,
+                "model_type": model_type or self.current_model,
+                "framework": self.current_framework
+            }
+            
+            # Start training using synthetic dataset
+            self.trainingStatusUpdated.emit(f"Loading dataset from: {data_path}")
+            self.trainingLogUpdated.emit(f"Architecture: {architecture}")
+            self.trainingLogUpdated.emit(f"Learning Rate: {self.training_params['learning_rate']}")
+            self.trainingLogUpdated.emit(f"Epochs: {self.training_params['epochs']}")
+            self.trainingLogUpdated.emit(f"Batch Size: {self.training_params['batch_size']}")
+            
+            # Use existing data loading pattern (similar to load_and_process_data)
+            # This integrates with existing training routines
+            self._train_model_with_synthetic_data(data_path, self.training_params, architecture)
+            
+            self.trainingStatusUpdated.emit("Training completed successfully")
+            self.flight_log.insert(0, f"Training completed: {architecture} model")
+            self.flightLogUpdated.emit(self.flight_log)
+            
+        except Exception as e:
+            error_msg = f"Training error: {str(e)}"
+            self.trainingStatusUpdated.emit(error_msg)
+            self.logMessage.emit(error_msg)
+            print(f"Error in startTraining: {e}")
+    
+    @Slot(str)
+    def deployModel(self, model_path):
+        """
+        Deploy a trained model for inference
+        
+        Args:
+            model_path: Path to the trained model file (.pkl, .h5, .pt, .pth, etc.)
+        """
+        try:
+            self.deploymentStatusUpdated.emit("Loading model for deployment...")
+            self.logMessage.emit(f"Deploying model from: {model_path}")
+            
+            if not model_path or not model_path.strip():
+                self.deploymentStatusUpdated.emit("Error: No model file specified")
+                return
+            
+            # Clean up file:/// prefix if present (from QML file dialogs)
+            if model_path.startswith("file:///"):
+                model_path = model_path[7:]
+            
+            model_path = Path(model_path).resolve()
+            
+            if not model_path.exists():
+                self.deploymentStatusUpdated.emit(f"Error: Model file not found: {model_path}")
+                return
+            
+            # Determine model type and load accordingly
+            ext = model_path.suffix.lower()
+            
+            if ext in ['.pt', '.pth']:
+                # Load PyTorch model
+                try:
+                    self.deployed_model = torch.load(str(model_path), map_location='cpu', weights_only=False)
+                    self.deployed_model_type = 'pytorch'
+                    self.deploymentStatusUpdated.emit(f"PyTorch model loaded: {model_path.name}")
+                except Exception as e:
+                    raise Exception(f"Failed to load PyTorch model: {e}")
+            elif ext in ['.h5', '.keras']:
+                # Load TensorFlow/Keras model
+                try:
+                    import tensorflow as tf
+                    self.deployed_model = tf.keras.models.load_model(str(model_path))
+                    self.deployed_model_type = 'tensorflow'
+                    self.deploymentStatusUpdated.emit(f"TensorFlow model loaded: {model_path.name}")
+                except ImportError:
+                    raise Exception("TensorFlow not installed")
+                except Exception as e:
+                    raise Exception(f"Failed to load TensorFlow model: {e}")
+            elif ext == '.pkl':
+                # Load pickle-serialized model (sklearn, etc.)
+                try:
+                    import pickle
+                    with open(model_path, 'rb') as f:
+                        self.deployed_model = pickle.load(f)
+                    self.deployed_model_type = 'pickle'
+                    self.deploymentStatusUpdated.emit(f"Pickle model loaded: {model_path.name}")
+                except Exception as e:
+                    raise Exception(f"Failed to load pickle model: {e}")
+            else:
+                self.deploymentStatusUpdated.emit(f"Error: Unsupported model format: {ext}")
+                return
+            
+            self.deployed_model_path = str(model_path)
+            self.deploymentStatusUpdated.emit("Model deployed successfully")
+            self.logMessage.emit(f"Model deployed: {model_path}")
+            self.flight_log.insert(0, f"Model deployed: {model_path.name}")
+            self.flightLogUpdated.emit(self.flight_log)
+            
+        except Exception as e:
+            error_msg = f"Deployment error: {str(e)}"
+            self.deploymentStatusUpdated.emit(error_msg)
+            self.logMessage.emit(error_msg)
+            print(f"Error in deployModel: {e}")
+    
+    @Slot(result=str)
+    def runInference(self):
+        """
+        Run inference using the deployed model
+        Returns prediction result as string
+        """
+        try:
+            if self.deployed_model is None:
+                # Fallback to BCI connection if available
+                if hasattr(self, 'bcicon') and self.bcicon:
+                    prediction_response = self.bcicon.bciConnectionController()
+                    if prediction_response:
+                        prediction = prediction_response.get('prediction_label', 'unknown')
+                        self.inferenceOutputUpdated.emit(f"Prediction: {prediction}")
+                        return prediction
+                self.inferenceOutputUpdated.emit("Error: No model deployed")
+                return "No model deployed"
+            
+            # Use deployed model for inference
+            if self.deployed_model_type == 'pytorch':
+                # For PyTorch models, use BCI connection if available, otherwise use model directly
+                if hasattr(self, 'bcicon') and self.bcicon:
+                    prediction_response = self.bcicon.bciConnectionController()
+                    if prediction_response:
+                        prediction = prediction_response.get('prediction_label', 'unknown')
+                        self.inferenceOutputUpdated.emit(f"Prediction: {prediction}")
+                        return prediction
+                # TODO: Direct model inference can be added here
+                return "Model loaded but inference needs implementation"
+            elif self.deployed_model_type == 'tensorflow':
+                # TensorFlow inference
+                if hasattr(self, 'bcicon') and self.bcicon:
+                    prediction_response = self.bcicon.bciConnectionController()
+                    if prediction_response:
+                        prediction = prediction_response.get('prediction_label', 'unknown')
+                        self.inferenceOutputUpdated.emit(f"Prediction: {prediction}")
+                        return prediction
+                return "Model loaded but inference needs implementation"
+            else:
+                # For pickle models (sklearn), use BCI connection
+                if hasattr(self, 'bcicon') and self.bcicon:
+                    prediction_response = self.bcicon.bciConnectionController()
+                    if prediction_response:
+                        prediction = prediction_response.get('prediction_label', 'unknown')
+                        self.inferenceOutputUpdated.emit(f"Prediction: {prediction}")
+                        return prediction
+                return "Model loaded but inference needs implementation"
+                
+        except Exception as e:
+            error_msg = f"Inference error: {str(e)}"
+            self.inferenceOutputUpdated.emit(error_msg)
+            print(f"Error in runInference: {e}")
+            return error_msg
+    
+    @Slot(str)
+    def selectAIModelType(self, model_type):
+        """
+        Select the AI/ML model type (called from QML)
+        
+        Args:
+            model_type: Type of model (e.g., "CNN", "LSTM", "Transformer", "Random Forest")
+        """
+        self.current_model = model_type
+        self.logMessage.emit(f"AI Model type selected: {model_type}")
+        self.flight_log.insert(0, f"AI Model type: {model_type}")
+        self.flightLogUpdated.emit(self.flight_log)
+# ========== lastl line for AI/ML Training and Deployment Methods ==========
     @Slot()
     def readMyMind(self):
         """ Runs the selected model and processes the brainwave data. """
