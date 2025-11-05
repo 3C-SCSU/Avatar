@@ -58,8 +58,10 @@ ApplicationWindow {
             FileShuffler { Layout.fillWidth: true; Layout.fillHeight: true }
             TransferData { Layout.fillWidth: true; Layout.fillHeight: true }
             Developers { Layout.fillWidth: true; Layout.fillHeight: true }
+            //   🤡
+            ArtificialIntelligence { Layout.fillWidth: true; Layout.fillHeight: true }
         }
-
+        // 🤡 
         // ===== BOTTOM TAB BAR =====
         TabBar {
             id: bottomTabBar
@@ -86,7 +88,14 @@ ApplicationWindow {
                 text: "Developers"
                 font.bold: true
                 onClicked: stackLayout.currentIndex = 6
+            } 
+            // 🤡
+            TabButton {
+                text: "Artificial Intelligence"
+                font.bold: true
+                onClicked: stackLayout.currentIndex = 7
             }
+            // 🤡
         }
     }
 }
