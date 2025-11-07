@@ -69,11 +69,6 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = 1
             }
             TabButton {
-                text: "Manual NAO6 Control"
-                font.bold: true
-                onClicked: stackLayout.currentIndex = 3
-            }
-            TabButton {
                 text: "File Shuffler"
                 font.bold: true
                 onClicked: stackLayout.currentIndex = 4
