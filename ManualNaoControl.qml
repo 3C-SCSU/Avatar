@@ -380,7 +380,7 @@ Rectangle {
                         Loader {
                             id: droneCameraLoader
                             anchors.fill: parent
-                            source: "Manual_NAO6_Control/camera_view/DroneCameraView.qml"
+                            source: "NAO6_Manual_Control/camera_view/DroneCameraView.qml"
                             asynchronous: true
 
                             onStatusChanged: console.log("DroneCameraLoader.status::: ", status)

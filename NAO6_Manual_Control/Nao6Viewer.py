@@ -60,7 +60,7 @@ class ObjectTransformController(QObject):
 
 
 class NaoViewerWidget(QWidget):
-    def __init__(self, obj_file_path="NA06_Manual_Control/Nao/Nao.obj", mtl_file_path="NA06_Manual_Control/Nao/Nao.mtl", parent=None):
+    def __init__(self, obj_file_path="NAO6_Manual_Control/Nao/Nao.obj", mtl_file_path="NAO6_Manual_Control/Nao/Nao.mtl", parent=None):
         super().__init__(parent)
 
         # Set up layout
@@ -286,10 +286,10 @@ class NaoViewerWidget(QWidget):
     def load_robot(self, mtl_file_path):
         # All obj files rendered
         file_paths = [
-            "NA06_Manual_Control/Nao/nao6_turn_right_animation/face_forward/gray/nao6_right_gray0001.obj",
-            "NA06_Manual_Control/Nao/nao6_turn_right_animation/face_forward/orange/nao6_right_orange0001.obj",
-            "NA06_Manual_Control/Nao/nao6_turn_right_animation/face_forward/teal/nao6_right_teal0001.obj",
-            "NA06_Manual_Control/Nao/nao6_turn_right_animation/face_forward/white/nao6_right_white0001.obj",
+            "NAO6_Manual_Control/Nao/nao6_turn_right_animation/face_forward/gray/nao6_right_gray0001.obj",
+            "NAO6_Manual_Control/Nao/nao6_turn_right_animation/face_forward/orange/nao6_right_orange0001.obj",
+            "NAO6_Manual_Control/Nao/nao6_turn_right_animation/face_forward/teal/nao6_right_teal0001.obj",
+            "NAO6_Manual_Control/Nao/nao6_turn_right_animation/face_forward/white/nao6_right_white0001.obj",
         ]
 
         # Create paremt mesh entity
@@ -309,13 +309,13 @@ class NaoViewerWidget(QWidget):
         # Create a mesh component from the OBJ file
         self.parent_mesh = Qt3DRender.QMesh()
         self.gray_mesh = Qt3DRender.QMesh()
-        self.gray_mesh.setSource(QUrl.fromLocalFile("NA06_Manual_Control/Nao/nao6_forward_animation/face_forward/gray/nao6_forward_gray0001.obj"))
+        self.gray_mesh.setSource(QUrl.fromLocalFile("NAO6_Manual_Control/Nao/nao6_forward_animation/face_forward/gray/nao6_forward_gray0001.obj"))
         self.orange_mesh = Qt3DRender.QMesh()
-        self.orange_mesh.setSource(QUrl.fromLocalFile("NA06_Manual_Control/Nao/nao6_forward_animation/face_forward/orange/nao6_forward_orange0001.obj"))
+        self.orange_mesh.setSource(QUrl.fromLocalFile("NAO6_Manual_Control/Nao/nao6_forward_animation/face_forward/orange/nao6_forward_orange0001.obj"))
         self.teal_mesh = Qt3DRender.QMesh()
-        self.teal_mesh.setSource(QUrl.fromLocalFile("NA06_Manual_Control/Nao/nao6_forward_animation/face_forward/teal/nao6_forward_teal0001.obj"))
+        self.teal_mesh.setSource(QUrl.fromLocalFile("NAO6_Manual_Control/Nao/nao6_forward_animation/face_forward/teal/nao6_forward_teal0001.obj"))
         self.white_mesh = Qt3DRender.QMesh()
-        self.white_mesh.setSource(QUrl.fromLocalFile("NA06_Manual_Control/Nao/nao6_forward_animation/face_forward/white/nao6_forward_white0001.obj"))
+        self.white_mesh.setSource(QUrl.fromLocalFile("NAO6_Manual_Control/Nao/nao6_forward_animation/face_forward/white/nao6_forward_white0001.obj"))
 
         entity_dict = {
             "gray": self.gray_entity,
@@ -547,7 +547,7 @@ class NaoViewerWidget(QWidget):
         pos_anim = self._create_movement_animation("position", current_pos, new_pos, 3000)
         pos_anim.start()
 
-        animation_folder = f"NA06_Manual_Control/Nao/nao6_forward_animation/face_forward/"
+        animation_folder = f"NAO6_Manual_Control/Nao/nao6_forward_animation/face_forward/"
         self._play_obj_animation(animation_folder)
 
         print(f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}")
@@ -581,7 +581,7 @@ class NaoViewerWidget(QWidget):
         pos_anim = self._create_movement_animation("position", current_pos, new_pos, 3000)
         pos_anim.start()
 
-        animation_folder = f"NA06_Manual_Control/Nao/nao6_forward_animation/face_forward/"
+        animation_folder = f"NAO6_Manual_Control/Nao/nao6_forward_animation/face_forward/"
         self._play_obj_animation(animation_folder)
 
         print(f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}")
@@ -604,7 +604,7 @@ class NaoViewerWidget(QWidget):
         rot_anim.start()
 
         # Start OBJ animation sequence for turning left
-        animation_folder = f"NA06_Manual_Control/Nao/nao6_turn_left_animation/face_forward/"
+        animation_folder = f"NAO6_Manual_Control/Nao/nao6_turn_left_animation/face_forward/"
         self._play_obj_animation(animation_folder)
 
         print(f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}")
@@ -627,7 +627,7 @@ class NaoViewerWidget(QWidget):
         rot_anim.start()
 
         # Start OBJ animation sequence for turning right
-        animation_folder = f"NA06_Manual_Control/Nao/nao6_turn_right_animation/face_forward/"
+        animation_folder = f"NAO6_Manual_Control/Nao/nao6_turn_right_animation/face_forward/"
         self._play_obj_animation(animation_folder)
 
         print(f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}")
@@ -653,7 +653,7 @@ class NaoViewerWidget(QWidget):
             self.vertical_state += 1
 
             # Start OBJ animation sequence for taking off
-            animation_folder = f"NA06_Manual_Control/Nao/nao6_take_off_animation/face_forward/"
+            animation_folder = f"NAO6_Manual_Control/Nao/nao6_take_off_animation/face_forward/"
             self._play_obj_animation(animation_folder)
 
             print(f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}")
@@ -682,7 +682,7 @@ class NaoViewerWidget(QWidget):
             self.vertical_state -= 1
             
             # Start OBJ animation sequence for taking off
-            animation_folder = f"NA06_Manual_Control/Nao/nao6_landing_animation/face_forward/"
+            animation_folder = f"NAO6_Manual_Control/Nao/nao6_landing_animation/face_forward/"
             self._play_obj_animation(animation_folder)
 
             print(f"Model updated - Position: ({self.model_position.x():.2f}, {self.model_position.y():.2f}, {self.model_position.z():.2f}), Rotation: {self.model_rotation_y}°, Vertical State: {self.vertical_state}")
@@ -735,7 +735,7 @@ def main():
     grid_layout.setSpacing(10)
 
     # Create and add the Nao viewer widget first so we can reference it
-    nao_viewer = NaoViewerWidget("NA06_Manual_Control/Nao/Nao.obj", "NA06_Manual_Control/Nao/Nao.mtl")
+    nao_viewer = NaoViewerWidget("NAO6_Manual_Control/Nao/Nao.obj", "NAO6_Manual_Control/Nao/Nao.mtl")
 
     # Create button references
     button_refs = {}
@@ -795,12 +795,12 @@ def main():
         return button_frame
 
     # Create all buttons
-    backward_btn = create_button("Backward", "NA06_Manual_Control/controllerImages/back", "moveBackward", 0, 0)
-    forward_btn = create_button("Forward", "NA06_Manual_Control/controllerImages/forward", "moveForward", 0, 1)
-    right_btn = create_button("Right", "NA06_Manual_Control/controllerImages/right", "turnRight", 1, 0)
-    left_btn = create_button("Left", "NA06_Manual_Control/controllerImages/left", "turnLeft", 1, 1)
-    takeoff_btn = create_button("Takeoff", "NA06_Manual_Control/controllerImages/takeoff", "moveUp", 2, 0)
-    land_btn = create_button("Land", "NA06_Manual_Control/controllerImages/land", "moveDown", 2, 1)
+    backward_btn = create_button("Backward", "NAO6_Manual_Control/controllerImages/back", "moveBackward", 0, 0)
+    forward_btn = create_button("Forward", "NAO6_Manual_Control/controllerImages/forward", "moveForward", 0, 1)
+    right_btn = create_button("Right", "NAO6_Manual_Control/controllerImages/right", "turnRight", 1, 0)
+    left_btn = create_button("Left", "NAO6_Manual_Control/controllerImages/left", "turnLeft", 1, 1)
+    takeoff_btn = create_button("Takeoff", "NAO6_Manual_Control/controllerImages/takeoff", "moveUp", 2, 0)
+    land_btn = create_button("Land", "NAO6_Manual_Control/controllerImages/land", "moveDown", 2, 1)
 
     # Add the grid layout to the left panel
     left_layout.addLayout(grid_layout)

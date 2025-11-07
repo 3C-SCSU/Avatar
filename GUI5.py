@@ -24,8 +24,8 @@ from NAO6.nao_connection import send_command
 
 # from Developers.hofCharts import main as hofCharts, ticketsByDev_text NA
 
-from Manual_NAO6_Control.Manual_NAO6_Control import ManualNAOController
-from Manual_NAO6_Control.camera_view.drone_camera_controller import DroneCameraController
+from NAO6_Manual_Control.NAO6_Manual_Control import ManualNAOController
+from NAO6_Manual_Control.camera_view.drone_camera_controller import DroneCameraController
 
 # Import BCI connection for brainwave prediction
 try:
