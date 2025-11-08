@@ -22,7 +22,8 @@ from NAO6.nao_connection import send_command
 
 from Developers import devCharts
 
-								
+from NAO6_Manual_Control.NAO6_Manual_Control import ManualNAOController
+from NAO6_Manual_Control.camera_view.drone_camera_controller import DroneCameraController
 
 # Import BCI connection for brainwave prediction
 try:
@@ -676,6 +677,8 @@ if __name__ == "__main__":
     # Create our controllers
     tab_controller = TabController()
     print("TabController created")
+    manual_nao_controller = ManualNAOController()
+    drone_camera_controller = DroneCameraController()
 
     # Initialize backend before loading QML
     backend = BrainwavesBackend()
@@ -686,6 +689,8 @@ if __name__ == "__main__":
     engine.rootContext().setContextProperty("cameraController", backend.camera_controller)
     print("Controllers exposed to QML")
     engine.rootContext().setContextProperty("fileShufflerGui", backend)  # For file shuffler
+    engine.rootContext().setContextProperty("manualNaoController", manual_nao_controller)
+    engine.rootContext().setContextProperty("droneCameraController", drone_camera_controller)
 
     # Load QML
     qml_file = Path(__file__).resolve().parent / "main.qml"

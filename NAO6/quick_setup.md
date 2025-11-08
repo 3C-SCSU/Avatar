@@ -29,7 +29,7 @@ Your folder structure should be:
 ```
 Avatar/
 ├── pynaoqi-python2.7-*/
-├── NA06_Manual_Control/
+├── NAO6_Manual_Control/
 ├── run_nao.sh
 └── GUI5.py
 ```
@@ -46,7 +46,7 @@ pip install -r requirements.txt
 
 ### 1. Configure NAO IP
 
-Edit `NA06_Manual_Control/nao_service.py`:
+Edit `NAO6_Manual_Control/nao_service.py`:
 ```python
 NAO_IP = "192.168.1.100"  # Your NAO's IP address
 ```

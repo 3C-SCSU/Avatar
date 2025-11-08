@@ -1,21 +1,3 @@
-/*
-    Avatar - Manual NAO Control Interface
-    Author: Youssef Elkhouly
-    Date: October 2025
-
-    Description:
-        This QML file implements the Manual NAO Control tab, providing a user interface
-        for controlling the NAO robot. It includes a 3D viewer of the NAO model and
-        a connection panel with configurable IP and Port settings.
-
-    Features:
-        - 3D NAO robot visualization
-        - Movement controls (Forward, Backward, Left, Right, Takeoff, Land)
-        - Configurable IP address and Port input fields
-        - Console logging for debugging
-        - Real-time animation of robot movements
-*/
-
 import QtQuick.Dialogs
 import Qt.labs.platform
 import QtQuick 6.5
@@ -26,8 +8,6 @@ import QtQuick3D 6.7
 import "Nao.mesh"
 
 // Manual Nao Control Tab view
-
-
 Rectangle {
     // Proper connection handling
     Connections {
@@ -71,7 +51,6 @@ Rectangle {
             Layout.fillHeight: true
 
             // Manual Controller Tab (Nao Viewer)
-
             Rectangle {
                 id: rootPanel
                 property int rotationStep: 90
@@ -82,17 +61,25 @@ Rectangle {
                 property bool animationInProgress: false
                 property int modelRotationY: 0
 
+                signal logMessage(string message)
+
+                Connections {
+                    target: typeof droneCameraController !== "undefined" ? droneCameraController : null
+                    onLogMessage: function(message) {
+                        if (rootPanel.appendLog) rootPanel.appendLog(message)
+                    }
+                }
+
                 RowLayout {
                     anchors.fill: parent
-                    spacing: 10
+                    spacing: 0
 
                     // ================= LEFT PANEL =================
                     Rectangle {
                         id: leftPanel
-                        Layout.preferredWidth: 500
+                        Layout.preferredWidth: parent.width * 0.30
                         Layout.fillHeight: true
                         color: "#718399"
-                        radius: 6
 
                         ColumnLayout {
                             anchors.fill: parent
@@ -160,10 +147,10 @@ Rectangle {
                                                     rootPanel[modelData.fn]()
                                                 }
                                                 if (modelData.label === "Takeoff") {
-								                    backend.nao_stand_up()
+                                                    backend.nao_stand_up()
                                                 }  else if (modelData.label === "Land") {
                                                     backend.nao_sit_down()
-						                        }
+                                                }
 
                                             }
                                         }
@@ -197,9 +184,9 @@ Rectangle {
                         }
                     }
 
-                    // ================= RIGHT PANEL (3D Viewer) =================
+                    // ================= CENTER PANEL (3D Viewer) =================
                     Rectangle {
-                        id: rightPanel
+                        id: centerPanel
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         color: "#2f2f2f"
@@ -249,7 +236,7 @@ Rectangle {
                             Rectangle {
                                 anchors.right: parent.right
                                 anchors.bottom: parent.bottom
-                                width: parent.width * 0.25
+                                width: Math.max(parent.width * 0.25, 160)
                                 height: parent.height * 0.25
                                 color: "#242c4d"
                                 radius: 8
@@ -361,6 +348,36 @@ Rectangle {
                             }
                         }
                     }
+
+                    // RIGHT PANEL (new) — drone camera view loaded here
+                    Rectangle {
+                        id: rightPanel
+                        Layout.preferredWidth: parent.width * 0.30
+                        Layout.minimumWidth: 300
+                        Layout.fillHeight: true
+                        color: "#111"
+                        radius: 6
+
+                        Loader {
+                            id: droneCameraLoader
+                            anchors.fill: parent
+                            source: "NAO6_Manual_Control/camera_view/DroneCameraView.qml"
+                            asynchronous: true
+
+                            onStatusChanged: console.log("DroneCameraLoader.status::: ", status)
+
+                            onLoaded: {
+                                if (droneCameraLoader.item) {
+                                    if (typeof droneCameraController !== "undefined") {
+                                        droneCameraLoader.item.cameraController = droneCameraController
+                                        console.log("DroneCameraController assigned::: ", droneCameraController)
+                                    } else {
+                                        console.log("DroneCameraController not defined")
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
                 // ================= Animations =================
@@ -381,58 +398,58 @@ Rectangle {
                 }
 
                 // ================= Movement functions =================
-				function moveForward() {
-					if (animationInProgress) { appendLog("Cannot move Forward - action already in progress!"); return }
-					var angleRad = modelRotationY * Math.PI / 180.0
-					var start = naoModel.position
-					var end = Qt.vector3d(
-						start.x + moveDistance * Math.sin(angleRad),
-						start.y,
-						start.z + moveDistance * Math.cos(angleRad)
-					)
-					animationInProgress = true
-					moveAnim.from = start
-					moveAnim.to = end
-					moveAnim.start()
-				}
+                function moveForward() {
+                    if (animationInProgress) { appendLog("Cannot move Forward - action already in progress!"); return }
+                    var angleRad = modelRotationY * Math.PI / 180.0
+                    var start = naoModel.position
+                    var end = Qt.vector3d(
+                        start.x + moveDistance * Math.sin(angleRad),
+                        start.y,
+                        start.z + moveDistance * Math.cos(angleRad)
+                    )
+                    animationInProgress = true
+                    moveAnim.from = start
+                    moveAnim.to = end
+                    moveAnim.start()
+                }
 
-				function moveBackward() {
-					if (animationInProgress) { appendLog("Cannot move Backward - action already in progress!"); return }
-					var angleRad = modelRotationY * Math.PI / 180.0
-					var start = naoModel.position
-					var end = Qt.vector3d(
-						start.x - moveDistance * Math.sin(angleRad),
-						start.y,
-						start.z - moveDistance * Math.cos(angleRad)
-					)
-					animationInProgress = true
-					moveAnim.from = start
-					moveAnim.to = end
-					moveAnim.start()
-				}
+                function moveBackward() {
+                    if (animationInProgress) { appendLog("Cannot move Backward - action already in progress!"); return }
+                    var angleRad = modelRotationY * Math.PI / 180.0
+                    var start = naoModel.position
+                    var end = Qt.vector3d(
+                        start.x - moveDistance * Math.sin(angleRad),
+                        start.y,
+                        start.z - moveDistance * Math.cos(angleRad)
+                    )
+                    animationInProgress = true
+                    moveAnim.from = start
+                    moveAnim.to = end
+                    moveAnim.start()
+                }
 
 
-				function turnLeft() {
-					if (animationInProgress) { appendLog("Cannot turn Left - action already in progress!"); return }
-					modelRotationY = (modelRotationY - rotationStep + 360) % 360  // keep 0–359
-					var start = naoModel.eulerRotation
-					var end = Qt.vector3d(start.x, start.y - rotationStep, start.z)  // subtract to match left turn
-					animationInProgress = true
-					rotateAnim.from = start
-					rotateAnim.to = end
-					rotateAnim.start()
-				}
+                function turnLeft() {
+                    if (animationInProgress) { appendLog("Cannot turn Left - action already in progress!"); return }
+                    modelRotationY = (modelRotationY - rotationStep + 360) % 360  // keep 0–359
+                    var start = naoModel.eulerRotation
+                    var end = Qt.vector3d(start.x, start.y - rotationStep, start.z)  // subtract to match left turn
+                    animationInProgress = true
+                    rotateAnim.from = start
+                    rotateAnim.to = end
+                    rotateAnim.start()
+                }
 
-				function turnRight() {
-					if (animationInProgress) { appendLog("Cannot turn Right - action already in progress!"); return }
-					modelRotationY = (modelRotationY + rotationStep) % 360
-					var start = naoModel.eulerRotation
-					var end = Qt.vector3d(start.x, start.y + rotationStep, start.z)  // add to match right turn
-					animationInProgress = true
-					rotateAnim.from = start
-					rotateAnim.to = end
-					rotateAnim.start()
-				}
+                function turnRight() {
+                    if (animationInProgress) { appendLog("Cannot turn Right - action already in progress!"); return }
+                    modelRotationY = (modelRotationY + rotationStep) % 360
+                    var start = naoModel.eulerRotation
+                    var end = Qt.vector3d(start.x, start.y + rotationStep, start.z)  // add to match right turn
+                    animationInProgress = true
+                    rotateAnim.from = start
+                    rotateAnim.to = end
+                    rotateAnim.start()
+                }
 
 
                 function moveUp() {
@@ -462,7 +479,11 @@ Rectangle {
                     var timestamp = new Date().toLocaleString()
                     consoleLog1.append(msg + " at " + timestamp)
                 }
-            
+
+                // Connect the signal to appendLog
+                onLogMessage: {
+                    appendLog(message)
+                }
             }
         }
     }
