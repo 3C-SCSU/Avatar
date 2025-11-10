@@ -43,6 +43,11 @@ ApplicationWindow {
                     tabController.startNaoViewer()
                 }
             }
+            TabButton {
+                text: "Artificial Intelligence"
+                font.bold: true
+                onClicked: stackLayout.currentIndex = 7
+            }
         }
 
         // ===== MAIN STACK LAYOUT =====
@@ -58,6 +63,7 @@ ApplicationWindow {
             FileShuffler { Layout.fillWidth: true; Layout.fillHeight: true }
             TransferData { Layout.fillWidth: true; Layout.fillHeight: true }
             Developers { Layout.fillWidth: true; Layout.fillHeight: true }
+            ArtificialIntelligence { Layout.fillWidth: true; Layout.fillHeight: true }
         }
 
         // ===== BOTTOM TAB BAR =====
