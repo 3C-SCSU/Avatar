@@ -51,7 +51,7 @@ Rectangle {
                             anchors.fill: parent
                             anchors.margins: 10
                             fillMode: Image.PreserveAspectFit
-                            source: "Developers/commit_tiers_output/gold_contributors.png"
+                            source: "Avatar/plotsDevelopers/gold_contributors.png"
                         }
 
                         Text {
@@ -99,7 +99,7 @@ Rectangle {
                             anchors.fill: parent
                             anchors.margins: 10
                             fillMode: Image.PreserveAspectFit
-                            source: "Developers/commit_tiers_output/silver_contributors.png"
+                            source: "Avatar/plotsDevelopers/silver_contributors.png"
                         }
 
                         Text {
@@ -147,7 +147,7 @@ Rectangle {
                             anchors.fill: parent
                             anchors.margins: 10
                             fillMode: Image.PreserveAspectFit
-                            source: "Developers/commit_tiers_output/bronze_contributors.png"
+                            source: "Avatar/plotsDevelopers/bronze_contributors.png"
                         }
 
                         Text {
@@ -185,7 +185,7 @@ Rectangle {
                     spacing: 8
 
                     Text {
-                        text: "Developers Log"
+                        text: "Developers List"
                         color: "white"
                         font.bold: true
                         font.pixelSize: 22
@@ -226,7 +226,7 @@ Rectangle {
 
                     // Medal Image
                     Image {
-                        source: "Developers/commit_tiers_output/Medal.png"
+                        source: "Avatar/plotsDevelopers/Medal.png"
                         width: 225
                         height: 325
                         fillMode: Image.PreserveAspectFit
