@@ -46,9 +46,10 @@ Rectangle {
             Layout.fillHeight: true
             spacing: 12
 
+            // MACHINE LEARNING BOX
             Rectangle {
                 Layout.fillWidth: true
-                Layout.fillHeight: true
+                Layout.preferredHeight: Math.min(root.height * 0.25, 220)
                 color: "#242c4d"
                 radius: 6
                 border.color: "#1a2035"
@@ -121,9 +122,21 @@ Rectangle {
                             }
                         }
                     }
+                }
+            }
 
-                    // Separator
-                    Rectangle { Layout.fillWidth: true; height: 4; color: "#3a4768"; radius: 2 }
+            // FRAMEWORK BOX
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.preferredHeight: Math.min(root.height * 0.25, 220)
+                color: "#242c4d"
+                radius: 6
+                border.color: "#1a2035"
+
+                ColumnLayout {
+                    anchors.fill: parent
+                    anchors.margins: 16
+                    spacing: 16
 
                     // Framework title
                     Text {
