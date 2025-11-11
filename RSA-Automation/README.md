@@ -5,6 +5,7 @@
 The RSA Key Automation Manager automates SSH public key management on Linux servers.  
 It adds expiry timestamps to user keys, removes expired ones automatically, and ensures synchronized metadata for improved security and reliability.
 
+
 This script is developed as part of the Avatar Open-Source Project (3C-SCSU) at St. Cloud State University, focusing on secure key lifecycle management across multi-user environments.
 
 ---
