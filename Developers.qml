@@ -33,7 +33,7 @@ Rectangle {
                     spacing: 8
 
                     Text {
-                        text: "Golden"
+                        text: "Gold"
                         color: "white"
                         font.bold: true
                         font.pixelSize: 26
@@ -51,7 +51,7 @@ Rectangle {
                             anchors.fill: parent
                             anchors.margins: 10
                             fillMode: Image.PreserveAspectFit
-                            source: "Avatar/plotsDevelopers/gold_contributors.png"
+                            source: developersBackend.goldPath
                         }
 
                         Text {
@@ -99,7 +99,7 @@ Rectangle {
                             anchors.fill: parent
                             anchors.margins: 10
                             fillMode: Image.PreserveAspectFit
-                            source: "Avatar/plotsDevelopers/silver_contributors.png"
+                            source: developersBackend.silverPath
                         }
 
                         Text {
@@ -147,7 +147,13 @@ Rectangle {
                             anchors.fill: parent
                             anchors.margins: 10
                             fillMode: Image.PreserveAspectFit
-                            source: "Avatar/plotsDevelopers/bronze_contributors.png"
+                            source: developersBackend.bronzePath
+
+                             onStatusChanged: {
+                                if (status === Image.Error) {
+                                    console.log("Image failed to load:", source)
+                                }
+    }
                         }
 
                         Text {
@@ -206,11 +212,21 @@ Rectangle {
                             wrapMode: TextArea.Wrap
                             font.pixelSize: 12
                             color: "black"
-                            background: Rectangle { color: "white"; radius: 6 }
+                            background: Rectangle {
+                                color: "white"; radius: 6
+                            }
+
                         }
                     }
                 }
+
+                Component.onCompleted: {
+                    devText.text = developersBackend.getDevList()
+                    ticketText.text = developersBackend.getTicketsByDev()
+                    developersBackend.devChart()
+                }
             }
+
 
             // ---------- MEDAL + REFRESH ----------
             Rectangle {
@@ -226,7 +242,7 @@ Rectangle {
 
                     // Medal Image
                     Image {
-                        source: "Avatar/plotsDevelopers/Medal.png"
+                        source: ".../plotsDevelopers/Medal.png"
                         width: 225
                         height: 325
                         fillMode: Image.PreserveAspectFit
@@ -257,8 +273,9 @@ Rectangle {
                         }
 
                         onClicked: {
-                            devText.text = backend.getDevList()
-                            ticketText.text = backend.getTicketsByDev()
+                            devText.text = developersBackend.getDevList()
+                            ticketText.text = developersBackend.getTicketsByDev()
+                            developersBackend.devChart()
                         }
                     }
                 }

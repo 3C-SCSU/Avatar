@@ -4,7 +4,7 @@ import subprocess
 from pathlib import Path
 from PySide6.QtWidgets import QApplication
 from PySide6.QtQml import QQmlApplicationEngine
-from PySide6.QtCore import QObject, Signal, Slot, QProcess, QUrl
+from PySide6.QtCore import QObject, Signal, Slot, Property, QProcess, QUrl
 from pdf2image import convert_from_path
 from djitellopy import Tello
 import random
@@ -16,6 +16,8 @@ import urllib.parse
 import contextlib
 from collections import defaultdict
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
+
+from Developers.devCharts import plot_single_tier
 from GUI5_ManualDroneControl.cameraview.camera_controller import CameraController
 from NAO6.nao_connection import send_command
 # from Developers.hofCharts import main as hofCharts, ticketsByDev_text NA
@@ -46,6 +48,91 @@ class TabController(QObject):
     def __init__(self):
         super().__init__()
         self.nao_process = None
+
+
+class developersBackend(QObject):
+
+    def __init__(self):
+        super().__init__()
+        self._gold_chart_path = ""
+        self._silver_chart_path = ""
+        self._bronze_chart_path = ""
+        self.devImagePath()
+
+    @Slot(result=str)
+    def getDevList(self):
+        return devCharts.devList()
+
+    @Slot(result=str)
+    def getTicketsByDev(self) -> str:
+
+        return devCharts.ticketsByDev_text()
+
+    @Slot()
+    def devChart(self):
+        print("Generating charts...")
+        try:
+            # Get the data
+            data = devCharts.run_shortlog_all()
+            if not data:
+                print("No contributors found")
+                return
+
+            exclude = ["3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>"]
+            data = [(n, c) for (n, c) in data if n not in exclude]
+
+            # Assign tiers
+            tiered = devCharts.assign_fixed_tiers(data)
+
+            # Generate charts for each tier
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            plots_dir = os.path.join(base_dir, "plotsDevelopers")
+            os.makedirs(plots_dir, exist_ok=True)
+
+            for tier in ["Gold", "Silver", "Bronze"]:
+                chart_path = os.path.join(plots_dir, f"{tier.lower()}_contributors.png")
+                devCharts.plot_single_tier(tiered, tier, chart_path)
+                print(f"Generated {tier} chart")
+
+            # Update paths after generating
+            self.devImagePath()
+            print("Charts generated successfully")
+
+        except Exception as e:
+            print(f"Error generating charts: {e}")
+
+
+    def devImagePath(self):
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        print(f"The base directory path is {base_dir}")
+        plots_dir = os.path.join(base_dir, "plotsDevelopers")
+        print(f"The plots directory path is {plots_dir}")
+        gold_path = os.path.abspath(os.path.join(plots_dir, "gold_contributors.png"))
+        silver_path = os.path.abspath(os.path.join(plots_dir, "silver_contributors.png"))
+        bronze_path = os.path.abspath(os.path.join(plots_dir, "bronze_contributors.png"))
+
+        self._gold_path = "file:///" + gold_path.replace("\\", "/")
+        self._silver_path = "file:///" + silver_path.replace("\\", "/")
+        self._bronze_path = "file:///" + bronze_path.replace("\\", "/")
+
+        print(f"Gold chart path: {self._gold_path}")
+        print(f"Silver chart path: {self._silver_path}")
+        print(f"Bronze chart path: {self._bronze_path}")
+
+        return gold_path, silver_path, bronze_path
+
+    @Property(str, constant = True)
+    def goldPath(self):
+        return self._gold_path
+
+    @Property(str, constant = True)
+    def silverPath(self):
+        return self._silver_path
+
+    @Property(str, constant = True)
+    def bronzePath(self):
+        return self._bronze_path
+
 
 
 class BrainwavesBackend(QObject):
@@ -102,27 +189,6 @@ class BrainwavesBackend(QObject):
         self.flightLogUpdated.emit(self.flight_log)
 
 
-            
-
-    @Slot(result=str)
-    def getDevList(self):
-        return devCharts.devList()
-
-    @Slot(result=str)
-    def getTicketsByDev(self) -> str:
-
-        return devCharts.ticketsByDev_text()
-
-    @Slot()
-    def devChart(self):
-        print("hofChart() SLOT CALLED")
-        try:
-            devCharts.main()
-            print("hofCharts.main() COMPLETED")
-        except Exception as e:
-            print(f"hofCharts.main() ERROR: {e}")
-
-
     def __init__(self):
         super().__init__()
         self.flight_log = []  # List to store flight log entries
@@ -133,6 +199,8 @@ class BrainwavesBackend(QObject):
         self.image_paths = []  # Store converted image paths
         self.plots_dir = os.path.abspath("plotscode/plots")  # Base plots directory
         self.current_dataset = "refresh"  # Default dataset to display
+        self._gold_chart_path = ""
+
         try:
             self.tello = Tello()
         except Exception as e:
@@ -602,9 +670,11 @@ if __name__ == "__main__":
 
     # Initialize backend before loading QML
     backend = BrainwavesBackend()
+    developers = developersBackend()
     engine.rootContext().setContextProperty("tabController", tab_controller)
     engine.rootContext().setContextProperty("backend", backend)
     engine.rootContext().setContextProperty("imageModel", [])  # Initialize empty model
+    engine.rootContext().setContextProperty("developersBackend", developers)
     engine.rootContext().setContextProperty("fileShufflerGui", backend)  # For file shuffler
     engine.rootContext().setContextProperty("cameraController", backend.camera_controller)
     print("Controllers exposed to QML")
