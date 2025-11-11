@@ -135,7 +135,7 @@ def ticketsByDev_map() -> Dict[str, List[str]]:
     pretty = "%x1e%an <%ae>%x1f%s%x1f%b"
     try:
         proc = subprocess.run(
-            ["git", "log", "--all", f"--pretty=format:{pretty}"],
+            ["git", "log", "main", f"--pretty=format:{pretty}"],
             capture_output=True, text=True, encoding="utf-8", errors="ignore", check=True
         )
     except subprocess.CalledProcessError:

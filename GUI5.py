@@ -85,7 +85,7 @@ class developersBackend(QObject):
 
             # Generate charts for each tier
             base_dir = os.path.dirname(os.path.abspath(__file__))
-            plots_dir = os.path.join(base_dir, "plotsDevelopers")
+            plots_dir = os.path.join(base_dir, "plotDevelopers")
             os.makedirs(plots_dir, exist_ok=True)
 
             for tier in ["Gold", "Silver", "Bronze"]:
