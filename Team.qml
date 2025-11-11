@@ -54,7 +54,7 @@ Rectangle {
                             anchors.fill: parent
                             anchors.margins: 10
                             fillMode: Image.PreserveAspectFit
-                            source: "HallofFame/commit_tiers_output/gold_contributors.png"
+                            source: "HallofFame/plotsdevelopers/gold_contributors.png"
                         }
                     }
                 }
@@ -87,7 +87,7 @@ Rectangle {
                             anchors.fill: parent
                             anchors.margins: 10
                             fillMode: Image.PreserveAspectFit
-                            source: "HallofFame/commit_tiers_output/silver_contributors.png"
+                            source: "HallofFame/plotsdevelopers/silver_contributors.png"
                         }
                     }
                 }
@@ -120,7 +120,7 @@ Rectangle {
                             anchors.fill: parent
                             anchors.margins: 10
                             fillMode: Image.PreserveAspectFit
-                            source: "HallofFame/commit_tiers_output/bronze_contributors.png"
+                            source: "HallofFame/plotsdevelopers/bronze_contributors.png"
                         }
                     }
                 }

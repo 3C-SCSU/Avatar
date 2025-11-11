@@ -225,7 +225,7 @@ def plot_single_tier(rows: list[tuple[str, int, str]], tier: str, outpath: str):
 # ----------------------------
 def main():
     parser = argparse.ArgumentParser(description="Generate Gold, Silver, and Bronze contributor charts.")
-    parser.add_argument("--out-dir", type=str, default="commit_tiers_output", help="Directory to save outputs.")
+    parser.add_argument("--out-dir", type=str, default="plotsdevelopers", help="Directory to save outputs.")
     args = parser.parse_args()
 
     data = run_shortlog_all()
