@@ -15,24 +15,28 @@ Rectangle {
 
     signal logToParent(string message)
 
+    // ======= SIGNAL CONNECTIONS =======
     Connections {
         target: cameraController
-        onVideoFrame: function(data) {
+        onFrameReady: function(data) {
             // controller expecting to get emitted a data-uri string (data:image/...)
-            if (typeof data === "string" && data.indexOf("data:image") === 0) {
-                feedImage.source = data
-                latestFrameDebug = ""
-            } else {
-                latestFrameDebug = data ? data.toString() : ""
+            if (typeof data === "string") {
+                if (data.startsWith("data:image")) {
+                    videoFeed.source = data
+                } else if (data.startsWith("file://")) {
+                    videoFeed.source = data
+                } else {
+                    latestFrameDebug = data
+                }
             }
         }
         onLogMessage: function(msg) {
-            console.log("drone camera log:", msg)
+            console.log("[DroneCameraController]", msg)
             logToParent(msg)
         }
     }
 
-    // Header
+    // ========= HEADER =========
     Rectangle {
         id: header
         anchors.top: parent.top
@@ -40,7 +44,7 @@ Rectangle {
         anchors.right: parent.right
         height: 56
         color: "#385166"
-        radius: 5
+        // radius: 5
 
         Text {
             anchors.centerIn: parent
@@ -51,7 +55,7 @@ Rectangle {
         }
     }
 
-    // Main feed area
+    // ========= CAMERA FEED CONTAINER =========
     Rectangle {
         id: cameraFeedContainer
         anchors {
@@ -83,8 +87,8 @@ Rectangle {
             width: 200
             height: 100
             color: "transparent"
-            visible: feedImage.source === "" || feedImage.status === Image.Error
-
+            visible: videoFeed.source == "" || videoFeed.status == Image.Error
+  
             Column {
                 anchors.centerIn: parent
                 spacing: 10
@@ -116,7 +120,8 @@ Rectangle {
         // debug small text for non-image payloads
         Text {
             id: debugText
-            anchors.left: parent.left; anchors.bottom: parent.bottom
+            anchors.left: parent.left; 
+            anchors.bottom: parent.bottom
             anchors.margins: 8
             color: "#9aa7b3"
             font.pixelSize: 11
@@ -132,14 +137,16 @@ Rectangle {
             width: 10
             height: 10
             radius: 10
-            color: "#E74C3C"
+            color: recording ? "#E74C3C" : "#888"
         }
     }
 
-    // Controls row
+    // ========= CONTROL BUTTONS =========
     Rectangle {
         id: controls
-        anchors.left: parent.left; anchors.right: parent.right; anchors.bottom: parent.bottom
+        anchors.left: parent.left; 
+        anchors.right: parent.right; 
+        anchors.bottom: parent.bottom
         height: 64
         color: "transparent"
 
@@ -153,6 +160,7 @@ Rectangle {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 40
                 Layout.alignment: Qt.AlignVCenter
+                enabled: true
                 background: Rectangle {
                     color: "#4A5B7B"
                     radius: 8
@@ -177,12 +185,14 @@ Rectangle {
             }
 
             Button {
+                id: stopButton
                 text: "Stop Stream"
                 Layout.fillWidth: true
                 Layout.preferredHeight: 40
                 Layout.alignment: Qt.AlignVCenter
+                enabled: true
                 background: Rectangle {
-                    color: "#4A5B7B"
+                    color: "#4A5B7B" // "#78808f" - for disabled
                     radius: 8
                     border.width: 1
                     border.color: "#3A4B6B"
@@ -206,12 +216,14 @@ Rectangle {
             }
 
             Button {
+                id: captureButton
                 text: "Capture"
                 Layout.fillWidth: true
                 Layout.preferredHeight: 40
                 Layout.alignment: Qt.AlignVCenter
+                enabled: true
                 background: Rectangle {
-                    color: "#4A5B7B"
+                    color: "#4A5B7B" // "#78808f" - for disabled
                     radius: 8
                     border.width: 1
                     border.color: "#3A4B6B"
@@ -235,5 +247,10 @@ Rectangle {
 
     Component.onCompleted: {
         console.log("DroneCameraView loaded; cameraController:", cameraController)
+    }
+
+    onRecordingChanged: {
+        captureButton.enabled = recording
+        stopButton.enabled = recording
     }
 }

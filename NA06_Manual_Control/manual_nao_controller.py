@@ -7,9 +7,9 @@ class ManualNaoController(QObject):
     super().__init__(parent)
     print("=============Manual Nao Controller initialized=============")
 
-  @Slot()
-  def connectNao(self):
+  @Slot(str, str)
+  def connectNao(self, ip, port):
       try:
-          self.logMessage.emit("Manual Nao Controller: connectNao called")
+          self.logMessage.emit(f"ManualNaoController: Connecting to NAO at {ip}:{port}")
       except Exception as e:
-          self.logMessage.emit(f"Manual Nao Controller error: {e}")
+          self.logMessage.emit(f"ManualNaoController error: {e}")

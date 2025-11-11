@@ -84,13 +84,6 @@ Rectangle {
 
                 signal logMessage(string message)
 
-                Connections {
-                    target: typeof droneCameraController !== "undefined" ? droneCameraController : null
-                    onLogMessage: function(message) {
-                        if (rootPanel.appendLog) rootPanel.appendLog(message)
-                    }
-                }
-
                 RowLayout {
                     anchors.fill: parent
                     // spacing: 10
@@ -394,6 +387,7 @@ Rectangle {
                                     if (typeof droneCameraController !== "undefined") {
                                         droneCameraLoader.item.cameraController = droneCameraController
                                         console.log("DroneCameraController assigned::: ", droneCameraController)
+                                        droneCameraLoader.item.logToParent.connect(rootPanel.appendLog)
                                     } else {
                                         console.log("DroneCameraController not defined")
                                     }
