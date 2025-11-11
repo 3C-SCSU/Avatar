@@ -4,7 +4,7 @@ import subprocess
 from pathlib import Path
 from PySide6.QtWidgets import QApplication
 from PySide6.QtQml import QQmlApplicationEngine
-from PySide6.QtCore import QObject, Signal, Slot, QProcess, QUrl
+from PySide6.QtCore import QObject, Signal, Slot, Property, QProcess, QUrl
 from pdf2image import convert_from_path
 from djitellopy import Tello
 import random
@@ -46,6 +46,99 @@ class TabController(QObject):
     def __init__(self):
         super().__init__()
         self.nao_process = None
+
+
+class developersBackend(QObject):
+
+    def __init__(self):
+        super().__init__()
+        self._gold_path = ""
+        self._silver_path = ""
+        self._bronze_path = ""
+        self._medal_path = ""
+        self.devImagePath()
+
+    @Slot(result=str)
+    def getDevList(self):
+        return devCharts.devList()
+
+    @Slot(result=str)
+    def getTicketsByDev(self) -> str:
+
+        return devCharts.ticketsByDev_text()
+
+    @Slot()
+    def devChart(self):
+        print("Generating charts...")
+        try:
+            # Get the data
+            data = devCharts.run_shortlog_all()
+            if not data:
+                print("No contributors found")
+                return
+
+            exclude = ["3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>"]
+            data = [(n, c) for (n, c) in data if n not in exclude]
+
+            # Assign tiers
+            tiered = devCharts.assign_fixed_tiers(data)
+
+            # Generate charts for each tier
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            plots_dir = os.path.join(base_dir, "plotDevelopers")
+            os.makedirs(plots_dir, exist_ok=True)
+
+            for tier in ["Gold", "Silver", "Bronze"]:
+                chart_path = os.path.join(plots_dir, f"{tier.lower()}_contributors.png")
+                devCharts.plot_single_tier(tiered, tier, chart_path)
+                print(f"Generated {tier} chart")
+
+            # Update paths after generating
+            self.devImagePath()
+            print("Charts generated successfully")
+
+        except Exception as e:
+            print(f"Error generating charts: {e}")
+
+
+    def devImagePath(self):
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        print(f"The base directory path is {base_dir}")
+        plots_dir = os.path.join(base_dir, "plotDevelopers")
+        print(f"The plots directory path is {plots_dir}")
+        gold_path = os.path.abspath(os.path.join(plots_dir, "gold_contributors.png"))
+        silver_path = os.path.abspath(os.path.join(plots_dir, "silver_contributors.png"))
+        bronze_path = os.path.abspath(os.path.join(plots_dir, "bronze_contributors.png"))
+        medal_path =  os.path.abspath(os.path.join(plots_dir, "Medal.png"))
+
+        self._gold_path = "file:///" + gold_path.replace("\\", "/")
+        self._silver_path = "file:///" + silver_path.replace("\\", "/")
+        self._bronze_path = "file:///" + bronze_path.replace("\\", "/")
+        self._medal_path = "file:///" + medal_path.replace("\\", "/")
+
+
+        print(f"Gold chart path: {self._gold_path}")
+        print(f"Silver chart path: {self._silver_path}")
+        print(f"Bronze chart path: {self._bronze_path}")
+        print(f"Medal path: {self._medal_path}")
+
+        return gold_path, silver_path, bronze_path
+
+    @Property(str, constant = True)
+    def goldPath(self):
+        return self._gold_path
+
+    @Property(str, constant = True)
+    def silverPath(self):
+        return self._silver_path
+
+    @Property(str, constant = True)
+    def bronzePath(self):
+        return self._bronze_path
+
+    @Property(str, constant = True)
+    def medalPath(self):
+        return self._medal_path
 
 
 class BrainwavesBackend(QObject):
@@ -101,103 +194,6 @@ class BrainwavesBackend(QObject):
             self.fligt_log.insert(0, "Nao failed to stand up.")
         self.flightLogUpdated.emit(self.flight_log)
 
-
-            
-
-    @Slot(result=str)
-    def getDevList(self):
-        exclude = {
-            "3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>",
-        }
-
-        proc = subprocess.run(
-            ["git", "shortlog", "-sne", "--all"],
-            capture_output=True, text=True, encoding="utf-8", errors="ignore"
-        )
-
-        if proc.returncode != 0:
-            return "No developers found."
-
-        lines = proc.stdout.strip().splitlines()
-        filtered_lines = []
-
-        for line in lines:
-            # Match the author portion
-            match = re.match(r"^\s*\d+\s+(?P<author>.+)$", line)
-            if match:
-                author = match.group("author").strip()
-                if author not in exclude:
-                    filtered_lines.append(line)
-
-        return "\n".join(filtered_lines) if filtered_lines else "No developers found."
-
-    @Slot(result=str)
-    def getTicketsByDev(self) -> str:
-
-            exclude = {
-                "3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>"
-            }
-
-            pretty = "%x1e%an <%ae>%x1f%s%x1f%b"
-            try:
-                proc = subprocess.run(
-                    ["git", "log", "--all", f"--pretty=format:{pretty}"],
-                    capture_output=True,
-                    text=True,
-                    encoding="utf-8",
-                    errors="ignore",
-                    check=True
-                )
-            except subprocess.CalledProcessError:
-                return "No tickets found."
-
-            raw = proc.stdout or ""
-            commits = raw.split("\x1e")
-
-            jira_re = re.compile(r'\b([A-Za-z]{2,}-\d+)\b')
-            hash_re = re.compile(r'(?<![A-Za-z0-9])#\d+\b')
-            author_to_ticketset = defaultdict(set)
-
-            for entry in commits:
-                entry = entry.strip()
-                if not entry:
-                    continue
-                parts = entry.split("\x1f", 2)
-                author = parts[0].strip()
-                subject = parts[1] if len(parts) > 1 else ""
-                body = parts[2] if len(parts) > 2 else ""
-                msg = (subject + "\n" + body).strip()
-
-                found = set()
-                for m in jira_re.findall(msg):
-                    found.add(m.upper())
-                for m in hash_re.findall(msg):
-                    found.add(m)
-
-                if found:
-                    author_to_ticketset[author].update(found)
-
-            if not author_to_ticketset:
-                return "No tickets found."
-
-            # Sort authors by ticket count descending, then by name
-            lines = []
-            for author, tickets in sorted(author_to_ticketset.items(), key=lambda kv: (-len(kv[1]), kv[0].lower())):
-                if author in exclude:
-                    continue  # skip excluded authors entirely
-                lines.append(f"{author}: {', '.join(sorted(tickets))}")
-
-
-            return "\n".join(lines)
-
-    @Slot()
-    def devChart(self):
-        print("hofChart() SLOT CALLED")
-        try:
-            devCharts.main()
-            print("hofCharts.main() COMPLETED")
-        except Exception as e:
-            print(f"hofCharts.main() ERROR: {e}")
 
 
     def __init__(self):
@@ -679,8 +675,10 @@ if __name__ == "__main__":
 
     # Initialize backend before loading QML
     backend = BrainwavesBackend()
+    developers = developersBackend()
     engine.rootContext().setContextProperty("tabController", tab_controller)
     engine.rootContext().setContextProperty("backend", backend)
+    engine.rootContext().setContextProperty("developersBackend", developers)
     engine.rootContext().setContextProperty("imageModel", [])  # Initialize empty model
     engine.rootContext().setContextProperty("fileShufflerGui", backend)  # For file shuffler
     engine.rootContext().setContextProperty("cameraController", backend.camera_controller)
