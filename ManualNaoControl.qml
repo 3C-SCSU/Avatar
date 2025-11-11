@@ -82,17 +82,27 @@ Rectangle {
                 property bool animationInProgress: false
                 property int modelRotationY: 0
 
+                signal logMessage(string message)
+
+                Connections {
+                    target: typeof droneCameraController !== "undefined" ? droneCameraController : null
+                    onLogMessage: function(message) {
+                        if (rootPanel.appendLog) rootPanel.appendLog(message)
+                    }
+                }
+
                 RowLayout {
                     anchors.fill: parent
-                    spacing: 10
+                    // spacing: 10
+                    spacing: 0
 
                     // ================= LEFT PANEL =================
                     Rectangle {
                         id: leftPanel
-                        Layout.preferredWidth: 500
+                        Layout.preferredWidth: parent.width * 0.30
                         Layout.fillHeight: true
                         color: "#718399"
-                        radius: 6
+                        // radius: 6
 
                         ColumnLayout {
                             anchors.fill: parent
@@ -197,9 +207,9 @@ Rectangle {
                         }
                     }
 
-                    // ================= RIGHT PANEL (3D Viewer) =================
+                    // ================= CENTER PANEL (3D Viewer) =================
                     Rectangle {
-                        id: rightPanel
+                        id: centerPanel
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         color: "#2f2f2f"
@@ -249,7 +259,7 @@ Rectangle {
                             Rectangle {
                                 anchors.right: parent.right
                                 anchors.bottom: parent.bottom
-                                width: parent.width * 0.25
+                                width: Math.max(parent.width * 0.25, 160)
                                 height: parent.height * 0.25
                                 color: "#242c4d"
                                 radius: 8
@@ -361,6 +371,36 @@ Rectangle {
                             }
                         }
                     }
+
+                    // RIGHT PANEL (Drone Camera View)
+                    Rectangle {
+                        id: rightPanel
+                        Layout.preferredWidth: parent.width * 0.30
+                        Layout.minimumWidth: 300
+                        Layout.fillHeight: true
+                        color: "#111"
+                        radius: 0
+
+                        Loader {
+                            id: droneCameraLoader
+                            anchors.fill: parent
+                            source: "NA06_Manual_Control/camera_view/DroneCameraView.qml"
+                            asynchronous: true
+
+                            onStatusChanged: console.log("DroneCameraLoader.status::: ", status)
+
+                            onLoaded: {
+                                if (droneCameraLoader.item) {
+                                    if (typeof droneCameraController !== "undefined") {
+                                        droneCameraLoader.item.cameraController = droneCameraController
+                                        console.log("DroneCameraController assigned::: ", droneCameraController)
+                                    } else {
+                                        console.log("DroneCameraController not defined")
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
                 // ================= Animations =================
@@ -462,7 +502,11 @@ Rectangle {
                     var timestamp = new Date().toLocaleString()
                     consoleLog1.append(msg + " at " + timestamp)
                 }
-            
+
+                // Connect the signal to appendLog
+                onLogMessage: {
+                    appendLog(message)
+                }
             }
         }
     }
