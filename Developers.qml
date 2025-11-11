@@ -33,7 +33,7 @@ Rectangle {
                     spacing: 8
 
                     Text {
-                        text: "Golden"
+                        text: "Gold"
                         color: "white"
                         font.bold: true
                         font.pixelSize: 26
@@ -51,7 +51,7 @@ Rectangle {
                             anchors.fill: parent
                             anchors.margins: 10
                             fillMode: Image.PreserveAspectFit
-                            source: "Developers/commit_tiers_output/gold_contributors.png"
+                            source: developersBackend.goldPath
                         }
 
                         Text {
@@ -99,7 +99,7 @@ Rectangle {
                             anchors.fill: parent
                             anchors.margins: 10
                             fillMode: Image.PreserveAspectFit
-                            source: "Developers/commit_tiers_output/silver_contributors.png"
+                            source: developersBackend.silverPath
                         }
 
                         Text {
@@ -147,7 +147,7 @@ Rectangle {
                             anchors.fill: parent
                             anchors.margins: 10
                             fillMode: Image.PreserveAspectFit
-                            source: "Developers/commit_tiers_output/bronze_contributors.png"
+                            source: developersBackend.bronzePath
                         }
 
                         Text {
@@ -185,7 +185,7 @@ Rectangle {
                     spacing: 8
 
                     Text {
-                        text: "Developers Log"
+                        text: "List Of Developers"
                         color: "white"
                         font.bold: true
                         font.pixelSize: 22
@@ -210,6 +210,12 @@ Rectangle {
                         }
                     }
                 }
+
+                Component.onCompleted: {
+                    devText.text = developersBackend.getDevList()
+                    ticketText.text = developersBackend.getTicketsByDev()
+                    developersBackend.devChart()
+                }
             }
 
             // ---------- MEDAL + REFRESH ----------
@@ -226,7 +232,7 @@ Rectangle {
 
                     // Medal Image
                     Image {
-                        source: "Developers/commit_tiers_output/Medal.png"
+                        source: developersBackend.medalPath
                         width: 225
                         height: 325
                         fillMode: Image.PreserveAspectFit
@@ -257,8 +263,9 @@ Rectangle {
                         }
 
                         onClicked: {
-                            devText.text = backend.getDevList()
-                            ticketText.text = backend.getTicketsByDev()
+                            devText.text = developersBackend.getDevList()
+                            ticketText.text = developersBackend.getTicketsByDev()
+                            developersBackend.devChart()
                         }
                     }
                 }
