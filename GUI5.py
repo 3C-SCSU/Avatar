@@ -368,7 +368,7 @@ class BrainwavesBackend(QObject):
         self.flight_log.insert(0, "Keep alive signal sent.")
         self.flightLogUpdated.emit(self.flight_log)
 
-    @Slot()
+    @Slot(str)
     def doDroneTAction(self, action):
         threading.Thread(target=self.getDroneAction, args=(action,), daemon=True).start()
 
