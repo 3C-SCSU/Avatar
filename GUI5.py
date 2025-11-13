@@ -369,7 +369,7 @@ class BrainwavesBackend(QObject):
         self.flightLogUpdated.emit(self.flight_log)
 
     @Slot()
-    def doDroneTAction(self):
+    def doDroneTAction(self, action):
         threading.Thread(target=self.getDroneAction, args=(action,), daemon=True).start()
 
     @Slot(str)
