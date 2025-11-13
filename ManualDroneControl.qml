@@ -158,7 +158,7 @@ Rectangle {
                         border.color: "black"
 
                         Image {
-                            source: "GUI_Pics/Forward.png"
+                            source: "GUI_Pics/forward.png"
                             width: 150
                             height: 150
                             anchors.centerIn: parent
@@ -263,7 +263,7 @@ Rectangle {
                         border.color: "black"
 
                         Image {
-                            source: "GUI_Pics/Stream.png"
+                            source: "GUI_Pics/stream.png"
                             width: 150
                             height: 150
                             anchors.centerIn: parent
