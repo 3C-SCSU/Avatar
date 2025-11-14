@@ -4,10 +4,11 @@ import subprocess
 from pathlib import Path
 from PySide6.QtWidgets import QApplication
 from PySide6.QtQml import QQmlApplicationEngine
-from PySide6.QtCore import QObject, Signal, Slot, QProcess, QUrl
+from PySide6.QtCore import QObject, Signal, Slot, Property, QProcess, QUrl
 from pdf2image import convert_from_path
 from djitellopy import Tello
 import random
+import threading
 import re
 import pandas as pd
 import time
@@ -23,6 +24,8 @@ from NAO6.nao_connection import send_command
 from Developers import devCharts
 
 								
+from NA06_Manual_Control import ManualNaoController
+from NA06_Manual_Control.camera_view import DroneCameraController
 
 # Import BCI connection for brainwave prediction
 try:
@@ -46,6 +49,99 @@ class TabController(QObject):
     def __init__(self):
         super().__init__()
         self.nao_process = None
+
+
+class developersBackend(QObject):
+
+    def __init__(self):
+        super().__init__()
+        self._gold_path = ""
+        self._silver_path = ""
+        self._bronze_path = ""
+        self._medal_path = ""
+        self.devImagePath()
+
+    @Slot(result=str)
+    def getDevList(self):
+        return devCharts.devList()
+
+    @Slot(result=str)
+    def getTicketsByDev(self) -> str:
+
+        return devCharts.ticketsByDev_text()
+
+    @Slot()
+    def devChart(self):
+        print("Generating charts...")
+        try:
+            # Get the data
+            data = devCharts.run_shortlog_all()
+            if not data:
+                print("No contributors found")
+                return
+
+            exclude = ["3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>"]
+            data = [(n, c) for (n, c) in data if n not in exclude]
+
+            # Assign tiers
+            tiered = devCharts.assign_fixed_tiers(data)
+
+            # Generate charts for each tier
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            plots_dir = os.path.join(base_dir, "plotDevelopers")
+            os.makedirs(plots_dir, exist_ok=True)
+
+            for tier in ["Gold", "Silver", "Bronze"]:
+                chart_path = os.path.join(plots_dir, f"{tier.lower()}_contributors.png")
+                devCharts.plot_single_tier(tiered, tier, chart_path)
+                print(f"Generated {tier} chart")
+
+            # Update paths after generating
+            self.devImagePath()
+            print("Charts generated successfully")
+
+        except Exception as e:
+            print(f"Error generating charts: {e}")
+
+
+    def devImagePath(self):
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        print(f"The base directory path is {base_dir}")
+        plots_dir = os.path.join(base_dir, "plotDevelopers")
+        print(f"The plots directory path is {plots_dir}")
+        gold_path = os.path.abspath(os.path.join(plots_dir, "gold_contributors.png"))
+        silver_path = os.path.abspath(os.path.join(plots_dir, "silver_contributors.png"))
+        bronze_path = os.path.abspath(os.path.join(plots_dir, "bronze_contributors.png"))
+        medal_path =  os.path.abspath(os.path.join(plots_dir, "Medal.png"))
+
+        self._gold_path = "file:///" + gold_path.replace("\\", "/")
+        self._silver_path = "file:///" + silver_path.replace("\\", "/")
+        self._bronze_path = "file:///" + bronze_path.replace("\\", "/")
+        self._medal_path = "file:///" + medal_path.replace("\\", "/")
+
+
+        print(f"Gold chart path: {self._gold_path}")
+        print(f"Silver chart path: {self._silver_path}")
+        print(f"Bronze chart path: {self._bronze_path}")
+        print(f"Medal path: {self._medal_path}")
+
+        return gold_path, silver_path, bronze_path
+
+    @Property(str, constant = True)
+    def goldPath(self):
+        return self._gold_path
+
+    @Property(str, constant = True)
+    def silverPath(self):
+        return self._silver_path
+
+    @Property(str, constant = True)
+    def bronzePath(self):
+        return self._bronze_path
+
+    @Property(str, constant = True)
+    def medalPath(self):
+        return self._medal_path
 
 
 class BrainwavesBackend(QObject):
@@ -102,103 +198,6 @@ class BrainwavesBackend(QObject):
         self.flightLogUpdated.emit(self.flight_log)
 
 
-            
-
-    @Slot(result=str)
-    def getDevList(self):
-        exclude = {
-            "3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>",
-        }
-
-        proc = subprocess.run(
-            ["git", "shortlog", "-sne", "--all"],
-            capture_output=True, text=True, encoding="utf-8", errors="ignore"
-        )
-
-        if proc.returncode != 0:
-            return "No developers found."
-
-        lines = proc.stdout.strip().splitlines()
-        filtered_lines = []
-
-        for line in lines:
-            # Match the author portion
-            match = re.match(r"^\s*\d+\s+(?P<author>.+)$", line)
-            if match:
-                author = match.group("author").strip()
-                if author not in exclude:
-                    filtered_lines.append(line)
-
-        return "\n".join(filtered_lines) if filtered_lines else "No developers found."
-
-    @Slot(result=str)
-    def getTicketsByDev(self) -> str:
-
-            exclude = {
-                "3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>"
-            }
-
-            pretty = "%x1e%an <%ae>%x1f%s%x1f%b"
-            try:
-                proc = subprocess.run(
-                    ["git", "log", "--all", f"--pretty=format:{pretty}"],
-                    capture_output=True,
-                    text=True,
-                    encoding="utf-8",
-                    errors="ignore",
-                    check=True
-                )
-            except subprocess.CalledProcessError:
-                return "No tickets found."
-
-            raw = proc.stdout or ""
-            commits = raw.split("\x1e")
-
-            jira_re = re.compile(r'\b([A-Za-z]{2,}-\d+)\b')
-            hash_re = re.compile(r'(?<![A-Za-z0-9])#\d+\b')
-            author_to_ticketset = defaultdict(set)
-
-            for entry in commits:
-                entry = entry.strip()
-                if not entry:
-                    continue
-                parts = entry.split("\x1f", 2)
-                author = parts[0].strip()
-                subject = parts[1] if len(parts) > 1 else ""
-                body = parts[2] if len(parts) > 2 else ""
-                msg = (subject + "\n" + body).strip()
-
-                found = set()
-                for m in jira_re.findall(msg):
-                    found.add(m.upper())
-                for m in hash_re.findall(msg):
-                    found.add(m)
-
-                if found:
-                    author_to_ticketset[author].update(found)
-
-            if not author_to_ticketset:
-                return "No tickets found."
-
-            # Sort authors by ticket count descending, then by name
-            lines = []
-            for author, tickets in sorted(author_to_ticketset.items(), key=lambda kv: (-len(kv[1]), kv[0].lower())):
-                if author in exclude:
-                    continue  # skip excluded authors entirely
-                lines.append(f"{author}: {', '.join(sorted(tickets))}")
-
-
-            return "\n".join(lines)
-
-    @Slot()
-    def devChart(self):
-        print("hofChart() SLOT CALLED")
-        try:
-            devCharts.main()
-            print("hofCharts.main() COMPLETED")
-        except Exception as e:
-            print(f"hofCharts.main() ERROR: {e}")
-
 
     def __init__(self):
         super().__init__()
@@ -210,6 +209,8 @@ class BrainwavesBackend(QObject):
         self.image_paths = []  # Store converted image paths
         self.plots_dir = os.path.abspath("plotscode/plots")  # Base plots directory
         self.current_dataset = "refresh"  # Default dataset to display
+        self.connected = False
+        self.drone_lock = threading.Lock()
         try:
             self.tello = Tello()
         except Exception as e:
@@ -370,53 +371,93 @@ class BrainwavesBackend(QObject):
         self.flightLogUpdated.emit(self.flight_log)
 
     @Slot(str)
+    def doDroneTAction(self, action):
+        threading.Thread(target=self.getDroneAction, args=(action,), daemon=True).start()
+
+    @Slot(str)
     def getDroneAction(self, action):
-        try:
-            if action == 'connect':
-                self.tello.connect()
-                self.logMessage.emit("Connected to Tello Drone")
-            elif action == 'up':
-                self.tello.move_up(30)
-                self.logMessage.emit("Moving up")
-            elif action == 'down':
-                self.tello.move_down(30)
-                self.logMessage.emit("Moving down")
-            elif action == 'forward':
-                self.tello.move_forward(30)
-                self.logMessage.emit("Moving forward")
-            elif action == 'backward':
-                self.tello.move_back(30)
-                self.logMessage.emit("Moving backward")
-            elif action == 'left':
-                self.tello.move_left(30)
-                self.logMessage.emit("Moving left")
-            elif action == 'right':
-                self.tello.move_right(30)
-                self.logMessage.emit("Moving right")
-            elif action == 'turn_left':
-                self.tello.rotate_counter_clockwise(45)
-                self.logMessage.emit("Rotating left")
-            elif action == 'turn_right':
-                self.tello.rotate_clockwise(45)
-                self.logMessage.emit("Rotating right")
-            elif action == 'takeoff':
-                self.tello.takeoff()
-                self.logMessage.emit("Taking off")
-            elif action == 'land':
-                self.tello.land()
-                self.logMessage.emit("Landing")
-            elif action == 'go_home':
-                self.go_home()
-            elif action == 'stream':
-                if hasattr(self, 'camera_controller'):
-                    self.camera_controller.start_camera_stream()
-                    self.logMessage.emit("Starting camera stream")
+        with self.drone_lock:
+            try:
+                if action == 'connect':
+                    self.tello.connect()
+                    battery = self.tello.get_battery()
+                    self.connected = True
+                    self.logMessage.emit(f"Connected to Tello Drone (Battery: {battery}%)")
+                    self.flight_log.insert(0, f"Drone connected (Battery: {battery}%)")
+                    self.flightLogUpdated.emit(self.flight_log)
+                    return
+                elif self.connected:
+                    self.logMessage.emit("Drone not connected. Please connect first.")
+                    self.flight_log.insert(0, "Command failed: Drone not connected")
+                    self.flightLogUpdated.emit(self.flight_log)
+                    return
+
+                if action == 'up':
+                    self.tello.move_up(30)
+                    self.logMessage.emit("Moving up")
+                    self.flight_log.insert(0, "Moving up 30cm")
+                elif action == 'down':
+                    self.tello.move_down(30)
+                    self.logMessage.emit("Moving down")
+                    self.flight_log.insert(0, "Moving down 30cm")
+                elif action == 'forward':
+                    self.tello.move_forward(30)
+                    self.logMessage.emit("Moving forward")
+                    self.flight_log.insert(0, "Moving forward 30cm")
+                elif action == 'backward':
+                    self.tello.move_back(30)
+                    self.logMessage.emit("Moving backward")
+                    self.flight_log.insert(0, "Moving backward 30cm")
+                elif action == 'left':
+                    self.tello.move_left(30)
+                    self.logMessage.emit("Moving left")
+                    self.flight_log.insert(0, "Moving left 30cm")
+                elif action == 'right':
+                    self.tello.move_right(30)
+                    self.logMessage.emit("Moving right")
+                    self.flight_log.insert(0, "Moving right 30cm")
+                elif action == 'turn_left':
+                    self.tello.rotate_counter_clockwise(45)
+                    self.logMessage.emit("Rotating left")
+                    self.flight_log.insert(0, "Rotating left 45°")
+                elif action == 'turn_right':
+                    self.tello.rotate_clockwise(45)
+                    self.logMessage.emit("Rotating right")
+                    self.flight_log.insert(0, "Rotating right 45°")
+                elif action == 'takeoff':
+                    self.tello.takeoff()
+                    self.logMessage.emit("Taking off")
+                    self.flight_log.insert(0, "Taking off")
+                elif action == 'land':
+                    self.tello.land()
+                    self.logMessage.emit("Landing")
+                    self.flight_log.insert(0, "Landing")
+                elif action == 'go_home':
+                    self.go_home()
+                    self.logMessage.emit("Going home")
+                    self.flight_log.insert(0, "Going home")
+                elif action == 'stream':
+                    if hasattr(self, 'camera_controller'):
+                        self.camera_controller.start_camera_stream()
+                        self.logMessage.emit("Starting camera stream")
+                        self.flight_log.insert(0, "Starting camera stream")
+                    else:
+                        self.logMessage.emit("Camera controller not available")
+                        self.flight_log.insert(0, "Camera controller not available")
                 else:
-                    self.logMessage.emit("Camera controller not available")
-            else:
-                self.logMessage.emit("Unknown action")
-        except Exception as e:
-            self.logMessage.emit(f"Error during {action}: {e}")
+                    self.logMessage.emit("Unknown action")
+                    self.flight_log.insert(0, "Unknown action")
+
+                self.flightLogUpdated.emit(self.flight_log)
+
+            except Exception as e:
+                error_msg = f"Error during {action}: {str(e)}"
+                self.logMessage.emit(error_msg)
+                self.flight_log.insert(0, error_msg)
+                self.flightLogUpdated.emit(self.flight_log)
+                # If critical error, mark as disconnected
+                if "Tello" in str(e) or "timeout" in str(e).lower():
+                    self.connected = False
 
     # Method for returning to home (an approximation)
     def go_home(self):
@@ -676,16 +717,22 @@ if __name__ == "__main__":
     # Create our controllers
     tab_controller = TabController()
     print("TabController created")
+    manual_nao_controller = ManualNaoController()
+    drone_camera_controller = DroneCameraController()
 
     # Initialize backend before loading QML
     backend = BrainwavesBackend()
+    developers = developersBackend()
     engine.rootContext().setContextProperty("tabController", tab_controller)
     engine.rootContext().setContextProperty("backend", backend)
+    engine.rootContext().setContextProperty("developersBackend", developers)
     engine.rootContext().setContextProperty("imageModel", [])  # Initialize empty model
     engine.rootContext().setContextProperty("fileShufflerGui", backend)  # For file shuffler
     engine.rootContext().setContextProperty("cameraController", backend.camera_controller)
     print("Controllers exposed to QML")
     engine.rootContext().setContextProperty("fileShufflerGui", backend)  # For file shuffler
+    engine.rootContext().setContextProperty("manualNaoController", manual_nao_controller)
+    engine.rootContext().setContextProperty("droneCameraController", drone_camera_controller)
 
     # Load QML
     qml_file = Path(__file__).resolve().parent / "main.qml"
