@@ -711,6 +711,7 @@ class BrainwavesBackend(QObject):
         self.board = BoardShim(BoardIds.CYTON_DAISY_BOARD.value, params)
         print("\nLive headset board initialized.")
 
+    # Start of change : Added Cloud Computing (Transfer Data) functionality 
     @Slot()
     def browse_private_key_dir(self):
         file_dialog = QFileDialog()
@@ -819,6 +820,8 @@ class BrainwavesBackend(QObject):
         except Exception as e:
             QMessageBox.critical(None, "Upload failed", "Please ensure that your inputs are correct and that the server is running\n\nERROR:\n" + str(e))
 
+    # End of change : Added Cloud Computing (Transfer Data) functionality 
+
 
 if __name__ == "__main__":
     os.environ["QT_QUICK_CONTROLS_STYLE"] = "Fusion"
@@ -850,6 +853,8 @@ if __name__ == "__main__":
 
     engine.load(str(qml_file))
 
+    # Start of change : Added Cloud Computing (Transfer Data) functionality 
+
     if engine.rootObjects():
         backend.root_object = engine.rootObjects()[0]
 
@@ -863,6 +868,8 @@ if __name__ == "__main__":
         backend.root_object.findChild(QObject, "targetDirButton").clicked.connect(backend.browse_target_dir)
     else:
         print("Error: QML not loaded properly.")
+
+    # End of change : Added Cloud Computing (Transfer Data) functionality 
 
 
     # Convert PDFs after engine load
