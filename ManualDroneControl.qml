@@ -69,7 +69,7 @@ Rectangle {
                                 buttonText.color = "white";
                             }
                             onClicked: {
-                                backend.getDroneAction("home");
+                                backend.doDroneTAction("home");
                             }
                         }
                     }
@@ -110,7 +110,7 @@ Rectangle {
                                 upButtonText.color = "white";
                             }
                             onClicked: {
-                                backend.getDroneAction("up");
+                                backend.doDroneTAction("up");
                             }
                         }
                     }
@@ -178,7 +178,7 @@ Rectangle {
                             anchors.fill: parent
                             onEntered: parent.color = "white"
                             onExited: parent.color = "#242c4d"
-                            onClicked: backend.getDroneAction("forward")
+                            onClicked: backend.doDroneTAction("forward")
                         }
                     }
                 }
@@ -219,7 +219,7 @@ Rectangle {
                             anchors.fill: parent
                             onEntered: parent.color = "white"
                             onExited: parent.color = "#242c4d"
-                            onClicked: backend.getDroneAction("turn_left")
+                            onClicked: backend.doDroneTAction("turn_left")
                         }
                     }
 
@@ -251,7 +251,7 @@ Rectangle {
                             anchors.fill: parent
                             onEntered: parent.color = "white"
                             onExited: parent.color = "#242c4d"
-                            onClicked: backend.getDroneAction("left")
+                            onClicked: backend.doDroneTAction("left")
                         }
                     }
 
@@ -283,7 +283,7 @@ Rectangle {
                             anchors.fill: parent
                             onEntered: parent.color = "white"
                             onExited: parent.color = "#242c4d"
-                            onClicked: backend.getDroneAction("stream")
+                            onClicked: backend.doDroneTAction("stream")
                         }
                     }
 
@@ -315,7 +315,7 @@ Rectangle {
                             anchors.fill: parent
                             onEntered: parent.color = "white"
                             onExited: parent.color = "#242c4d"
-                            onClicked: backend.getDroneAction("right")
+                            onClicked: backend.doDroneTAction("right")
                         }
                     }
 
@@ -347,7 +347,7 @@ Rectangle {
                             anchors.fill: parent
                             onEntered: parent.color = "white"
                             onExited: parent.color = "#242c4d"
-                            onClicked: backend.getDroneAction("turn_right")
+                            onClicked: backend.doDroneTAction("turn_right")
                         }
                     }
                 }
@@ -388,7 +388,7 @@ Rectangle {
                             anchors.fill: parent
                             onEntered: parent.color = "white"
                             onExited: parent.color = "#242c4d"
-                            onClicked: backend.getDroneAction("backward")
+                            onClicked: backend.doDroneTAction("backward")
                         }
                     }
                 }
@@ -434,7 +434,7 @@ Rectangle {
                                 anchors.fill: parent
                                 onEntered: parent.color = "white"
                                 onExited: parent.color = "#242c4d"
-                                onClicked: backend.getDroneAction("connect")
+                                onClicked: backend.doDroneTAction("connect")
                             }
                         }
 
@@ -466,7 +466,7 @@ Rectangle {
                                 anchors.fill: parent
                                 onEntered: parent.color = "white"
                                 onExited: parent.color = "#242c4d"
-                                onClicked: backend.getDroneAction("down")
+                                onClicked: backend.doDroneTAction("down")
                             }
                         }
 
@@ -498,7 +498,7 @@ Rectangle {
                                 anchors.fill: parent
                                 onEntered: parent.color = "white"
                                 onExited: parent.color = "#242c4d"
-                                onClicked: backend.getDroneAction("takeoff")
+                                onClicked: backend.doDroneTAction("takeoff")
                             }
                         }
 
@@ -530,7 +530,7 @@ Rectangle {
                                 anchors.fill: parent
                                 onEntered: parent.color = "white"
                                 onExited: parent.color = "#242c4d"
-                                onClicked: backend.getDroneAction("land")
+                                onClicked: backend.doDroneTAction("land")
                             }
                         }
                     }
