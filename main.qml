@@ -64,7 +64,7 @@ ApplicationWindow {
             ManualDroneControl { Layout.fillWidth: true; Layout.fillHeight: true }
             ManualNaoControl { Layout.fillWidth: true; Layout.fillHeight: true }
             FileShuffler { Layout.fillWidth: true; Layout.fillHeight: true }
-            TransferData { Layout.fillWidth: true; Layout.fillHeight: true }
+            CloudComputing { Layout.fillWidth: true; Layout.fillHeight: true } // Renamed Transfer Data to Cloud Computing 
             Developers { Layout.fillWidth: true; Layout.fillHeight: true }
             ArtificialIntelligence { Layout.fillWidth: true; Layout.fillHeight: true }
         }
@@ -87,7 +87,7 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = 4
             }
             TabButton {
-                text: "Transfer Data"
+                text: "Cloud Computing" // Renamed Transfer Data to Cloud Computing 
                 font.bold: true
                 onClicked: stackLayout.currentIndex = 5
             }
