@@ -25,7 +25,7 @@ ApplicationWindow {
             height: 40
 
             TabButton {
-                text: "Brainwave Reading"
+                text: "Read Brain"
                 font.bold: true
                 onClicked: stackLayout.currentIndex = 0
             }
