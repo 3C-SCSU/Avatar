@@ -3,7 +3,8 @@ import QtQuick.Controls 6.4
 import QtQuick.Layouts 1.15 
 
 Rectangle { 
-    id: root color: "#718399" 
+    id: root 
+    color: "#718399" 
     Layout.fillWidth: true 
     Layout.fillHeight: true 
 
