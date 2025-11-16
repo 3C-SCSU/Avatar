@@ -17,6 +17,8 @@ import urllib.parse
 import contextlib
 from collections import defaultdict
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
+from predictions_local.brainflowprocessor import BrainFlowDataProcessor
+from predictions_local.deeplearningpytorchpredictor import DeeplearningPytorchPredictor
 from GUI5_ManualDroneControl.cameraview.camera_controller import CameraController
 from NAO6.nao_connection import send_command
 # from Developers.hofCharts import main as hofCharts, ticketsByDev_text NA
@@ -312,15 +314,27 @@ class BrainwavesBackend(QObject):
 
     def run_deep_learning_pytorch(self):
         """ Deep Learning model processing with PyTorch backend """
-        print("Running Deep Learning Model with PyTorch...")
+        print("Running Deep Learning Model with PyTorch...")       
+        self.get_brainwave_data()
         try:
-            # Simulate PyTorch deep learning model processing
-            # In a real implementation, this would load and run a PyTorch CNN model
-            time.sleep(2)  # Simulate longer processing time for deep learning
-            return random.choice(["forward", "backward", "left", "right", "takeoff", "land", "up", "down"])
+            model = DeeplearningPytorchPredictor()
+            pred_label = model(self.brainwave_data)
+            return pred_label
         except Exception as e:
             print(f"Error with PyTorch Deep Learning: {e}")
-            return "forward"
+            return "Error"
+    
+    def get_brainwave_data(self):
+        if self.current_data_mode == 'synthetic':
+            self.brainwave_processor = BrainFlowDataProcessor(board_id=BoardIds.SYNTHETIC_BOARD.value)
+            self.brainwave_data = self.brainwave_processor.get_tensor()
+            print("synethetic data retrieved")
+            return self.brainwave_data
+        else:
+            self.brainwave_processor = BrainFlowDataProcessor(board_id=BoardIds.CYTON_DAISY_BOARD.value)
+            self.brainwave_data = self.brainwave_processor.get_tensor()
+            print("live Cyton Daisy data retrieved")
+            return self.brainwave_data
 
     def run_deep_learning_tensorflow(self):
         """ Deep Learning model processing with TensorFlow backend """
@@ -684,6 +698,9 @@ class BrainwavesBackend(QObject):
         """
         Set data mode to either synthetic or live based on radio button selection.
         """
+        
+        self.current_data_mode = mode
+
         if mode == "synthetic":
             self.init_synthetic_board()
             self.logMessage.emit("Switched to Synthetic Data Mode")
