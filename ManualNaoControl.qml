@@ -1,21 +1,3 @@
-/*
-    Avatar - Manual NAO Control Interface
-    Author: Youssef Elkhouly
-    Date: October 2025
-
-    Description:
-        This QML file implements the Manual NAO Control tab, providing a user interface
-        for controlling the NAO robot. It includes a 3D viewer of the NAO model and
-        a connection panel with configurable IP and Port settings.
-
-    Features:
-        - 3D NAO robot visualization
-        - Movement controls (Forward, Backward, Left, Right, Takeoff, Land)
-        - Configurable IP address and Port input fields
-        - Console logging for debugging
-        - Real-time animation of robot movements
-*/
-
 import QtQuick.Dialogs
 import Qt.labs.platform
 import QtQuick 6.5
