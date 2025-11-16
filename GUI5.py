@@ -424,6 +424,22 @@ class BrainwavesBackend(QObject):
                     self.tello.rotate_clockwise(45)
                     self.logMessage.emit("Rotating right")
                     self.flight_log.insert(0, "Rotating right 45°")
+                elif action == 'flip_forward':
+                    self.tello.flip_forward()
+                    self.logMessage.emit("Flipping forward")
+                    self.flight_log.insert(0, "Flipping forward")
+                elif action == 'flip_back':
+                    self.tello.flip_back()
+                    self.logMessage.emit("Flipping backward")
+                    self.flight_log.insert(0, "Flipping backward")
+                elif action == 'flip_left':
+                    self.tello.flip_left()
+                    self.logMessage.emit("Flipping left")
+                    self.flight_log.insert(0, "Flipping left")
+                elif action == 'flip_right':
+                    self.tello.flip_right()
+                    self.logMessage.emit("Flipping right")
+                    self.flight_log.insert(0, "Flipping right")
                 elif action == 'takeoff':
                     self.tello.takeoff()
                     self.logMessage.emit("Taking off")
