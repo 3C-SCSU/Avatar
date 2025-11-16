@@ -185,7 +185,7 @@ Rectangle {
                     spacing: 8
 
                     Text {
-                        text: "List Of Developers"
+                        text: "List of Developers"
                         color: "white"
                         font.bold: true
                         font.pixelSize: 22
