@@ -82,20 +82,17 @@ Rectangle {
                 property bool animationInProgress: false
                 property int modelRotationY: 0
 
-                signal logMessage(string message)
-
                 RowLayout {
                     anchors.fill: parent
-                    // spacing: 10
-                    spacing: 0
+                    spacing: 10
 
                     // ================= LEFT PANEL =================
                     Rectangle {
                         id: leftPanel
-                        Layout.preferredWidth: parent.width * 0.30
+                        Layout.preferredWidth: 500
                         Layout.fillHeight: true
                         color: "#718399"
-                        // radius: 6
+                        radius: 6
 
                         ColumnLayout {
                             anchors.fill: parent
@@ -178,9 +175,11 @@ Rectangle {
                                 title: "Console Log"
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
-                                Layout.preferredHeight: 200
+														   
                                 label: Text {
-                                    text: qsTr("Console Log"); font.bold: true; color: "white"
+                                    text: qsTr("Console Log")
+                                    font.bold: true
+                                    color: "white"
                                 }
 
                                 ScrollView {
@@ -192,17 +191,18 @@ Rectangle {
                                         readOnly: true
                                         wrapMode: Text.Wrap
                                         color: "white"
-                                        font.pixelSize: 10
+                                        font.pixelSize: Math.max(10, leftPanel.height * 0.02)
                                         background: Rectangle { color: "black" }
+                                        padding: leftPanel.height * 0.01
                                     }
                                 }
                             }
                         }
                     }
 
-                    // ================= CENTER PANEL (3D Viewer) =================
+                    // ================= RIGHT PANEL (3D Viewer) =================
                     Rectangle {
-                        id: centerPanel
+                        id: rightPanel
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         color: "#2f2f2f"
@@ -252,7 +252,7 @@ Rectangle {
                             Rectangle {
                                 anchors.right: parent.right
                                 anchors.bottom: parent.bottom
-                                width: Math.max(parent.width * 0.25, 160)
+                                width: parent.width * 0.25
                                 height: parent.height * 0.25
                                 color: "#242c4d"
                                 radius: 8
@@ -364,37 +364,6 @@ Rectangle {
                             }
                         }
                     }
-
-                    // RIGHT PANEL (Drone Camera View)
-                    Rectangle {
-                        id: rightPanel
-                        Layout.preferredWidth: parent.width * 0.30
-                        Layout.minimumWidth: 300
-                        Layout.fillHeight: true
-                        color: "#111"
-                        radius: 0
-
-                        Loader {
-                            id: droneCameraLoader
-                            anchors.fill: parent
-                            source: "NA06_Manual_Control/camera_view/DroneCameraView.qml"
-                            asynchronous: true
-
-                            onStatusChanged: console.log("DroneCameraLoader.status::: ", status)
-
-                            onLoaded: {
-                                if (droneCameraLoader.item) {
-                                    if (typeof droneCameraController !== "undefined") {
-                                        droneCameraLoader.item.cameraController = droneCameraController
-                                        console.log("DroneCameraController assigned::: ", droneCameraController)
-                                        droneCameraLoader.item.logToParent.connect(rootPanel.appendLog)
-                                    } else {
-                                        console.log("DroneCameraController not defined")
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
 
                 // ================= Animations =================
@@ -496,11 +465,7 @@ Rectangle {
                     var timestamp = new Date().toLocaleString()
                     consoleLog1.append(msg + " at " + timestamp)
                 }
-
-                // Connect the signal to appendLog
-                onLogMessage: {
-                    appendLog(message)
-                }
+            
             }
         }
     }
