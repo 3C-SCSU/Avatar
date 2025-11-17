@@ -69,7 +69,7 @@ Rectangle {
                                 buttonText.color = "white";
                             }
                             onClicked: {
-                                backend.doDroneTAction("home");
+                                backend.doDroneTAction("go_home");
                             }
                         }
                     }
@@ -120,13 +120,13 @@ Rectangle {
                         width: parent.width * 0.2
                         height: parent.height
                         anchors.right: parent.right
-                        color: "white"
+                        color: "#ffffff"
                         border.color: "#2E4053"
 
                         Text {
                             text: "Flight Log"
                             font.bold: true
-                            font.pixelSize: Math.max(12, parent.width * 0.05)
+                            font.pixelSize: Math.max(10, parent.width * 0.045) // slightly smaller
                             color: "black"
                             anchors.horizontalCenter: parent.horizontalCenter
                             anchors.top: parent.top
@@ -134,10 +134,23 @@ Rectangle {
                         }
 
                         TextArea {
-                            anchors.fill: parent
-                            anchors.topMargin: 30
-                            font.pixelSize: Math.max(10, parent.width * 0.03)
+                            id: flightLog
+                            readOnly: true
+                            wrapMode: TextArea.Wrap
+                            font.pixelSize: Math.max(10, parent.width * 0.04)
                             color: "black"
+                            anchors.top: parent.top
+                            anchors.topMargin: 40
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.bottom: parent.bottom
+                            clip: true
+
+                            Component.onCompleted: {
+                                backend.flightLogUpdated.connect(function(logList) {
+                                    flightLog.text = logList.join("\n")
+                                })
+                            }
                         }
                     }
                 }
