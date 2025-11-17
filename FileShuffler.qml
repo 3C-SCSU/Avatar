@@ -13,135 +13,275 @@ Rectangle {
     Layout.fillWidth: true
     Layout.fillHeight: true
 
-    property string outputBoxText: ""
-    property string selectedDirectory: ""
+    // Separate logs for each action
+    property string unifyLog: ""
+    property string removeLog: ""
+    property string runLog: ""
+
+    // Status flags
     property bool ranShuffle: false
     property bool unifiedThoughts: false
 
-    Column {
-        anchors.fill: parent
-        spacing: 10
+    // Which button is currently active ("unify", "remove", "run", or "")
+    property string activeButton: ""
 
+    ColumnLayout {
+        anchors.fill: parent
+        anchors.margins: 20
+        spacing: 16
+
+        // HEADER + BUTTON BAR
+        Rectangle {
+            Layout.alignment: Qt.AlignHCenter
+            Layout.preferredWidth: fileShufflerView.width * 0.7
+            Layout.preferredHeight: fileShufflerView.height * 0.2
+            radius: 10
+            color: "#202846"    // dark blue header
+
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: 14
+                spacing: 6
+
+                Text {
+                    text: "FILE SHUFFLER"
+                    color: "white"
+                    font.family: "serif"              //serif look
+                    font.letterSpacing: 1.0           //
+                    font.bold: true
+                    font.pixelSize: 24
+                    horizontalAlignment: Text.AlignHCenter
+                    Layout.alignment: Qt.AlignHCenter
+                }
+
+                RowLayout {
+                    id: buttonRow
+                    Layout.alignment: Qt.AlignHCenter
+                    spacing: 14
+
+                    function isActive(name) {
+                        return fileShufflerView.activeButton === name;
+                    }
+
+                    Button {
+                        id: unifyButton
+                        Layout.preferredWidth: 180
+                        Layout.preferredHeight: 60
+
+                        background: Rectangle {
+                            radius: 6
+                            color: "#7CC000"
+                            border.color: "#E5E500"
+                        }
+
+                        contentItem: Text {
+                            anchors.centerIn: parent
+                            text: "Unify Thoughts"
+                            font.pixelSize: 18
+                            font.bold: true
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            color: buttonRow.isActive("unify") ? "yellow" : "white"
+                        }
+
+                        onClicked: {
+                            fileShufflerView.activeButton = "unify"
+                            unifyLog = "Running Thoughts Unifier...\n"
+                            unifiedThoughts = false
+                            ranShuffle = false
+                            unifyThoughtsDialog.open()
+                        }
+                    }
+
+                    Button {
+                        id: removeButton
+                        Layout.preferredWidth: 180
+                        Layout.preferredHeight: 60
+
+                        background: Rectangle {
+                            radius: 6
+                            color: "#7CC000"
+                            border.color: "#E5E500"
+                        }
+
+                        contentItem: Text {
+                            anchors.centerIn: parent
+                            text: "Remove 8 Channel"
+                            font.pixelSize: 18
+                            font.bold: true
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            color: buttonRow.isActive("remove") ? "yellow" : "white"
+                        }
+
+                        onClicked: {
+                            fileShufflerView.activeButton = "remove"
+                            removeLog = "Running 8 Channel Data Remover...\n"
+                            unifiedThoughts = false
+                            ranShuffle = false
+                            remove8channelDialog.open()
+                        }
+                    }
+
+                    Button {
+                        id: runButton
+                        Layout.preferredWidth: 180
+                        Layout.preferredHeight: 60
+
+                        background: Rectangle {
+                            radius: 6
+                            color: "#7CC000"
+                            border.color: "#E5E500"
+                        }
+
+                        contentItem: Text {
+                            anchors.centerIn: parent
+                            text: "Anonymize" //Renamed "Run File Shuffler" to "Anonymize"
+                            font.pixelSize: 18
+                            font.bold: true
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            color: buttonRow.isActive("run") ? "yellow" : "white"
+                        }
+
+                        onClicked: {
+                            fileShufflerView.activeButton = "run"
+                            runLog = "Running File Shuffler...\n"
+                            unifiedThoughts = false
+                            ranShuffle = false
+                            fileShufflerDialog.open()
+                        }
+                    }
+                }
+            }
+        }
+
+        // CONSOLE LOG TITLE
         Text {
-            text: "File Shuffler"
+            text: "Console Log"
             color: "white"
             font.bold: true
-            font.pixelSize: 24
+            font.pixelSize: 26
             horizontalAlignment: Text.AlignHCenter
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
-            anchors.topMargin: 20
+            Layout.alignment: Qt.AlignHCenter
         }
 
+        // WRAPPER THAT CONTROLS CONSOLE HEIGHT
         Rectangle {
-            width: parent.width * 0.6
-            height: parent.height * 0.6
-            color: "lightgrey"
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
+            id: logsArea
+            Layout.alignment: Qt.AlignHCenter
+            Layout.preferredWidth: fileShufflerView.width * 0.7
+            Layout.preferredHeight: fileShufflerView.height * 0.6
+            radius: 4
+            border.width: 1
+            border.color: "#D0D0D0"
+            color: "transparent"
 
-            ScrollView {
+            RowLayout {
                 anchors.fill: parent
+                anchors.margins: 20
+                spacing: 10
 
-                TextArea {
-                    id: outputBox
-                    text: fileShufflerView.outputBoxText
-                    color: "black"
-                    readOnly: true
-                    width: parent.width
+                // Panel 1: Unify Thoughts
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    radius: 4
+                    color: "white"
+
+                    ScrollView {
+                        anchors.fill: parent
+
+                        TextArea {
+                            text: fileShufflerView.unifyLog
+                            readOnly: true
+                            wrapMode: TextArea.Wrap
+                            color: "black"
+                            font.pixelSize: 13
+                            background: null
+                        }
+                    }
+                }
+
+                // Panel 2: Remove 8 Channel
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    radius: 4
+                    color: "white"
+
+                    ScrollView {
+                        anchors.fill: parent
+
+                        TextArea {
+                            text: fileShufflerView.removeLog
+                            readOnly: true
+                            wrapMode: TextArea.Wrap
+                            color: "black"
+                            font.pixelSize: 13
+                            background: null
+                        }
+                    }
+                }
+
+                // Panel 3: Run Shuffler
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    radius: 4
+
+                    color: "white"
+
+                    ScrollView {
+                        anchors.fill: parent
+
+                        TextArea {
+                            text: fileShufflerView.runLog
+                            readOnly: true
+                            wrapMode: TextArea.Wrap
+                            color: "black"
+                            font.pixelSize: 13
+                            background: null
+                        }
+                    }
                 }
             }
         }
 
-        Row {
-            id: buttonRow
-            spacing: 20
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.verticalCenter
-            anchors.topMargin: parent.height * 0.3 + 10
-
-            Button {
-                text: "Unify Thoughts"
-                onClicked: {
-                    unifyThoughts.open()
-                    fileShufflerView.outputBoxText = `Running Thoughts Unifier...\n`
-                    fileShufflerView.unifiedThoughts = false
-                }
-            }
-
-            Button {
-                text: "Remove 8 Channel Data"
-                onClicked: {
-                    remove8channelDialog.open()
-                    fileShufflerView.outputBoxText = `Running 8 Channel Data Remover...\n`
-                    fileShufflerView.unifiedThoughts = false
-                }
-            }
-
-            Button {
-                text: "Run File Shuffler"
-                onClicked: {
-                    fileShuffler.open()
-                    fileShufflerView.outputBoxText = `Running File Shuffler...\n`
-                    fileShufflerView.ranShuffle = false
-                }
-            }
-        }
-
-        FolderDialog {
-            id: fileShuffler
-            folder: "file:///"
-            visible: false
-
-            onAccepted: {
-                console.log("Selected folder:", fileShuffler.folder)
-                fileShufflerGui.run_file_shuffler_program(fileShuffler.folder)
-                fileShufflerView.ranShuffle = true
-                var output = fileShufflerGui.run_file_shuffler_program(fileShufflerView.folder)
-                fileShufflerView.outputBoxText += output
-            }
-
-            onRejected: {
-                console.log("Folder dialog canceled")
-            }
-        }
-
+        // STATUS TEXTS UNDER LOGS
         Text {
             id: ranText
             text: "Shuffle Complete!"
             color: "yellow"
             font.bold: true
-            font.pixelSize: 18
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: buttonRow.bottom
-            anchors.topMargin: 10
+            font.pixelSize: 16
+            Layout.alignment: Qt.AlignHCenter
             visible: fileShufflerView.ranShuffle
         }
 
         Text {
-            id: unifiedThoughts
+            id: unifiedText
             text: "Thoughts Unified!"
             color: "lightgreen"
             font.bold: true
-            font.pixelSize: 18
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: ranText.bottom
-            anchors.topMargin: 10
+            font.pixelSize: 16
+            Layout.alignment: Qt.AlignHCenter
             visible: fileShufflerView.unifiedThoughts
         }
     }
 
+    //  FOLDER DIALOGS
+
+    // Run File Shuffler - Renamed "Run File Shuffler" to "Anonymize"
     FolderDialog {
-        id: unifyThoughts
+        id: fileShufflerDialog
         folder: "file:///"
 
         onAccepted: {
-            console.log("Selected folder:", unifyThoughts.folder)
-            fileShufflerGui.unify_thoughts(unifyThoughts.folder)
-            fileShufflerView.unifiedThoughts = true
-            var outputt = fileShufflerGui.unify_thoughts(unifyThoughts.folder)
-            fileShufflerView.outputBoxText += outputt
-            fileShufflerView.outputBoxText += "\nThoughts Unified!\n"
+            console.log("Selected folder:", fileShufflerDialog.folder)
+            var output = fileShufflerGui.run_file_shuffler_program(fileShufflerDialog.folder)
+            fileShufflerView.runLog += output + "\n"
+            fileShufflerView.ranShuffle = true
         }
 
         onRejected: {
@@ -149,18 +289,34 @@ Rectangle {
         }
     }
 
+    // Unify Thoughts
+    FolderDialog {
+        id: unifyThoughtsDialog
+        folder: "file:///"
+
+        onAccepted: {
+            console.log("Selected folder:", unifyThoughtsDialog.folder)
+            var output = fileShufflerGui.unify_thoughts(unifyThoughtsDialog.folder)
+            fileShufflerView.unifyLog += output + "\nThoughts Unified!\n"
+            fileShufflerView.unifiedThoughts = true
+        }
+
+        onRejected: {
+            console.log("Folder dialog canceled")
+        }
+    }
+
+    // Remove 8 Channel Data
     FolderDialog {
         id: remove8channelDialog
         folder: "file:///"
 
         onAccepted: {
             console.log("Selected folder:", remove8channelDialog.folder)
-            fileShufflerGui.outputBoxText = "Running 8 Channel Data Remover...\n"
             var output = fileShufflerGui.remove_8_channel(remove8channelDialog.folder)
-            fileShufflerView.outputBoxText += output
+            fileShufflerView.removeLog += output + "\n8 Channel Data Files Removed!\n"
             fileShufflerView.unifiedThoughts = false
             fileShufflerView.ranShuffle = false
-            fileShufflerView.outputBoxText += "\n8 Channel Data Files Removed!\n"
         }
 
         onRejected: {
