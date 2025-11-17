@@ -28,7 +28,7 @@ ApplicationWindow {
                 // this tab shows page index 0
                 property int targetIndex: 0
 
-                text: "Brainwave Reading"
+                text: "Read Brain"
                 font.bold: true
                 onClicked: stackLayout.currentIndex = targetIndex
 
