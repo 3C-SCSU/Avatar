@@ -11,6 +11,7 @@ import random
 import threading
 import re
 import pandas as pd
+import torch
 import time
 import io
 import urllib.parse
@@ -257,6 +258,11 @@ class BrainwavesBackend(QObject):
                 prediction = self.run_random_forest_pytorch()
             else:
                 prediction = self.run_random_forest_tensorflow()
+        elif self.current_model == "GaussianNB":
+            if self.current_framework == "PyTorch":
+                prediction = self.run_gaussiannb_pytorch()
+            else:
+                prediction = self.run_gaussiannb_tensorflow()
         else:  # Deep Learning
             if self.current_framework == "PyTorch":
                 prediction = self.run_deep_learning_pytorch()
@@ -333,7 +339,56 @@ class BrainwavesBackend(QObject):
         except Exception as e:
             print(f"Error with TensorFlow Deep Learning: {e}")
             return "forward"
-
+    def run_gaussiannb_pytorch(self):
+        """ GaussianNB model processing with PyTorch backend """
+        print("Running GaussianNB Model with PyTorch...")
+        try:
+            # Import the GaussianNB model
+            import sys
+            import os
+            sys.path.append(os.path.join(os.path.dirname(__file__), 'prediction-gaussiannb', 'pytorch'))
+            from gaussiannb_model import GaussianNB
+            
+            # Try to load trained model
+            model_path = os.path.join(os.path.dirname(__file__), 'prediction-gaussiannb', 'pytorch', 'gaussiannb_trained.pth')
+            
+            if os.path.exists(model_path):
+                # Load the trained model
+                checkpoint = torch.load(model_path)
+                model = GaussianNB(
+                    num_features=checkpoint['num_features'],
+                    num_classes=checkpoint['num_classes']
+                )
+                model.load_state_dict(checkpoint['model_state_dict'])
+                
+                # Get prediction from BCI connection
+                if hasattr(self, 'bcicon'):
+                    prediction_response = self.bcicon.bciConnectionController()
+                    if prediction_response:
+                        return prediction_response.get('prediction_label', 'forward')
+                
+                # Fallback
+                return random.choice(["forward", "backward", "left", "right", "takeoff", "land"])
+            else:
+                print(f"GaussianNB model not found at {model_path}. Using simulation.")
+                return random.choice(["forward", "backward", "left", "right", "takeoff", "land"])
+                
+        except Exception as e:
+            print(f"Error with PyTorch GaussianNB: {e}")
+            return random.choice(["forward", "backward", "left", "right", "takeoff", "land"])
+    
+    def run_gaussiannb_tensorflow(self):
+        """ GaussianNB model processing with TensorFlow backend """
+        print("Running GaussianNB Model with TensorFlow...")
+        try:
+            # Note: GaussianNB with TensorFlow is not implemented yet
+            # For now, fallback to simulation
+            print("TensorFlow backend for GaussianNB not implemented. Using simulation.")
+            time.sleep(1)
+            return random.choice(["forward", "backward", "left", "right", "takeoff", "land"])
+        except Exception as e:
+            print(f"Error with TensorFlow GaussianNB: {e}")
+            return "forward"
     @Slot(str)
     def notWhatIWasThinking(self, manual_action):
         # Handle manual action input
