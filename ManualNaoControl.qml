@@ -1,3 +1,20 @@
+** File Name: ManualNaoControl.qml
+** { Copyright: © 2025 Avatar BCI -- All rights reserved.
+** ---------------------- [Cloud Computing Club;
+** ---------------------- Brain Computer Interface Lab;
+** ---------------------- CIDS / SCSU.] }
+** Author: For the complete list of contributors, please refer to
+** ---------------------- specific code file in the project's
+** ---------------------- GitHub history and the UI Tab: [Developers] containing the 
+** ---------------------- automatically updated complete list of authors.
+** Description: 
+** This QML file implements the Manual NAO Control tab, providing a user interface
+** for controlling the NAO robot. It includes a 3D viewer of the NAO model  and 
+** a connection panel with configurable IP and Port settings.
+** a connection panel with configurable IP and Port settings.
+** MIT License
+ -----------------------------------------------------*/
+
 import QtQuick.Dialogs
 import Qt.labs.platform
 import QtQuick 6.5
