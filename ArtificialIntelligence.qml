@@ -336,8 +336,7 @@ Rectangle {
 
                     Rectangle {
                         Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        Layout.preferredHeight: Math.min(root.height * 0.25, 200)
+                        Layout.preferredHeight: Math.min(root.height * 0.32, 260)  // Match Success Rate height
                         color: "white"
                         radius: 6
                         border.color: "#d0d6df"
@@ -345,7 +344,8 @@ Rectangle {
                         ScrollView {
                             anchors.fill: parent
                             anchors.margins: 8
-                            ScrollBar.vertical.policy: ScrollBar.AlwaysOn
+                            clip: true  // Important: prevents content overflow
+                            ScrollBar.vertical.policy: ScrollBar.AsNeeded  // Changed from AlwaysOn
 
                             TextArea {
                                 id: consoleLog
@@ -355,7 +355,7 @@ Rectangle {
                                 color: "black"
                                 font.pixelSize: 10
                                 background: Rectangle {
-                                    color: "white"
+                                    color: "transparent"  // Changed from "white"
                                 }
                             }
                         }
