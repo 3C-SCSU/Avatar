@@ -1,4 +1,4 @@
-** File Name: ManualNaoControl.qml
+/** File Name: ManualNaoControl.qml
 ** { Copyright: © 2025 Avatar BCI -- All rights reserved.
 ** ---------------------- [Cloud Computing Club;
 ** ---------------------- Brain Computer Interface Lab;
