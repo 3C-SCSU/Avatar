@@ -5,7 +5,7 @@ import QtQuick.Window 2.15
 import QtQuick3D 6.7
 import QtQuick.Dialogs
 import Qt.labs.platform
-import "GUI5_ManualDroneControl/cameraview"
+import "cameraview"
 
 // Manual Drone Control Tab view
 Rectangle {
@@ -351,44 +351,181 @@ Rectangle {
                         }
                     }
                 }
-
-                // Back Button
+                // Back Button Row with Flip Buttons
                 Rectangle {
                     width: parent.width
                     height: parent.height * 0.18
                     anchors.top: parent.top
                     anchors.topMargin: parent.height * 0.6
                     color: "transparent"
-
-                    Rectangle {
+                    
+                    Row {
                         width: parent.width
                         height: parent.height
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        color: "#242c4d"
-                        border.color: "black"
-
-                        Image {
-                            source: "GUI_Pics/back.png"
-                            width: 150
-                            height: 150
-                            anchors.centerIn: parent
+                        spacing: parent.width * 0.0165
+                // Flip Forward Button
+                        Rectangle {
+                            width: (parent.width - parent.spacing * 4) / 5
+                            height: parent.height
+                            color: "#242c4d"
+                            border.color: "black"
+                            
+                            Text {
+                                text: "↻"
+                                font.bold: true
+                                color: "#76ff03"
+                                font.pixelSize: 80
+                                anchors.centerIn: parent
+                                anchors.verticalCenterOffset: -15
+                            }
+                            
+                            Text {
+                                text: "Flip Forward"
+                                font.bold: true
+                                color: "white"
+                                font.pixelSize: 11
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.bottom: parent.bottom
+                                anchors.bottomMargin: 5
+                            }
+                            
+                            MouseArea {
+                                anchors.fill: parent
+                                onEntered: parent.color = "white"
+                                onExited: parent.color = "#242c4d"
+                                onClicked: backend.doDroneTAction("flip_forward")
+                            }
                         }
-
-                        Text {
-                            text: "Back"
-                            font.bold: true
-                            color: "white"
-                            font.pixelSize: parent.width * 0.01
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 10
+                        
+                        // Flip Back Button
+                        Rectangle {
+                            width: (parent.width - parent.spacing * 4) / 5
+                            height: parent.height
+                            color: "#242c4d"
+                            border.color: "black"
+                            
+                            Text {
+                                text: "↺"
+                                font.bold: true
+                                color: "#76ff03"
+                                font.pixelSize: 80
+                                anchors.centerIn: parent
+                                anchors.verticalCenterOffset: -15
+                            }
+                            
+                            Text {
+                                text: "Flip Back"
+                                font.bold: true
+                                color: "white"
+                                font.pixelSize: 11
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.bottom: parent.bottom
+                                anchors.bottomMargin: 5
+                            }
+                            
+                            MouseArea {
+                                anchors.fill: parent
+                                onEntered: parent.color = "white"
+                                onExited: parent.color = "#242c4d"
+                                onClicked: backend.doDroneTAction("flip_back")
+                            }
                         }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onEntered: parent.color = "white"
-                            onExited: parent.color = "#242c4d"
-                            onClicked: backend.doDroneTAction("backward")
+                        
+                        // Back Button (Center)
+                        Rectangle {
+                            width: (parent.width - parent.spacing * 4) / 5
+                            height: parent.height
+                            color: "#242c4d"
+                            border.color: "black"
+                            Image {
+                                source: "GUI_Pics/back.png"
+                                width: 100
+                                height: 100
+                                anchors.centerIn: parent
+                            }
+                            Text {
+                                text: "Back"
+                                font.bold: true
+                                color: "white"
+                                font.pixelSize: 11
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.bottom: parent.bottom
+                                anchors.bottomMargin: 5
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                onEntered: parent.color = "white"
+                                onExited: parent.color = "#242c4d"
+                                onClicked: backend.doDroneTAction("backward")
+                            }
+                        }
+                        
+                        // Flip Left Button
+                        Rectangle {
+                            width: (parent.width - parent.spacing * 4) / 5
+                            height: parent.height
+                            color: "#242c4d"
+                            border.color: "black"
+                            
+                            Text {
+                                text: "⟲"
+                                font.bold: true
+                                color: "#76ff03"
+                                font.pixelSize: 150
+                                anchors.centerIn: parent
+                                anchors.verticalCenterOffset: -15
+                            }
+                            
+                            Text {
+                                text: "Flip Left"
+                                font.bold: true
+                                color: "white"
+                                font.pixelSize: 11
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.bottom: parent.bottom
+                                anchors.bottomMargin: 5
+                            }
+                            
+                            MouseArea {
+                                anchors.fill: parent
+                                onEntered: parent.color = "white"
+                                onExited: parent.color = "#242c4d"
+                                onClicked: backend.doDroneTAction("flip_left")
+                            }
+                        }
+                        
+                        // Flip Right Button
+                        Rectangle {
+                            width: (parent.width - parent.spacing * 4) / 5
+                            height: parent.height
+                            color: "#242c4d"
+                            border.color: "black"
+                            
+                            Text {
+                                text: "⟳"
+                                font.bold: true
+                                color: "#76ff03"
+                                font.pixelSize: 150
+                                anchors.centerIn: parent
+                                anchors.verticalCenterOffset: -15
+                            }
+                            
+                            Text {
+                                text: "Flip Right"
+                                font.bold: true
+                                color: "white"
+                                font.pixelSize: 11
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.bottom: parent.bottom
+                                anchors.bottomMargin: 5
+                            }
+                            
+                            MouseArea {
+                                anchors.fill: parent
+                                onEntered: parent.color = "white"
+                                onExited: parent.color = "#242c4d"
+                                onClicked: backend.doDroneTAction("flip_right")
+                            }
                         }
                     }
                 }
