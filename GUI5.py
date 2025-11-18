@@ -205,6 +205,7 @@ class BrainwavesBackend(QObject):
 
     def __init__(self):
         super().__init__()
+        self.drone_position = [0, 0, 0]  # x, y, z in cm; origin is home
         self.flight_log = []  # List to store flight log entries
         self.predictions_log = []  # List to store prediction records
         self.current_prediction_label = ""
@@ -454,26 +455,32 @@ class BrainwavesBackend(QObject):
 
                 if action == 'up':
                     self.tello.move_up(30)
+                    self.drone_position[2] += 30
                     self.logMessage.emit("Moving up")
                     self.flight_log.insert(0, "Moving up 30cm")
                 elif action == 'down':
                     self.tello.move_down(30)
                     self.logMessage.emit("Moving down")
+                    self.drone_position[2] -= 30
                     self.flight_log.insert(0, "Moving down 30cm")
                 elif action == 'forward':
                     self.tello.move_forward(30)
+                    self.drone_position[0] += 30
                     self.logMessage.emit("Moving forward")
                     self.flight_log.insert(0, "Moving forward 30cm")
                 elif action == 'backward':
                     self.tello.move_back(30)
+                    self.drone_position[0] -= 30
                     self.logMessage.emit("Moving backward")
                     self.flight_log.insert(0, "Moving backward 30cm")
                 elif action == 'left':
                     self.tello.move_left(30)
+                    self.drone_position[1] += 30
                     self.logMessage.emit("Moving left")
                     self.flight_log.insert(0, "Moving left 30cm")
                 elif action == 'right':
                     self.tello.move_right(30)
+                    self.drone_position[1] -= 30
                     self.logMessage.emit("Moving right")
                     self.flight_log.insert(0, "Moving right 30cm")
                 elif action == 'turn_left':
@@ -535,12 +542,45 @@ class BrainwavesBackend(QObject):
                 if "Tello" in str(e) or "timeout" in str(e).lower():
                     self.connected = False
 
-    # Method for returning to home (an approximation)
     def go_home(self):
-        # Assuming the home action means moving backward and upwards
-        self.tello.move_back(50)  # Move back to home point (adjust distance as needed)
-        self.tello.move_up(50)  # Move up to avoid obstacles
-        self.logMessage.emit("Returning to home")
+        try:
+            x, y, z = self.drone_position  # current relative position
+
+            # Step 1: Ascend if needed to avoid obstacles
+            if z < 50:  # maintain at least 50cm above ground
+                self.tello.move_up(50 - z)
+                self.flight_log.insert(0, f"Ascending to safe height: {50}cm")
+                z = 50
+
+            # Step 2: Move in x direction (forward/back)
+            if x > 0:
+                self.tello.move_back(x)
+            elif x < 0:
+                self.tello.move_forward(-x)
+
+            # Step 3: Move in y direction (left/right)
+            if y > 0:
+                self.tello.move_right(y)
+            elif y < 0:
+                self.tello.move_left(-y)
+
+            # Step 4: Land safely
+            if z > 0:
+                self.tello.land()
+                self.flight_log.insert(0, "Drone landed at home")
+
+            # Reset drone position
+            self.drone_position = [0, 0, 0]
+
+            self.logMessage.emit("Drone returned to home position.")
+            self.flightLogUpdated.emit(self.flight_log)
+
+        except Exception as e:
+            error_msg = f"Error during go_home: {str(e)}"
+            self.logMessage.emit(error_msg)
+            self.flight_log.insert(0, error_msg)
+            self.flightLogUpdated.emit(self.flight_log)
+
 
     @Slot()
     def check_plots_exist(self):
