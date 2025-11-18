@@ -1,13 +1,22 @@
-import QtQuick 6.5
-import QtQuick.Controls 6.4
-import QtQuick.Layouts 1.15
+import QtQuick 6.5 
+import QtQuick.Controls 6.4 
+import QtQuick.Layouts 1.15 
 
 Rectangle {
     id: root
     color: "#718399"
     Layout.fillWidth: true
     Layout.fillHeight: true
-
+    // Function to log messages to console
+    function logToConsole(message) {
+        var timestamp = Qt.formatDateTime(new Date(), "dddd, MMMM d, yyyy h:mm:ss AP")
+        var logMessage = message + " at " + timestamp
+        if (consoleLog.text === "Console output will appear here...") {
+            consoleLog.text = logMessage
+        } else {
+            consoleLog.text = consoleLog.text + "\n" + logMessage
+        }
+    }
     // Mode and model selection
     property string mode: "Deploy"            // "Deploy" (default) | "Train"
     property string currentModel: "Random Forest"   // "Random Forest" | "Deep Learning"
@@ -85,7 +94,7 @@ Rectangle {
                             Text {
                                 anchors.centerIn: parent
                                 text: "Random Forest"
-                                color: "white"
+                                color: currentModel === "Random Forest" ? "yellow" : "white"
                                 font.bold: true
                                 font.pixelSize: Math.max(18, parent.height * 0.28)
                             }
@@ -94,6 +103,7 @@ Rectangle {
                                 onClicked: {
                                     currentModel = "Random Forest"
                                     backend.selectModel("Random Forest")
+                                    logToConsole("Model selected: Random Forest")
                                 }
                             }
                         }
@@ -109,7 +119,7 @@ Rectangle {
                             Text {
                                 anchors.centerIn: parent
                                 text: "Deep Learning"
-                                color: "white"
+                                color: currentModel === "Deep Learning" ? "yellow" : "white"
                                 font.bold: true
                                 font.pixelSize: Math.max(18, parent.height * 0.28)
                             }
@@ -118,6 +128,7 @@ Rectangle {
                                 onClicked: {
                                     currentModel = "Deep Learning"
                                     backend.selectModel("Deep Learning")
+                                    logToConsole("Model selected: Deep Learning")
                                 }
                             }
                         }
@@ -164,7 +175,7 @@ Rectangle {
                             Text {
                                 anchors.centerIn: parent
                                 text: "PyTorch"
-                                color: "white"
+                                color: currentFramework === "PyTorch" ? "yellow" : "white"
                                 font.bold: true
                                 font.pixelSize: Math.max(18, parent.height * 0.28)
                             }
@@ -173,6 +184,7 @@ Rectangle {
                                 onClicked: {
                                     currentFramework = "PyTorch"
                                     backend.selectFramework("PyTorch")
+                                    logToConsole("Model selected: PyTorch")
                                 }
                             }
                         }
@@ -188,7 +200,7 @@ Rectangle {
                             Text {
                                 anchors.centerIn: parent
                                 text: "TensorFlow"
-                                color: "white"
+                                color: currentFramework === "TensorFlow" ? "yellow" : "white"
                                 font.bold: true
                                 font.pixelSize: Math.max(18, parent.height * 0.28)
                             }
@@ -197,6 +209,7 @@ Rectangle {
                                 onClicked: {
                                     currentFramework = "TensorFlow"
                                     backend.selectFramework("TensorFlow")
+                                    logToConsole("Model selected: TensorFlow")
                                 }
                             }
                         }
@@ -212,7 +225,7 @@ Rectangle {
                             Text {
                                 anchors.centerIn: parent
                                 text: "JAX"
-                                color: "white"
+                                color: currentFramework === "JAX" ? "yellow" : "white"
                                 font.bold: true
                                 font.pixelSize: Math.max(18, parent.height * 0.28)
                             }
@@ -221,24 +234,30 @@ Rectangle {
                                 onClicked: {
                                     currentFramework = "JAX"
                                     backend.selectFramework("JAX")
+                                    logToConsole("Model selected: JAX")
                                 }
                             }
                         }
                     }
                 }
             }
-            // Results Log label
+                        
+            RowLayout {
+            Layout.fillWidth: true
+            spacing: 24
+            // Success Rate section
+            ColumnLayout {
+                Layout.fillWidth: true
+                spacing: 8
+            
+            
+            // Success Rate label
             Text {
-                text: "Results Log:"
+                text: "Success Rate"
                 color: "white"
                 font.bold: true
                 font.pixelSize: Math.max(18, root.height * 0.03)
             }
-
-            // Results table with side buttons (Deploy above Train)
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: 24
 
                 // Results table (unchanged content)
                 Rectangle {
@@ -302,6 +321,46 @@ Rectangle {
                         }
                     }
                 }
+            }
+                // Console Log
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 8
+                    
+                    Text {
+                        text: "Console Log"
+                        color: "white"
+                        font.bold: true
+                        font.pixelSize: Math.max(18, root.height * 0.03)
+                    }
+
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: Math.min(root.height * 0.32, 260)  // Match Success Rate height
+                        color: "white"
+                        radius: 6
+                        border.color: "#d0d6df"
+
+                        ScrollView {
+                            anchors.fill: parent
+                            anchors.margins: 8
+                            clip: true  // Important: prevents content overflow
+                            ScrollBar.vertical.policy: ScrollBar.AsNeeded  // Changed from AlwaysOn
+
+                            TextArea {
+                                id: consoleLog
+                                readOnly: true
+                                wrapMode: Text.Wrap
+                                text: "Console output here..."
+                                color: "black"
+                                font.pixelSize: 10
+                                background: Rectangle {
+                                    color: "transparent"  // Changed from "white"
+                                }
+                            }
+                        }
+                    }
+                }
                 // Vertical buttons column: Deploy (top), Train (below)
                 ColumnLayout {
                     spacing: 24
@@ -314,7 +373,10 @@ Rectangle {
                         id: deployBtn
                         checkable: true
                         checked: mode === "Deploy"
-                        onClicked: mode = "Deploy"
+                        onClicked: {
+                          mode = "Deploy"
+                          logToConsole("Mode changed: Deploy")
+                        }
                         Layout.preferredWidth: 110
                         Layout.preferredHeight: 110
                         padding: 0
@@ -343,7 +405,10 @@ Rectangle {
                         id: trainBtn
                         checkable: true
                         checked: mode === "Train"
-                        onClicked: mode = "Train"
+                        onClicked: {
+                          mode = "Train"
+                          logToConsole("Mode changed: Train")
+                        }
                         Layout.preferredWidth: 110
                         Layout.preferredHeight: 110
                         padding: 0
@@ -369,7 +434,7 @@ Rectangle {
                 }
             }
         }
-
+          
         // RIGHT PANE (Parameters – navy; visible and enabled only in Train) --
         Rectangle {
             Layout.preferredWidth: Math.max(380, root.width * 0.34)

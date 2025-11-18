@@ -2,7 +2,7 @@ import sys
 import os
 import subprocess
 from pathlib import Path
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication,QFileDialog, QMessageBox
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtCore import QObject, Signal, Slot, Property, QProcess, QUrl
 from pdf2image import convert_from_path
@@ -11,6 +11,7 @@ import random
 import threading
 import re
 import pandas as pd
+import torch
 import time
 import io
 import urllib.parse
@@ -19,7 +20,7 @@ from collections import defaultdict
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
 from predictions_local.brainflowprocessor import BrainFlowDataProcessor
 from predictions_local.deeplearningpytorchpredictor import DeeplearningPytorchPredictor
-from GUI5_ManualDroneControl.cameraview.camera_controller import CameraController
+from cameraview.camera_controller import CameraController
 from NAO6.nao_connection import send_command
 # from Developers.hofCharts import main as hofCharts, ticketsByDev_text NA
 
@@ -28,6 +29,9 @@ from Developers import devCharts
 								
 from NA06_Manual_Control import ManualNaoController
 from NA06_Manual_Control.camera_view import DroneCameraController
+
+import configparser
+from sftp import fileTransfer	
 
 # Import BCI connection for brainwave prediction
 try:
@@ -203,6 +207,7 @@ class BrainwavesBackend(QObject):
 
     def __init__(self):
         super().__init__()
+        self.drone_position = [0, 0, 0]  # x, y, z in cm; origin is home
         self.flight_log = []  # List to store flight log entries
         self.predictions_log = []  # List to store prediction records
         self.current_prediction_label = ""
@@ -213,6 +218,8 @@ class BrainwavesBackend(QObject):
         self.current_dataset = "refresh"  # Default dataset to display
         self.connected = False
         self.drone_lock = threading.Lock()
+        self.config = configparser.ConfigParser()
+        self.config.optionxform = str
         try:
             self.tello = Tello()
         except Exception as e:
@@ -259,6 +266,11 @@ class BrainwavesBackend(QObject):
                 prediction = self.run_random_forest_pytorch()
             else:
                 prediction = self.run_random_forest_tensorflow()
+        elif self.current_model == "GaussianNB":
+            if self.current_framework == "PyTorch":
+                prediction = self.run_gaussiannb_pytorch()
+            else:
+                prediction = self.run_gaussiannb_tensorflow()
         else:  # Deep Learning
             if self.current_framework == "PyTorch":
                 prediction = self.run_deep_learning_pytorch()
@@ -347,7 +359,56 @@ class BrainwavesBackend(QObject):
         except Exception as e:
             print(f"Error with TensorFlow Deep Learning: {e}")
             return "forward"
-
+    def run_gaussiannb_pytorch(self):
+        """ GaussianNB model processing with PyTorch backend """
+        print("Running GaussianNB Model with PyTorch...")
+        try:
+            # Import the GaussianNB model
+            import sys
+            import os
+            sys.path.append(os.path.join(os.path.dirname(__file__), 'prediction-gaussiannb', 'pytorch'))
+            from gaussiannb_model import GaussianNB
+            
+            # Try to load trained model
+            model_path = os.path.join(os.path.dirname(__file__), 'prediction-gaussiannb', 'pytorch', 'gaussiannb_trained.pth')
+            
+            if os.path.exists(model_path):
+                # Load the trained model
+                checkpoint = torch.load(model_path)
+                model = GaussianNB(
+                    num_features=checkpoint['num_features'],
+                    num_classes=checkpoint['num_classes']
+                )
+                model.load_state_dict(checkpoint['model_state_dict'])
+                
+                # Get prediction from BCI connection
+                if hasattr(self, 'bcicon'):
+                    prediction_response = self.bcicon.bciConnectionController()
+                    if prediction_response:
+                        return prediction_response.get('prediction_label', 'forward')
+                
+                # Fallback
+                return random.choice(["forward", "backward", "left", "right", "takeoff", "land"])
+            else:
+                print(f"GaussianNB model not found at {model_path}. Using simulation.")
+                return random.choice(["forward", "backward", "left", "right", "takeoff", "land"])
+                
+        except Exception as e:
+            print(f"Error with PyTorch GaussianNB: {e}")
+            return random.choice(["forward", "backward", "left", "right", "takeoff", "land"])
+    
+    def run_gaussiannb_tensorflow(self):
+        """ GaussianNB model processing with TensorFlow backend """
+        print("Running GaussianNB Model with TensorFlow...")
+        try:
+            # Note: GaussianNB with TensorFlow is not implemented yet
+            # For now, fallback to simulation
+            print("TensorFlow backend for GaussianNB not implemented. Using simulation.")
+            time.sleep(1)
+            return random.choice(["forward", "backward", "left", "right", "takeoff", "land"])
+        except Exception as e:
+            print(f"Error with TensorFlow GaussianNB: {e}")
+            return "forward"
     @Slot(str)
     def notWhatIWasThinking(self, manual_action):
         # Handle manual action input
@@ -408,26 +469,32 @@ class BrainwavesBackend(QObject):
 
                 if action == 'up':
                     self.tello.move_up(30)
+                    self.drone_position[2] += 30
                     self.logMessage.emit("Moving up")
                     self.flight_log.insert(0, "Moving up 30cm")
                 elif action == 'down':
                     self.tello.move_down(30)
                     self.logMessage.emit("Moving down")
+                    self.drone_position[2] -= 30
                     self.flight_log.insert(0, "Moving down 30cm")
                 elif action == 'forward':
                     self.tello.move_forward(30)
+                    self.drone_position[0] += 30
                     self.logMessage.emit("Moving forward")
                     self.flight_log.insert(0, "Moving forward 30cm")
                 elif action == 'backward':
                     self.tello.move_back(30)
+                    self.drone_position[0] -= 30
                     self.logMessage.emit("Moving backward")
                     self.flight_log.insert(0, "Moving backward 30cm")
                 elif action == 'left':
                     self.tello.move_left(30)
+                    self.drone_position[1] += 30
                     self.logMessage.emit("Moving left")
                     self.flight_log.insert(0, "Moving left 30cm")
                 elif action == 'right':
                     self.tello.move_right(30)
+                    self.drone_position[1] -= 30
                     self.logMessage.emit("Moving right")
                     self.flight_log.insert(0, "Moving right 30cm")
                 elif action == 'turn_left':
@@ -438,6 +505,22 @@ class BrainwavesBackend(QObject):
                     self.tello.rotate_clockwise(45)
                     self.logMessage.emit("Rotating right")
                     self.flight_log.insert(0, "Rotating right 45°")
+                elif action == 'flip_forward':
+                    self.tello.flip_forward()
+                    self.logMessage.emit("Flipping forward")
+                    self.flight_log.insert(0, "Flipping forward")
+                elif action == 'flip_back':
+                    self.tello.flip_back()
+                    self.logMessage.emit("Flipping backward")
+                    self.flight_log.insert(0, "Flipping backward")
+                elif action == 'flip_left':
+                    self.tello.flip_left()
+                    self.logMessage.emit("Flipping left")
+                    self.flight_log.insert(0, "Flipping left")
+                elif action == 'flip_right':
+                    self.tello.flip_right()
+                    self.logMessage.emit("Flipping right")
+                    self.flight_log.insert(0, "Flipping right")
                 elif action == 'takeoff':
                     self.tello.takeoff()
                     self.logMessage.emit("Taking off")
@@ -473,12 +556,45 @@ class BrainwavesBackend(QObject):
                 if "Tello" in str(e) or "timeout" in str(e).lower():
                     self.connected = False
 
-    # Method for returning to home (an approximation)
     def go_home(self):
-        # Assuming the home action means moving backward and upwards
-        self.tello.move_back(50)  # Move back to home point (adjust distance as needed)
-        self.tello.move_up(50)  # Move up to avoid obstacles
-        self.logMessage.emit("Returning to home")
+        try:
+            x, y, z = self.drone_position  # current relative position
+
+            # Step 1: Ascend if needed to avoid obstacles
+            if z < 50:  # maintain at least 50cm above ground
+                self.tello.move_up(50 - z)
+                self.flight_log.insert(0, f"Ascending to safe height: {50}cm")
+                z = 50
+
+            # Step 2: Move in x direction (forward/back)
+            if x > 0:
+                self.tello.move_back(x)
+            elif x < 0:
+                self.tello.move_forward(-x)
+
+            # Step 3: Move in y direction (left/right)
+            if y > 0:
+                self.tello.move_right(y)
+            elif y < 0:
+                self.tello.move_left(-y)
+
+            # Step 4: Land safely
+            if z > 0:
+                self.tello.land()
+                self.flight_log.insert(0, "Drone landed at home")
+
+            # Reset drone position
+            self.drone_position = [0, 0, 0]
+
+            self.logMessage.emit("Drone returned to home position.")
+            self.flightLogUpdated.emit(self.flight_log)
+
+        except Exception as e:
+            error_msg = f"Error during go_home: {str(e)}"
+            self.logMessage.emit(error_msg)
+            self.flight_log.insert(0, error_msg)
+            self.flightLogUpdated.emit(self.flight_log)
+
 
     @Slot()
     def check_plots_exist(self):
@@ -723,7 +839,116 @@ class BrainwavesBackend(QObject):
         self.board = BoardShim(BoardIds.CYTON_DAISY_BOARD.value, params)
         print("\nLive headset board initialized.")
 
+    # Start of change : Added Cloud Computing (Transfer Data) functionality 
+    @Slot()
+    def browse_private_key_dir(self):
+        file_dialog = QFileDialog()
+        file_dialog.setFileMode(QFileDialog.FileMode.Directory)
+        file_dialog.setViewMode(QFileDialog.ViewMode.List)
+        if file_dialog.exec():
+            file_paths = file_dialog.selectedFiles()
+            if file_paths:
+                self.root_object.findChild(QObject, "privateKeyDirInput").setProperty("text", file_paths[0])
 
+    @Slot()
+    def browse_source_dir(self):
+        file_dialog = QFileDialog()
+        file_dialog.setFileMode(QFileDialog.FileMode.Directory)
+        file_dialog.setViewMode(QFileDialog.ViewMode.List)
+        if file_dialog.exec():
+            file_paths = file_dialog.selectedFiles()
+            if file_paths:
+                self.root_object.findChild(QObject, "sourceDirInput").setProperty("text", file_paths[0])
+
+    @Slot()
+    def browse_target_dir(self):
+        file_dialog = QFileDialog()
+        file_dialog.setFileMode(QFileDialog.FileMode.Directory)
+        file_dialog.setViewMode(QFileDialog.ViewMode.List)
+        if file_dialog.exec():
+            file_paths = file_dialog.selectedFiles()
+            if file_paths:
+                self.root_object.findChild(QObject, "targetDirInput").setProperty("text", file_paths[0])
+
+    @Slot()
+    def save_config(self):
+        selected_file, _ = QFileDialog.getSaveFileName(
+            None,
+            "Save config file",
+            "",
+            "INI Files (*.ini)"
+        )
+
+        if selected_file:
+            if not selected_file.endswith(".ini"):
+                selected_file += ".ini"
+
+            with open(selected_file, 'w') as configfile:
+                self.config['data'] = {
+                    "-HOST-": self.root_object.findChild(QObject, "hostInput").property("text"),
+                    "-USERNAME-": self.root_object.findChild(QObject, "usernameInput").property("text"),
+                    "-PRIVATE_KEY-": self.root_object.findChild(QObject, "privateKeyDirInput").property("text"),
+                    "-IGNORE_HOST_KEY-": self.root_object.findChild(QObject, "ignoreHostKeyCheckbox").property("checked"),
+                    "-SOURCE-": self.root_object.findChild(QObject, "sourceDirInput").property("text"),
+                    "-TARGET-": self.root_object.findChild(QObject, "targetDirInput").property("text"),
+                }
+                self.config.write(configfile)
+
+    @Slot()
+    def load_config(self):
+        selected_file, _ = QFileDialog.getOpenFileName(
+            None,
+            "Load config file",
+            "",
+            "INI Files (*.ini)"
+        )
+
+        try:
+            if selected_file:
+                self.config.read(selected_file)
+
+                self.root_object.findChild(QObject, "hostInput").setProperty("text", self.config["data"]["-HOST-"])
+                self.root_object.findChild(QObject, "usernameInput").setProperty("text", self.config["data"]["-USERNAME-"])
+                self.root_object.findChild(QObject, "privateKeyDirInput").setProperty("text", self.config["data"]["-PRIVATE_KEY-"])
+                self.root_object.findChild(QObject, "ignoreHostKeyCheckbox").setProperty("checked", self.config["data"]["-IGNORE_HOST_KEY-"].lower() in ("true"))
+                self.root_object.findChild(QObject, "sourceDirInput").setProperty("text", self.config["data"]["-SOURCE-"])
+                self.root_object.findChild(QObject, "targetDirInput").setProperty("text", self.config["data"]["-TARGET-"])
+
+        except Exception as e:
+            QMessageBox.critical(None, "Loading failed", "Error: " + str(e))
+
+    @Slot()
+    def clear_config(self):
+        self.root_object.findChild(QObject, "hostInput").setProperty("text", "")
+        self.root_object.findChild(QObject, "usernameInput").setProperty("text", "")
+        self.root_object.findChild(QObject, "privateKeyDirInput").setProperty("text", "")
+        self.root_object.findChild(QObject, "ignoreHostKeyCheckbox").setProperty("checked", True)  # Reset checkbox to checked
+        self.root_object.findChild(QObject, "sourceDirInput").setProperty("text", "")
+        self.root_object.findChild(QObject, "targetDirInput").setProperty("text", "/home/")  # Reset to default
+
+    @Slot()
+    def upload(self):
+        try:
+            svrcon = fileTransfer(
+                self.root_object.findChild(QObject, "hostInput").property("text"),
+                self.root_object.findChild(QObject, "usernameInput").property("text"),
+                self.root_object.findChild(QObject, "privateKeyDirInput").property("text"),
+                self.root_object.findChild(QObject, "passwordInput").property("text"),
+                self.root_object.findChild(QObject, "ignoreHostKeyCheckbox").property("checked")
+            )
+            source_dir = self.root_object.findChild(QObject, "sourceDirInput").property("text")
+            target_dir = self.root_object.findChild(QObject, "targetDirInput").property("text")
+
+            if source_dir and target_dir:
+                svrcon.transfer(source_dir, target_dir)
+                QMessageBox.information(None, "Upload complete")
+            else:
+                QMessageBox.critical(None, "Upload failed", "Please ensure that all fields have been filled!")
+
+        except Exception as e:
+            QMessageBox.critical(None, "Upload failed", "Please ensure that your inputs are correct and that the server is running\n\nERROR:\n" + str(e))
+
+    # End of change : Added Cloud Computing (Transfer Data) functionality 
 
 
 if __name__ == "__main__":
@@ -756,6 +981,25 @@ if __name__ == "__main__":
 
     engine.load(str(qml_file))
 
+    # Start of change : Added Cloud Computing (Transfer Data) functionality 
+
+    if engine.rootObjects():
+        backend.root_object = engine.rootObjects()[0]
+
+        # ✅ connect QML button clicks to backend slots
+        backend.root_object.findChild(QObject, "saveConfigButton").clicked.connect(backend.save_config)
+        backend.root_object.findChild(QObject, "loadConfigButton").clicked.connect(backend.load_config)
+        backend.root_object.findChild(QObject, "clearConfigButton").clicked.connect(backend.clear_config)
+        backend.root_object.findChild(QObject, "uploadButton").clicked.connect(backend.upload)
+        backend.root_object.findChild(QObject, "privateKeyDirButton").clicked.connect(backend.browse_private_key_dir)
+        backend.root_object.findChild(QObject, "sourceDirButton").clicked.connect(backend.browse_source_dir)
+        backend.root_object.findChild(QObject, "targetDirButton").clicked.connect(backend.browse_target_dir)
+    else:
+        print("Error: QML not loaded properly.")
+
+    # End of change : Added Cloud Computing (Transfer Data) functionality 
+
+
     # Convert PDFs after engine load
     try:
         backend.convert_pdfs_to_images()
@@ -766,7 +1010,6 @@ if __name__ == "__main__":
     backend.imagesReady.connect(lambda images: engine.rootContext().setContextProperty("imageModel", images))
 
     sys.exit(app.exec())
-
 
 
 
