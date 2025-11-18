@@ -5,7 +5,7 @@ import QtQuick.Window 2.15
 import QtQuick3D 6.7
 import QtQuick.Dialogs
 import Qt.labs.platform
-import "GUI5_ManualDroneControl/cameraview"
+import "cameraview"
 
 // Manual Drone Control Tab view
 Rectangle {
