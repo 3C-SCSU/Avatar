@@ -314,7 +314,9 @@ Rectangle {
                         width: (parent.width - parent.spacing * 2) / 3
                         height: parent.height
                         color: "#6eb109"
-                        radius: 5
+			radius: 5
+			border.color: selectedModel === "Random Forest" ? "yellow" : "#5a8c2b"
+   			border.width: selectedModel === "Random Forest" ? 3 : 1
                         Text {
                             text: "Random\nForest"
                             font.pixelSize: parent.width * 0.12
@@ -337,8 +339,11 @@ Rectangle {
                         width: (parent.width - parent.spacing * 2) / 3
                         height: parent.height
                         color: "#6eb109"
-                        radius: 5
-                        Text {
+			radius: 5
+			border.color: selectedModel === "GaussianNB" ? "yellow" : "#5a8c2b"
+   	 		border.width: selectedModel === "GaussianNB" ? 3 : 1
+			
+			Text {
                             text: "GaussianNB"
                             font.pixelSize: parent.width * 0.12
                             font.bold: true
@@ -360,7 +365,9 @@ Rectangle {
                         width: (parent.width - parent.spacing * 2) / 3
                         height: parent.height
                         color: "#6eb109"
-                        radius: 5
+			radius: 5
+			border.color: selectedModel === "Deep Learning" ? "yellow" : "#5a8c2b"
+    			border.width: selectedModel === "Deep Learning" ? 3 : 1
                         Text {
                             text: "Deep\nLearning"
                             font.pixelSize: parent.width * 0.12
@@ -432,7 +439,8 @@ Rectangle {
                         height: parent.height
                         color: "#6eb109"
                         radius: 5
-
+			border.color: isPyTorchSelected ? "yellow" : "#5a8c2b"
+        		border.width: isPyTorchSelected ? 3 : 1
                         Text {
                             text: "PyTorch"
                             font.pixelSize: parent.width * 0.08
@@ -456,7 +464,8 @@ Rectangle {
                         height: parent.height
                         color: "#6eb109"
                         radius: 5
-
+			border.color: !isPyTorchSelected ? "yellow" : "#5a8c2b"
+        		border.width: !isPyTorchSelected ? 3 : 1
                         Text {
                             text: "TensorFlow"
                             font.pixelSize: parent.width * 0.08
