@@ -1,0 +1,29 @@
+[
+  {
+    "framework": "JAX",
+    "device": "cpu",
+    "total_train_time": 1.086799144744873,
+    "avg_epoch_time": 0.21478800773620604,
+    "accuracy": 18.5,
+    "avg_inference_time": 1.5636610984802246,
+    "epochs": 5
+  },
+  {
+    "framework": "PyTorch",
+    "device": "cpu",
+    "total_train_time": 0.6267697811126709,
+    "avg_epoch_time": 0.12531986236572265,
+    "accuracy": 18.0,
+    "avg_inference_time": 1.781599862234933,
+    "epochs": 5
+  },
+  {
+    "framework": "TensorFlow",
+    "device": "cpu",
+    "total_train_time": 0.8536350727081299,
+    "avg_epoch_time": 0.17072701454162598,
+    "accuracy": 18.99999976158142,
+    "avg_inference_time": 20.954983234405518,
+    "epochs": 5
+  }
+]
