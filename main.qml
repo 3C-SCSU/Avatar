@@ -127,14 +127,14 @@ ApplicationWindow {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            BrainwaveReading        { Layout.fillWidth: true; Layout.fillHeight: true } // index 0
-            BrainwaveVisualization  { Layout.fillWidth: true; Layout.fillHeight: true } // index 1
-            ManualDroneControl      { Layout.fillWidth: true; Layout.fillHeight: true } // index 2
-            ManualNaoControl        { Layout.fillWidth: true; Layout.fillHeight: true } // index 3
-            FileShuffler            { Layout.fillWidth: true; Layout.fillHeight: true } // index 4
-            TransferData            { Layout.fillWidth: true; Layout.fillHeight: true } // index 5
-            Developers              { Layout.fillWidth: true; Layout.fillHeight: true } // index 6
-            ArtificialIntelligence  { Layout.fillWidth: true; Layout.fillHeight: true } // index 7
+            BrainwaveReading { Layout.fillWidth: true; Layout.fillHeight: true }
+            BrainwaveVisualization { Layout.fillWidth: true; Layout.fillHeight: true }
+            ManualDroneControl { Layout.fillWidth: true; Layout.fillHeight: true }
+            ManualNaoControl { Layout.fillWidth: true; Layout.fillHeight: true }
+            FileShuffler { Layout.fillWidth: true; Layout.fillHeight: true }
+            CloudComputing { Layout.fillWidth: true; Layout.fillHeight: true } // Renamed Transfer Data to Cloud Computing 
+            Developers { Layout.fillWidth: true; Layout.fillHeight: true }
+            ArtificialIntelligence { Layout.fillWidth: true; Layout.fillHeight: true }
         }
 
         // ===== BOTTOM TAB BAR =====
@@ -191,7 +191,7 @@ ApplicationWindow {
             TabButton {
                 property int targetIndex: 5
 
-                text: "Transfer Data"
+                text: "Cloud Computing" // Renamed Transfer Data to Cloud Computing 
                 font.bold: true
                 onClicked: stackLayout.currentIndex = targetIndex
 
