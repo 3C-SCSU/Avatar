@@ -179,7 +179,7 @@ Rectangle {
 
                 Button {
                     id: executeBtn
-                    text: "Execute"
+                    text: "Action"
                     font.pixelSize: parent.width * 0.03
                     width: parent.width * 0.5
                     height: parent.height
@@ -219,7 +219,7 @@ Rectangle {
                     }
 
                     contentItem: Text {
-                        text: qsTr("Keep Drone Alive")
+                        text: qsTr("Run")
                         color: "white"
                         font.pixelSize: parent.height * 0.5
                         horizontalAlignment: Text.AlignHCenter
