@@ -31,6 +31,10 @@ Rectangle {
     property bool isTrainMode: false
     property bool isDeployMode: true
     
+    // Model selection properties (matching Brainwave Reading tab style)
+    property bool isRandomForestSelected: false
+    property bool isDeepLearningSelected: true  // Default to Deep Learning
+    
     // Status messages from backend
     property string trainingStatus: ""
     property string deploymentStatus: ""
@@ -52,6 +56,72 @@ Rectangle {
             font.bold: true
             font.pixelSize: 32
             Layout.alignment: Qt.AlignHCenter
+        }
+
+        // Model Selection Buttons: Random Forest and Deep Learning
+        // These buttons allow users to choose which ML model to train/deploy
+        // Same style as Brainwave Reading tab
+        Row {
+            Layout.alignment: Qt.AlignHCenter
+            spacing: 20
+            
+            // Random Forest Button
+            Rectangle {
+                width: 150
+                height: 50
+                color: "#6eb109"
+                radius: 5
+                
+                Text {
+                    text: "Random Forest"
+                    font.pixelSize: 16
+                    font.bold: true
+                    // Text color changes to yellow when selected, white when not
+                    color: isRandomForestSelected ? "yellow" : "white"
+                    anchors.centerIn: parent
+                }
+                
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        isRandomForestSelected = true
+                        isDeepLearningSelected = false
+                        // Call backend to notify model selection
+                        if (typeof backend !== 'undefined' && backend.selectModel) {
+                            backend.selectModel("Random Forest")
+                        }
+                    }
+                }
+            }
+            
+            // Deep Learning Button
+            Rectangle {
+                width: 150
+                height: 50
+                color: "#6eb109"
+                radius: 5
+                
+                Text {
+                    text: "Deep Learning"
+                    font.pixelSize: 16
+                    font.bold: true
+                    // Text color changes to yellow when selected, white when not
+                    color: isDeepLearningSelected ? "yellow" : "white"
+                    anchors.centerIn: parent
+                }
+                
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        isDeepLearningSelected = true
+                        isRandomForestSelected = false
+                        // Call backend to notify model selection
+                        if (typeof backend !== 'undefined' && backend.selectModel) {
+                            backend.selectModel("Deep Learning")
+                        }
+                    }
+                }
+            }
         }
 
         // Toggle Buttons: Train and Deploy
