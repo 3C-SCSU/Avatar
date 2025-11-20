@@ -291,83 +291,306 @@ Rectangle {
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    // Learning Rate: Controls how fast the model learns during training
-                    // Lower values = slower but more stable learning
-                    RowLayout {
+                    // DEEP LEARNING PARAMETERS
+                    // These parameters are shown when Deep Learning model is selected
+                    ColumnLayout {
+                        id: deepLearningParams
+                        visible: isDeepLearningSelected
                         Layout.fillWidth: true
                         spacing: 10
 
-                        Text {
-                            text: "Learning Rate:"
-                            color: "white"
-                            font.pixelSize: 14
-                            Layout.preferredWidth: 150
+                        // Learning Rate: Controls how fast the model learns during training
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 10
+
+                            Text {
+                                text: "Learning Rate:"
+                                color: "white"
+                                font.pixelSize: 14
+                                Layout.preferredWidth: 150
+                            }
+
+                            TextField {
+                                id: learningRateField
+                                Layout.fillWidth: true
+                                placeholderText: "e.g., 0.001"
+                            }
                         }
 
-                        TextField {
-                            id: learningRateField
+                        // Epochs: Number of complete passes through the training dataset
+                        RowLayout {
                             Layout.fillWidth: true
-                            placeholderText: "e.g., 0.001"
+                            spacing: 10
+
+                            Text {
+                                text: "Epochs:"
+                                color: "white"
+                                font.pixelSize: 14
+                                Layout.preferredWidth: 150
+                            }
+
+                            TextField {
+                                id: epochsField
+                                Layout.fillWidth: true
+                                placeholderText: "e.g., 100"
+                            }
+                        }
+
+                        // Batch Size: Number of samples processed before updating model weights
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 10
+
+                            Text {
+                                text: "Batch Size:"
+                                color: "white"
+                                font.pixelSize: 14
+                                Layout.preferredWidth: 150
+                            }
+
+                            TextField {
+                                id: batchSizeField
+                                Layout.fillWidth: true
+                                placeholderText: "e.g., 32"
+                            }
+                        }
+
+                        // Model Architecture: Type of neural network to train
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 10
+
+                            Text {
+                                text: "Model Architecture:"
+                                color: "white"
+                                font.pixelSize: 14
+                                Layout.preferredWidth: 150
+                            }
+
+                            TextField {
+                                id: modelArchField
+                                Layout.fillWidth: true
+                                placeholderText: "e.g., CNN, LSTM, MLP"
+                            }
+                        }
+
+                        // Optimizer: Algorithm used to update model weights
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 10
+
+                            Text {
+                                text: "Optimizer:"
+                                color: "white"
+                                font.pixelSize: 14
+                                Layout.preferredWidth: 150
+                            }
+
+                            TextField {
+                                id: optimizerField
+                                Layout.fillWidth: true
+                                placeholderText: "e.g., Adam, SGD"
+                            }
+                        }
+
+                        // Activation Function: Non-linearity applied to neurons
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 10
+
+                            Text {
+                                text: "Activation Function:"
+                                color: "white"
+                                font.pixelSize: 14
+                                Layout.preferredWidth: 150
+                            }
+
+                            TextField {
+                                id: activationField
+                                Layout.fillWidth: true
+                                placeholderText: "e.g., ReLU, Tanh"
+                            }
+                        }
+
+                        // Dropout Rate: Fraction of neurons randomly deactivated to prevent overfitting
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 10
+
+                            Text {
+                                text: "Dropout Rate:"
+                                color: "white"
+                                font.pixelSize: 14
+                                Layout.preferredWidth: 150
+                            }
+
+                            TextField {
+                                id: dropoutRateField
+                                Layout.fillWidth: true
+                                placeholderText: "e.g., 0.3"
+                            }
                         }
                     }
 
-                    // Epochs: Number of complete passes through the training dataset
-                    // More epochs = longer training time, potentially better results
-                    RowLayout {
+                    // RANDOM FOREST PARAMETERS
+                    // These parameters are shown when Random Forest model is selected
+                    ColumnLayout {
+                        id: randomForestParams
+                        visible: isRandomForestSelected
                         Layout.fillWidth: true
                         spacing: 10
 
-                        Text {
-                            text: "Epochs:"
-                            color: "white"
-                            font.pixelSize: 14
-                            Layout.preferredWidth: 150
-                        }
-
-                        TextField {
-                            id: epochsField
+                        // n_estimators: Number of trees in the forest
+                        RowLayout {
                             Layout.fillWidth: true
-                            placeholderText: "e.g., 100"
+                            spacing: 10
+
+                            Text {
+                                text: "n_estimators:"
+                                color: "white"
+                                font.pixelSize: 14
+                                Layout.preferredWidth: 150
+                            }
+
+                            TextField {
+                                id: nEstimatorsField
+                                Layout.fillWidth: true
+                                placeholderText: "e.g., 100"
+                            }
                         }
-                    }
 
-                    // Batch Size: Number of samples processed before updating model weights
-                    // Larger batches = more memory usage but potentially more stable gradients
-                    RowLayout {
-                        Layout.fillWidth: true
-                        spacing: 10
-
-                        Text {
-                            text: "Batch Size:"
-                            color: "white"
-                            font.pixelSize: 14
-                            Layout.preferredWidth: 150
-                        }
-
-                        TextField {
-                            id: batchSizeField
+                        // max_depth: Maximum depth of the trees
+                        RowLayout {
                             Layout.fillWidth: true
-                            placeholderText: "e.g., 32"
+                            spacing: 10
+
+                            Text {
+                                text: "max_depth:"
+                                color: "white"
+                                font.pixelSize: 14
+                                Layout.preferredWidth: 150
+                            }
+
+                            TextField {
+                                id: maxDepthField
+                                Layout.fillWidth: true
+                                placeholderText: "e.g., 20"
+                            }
                         }
-                    }
 
-                    // Model Architecture: Type of neural network to train
-                    // Examples: CNN for images, LSTM for sequences, Transformer for NLP
-                    RowLayout {
-                        Layout.fillWidth: true
-                        spacing: 10
-
-                        Text {
-                            text: "Model Architecture:"
-                            color: "white"
-                            font.pixelSize: 14
-                            Layout.preferredWidth: 150
-                        }
-
-                        TextField {
-                            id: modelArchField
+                        // max_features: Number of features to consider for best split
+                        RowLayout {
                             Layout.fillWidth: true
-                            placeholderText: "e.g., CNN, LSTM, Transformer"
+                            spacing: 10
+
+                            Text {
+                                text: "max_features:"
+                                color: "white"
+                                font.pixelSize: 14
+                                Layout.preferredWidth: 150
+                            }
+
+                            TextField {
+                                id: maxFeaturesField
+                                Layout.fillWidth: true
+                                placeholderText: "e.g., sqrt, log2, or number"
+                            }
+                        }
+
+                        // min_samples_split: Minimum samples required to split a node
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 10
+
+                            Text {
+                                text: "min_samples_split:"
+                                color: "white"
+                                font.pixelSize: 14
+                                Layout.preferredWidth: 150
+                            }
+
+                            TextField {
+                                id: minSamplesSplitField
+                                Layout.fillWidth: true
+                                placeholderText: "e.g., 2"
+                            }
+                        }
+
+                        // min_samples_leaf: Minimum samples required in a leaf node
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 10
+
+                            Text {
+                                text: "min_samples_leaf:"
+                                color: "white"
+                                font.pixelSize: 14
+                                Layout.preferredWidth: 150
+                            }
+
+                            TextField {
+                                id: minSamplesLeafField
+                                Layout.fillWidth: true
+                                placeholderText: "e.g., 1"
+                            }
+                        }
+
+                        // bootstrap: Whether to use bootstrap sampling when building trees
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 10
+
+                            Text {
+                                text: "bootstrap:"
+                                color: "white"
+                                font.pixelSize: 14
+                                Layout.preferredWidth: 150
+                            }
+
+                            TextField {
+                                id: bootstrapField
+                                Layout.fillWidth: true
+                                placeholderText: "true or false"
+                            }
+                        }
+
+                        // random_state: Seed for random number generation
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 10
+
+                            Text {
+                                text: "random_state:"
+                                color: "white"
+                                font.pixelSize: 14
+                                Layout.preferredWidth: 150
+                            }
+
+                            TextField {
+                                id: randomStateField
+                                Layout.fillWidth: true
+                                placeholderText: "e.g., 42"
+                            }
+                        }
+
+                        // n_jobs: Number of parallel jobs to run
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 10
+
+                            Text {
+                                text: "n_jobs:"
+                                color: "white"
+                                font.pixelSize: 14
+                                Layout.preferredWidth: 150
+                            }
+
+                            TextField {
+                                id: nJobsField
+                                Layout.fillWidth: true
+                                placeholderText: "e.g., -1 (all cores)"
+                            }
                         }
                     }
 
@@ -400,6 +623,7 @@ Rectangle {
                     }
 
                     // Start Training Button - Initiates the training process with configured parameters
+                    // Passes different parameters based on selected model type (Deep Learning or Random Forest)
                     Button {
                         Layout.alignment: Qt.AlignHCenter
                         Layout.preferredWidth: 200
@@ -407,14 +631,28 @@ Rectangle {
                         text: "Start Training"
                         font.bold: true
                         onClicked: {
-                            // Call backend to start training with all parameters
-                            backend.startTraining(
-                                learningRateField.text,
-                                epochsField.text,
-                                batchSizeField.text,
-                                modelArchField.text,
-                                dataPathField.text
-                            )
+                            // Pass parameters based on selected model type
+                            if (isDeepLearningSelected) {
+                                // Deep Learning parameters
+                                backend.startTraining(
+                                    learningRateField.text,
+                                    epochsField.text,
+                                    batchSizeField.text,
+                                    modelArchField.text,
+                                    dataPathField.text
+                                )
+                            } else if (isRandomForestSelected) {
+                                // Random Forest parameters
+                                // Note: Backend may need to be updated to handle RF-specific parameters
+                                // For now, pass them in a format the backend can parse
+                                backend.startTraining(
+                                    nEstimatorsField.text,
+                                    maxDepthField.text,
+                                    maxFeaturesField.text,
+                                    "Random Forest",  // Architecture type
+                                    dataPathField.text
+                                )
+                            }
                         }
                     }
                     
