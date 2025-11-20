@@ -1,10 +1,10 @@
 # ML Frameworks Benchmark for Avatar BCI
 
 ## Overview
-Comprehensive benchmarking comparison of TensorFlow, PyTorch, and JAX frameworks for EEG brainwave classification on Kubernetes.
+Comprehensive benchmarking comparison of TensorFlow, PyTorch, and JAX frameworks for EEG brainwave classification.
 
 ## Purpose
-This benchmark addresses issue #406 by comparing ML framework performance for complex brainwave data signals in both CPU and GPU modes.
+This benchmark addresses issue #406 by comparing ML framework performance for complex brainwave data signals.
 
 ## Structure
 ```
@@ -31,7 +31,7 @@ ml-frameworks-benchmark/
 - Training time
 - Inference latency
 - Model accuracy
-- CPU vs GPU performance
+- CPU performance
 
 ## Usage
 
@@ -56,12 +56,12 @@ python3 ml-frameworks-benchmark/benchmarks/jax_benchmark.py
 - **JSON Results**: `ml-frameworks-benchmark/results/benchmark_results.json`
 - **Detailed Report**: `ml-frameworks-benchmark/results/BENCHMARK_REPORT.md`
 
-## Results Summary
+## Results Summary on Real EEG Data
 
 **Winners on CPU:**
-- Fastest Training: PyTorch (0.68s)
-- Fastest Inference: JAX (1.65ms)
-- Most Accurate: TensorFlow (19.50%)
+- Fastest Training: PyTorch (0.89s)
+- Fastest Inference: PyTorch (0.66ms)
+- Most Accurate: JAX (26.39%)
 
 See full report in `results/BENCHMARK_REPORT.md`
 
@@ -71,6 +71,3 @@ Install dependencies:
 ```bash
 pip install torch tensorflow jax jaxlib numpy pandas
 ```
-
-## Issue
-Closes #406 

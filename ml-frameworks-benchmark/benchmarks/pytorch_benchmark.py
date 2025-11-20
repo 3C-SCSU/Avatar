@@ -18,7 +18,7 @@ from utils.data_loader import BenchmarkDataLoader
 
 class SimpleCNN(nn.Module):
     """Simple CNN for EEG classification"""
-    def __init__(self, n_features=64, n_classes=6):
+    def __init__(self, n_features=16, n_classes=6):
         super(SimpleCNN, self).__init__()
         self.conv1 = nn.Conv1d(1, 32, kernel_size=3, padding=1)
         self.conv2 = nn.Conv1d(32, 64, kernel_size=3, padding=1)
@@ -107,7 +107,7 @@ def run_benchmark(device_type='cpu', epochs=10):
     
     # Load data
     print("Loading data...")
-    loader = BenchmarkDataLoader(use_synthetic=True)
+    loader = BenchmarkDataLoader(use_synthetic=False)
     X_train, X_test, y_train, y_test = loader.load_data()
     
     # Create PyTorch datasets
@@ -125,7 +125,7 @@ def run_benchmark(device_type='cpu', epochs=10):
     
     # Create model
     print("Creating model...")
-    model = SimpleCNN(n_features=64, n_classes=6).to(device)
+    model = SimpleCNN(n_features=16, n_classes=6).to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
     

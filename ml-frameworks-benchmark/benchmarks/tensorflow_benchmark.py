@@ -14,7 +14,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 from utils.data_loader import BenchmarkDataLoader
 
 
-def create_model(n_features=64, n_classes=6):
+def create_model(n_features=16, n_classes=6):
     """Create TensorFlow CNN model"""
     model = tf.keras.Sequential([
         tf.keras.layers.Reshape((n_features, 1), input_shape=(n_features,)),
@@ -57,12 +57,12 @@ def run_benchmark(device_type='cpu', epochs=10):
     
     # Load data
     print("Loading data...")
-    loader = BenchmarkDataLoader(use_synthetic=True)
+    loader = BenchmarkDataLoader(use_synthetic=False)
     X_train, X_test, y_train, y_test = loader.load_data()
     
     # Create model
     print("Creating model...")
-    model = create_model(n_features=64, n_classes=6)
+    model = create_model(n_features=16, n_classes=6)
     
     # Train
     print(f"\nTraining for {epochs} epochs...")

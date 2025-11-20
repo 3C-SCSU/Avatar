@@ -58,7 +58,7 @@ def loss(params, x, y):
 
 
 @jit
-def update(params, x, y, lr=0.01):
+def update(params, x, y, lr=0.001):
     """Single gradient descent step"""
     grads = grad(loss)(params, x, y)
     return [
@@ -93,7 +93,7 @@ def run_benchmark(device_type='cpu', epochs=10):
     
     # Load data
     print("Loading data...")
-    loader = BenchmarkDataLoader(use_synthetic=True)
+    loader = BenchmarkDataLoader(use_synthetic=False)
     X_train, X_test, y_train, y_test = loader.load_data()
     
     # Convert to JAX arrays
@@ -105,7 +105,7 @@ def run_benchmark(device_type='cpu', epochs=10):
     # Create model
     print("Creating model...")
     rng = random.PRNGKey(0)
-    layer_sizes = [64, 128, 64, 6]  # Input, hidden layers, output
+    layer_sizes = [16, 64, 32, 6]  # Input, hidden layers, output
     params = create_model_params(rng, layer_sizes)
     
     # Train

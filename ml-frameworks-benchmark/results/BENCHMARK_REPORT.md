@@ -1,51 +1,55 @@
 # ML Frameworks Benchmark Report - Avatar BCI
 
 ## Summary
-
-Comprehensive performance comparison of PyTorch, TensorFlow, and JAX for EEG brainwave classification on CPU.
+Comprehensive performance comparison of PyTorch, TensorFlow, and JAX for EEG brainwave classification on CPU using real BCI data.
 
 ## Test Environment
-
 - **Hardware**: CPU (M series Apple Silicon)
-- **Dataset**: Synthetic EEG data (800 train, 200 test samples)
-- **Features**: 64 channels (simulating EEG electrodes)
-- **Classes**: 6 (backward, forward, left, right, takeoff, landing)
+- **Dataset**: Real EEG data from Avatar BCI system
+- **Samples**: 1,864 training samples, 466 test samples
+- **Features**: 16 features (8 EEG channels with mean and standard deviation)
+- **Classes**: 6 (backwards, forward, left, right, takeoff, landing)
 - **Epochs**: 5
 - **Batch Size**: 32
 
-## Results 
+## Results on Real EEG Data
 
 | Framework   | Training Time | Avg Epoch Time | Test Accuracy | Inference Time |
 |-------------|---------------|----------------|---------------|----------------|
-| **JAX**     | 0.71s         | 0.14s          | 18.50%        | **1.65ms**  |
-| **PyTorch** | **0.68s**    | 0.14s          | 17.50%        | 1.88ms         |
-| **TensorFlow** | 0.90s      | 0.18s          | **19.50%**  | 19.24ms        |
+| **PyTorch** | **0.89s**     | 0.18s          | 24.46%        | **0.66ms**     |
+| **JAX**     | 1.03s         | 0.20s          | **26.39%**    | 0.77ms         |
+| **TensorFlow** | 1.01s      | 0.20s          | 23.61%        | 19.20ms        |
 
----
-
--  **Fastest Training**: PyTorch (0.68s)
--  **Fastest Inference**: JAX (1.65ms) **11.6x faster than TensorFlow**
--  **Most Accurate**: TensorFlow (19.50%)
+## Winners
+- **Fastest Training**: PyTorch (0.89s)
+- **Fastest Inference**: PyTorch (0.66ms) 29x faster than TensorFlow
+- **Most Accurate**: JAX (26.39%)
 
 ## Key Findings
 
 ### PyTorch
-- **Best for**: Development speed, training performance
-- Fast training (0.68s total)
-- Good inference speed (1.88ms)
-- Moderate accuracy on synthetic data
-- Excellent ecosystem and debugging tools
-
-### TensorFlow
-- **Best for**: Accuracy, production deployment
-- Highest accuracy (19.50%)
-- Slower inference (19.24ms 10x slower than JAX/PyTorch)
-- Keras API provides easy model building
-- Good for complex production pipelines
+- **Best for**: Overall performance fastest training and inference
+- Excellent for real time BCI applications
+- Good balance of speed and accuracy
+- Easy to debug and develop
 
 ### JAX
-- **Best for**: Research, high performance inference
-- **Fastest inference** (1.65ms)
-- JIT compilation provides excellent performance
+- **Best for**: Accuracy on limited training epochs
 - Functional programming approach
-- Ideal for real time BCI applications
+- JIT compilation provides good performance
+- Highest accuracy achieved (26.39%)
+
+### TensorFlow
+- **Best for**: Production deployment with mature ecosystem
+- Significantly slower inference (19.20ms vs 0.66ms for PyTorch)
+- Keras API provides accessible model building
+- Competitive accuracy with PyTorch
+
+## Implementation Notes
+- Limited to 5 files per class and 5 training epochs for benchmark speed
+- Accuracy can be improved with more training data and epochs
+- All frameworks successfully handle real EEG signals
+- Real time performance achieved with PyTorch and JAX (sub millisecond inference)
+
+
+

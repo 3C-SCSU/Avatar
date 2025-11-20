@@ -18,3 +18,10 @@ plotscode/.Rhistory
 plotscode/.RData
 
 pynaoqi-python2.7-2.8.6.23-linux64-20191127_152327/
+
+# Local EEG data
+**/BrainFlow-RAW*.csv
+data/
+Data/
+~/Documents/data/
+*.csv
