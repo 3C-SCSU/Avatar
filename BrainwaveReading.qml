@@ -429,13 +429,13 @@ Rectangle {
 
                 // PyTorch and TensorFlow Framework Buttons
                 Row {
-                    width: parent.width * 0.5
+                    width: parent.width * 0.7
                     height: parent.height * 0.3
                     spacing: height * 0.1
 
                     //PyTorch Button
                     Rectangle {
-                        width: parent.width * 0.5
+                        width: parent.width * 0.33
                         height: parent.height
                         color: "#6eb109"
                         radius: 5
@@ -460,7 +460,7 @@ Rectangle {
 
                     //TensorFlow Button
                     Rectangle {
-                        width: parent.width * 0.5
+                        width: parent.width * 0.33
                         height: parent.height
                         color: "#6eb109"
                         radius: 5
@@ -479,6 +479,30 @@ Rectangle {
                             onClicked: {
                                 currentFramework = "TensorFlow"
                                 backend.selectFramework("TensorFlow")
+                            }
+                        }
+                      }
+                      //JAX Button
+                    Rectangle {
+                        width: parent.width * 0.33
+                        height: parent.height
+                        color: "#6eb109"
+                        radius: 5
+                        border.color: currentFramework === "JAX" ? "yellow" : "#5a8c2b"
+                        border.width: currentFramework === "JAX" ? 3 : 1
+                        Text {
+                            text: "JAX"
+                            font.pixelSize: parent.width * 0.08
+                            font.bold: true
+                            color: currentFramework === "JAX" ? "yellow" : "white"
+                            anchors.centerIn: parent
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                currentFramework = "JAX"
+                                backend.selectFramework("JAX")
                             }
                         }
                     }
