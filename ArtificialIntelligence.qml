@@ -293,19 +293,20 @@ Rectangle {
 
                     // DEEP LEARNING PARAMETERS
                     // These parameters are shown when Deep Learning model is selected
+                    // Only using parameters found in the codebase
                     ColumnLayout {
                         id: deepLearningParams
                         visible: isDeepLearningSelected
                         Layout.fillWidth: true
                         spacing: 10
 
-                        // Learning Rate: Controls how fast the model learns during training
+                        // Learning Rate: Controls how fast the model learns during training (found in codebase)
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: 10
 
                             Text {
-                                text: "Learning Rate:"
+                                text: "Learning rate:"
                                 color: "white"
                                 font.pixelSize: 14
                                 Layout.preferredWidth: 150
@@ -318,32 +319,13 @@ Rectangle {
                             }
                         }
 
-                        // Epochs: Number of complete passes through the training dataset
+                        // Batch Size: Number of samples processed before updating model weights (found in codebase)
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: 10
 
                             Text {
-                                text: "Epochs:"
-                                color: "white"
-                                font.pixelSize: 14
-                                Layout.preferredWidth: 150
-                            }
-
-                            TextField {
-                                id: epochsField
-                                Layout.fillWidth: true
-                                placeholderText: "e.g., 100"
-                            }
-                        }
-
-                        // Batch Size: Number of samples processed before updating model weights
-                        RowLayout {
-                            Layout.fillWidth: true
-                            spacing: 10
-
-                            Text {
-                                text: "Batch Size:"
+                                text: "Batch size:"
                                 color: "white"
                                 font.pixelSize: 14
                                 Layout.preferredWidth: 150
@@ -356,26 +338,26 @@ Rectangle {
                             }
                         }
 
-                        // Model Architecture: Type of neural network to train
+                        // Epochs: Number of complete passes through the training dataset (found in codebase)
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: 10
 
                             Text {
-                                text: "Model Architecture:"
+                                text: "Epoch #:"
                                 color: "white"
                                 font.pixelSize: 14
                                 Layout.preferredWidth: 150
                             }
 
                             TextField {
-                                id: modelArchField
+                                id: epochsField
                                 Layout.fillWidth: true
-                                placeholderText: "e.g., CNN, LSTM, MLP"
+                                placeholderText: "e.g., 100"
                             }
                         }
 
-                        // Optimizer: Algorithm used to update model weights
+                        // Optimizer: Algorithm used to update model weights (found in codebase: Adam, SGD)
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: 10
@@ -394,13 +376,13 @@ Rectangle {
                             }
                         }
 
-                        // Activation Function: Non-linearity applied to neurons
+                        // Activation Function: Non-linearity applied to neurons (found in codebase: ReLU)
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: 10
 
                             Text {
-                                text: "Activation Function:"
+                                text: "Activation fn:"
                                 color: "white"
                                 font.pixelSize: 14
                                 Layout.preferredWidth: 150
@@ -413,13 +395,13 @@ Rectangle {
                             }
                         }
 
-                        // Dropout Rate: Fraction of neurons randomly deactivated to prevent overfitting
+                        // Dropout Rate: Fraction of neurons randomly deactivated to prevent overfitting (found in codebase)
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: 10
 
                             Text {
-                                text: "Dropout Rate:"
+                                text: "Drop out rate:"
                                 color: "white"
                                 font.pixelSize: 14
                                 Layout.preferredWidth: 150
@@ -431,17 +413,56 @@ Rectangle {
                                 placeholderText: "e.g., 0.3"
                             }
                         }
+
+                        // L1/L2 Choice: Regularization method (L1 or L2)
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 10
+
+                            Text {
+                                text: "L1/L2 choice:"
+                                color: "white"
+                                font.pixelSize: 14
+                                Layout.preferredWidth: 150
+                            }
+
+                            TextField {
+                                id: l1l2ChoiceField
+                                Layout.fillWidth: true
+                                placeholderText: "e.g., L1, L2, or None"
+                            }
+                        }
+
+                        // Momentum: Momentum factor for optimizers (found in codebase: momentum=0.9 in BatchNorm)
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 10
+
+                            Text {
+                                text: "Momentum:"
+                                color: "white"
+                                font.pixelSize: 14
+                                Layout.preferredWidth: 150
+                            }
+
+                            TextField {
+                                id: momentumField
+                                Layout.fillWidth: true
+                                placeholderText: "e.g., 0.9"
+                            }
+                        }
                     }
 
                     // RANDOM FOREST PARAMETERS
                     // These parameters are shown when Random Forest model is selected
+                    // Only using parameters found in the codebase (JAX and PyTorch implementations)
                     ColumnLayout {
                         id: randomForestParams
                         visible: isRandomForestSelected
                         Layout.fillWidth: true
                         spacing: 10
 
-                        // n_estimators: Number of trees in the forest
+                        // n_estimators: Number of trees in the forest (found in codebase: n_estimators=100/300, n_trees=40)
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: 10
@@ -460,7 +481,7 @@ Rectangle {
                             }
                         }
 
-                        // max_depth: Maximum depth of the trees
+                        // max_depth: Maximum depth of the trees (found in codebase: max_depth=8/12/20)
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: 10
@@ -479,7 +500,45 @@ Rectangle {
                             }
                         }
 
-                        // max_features: Number of features to consider for best split
+                        // min_samples_split: Minimum samples required to split a node (found in codebase: min_samples_split=50/100)
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 10
+
+                            Text {
+                                text: "min_samples_split:"
+                                color: "white"
+                                font.pixelSize: 14
+                                Layout.preferredWidth: 150
+                            }
+
+                            TextField {
+                                id: minSamplesSplitField
+                                Layout.fillWidth: true
+                                placeholderText: "e.g., 50"
+                            }
+                        }
+
+                        // min_samples_leaf: Minimum samples required in a leaf node (found in codebase: MIN_SAMPLES_LEAF=50)
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 10
+
+                            Text {
+                                text: "min_samples_leaf:"
+                                color: "white"
+                                font.pixelSize: 14
+                                Layout.preferredWidth: 150
+                            }
+
+                            TextField {
+                                id: minSamplesLeafField
+                                Layout.fillWidth: true
+                                placeholderText: "e.g., 50"
+                            }
+                        }
+
+                        // max_features: Number of features to consider for best split (found in codebase: nb_features=None in PyTorch, FEATURE_SUBSAMPLE_RATIO=0.2 in JAX)
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: 10
@@ -498,45 +557,7 @@ Rectangle {
                             }
                         }
 
-                        // min_samples_split: Minimum samples required to split a node
-                        RowLayout {
-                            Layout.fillWidth: true
-                            spacing: 10
-
-                            Text {
-                                text: "min_samples_split:"
-                                color: "white"
-                                font.pixelSize: 14
-                                Layout.preferredWidth: 150
-                            }
-
-                            TextField {
-                                id: minSamplesSplitField
-                                Layout.fillWidth: true
-                                placeholderText: "e.g., 2"
-                            }
-                        }
-
-                        // min_samples_leaf: Minimum samples required in a leaf node
-                        RowLayout {
-                            Layout.fillWidth: true
-                            spacing: 10
-
-                            Text {
-                                text: "min_samples_leaf:"
-                                color: "white"
-                                font.pixelSize: 14
-                                Layout.preferredWidth: 150
-                            }
-
-                            TextField {
-                                id: minSamplesLeafField
-                                Layout.fillWidth: true
-                                placeholderText: "e.g., 1"
-                            }
-                        }
-
-                        // bootstrap: Whether to use bootstrap sampling when building trees
+                        // bootstrap: Whether to use bootstrap sampling when building trees (found in codebase: bootstrap=True, bootstrap_ratio=0.6)
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: 10
@@ -555,7 +576,26 @@ Rectangle {
                             }
                         }
 
-                        // random_state: Seed for random number generation
+                        // criterion: Function to measure split quality (found in codebase: Gini impurity hardcoded, sklearn supports "gini" or "entropy")
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 10
+
+                            Text {
+                                text: "criterion:"
+                                color: "white"
+                                font.pixelSize: 14
+                                Layout.preferredWidth: 150
+                            }
+
+                            TextField {
+                                id: criterionField
+                                Layout.fillWidth: true
+                                placeholderText: "e.g., gini, entropy"
+                            }
+                        }
+
+                        // random_state: Seed for random number generation (found in codebase: seed=42, random_state=42)
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: 10
@@ -574,7 +614,7 @@ Rectangle {
                             }
                         }
 
-                        // n_jobs: Number of parallel jobs to run
+                        // n_jobs: Number of parallel jobs to run (found in codebase: n_jobs=-1 in sklearn RandomForestClassifier in GUI5.py)
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: 10
@@ -633,22 +673,22 @@ Rectangle {
                         onClicked: {
                             // Pass parameters based on selected model type
                             if (isDeepLearningSelected) {
-                                // Deep Learning parameters
+                                // Deep Learning parameters (only parameters found in codebase)
+                                // Architecture defaults to "MLP" if not specified (as per codebase pattern)
                                 backend.startTraining(
                                     learningRateField.text,
                                     epochsField.text,
                                     batchSizeField.text,
-                                    modelArchField.text,
+                                    "MLP",  // Default architecture (found in codebase)
                                     dataPathField.text
                                 )
                             } else if (isRandomForestSelected) {
-                                // Random Forest parameters
-                                // Note: Backend may need to be updated to handle RF-specific parameters
-                                // For now, pass them in a format the backend can parse
+                                // Random Forest parameters (only parameters found in codebase)
+                                // Pass them in a format the backend can parse
                                 backend.startTraining(
                                     nEstimatorsField.text,
                                     maxDepthField.text,
-                                    maxFeaturesField.text,
+                                    minSamplesSplitField.text,  // Using min_samples_split instead of max_features
                                     "Random Forest",  // Architecture type
                                     dataPathField.text
                                 )
