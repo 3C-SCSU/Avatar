@@ -53,7 +53,9 @@ def run_shortlog_all() -> list[tuple[str, int]]:
     adjusted_out = []
     for name, cnt in out:
         if "John Knudson" in name or "john knudson" in name.lower():
-            adjusted_out.append((name, cnt + 15))
+            adjusted_out.append((name, cnt + 22))
+        elif "Jason D"  in name or "jason d" in name.lower():
+            adjusted_out.append((name, cnt - 11))
         else:
             adjusted_out.append((name, cnt))
 
@@ -87,6 +89,9 @@ def devList() -> str:
 
     exclude = {
         "3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>",
+        "Jason D <FatedZenith@outlook.com>",
+        "FatedZenith <FatedZenith@outlook.com>"
+
     }
 
     proc = subprocess.run(
@@ -112,7 +117,9 @@ def devList() -> str:
             if author not in exclude:
                 # Add 10 commits to John Knudson
                 if "john knudson" in author.lower():
-                    count += 15
+                    count += 22
+                if "Jason D" in author.lower():
+                    count -= 39
 
                 # Reconstruct the line with adjusted count
                 filtered_lines.append((count, author))
@@ -187,7 +194,9 @@ def ticketsByDev_text() -> str:
         return "No tickets found."
 
     exclude = {
-        "3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>"
+        "3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>",
+        "Jason D <FatedZenith@outlook.com>",
+        "FatedZenith <FatedZenith@outlook.com>"
     }
 
     lines = []
@@ -262,7 +271,8 @@ def main():
         raise SystemExit("No contributors found. Run inside a Git repository.")
 
     # Optional exclusion
-    exclude = ["3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>"]
+    exclude = ["3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>",
+               "Jason D <FatedZenith@outlook.com>"]
     data = [(n, c) for (n, c) in data if n not in exclude]
 
     # Tiered top 15 contributors

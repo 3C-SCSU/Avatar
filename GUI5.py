@@ -86,7 +86,8 @@ class developersBackend(QObject):
                 print("No contributors found")
                 return
 
-            exclude = ["3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>"]
+            exclude = ["3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>",
+                       "Jason D <FatedZenith@outlook.com>"]
             data = [(n, c) for (n, c) in data if n not in exclude]
 
             # Assign tiers
