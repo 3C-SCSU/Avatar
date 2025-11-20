@@ -35,6 +35,10 @@ Rectangle {
     property bool isRandomForestSelected: false
     property bool isDeepLearningSelected: true  // Default to Deep Learning
     
+    // Framework selection properties (matching Brainwave Reading tab style)
+    property bool isPyTorchSelected: true  // Default to PyTorch
+    property bool isTensorFlowSelected: false
+    
     // Status messages from backend
     property string trainingStatus: ""
     property string deploymentStatus: ""
@@ -118,6 +122,72 @@ Rectangle {
                         // Call backend to notify model selection
                         if (typeof backend !== 'undefined' && backend.selectModel) {
                             backend.selectModel("Deep Learning")
+                        }
+                    }
+                }
+            }
+        }
+
+        // Framework Selection Buttons: PyTorch and TensorFlow
+        // These buttons allow users to choose which ML framework to use
+        // Same style as Brainwave Reading tab
+        Row {
+            Layout.alignment: Qt.AlignHCenter
+            spacing: 20
+            
+            // PyTorch Button
+            Rectangle {
+                width: 150
+                height: 50
+                color: "#6eb109"
+                radius: 5
+                
+                Text {
+                    text: "PyTorch"
+                    font.pixelSize: 16
+                    font.bold: true
+                    // Text color changes to yellow when selected, white when not
+                    color: isPyTorchSelected ? "yellow" : "white"
+                    anchors.centerIn: parent
+                }
+                
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        isPyTorchSelected = true
+                        isTensorFlowSelected = false
+                        // Call backend to notify framework selection
+                        if (typeof backend !== 'undefined' && backend.selectFramework) {
+                            backend.selectFramework("PyTorch")
+                        }
+                    }
+                }
+            }
+            
+            // TensorFlow Button
+            Rectangle {
+                width: 150
+                height: 50
+                color: "#6eb109"
+                radius: 5
+                
+                Text {
+                    text: "TensorFlow"
+                    font.pixelSize: 16
+                    font.bold: true
+                    // Text color changes to yellow when selected, white when not
+                    color: isTensorFlowSelected ? "yellow" : "white"
+                    anchors.centerIn: parent
+                }
+                
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        isTensorFlowSelected = true
+                        isPyTorchSelected = false
+                        // Call backend to notify framework selection
+                        if (typeof backend !== 'undefined' && backend.selectFramework) {
+                            backend.selectFramework("TensorFlow")
                         }
                     }
                 }
