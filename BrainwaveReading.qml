@@ -9,7 +9,7 @@ import QtQuick3D 6.7
 // Brainwave Reading view
 Rectangle {
     property string selectedModel: "Random Forest"  // Can be "Random Forest", "GaussianNB", or "Deep Learning"
-    property bool isPyTorchSelected: true
+    property string currentFramework: "PyTorch"  // Can be "PyTorch", "TensorFlow", or "JAX"
     color: "#718399"
     Layout.fillWidth: true
     Layout.fillHeight: true
@@ -439,20 +439,20 @@ Rectangle {
                         height: parent.height
                         color: "#6eb109"
                         radius: 5
-			border.color: isPyTorchSelected ? "yellow" : "#5a8c2b"
-        		border.width: isPyTorchSelected ? 3 : 1
+			border.color: currentFramework === "PyTorch" ? "yellow" : "#5a8c2b"
+        		border.width: currentFramework === "PyTorch" ? 3 : 1
                         Text {
                             text: "PyTorch"
                             font.pixelSize: parent.width * 0.08
                             font.bold: true
-                            color: isPyTorchSelected ? "yellow" : "white"
+                            color: currentFramework === "PyTorch" ? "yellow" : "white"
                             anchors.centerIn: parent
                         }
 
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                isPyTorchSelected = true
+                                currentFramework = "PyTorch"
                                 backend.selectFramework("PyTorch")
                             }
                         }
@@ -464,20 +464,20 @@ Rectangle {
                         height: parent.height
                         color: "#6eb109"
                         radius: 5
-			border.color: !isPyTorchSelected ? "yellow" : "#5a8c2b"
-        		border.width: !isPyTorchSelected ? 3 : 1
+			border.color: currentFramework === "TensorFlow" ? "yellow" : "#5a8c2b"
+        		border.width: currentFramework === "TensorFlow" ? 3 : 1
                         Text {
                             text: "TensorFlow"
                             font.pixelSize: parent.width * 0.08
                             font.bold: true
-                            color: !isPyTorchSelected ? "yellow" : "white"
+                            color: currentFramework === "TensorFlow" ? "yellow" : "white"
                             anchors.centerIn: parent
                         }
 
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                isPyTorchSelected = false
+                                currentFramework = "TensorFlow"
                                 backend.selectFramework("TensorFlow")
                             }
                         }
