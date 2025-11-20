@@ -11,12 +11,15 @@ import random
 import threading
 import re
 import pandas as pd
+import torch
 import time
 import io
 import urllib.parse
 import contextlib
 from collections import defaultdict
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
+from predictions_local.brainflowprocessor import BrainFlowDataProcessor
+from predictions_local.deeplearningpytorchpredictor import DeeplearningPytorchPredictor
 from cameraview.camera_controller import CameraController
 from NAO6.nao_connection import send_command
 # from Developers.hofCharts import main as hofCharts, ticketsByDev_text NA
@@ -204,6 +207,7 @@ class BrainwavesBackend(QObject):
 
     def __init__(self):
         super().__init__()
+        self.drone_position = [0, 0, 0]  # x, y, z in cm; origin is home
         self.flight_log = []  # List to store flight log entries
         self.predictions_log = []  # List to store prediction records
         self.current_prediction_label = ""
@@ -262,6 +266,11 @@ class BrainwavesBackend(QObject):
                 prediction = self.run_random_forest_pytorch()
             else:
                 prediction = self.run_random_forest_tensorflow()
+        elif self.current_model == "GaussianNB":
+            if self.current_framework == "PyTorch":
+                prediction = self.run_gaussiannb_pytorch()
+            else:
+                prediction = self.run_gaussiannb_tensorflow()
         else:  # Deep Learning
             if self.current_framework == "PyTorch":
                 prediction = self.run_deep_learning_pytorch()
@@ -317,15 +326,27 @@ class BrainwavesBackend(QObject):
 
     def run_deep_learning_pytorch(self):
         """ Deep Learning model processing with PyTorch backend """
-        print("Running Deep Learning Model with PyTorch...")
+        print("Running Deep Learning Model with PyTorch...")       
+        self.get_brainwave_data()
         try:
-            # Simulate PyTorch deep learning model processing
-            # In a real implementation, this would load and run a PyTorch CNN model
-            time.sleep(2)  # Simulate longer processing time for deep learning
-            return random.choice(["forward", "backward", "left", "right", "takeoff", "land", "up", "down"])
+            model = DeeplearningPytorchPredictor()
+            pred_label = model(self.brainwave_data)
+            return pred_label
         except Exception as e:
             print(f"Error with PyTorch Deep Learning: {e}")
-            return "forward"
+            return "Error"
+    
+    def get_brainwave_data(self):
+        if self.current_data_mode == 'synthetic':
+            self.brainwave_processor = BrainFlowDataProcessor(board_id=BoardIds.SYNTHETIC_BOARD.value)
+            self.brainwave_data = self.brainwave_processor.get_tensor()
+            print("synethetic data retrieved")
+            return self.brainwave_data
+        else:
+            self.brainwave_processor = BrainFlowDataProcessor(board_id=BoardIds.CYTON_DAISY_BOARD.value)
+            self.brainwave_data = self.brainwave_processor.get_tensor()
+            print("live Cyton Daisy data retrieved")
+            return self.brainwave_data
 
     def run_deep_learning_tensorflow(self):
         """ Deep Learning model processing with TensorFlow backend """
@@ -338,7 +359,56 @@ class BrainwavesBackend(QObject):
         except Exception as e:
             print(f"Error with TensorFlow Deep Learning: {e}")
             return "forward"
-
+    def run_gaussiannb_pytorch(self):
+        """ GaussianNB model processing with PyTorch backend """
+        print("Running GaussianNB Model with PyTorch...")
+        try:
+            # Import the GaussianNB model
+            import sys
+            import os
+            sys.path.append(os.path.join(os.path.dirname(__file__), 'prediction-gaussiannb', 'pytorch'))
+            from gaussiannb_model import GaussianNB
+            
+            # Try to load trained model
+            model_path = os.path.join(os.path.dirname(__file__), 'prediction-gaussiannb', 'pytorch', 'gaussiannb_trained.pth')
+            
+            if os.path.exists(model_path):
+                # Load the trained model
+                checkpoint = torch.load(model_path)
+                model = GaussianNB(
+                    num_features=checkpoint['num_features'],
+                    num_classes=checkpoint['num_classes']
+                )
+                model.load_state_dict(checkpoint['model_state_dict'])
+                
+                # Get prediction from BCI connection
+                if hasattr(self, 'bcicon'):
+                    prediction_response = self.bcicon.bciConnectionController()
+                    if prediction_response:
+                        return prediction_response.get('prediction_label', 'forward')
+                
+                # Fallback
+                return random.choice(["forward", "backward", "left", "right", "takeoff", "land"])
+            else:
+                print(f"GaussianNB model not found at {model_path}. Using simulation.")
+                return random.choice(["forward", "backward", "left", "right", "takeoff", "land"])
+                
+        except Exception as e:
+            print(f"Error with PyTorch GaussianNB: {e}")
+            return random.choice(["forward", "backward", "left", "right", "takeoff", "land"])
+    
+    def run_gaussiannb_tensorflow(self):
+        """ GaussianNB model processing with TensorFlow backend """
+        print("Running GaussianNB Model with TensorFlow...")
+        try:
+            # Note: GaussianNB with TensorFlow is not implemented yet
+            # For now, fallback to simulation
+            print("TensorFlow backend for GaussianNB not implemented. Using simulation.")
+            time.sleep(1)
+            return random.choice(["forward", "backward", "left", "right", "takeoff", "land"])
+        except Exception as e:
+            print(f"Error with TensorFlow GaussianNB: {e}")
+            return "forward"
     @Slot(str)
     def notWhatIWasThinking(self, manual_action):
         # Handle manual action input
@@ -399,26 +469,32 @@ class BrainwavesBackend(QObject):
 
                 if action == 'up':
                     self.tello.move_up(30)
+                    self.drone_position[2] += 30
                     self.logMessage.emit("Moving up")
                     self.flight_log.insert(0, "Moving up 30cm")
                 elif action == 'down':
                     self.tello.move_down(30)
                     self.logMessage.emit("Moving down")
+                    self.drone_position[2] -= 30
                     self.flight_log.insert(0, "Moving down 30cm")
                 elif action == 'forward':
                     self.tello.move_forward(30)
+                    self.drone_position[0] += 30
                     self.logMessage.emit("Moving forward")
                     self.flight_log.insert(0, "Moving forward 30cm")
                 elif action == 'backward':
                     self.tello.move_back(30)
+                    self.drone_position[0] -= 30
                     self.logMessage.emit("Moving backward")
                     self.flight_log.insert(0, "Moving backward 30cm")
                 elif action == 'left':
                     self.tello.move_left(30)
+                    self.drone_position[1] += 30
                     self.logMessage.emit("Moving left")
                     self.flight_log.insert(0, "Moving left 30cm")
                 elif action == 'right':
                     self.tello.move_right(30)
+                    self.drone_position[1] -= 30
                     self.logMessage.emit("Moving right")
                     self.flight_log.insert(0, "Moving right 30cm")
                 elif action == 'turn_left':
@@ -480,12 +556,45 @@ class BrainwavesBackend(QObject):
                 if "Tello" in str(e) or "timeout" in str(e).lower():
                     self.connected = False
 
-    # Method for returning to home (an approximation)
     def go_home(self):
-        # Assuming the home action means moving backward and upwards
-        self.tello.move_back(50)  # Move back to home point (adjust distance as needed)
-        self.tello.move_up(50)  # Move up to avoid obstacles
-        self.logMessage.emit("Returning to home")
+        try:
+            x, y, z = self.drone_position  # current relative position
+
+            # Step 1: Ascend if needed to avoid obstacles
+            if z < 50:  # maintain at least 50cm above ground
+                self.tello.move_up(50 - z)
+                self.flight_log.insert(0, f"Ascending to safe height: {50}cm")
+                z = 50
+
+            # Step 2: Move in x direction (forward/back)
+            if x > 0:
+                self.tello.move_back(x)
+            elif x < 0:
+                self.tello.move_forward(-x)
+
+            # Step 3: Move in y direction (left/right)
+            if y > 0:
+                self.tello.move_right(y)
+            elif y < 0:
+                self.tello.move_left(-y)
+
+            # Step 4: Land safely
+            if z > 0:
+                self.tello.land()
+                self.flight_log.insert(0, "Drone landed at home")
+
+            # Reset drone position
+            self.drone_position = [0, 0, 0]
+
+            self.logMessage.emit("Drone returned to home position.")
+            self.flightLogUpdated.emit(self.flight_log)
+
+        except Exception as e:
+            error_msg = f"Error during go_home: {str(e)}"
+            self.logMessage.emit(error_msg)
+            self.flight_log.insert(0, error_msg)
+            self.flightLogUpdated.emit(self.flight_log)
+
 
     @Slot()
     def check_plots_exist(self):
@@ -705,6 +814,9 @@ class BrainwavesBackend(QObject):
         """
         Set data mode to either synthetic or live based on radio button selection.
         """
+        
+        self.current_data_mode = mode
+
         if mode == "synthetic":
             self.init_synthetic_board()
             self.logMessage.emit("Switched to Synthetic Data Mode")

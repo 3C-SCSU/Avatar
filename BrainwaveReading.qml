@@ -8,7 +8,7 @@ import QtQuick3D 6.7
 
 // Brainwave Reading view
 Rectangle {
-    property bool isRandomForestSelected: false
+    property string selectedModel: "Random Forest"  // Can be "Random Forest", "GaussianNB", or "Deep Learning"
     property bool isPyTorchSelected: true
     color: "#718399"
     Layout.fillWidth: true
@@ -179,7 +179,7 @@ Rectangle {
 
                 Button {
                     id: executeBtn
-                    text: "Execute"
+                    text: "Action"
                     font.pixelSize: parent.width * 0.03
                     width: parent.width * 0.5
                     height: parent.height
@@ -219,7 +219,7 @@ Rectangle {
                     }
 
                     contentItem: Text {
-                        text: qsTr("Keep Drone Alive")
+                        text: qsTr("Run")
                         color: "white"
                         font.pixelSize: parent.height * 0.5
                         horizontalAlignment: Text.AlignHCenter
@@ -303,55 +303,83 @@ Rectangle {
                     }
                 }
 
-                // Random Forest and Deep Learning Buttons
+                // Model Selection Buttons: Random Forest, GaussianNB, Deep Learning
                 Row {
                     width: parent.width * 0.5
                     height: parent.height * 0.3
-                    spacing: height * 0.1
-
+                    spacing: height * 0.05
+                    
                     // Random Forest Button
-
                     Rectangle {
-                        width: parent.width * 0.5
+                        width: (parent.width - parent.spacing * 2) / 3
                         height: parent.height
                         color: "#6eb109"
-                        radius: 5
-
+			radius: 5
+			border.color: selectedModel === "Random Forest" ? "yellow" : "#5a8c2b"
+   			border.width: selectedModel === "Random Forest" ? 3 : 1
                         Text {
-                            text: "Random Forest"
-                            font.pixelSize: parent.width * 0.08
+                            text: "Random\nForest"
+                            font.pixelSize: parent.width * 0.12
                             font.bold: true
-                            color: isRandomForestSelected ? "yellow" : "white"
+                            color: selectedModel === "Random Forest" ? "yellow" : "white"
                             anchors.centerIn: parent
+                            horizontalAlignment: Text.AlignHCenter
                         }
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                isRandomForestSelected = true;
+                                selectedModel = "Random Forest";
                                 backend.selectModel("Random Forest")
                             }
                         }
                     }
-
-                    // Deep Learning Button
+                    
+                    // GaussianNB Button
                     Rectangle {
-                        width: parent.width * 0.5
+                        width: (parent.width - parent.spacing * 2) / 3
                         height: parent.height
                         color: "#6eb109"
-
-                        radius: 5
-                        Text {
-                            text: "Deep Learning"
-                            font.pixelSize: parent.width * 0.08
+			radius: 5
+			border.color: selectedModel === "GaussianNB" ? "yellow" : "#5a8c2b"
+   	 		border.width: selectedModel === "GaussianNB" ? 3 : 1
+			
+			Text {
+                            text: "GaussianNB"
+                            font.pixelSize: parent.width * 0.12
                             font.bold: true
-                            color: !isRandomForestSelected ? "yellow" : "white"
+                            color: selectedModel === "GaussianNB" ? "yellow" : "white"
                             anchors.centerIn: parent
+                            horizontalAlignment: Text.AlignHCenter
                         }
-
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                isRandomForestSelected = false;
+                                selectedModel = "GaussianNB";
+                                backend.selectModel("GaussianNB")
+                            }
+                        }
+                    }
+                    
+                    // Deep Learning Button
+                    Rectangle {
+                        width: (parent.width - parent.spacing * 2) / 3
+                        height: parent.height
+                        color: "#6eb109"
+			radius: 5
+			border.color: selectedModel === "Deep Learning" ? "yellow" : "#5a8c2b"
+    			border.width: selectedModel === "Deep Learning" ? 3 : 1
+                        Text {
+                            text: "Deep\nLearning"
+                            font.pixelSize: parent.width * 0.12
+                            font.bold: true
+                            color: selectedModel === "Deep Learning" ? "yellow" : "white"
+                            anchors.centerIn: parent
+                            horizontalAlignment: Text.AlignHCenter
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                selectedModel = "Deep Learning";
                                 backend.selectModel("Deep Learning")
                             }
                         }
@@ -411,7 +439,8 @@ Rectangle {
                         height: parent.height
                         color: "#6eb109"
                         radius: 5
-
+			border.color: isPyTorchSelected ? "yellow" : "#5a8c2b"
+        		border.width: isPyTorchSelected ? 3 : 1
                         Text {
                             text: "PyTorch"
                             font.pixelSize: parent.width * 0.08
@@ -435,7 +464,8 @@ Rectangle {
                         height: parent.height
                         color: "#6eb109"
                         radius: 5
-
+			border.color: !isPyTorchSelected ? "yellow" : "#5a8c2b"
+        		border.width: !isPyTorchSelected ? 3 : 1
                         Text {
                             text: "TensorFlow"
                             font.pixelSize: parent.width * 0.08
