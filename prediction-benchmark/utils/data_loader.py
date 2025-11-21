@@ -8,7 +8,7 @@ import pandas as pd
 from pathlib import Path
 from typing import Tuple, Optional
 import glob
-
+from sklearn.preprocessing import StandardScaler
 
 class BenchmarkDataLoader:
     """
@@ -94,7 +94,7 @@ class BenchmarkDataLoader:
             csv_files = list(class_path.glob("BrainFlow-RAW*.csv"))
             print(f"Loading {len(csv_files)} files for class: {class_name}")
             
-            for csv_file in csv_files[:5]:  # Limit to 5 files per class for speed
+            for csv_file in csv_files:  # Use all files for proper training
                 try:
                     # Read CSV (tab-separated)
                     df = pd.read_csv(csv_file, sep='\t', header=None)
@@ -134,6 +134,11 @@ class BenchmarkDataLoader:
         split_idx = int(0.8 * len(X))
         X_train, X_test = X[:split_idx], X[split_idx:]
         y_train, y_test = y[:split_idx], y[split_idx:]
+
+        # Normalize features using StandardScaler
+        scaler = StandardScaler()
+        X_train = scaler.fit_transform(X_train)
+        X_test = scaler.transform(X_test)
         
         print(f"Loaded real data: {X_train.shape[0]} train, {X_test.shape[0]} test samples")
         print(f"Feature shape: {X_train.shape[1]} features (8 channels × 2 stats)")
