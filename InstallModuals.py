@@ -5,8 +5,7 @@
 
 import pip
 
-importlsl = ['PySimpleGUI',
-             'opencv-python',
+importlsl = ['opencv-python',
              "paramiko<3.0",
              'pandas',
              'requests',
@@ -28,6 +27,7 @@ for i in importlsl:
         print()
     except Exception as e:
         print(f"faild to install {i}\n")
+
 
 
 
