@@ -14,7 +14,7 @@ from tensorflow_benchmark import run_benchmark as tensorflow_benchmark
 from jax_benchmark import run_benchmark as jax_benchmark
 
 
-def run_all_benchmarks(epochs=5):
+def run_all_benchmarks(epochs=50):
     """Run benchmarks for all frameworks"""
 
     print("ML FRAMEWORKS BENCHMARK SUITE - Avatar BCI Project")
@@ -73,7 +73,7 @@ def generate_report(results):
     return sorted_results
 
 
-def save_results(results, output_file='ml-frameworks-benchmark/results/benchmark_results.json'):
+def save_results(results, output_file='prediction-benchmark/results/benchmark_results.json'):
     """Save results to JSON file"""
     with open(output_file, 'w') as f:
         json.dump(results, f, indent=2)
@@ -82,7 +82,7 @@ def save_results(results, output_file='ml-frameworks-benchmark/results/benchmark
 
 if __name__ == "__main__":
     # Run all benchmarks
-    results = run_all_benchmarks(epochs=5)
+    results = run_all_benchmarks(epochs=50)
     
     # Generate comparison report
     sorted_results = generate_report(results)
