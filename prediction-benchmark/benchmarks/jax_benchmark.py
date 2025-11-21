@@ -177,12 +177,12 @@ def run_benchmark(device_type='cpu', epochs=10):
 
 if __name__ == "__main__":
     # Run CPU benchmark
-    results_cpu = run_benchmark(device_type='cpu', epochs=5)
+    results_cpu = run_benchmark(device_type='cpu', epochs=50)
     
     # Try GPU if available
     try:
         gpu_devices = jax.devices('gpu')
         if gpu_devices:
-            results_gpu = run_benchmark(device_type='gpu', epochs=5)
+            results_gpu = run_benchmark(device_type='gpu', epochs=50)
     except:
         print("\nGPU not available, skipping GPU benchmark")

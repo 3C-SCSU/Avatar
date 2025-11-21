@@ -16,31 +16,32 @@ sys.path.append(str(Path(__file__).parent.parent))
 from utils.data_loader import BenchmarkDataLoader
 
 
-class SimpleCNN(nn.Module):
-    """Simple CNN for EEG classification"""
+class FlexibleCNNClassifier(nn.Module):
+    """Better CNN architecture for EEG classification"""
     def __init__(self, n_features=16, n_classes=6):
-        super(SimpleCNN, self).__init__()
-        self.conv1 = nn.Conv1d(1, 32, kernel_size=3, padding=1)
-        self.conv2 = nn.Conv1d(32, 64, kernel_size=3, padding=1)
+        super(FlexibleCNNClassifier, self).__init__()
+        # Two 1D convolutional layers
+        self.conv1 = nn.Conv1d(in_channels=1, out_channels=64, kernel_size=3, padding=1)
+        self.conv2 = nn.Conv1d(in_channels=64, out_channels=128, kernel_size=3, padding=1)
         self.pool = nn.MaxPool1d(2)
-        self.fc1 = nn.Linear(64 * (n_features // 4), 128)
-        self.fc2 = nn.Linear(128, n_classes)
-        self.relu = nn.ReLU()
-        self.dropout = nn.Dropout(0.5)
+        self.global_pool = nn.AdaptiveAvgPool1d(1)
+        
+        # Two Linear layers
+        self.fc1 = nn.Linear(128, 64)
+        self.fc2 = nn.Linear(64, n_classes)
         
     def forward(self, x):
-        # Input: (batch, features)
-        x = x.unsqueeze(1)  # Add channel dimension: (batch, 1, features)
-        x = self.relu(self.conv1(x))
-        x = self.pool(x)
-        x = self.relu(self.conv2(x))
-        x = self.pool(x)
-        x = x.view(x.size(0), -1)  # Flatten
-        x = self.relu(self.fc1(x))
-        x = self.dropout(x)
+        if x.dim() == 2:
+            x = x.unsqueeze(1)
+        x = nn.functional.relu(self.conv1(x))
+        x = self.pool(x) if x.shape[-1] > 1 else x
+        x = nn.functional.relu(self.conv2(x))
+        x = self.pool(x) if x.shape[-1] > 1 else x
+        x = self.global_pool(x)
+        x = torch.flatten(x, 1)
+        x = nn.functional.relu(self.fc1(x))
         x = self.fc2(x)
         return x
-
 
 def train_model(model, train_loader, criterion, optimizer, device, epochs=10):
     """Train the PyTorch model"""
@@ -125,10 +126,18 @@ def run_benchmark(device_type='cpu', epochs=10):
     
     # Create model
     print("Creating model...")
-    model = SimpleCNN(n_features=16, n_classes=6).to(device)
-    criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    model = FlexibleCNNClassifier(n_features=16, n_classes=6).to(device)
     
+    # Calculate class weights for imbalanced dataset
+    class_counts = torch.bincount(torch.LongTensor(y_train))
+    class_weights = 1.0 / class_counts.float()
+    class_weights = class_weights / class_weights.sum() * len(class_weights)
+    class_weights = class_weights.to(device)
+    print(f"Class weights: {class_weights}")
+
+    criterion = nn.CrossEntropyLoss(weight=class_weights)
+    optimizer = optim.Adam(model.parameters(), lr=0.01)
+
     # Train
     print(f"\nTraining for {epochs} epochs...")
     total_train_start = time.time()
@@ -162,8 +171,8 @@ def run_benchmark(device_type='cpu', epochs=10):
 
 if __name__ == "__main__":
     # Run CPU benchmark
-    results_cpu = run_benchmark(device_type='cpu', epochs=5)
+    results_cpu = run_benchmark(device_type='cpu', epochs=100)
     
     # Try GPU if available
     if torch.cuda.is_available():
-        results_gpu = run_benchmark(device_type='cuda', epochs=5)
+        results_gpu = run_benchmark(device_type='cuda', epochs=100)
