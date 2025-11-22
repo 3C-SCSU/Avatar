@@ -48,8 +48,11 @@ Open the terminal in your IDE and run:
 python installModules.py
 
 
-
-
-
-
 After installation completes, all required libraries will be available and the CSCU Avatar Project is ready to run.
+
+
+
+
+
+
+
