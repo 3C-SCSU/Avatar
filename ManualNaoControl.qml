@@ -177,7 +177,6 @@ Rectangle {
                                 title: "Console Log"
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
-                                Layout.preferredHeight: 200
                                 label: Text {
                                     text: qsTr("Console Log"); font.bold: true; color: "white"
                                 }
@@ -191,7 +190,7 @@ Rectangle {
                                         readOnly: true
                                         wrapMode: Text.Wrap
                                         color: "white"
-                                        font.pixelSize: 10
+                                        font.pixelSize: Math.max(10, leftPanel.height * 0.02)
                                         background: Rectangle { color: "black" }
                                     }
                                 }
