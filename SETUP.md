@@ -68,3 +68,5 @@ Should show Python 3.11.x
 - Your Mac's system software is NOT affected by these installations
 - Always activate the venv before running the application
 
+
+

@@ -1,71 +1,107 @@
-LICENSE
-README.md
-
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
+# Python
 __pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+venv_old_py314/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
 
-
-plotscode/plots/
-plotscode/.Rhistory
-plotscode/.RData
-
-pynaoqi-python2.7-2.8.6.23-linux64-20191127_152327/
-
-
-# --- MacOS junk ---
-.DS_Store
-
-# --- IDE files ---
+# IDEs
+.vscode/
 .idea/
 .qtcreator/
-*.user
-*.user.*
 *.pyproject.user
+*.DS_Store
 
-# --- Python ---
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.egg-info/
-venv/
+# Sensitive files
+kafka-cluster/ssl-certs/*.jks
+kafka-cluster/ssl-certs/*-cert
+kafka-cluster/ssl-certs/broker_creds
+kafka-cluster/ssl-certs/*.csr
+kubernetes-encryption/encryption-config.yaml
+**/ssl-certs/
+*.pem
+*.key
+*.crt
+*.p12
 
-# --- Backups and temp ---
+# Media files (copyrighted)
+*.mp3
+*.wav
+*.m4a
+*.mp4
+*.mov
+*.avi
+
+# Documents
+*.docx
+*.pdf
+informed-consent.docx
+
+# Legacy/Old code
+Legacy*/
+**/Legacy*/
+GUI3*
+*brainwave-prediction-app3/
+
+# Temporary/Generated files
+.MessCleaner.txt
 *.backup
 *.bak
 *.tmp
 *.log
+requirements.txt.bak
 
-# --- Qt/QML generated files ---
+# Large binary files
+*.pkl
+*.pth
+*.h5
+*.model
+*.weights
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Plots/Output (can regenerate)
+plotscode/plots/
+commit_tiers_output/
+*.png
+*.jpg
+*.jpeg
+
+# Compiled Python
+*.pyc
+__pycache__/
+
+# Virtual environments
+venv/
+venv_*/
+.env
+.venv
+
+# Test files
+test.py
+test_*.py
+
+# PyCharm
+.idea/
+
+# VS Code  
+.vscode/
+
+# Qt
+*.pro.user
 *.qmlc
 *.jsc
-*.qsb
-*.qrc
 
-# --- Unnecessary folders ---
-commit_tiers_output/
-file-remove8channel/
-file-shuffler/
-file-transfer/
-file-unify-labels/
-plotscode/
-prediction-deep-learning/
-prediction-random-forest/
-GUI_Pics/
-Legacy /
-NA06_Manual_Control/
-Nao.mesh/
-UI/
-server/
-
-# --- Project-specific ---
-GUI5.pyproject
-GUI5.pyproject.user
+# Backup files
+*.backup
+*~
