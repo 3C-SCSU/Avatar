@@ -313,9 +313,9 @@ Rectangle {
                     Rectangle {
                         width: (parent.width - parent.spacing * 2) / 3
                         height: parent.height
-                        color: "#6eb109"
+                        color: "#2d7a4a"
 			radius: 5
-			border.color: selectedModel === "Random Forest" ? "yellow" : "#5a8c2b"
+			border.color: selectedModel === "Random Forest" ? "yellow" : "#4a9d6f"
    			border.width: selectedModel === "Random Forest" ? 3 : 1
                         Text {
                             text: "Random\nForest"
@@ -338,9 +338,9 @@ Rectangle {
                     Rectangle {
                         width: (parent.width - parent.spacing * 2) / 3
                         height: parent.height
-                        color: "#6eb109"
+                        color: "#2d7a4a"
 			radius: 5
-			border.color: selectedModel === "GaussianNB" ? "yellow" : "#5a8c2b"
+			border.color: selectedModel === "GaussianNB" ? "yellow" : "#4a9d6f"
    	 		border.width: selectedModel === "GaussianNB" ? 3 : 1
 			
 			Text {
@@ -364,9 +364,9 @@ Rectangle {
                     Rectangle {
                         width: (parent.width - parent.spacing * 2) / 3
                         height: parent.height
-                        color: "#6eb109"
+                        color: "#2d7a4a"
 			radius: 5
-			border.color: selectedModel === "Deep Learning" ? "yellow" : "#5a8c2b"
+			border.color: selectedModel === "Deep Learning" ? "yellow" : "#4a9d6f"
     			border.width: selectedModel === "Deep Learning" ? 3 : 1
                         Text {
                             text: "Deep\nLearning"
@@ -437,9 +437,9 @@ Rectangle {
                     Rectangle {
                         width: parent.width * 0.33
                         height: parent.height
-                        color: "#6eb109"
+                        color: "#2d7a4a"
                         radius: 5
-			border.color: currentFramework === "PyTorch" ? "yellow" : "#5a8c2b"
+			border.color: currentFramework === "PyTorch" ? "yellow" : "#4a9d6f"
         		border.width: currentFramework === "PyTorch" ? 3 : 1
                         Text {
                             text: "PyTorch"
@@ -462,9 +462,9 @@ Rectangle {
                     Rectangle {
                         width: parent.width * 0.33
                         height: parent.height
-                        color: "#6eb109"
+                        color: "#2d7a4a"
                         radius: 5
-			border.color: currentFramework === "TensorFlow" ? "yellow" : "#5a8c2b"
+			border.color: currentFramework === "TensorFlow" ? "yellow" : "#4a9d6f"
         		border.width: currentFramework === "TensorFlow" ? 3 : 1
                         Text {
                             text: "TensorFlow"
@@ -486,9 +486,9 @@ Rectangle {
                     Rectangle {
                         width: parent.width * 0.33
                         height: parent.height
-                        color: "#6eb109"
+                        color: "#2d7a4a"
                         radius: 5
-                        border.color: currentFramework === "JAX" ? "yellow" : "#5a8c2b"
+                        border.color: currentFramework === "JAX" ? "yellow" : "#4a9d6f"
                         border.width: currentFramework === "JAX" ? 3 : 1
                         Text {
                             text: "JAX"
