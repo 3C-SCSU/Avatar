@@ -512,13 +512,10 @@ Rectangle {
                         }
                     }
 
-                    // Vertical buttons column: Deploy / Train
-                    ColumnLayout {
-                        spacing: 16
-                        Layout.preferredWidth: 160
-                        Layout.minimumWidth: root.minControlSize
-                        Layout.fillHeight: true
-                        Layout.alignment: Qt.AlignTop
+                    // Buttons under Success Rate
+                    RowLayout {
+                            Layout.alignment: Qt.AlignHCenter
+                            spacing: 24
 
                         // DEPLOY
                         Button {
