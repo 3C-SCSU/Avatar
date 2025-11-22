@@ -1,0 +1,71 @@
+LICENSE
+README.md
+
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+__pycache__/
+
+
+plotscode/plots/
+plotscode/.Rhistory
+plotscode/.RData
+
+pynaoqi-python2.7-2.8.6.23-linux64-20191127_152327/
+
+
+# --- MacOS junk ---
+.DS_Store
+
+# --- IDE files ---
+.idea/
+.qtcreator/
+*.user
+*.user.*
+*.pyproject.user
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+venv/
+
+# --- Backups and temp ---
+*.backup
+*.bak
+*.tmp
+*.log
+
+# --- Qt/QML generated files ---
+*.qmlc
+*.jsc
+*.qsb
+*.qrc
+
+# --- Unnecessary folders ---
+commit_tiers_output/
+file-remove8channel/
+file-shuffler/
+file-transfer/
+file-unify-labels/
+plotscode/
+prediction-deep-learning/
+prediction-random-forest/
+GUI_Pics/
+Legacy /
+NA06_Manual_Control/
+Nao.mesh/
+UI/
+server/
+
+# --- Project-specific ---
+GUI5.pyproject
+GUI5.pyproject.user
