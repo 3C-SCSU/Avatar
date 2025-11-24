@@ -207,7 +207,7 @@ class BrainwavesBackend(QObject):
 
     def __init__(self):
         super().__init__()
-        self.drone_position = [0, 0, 0]  # x, y, z in cm; origin is home
+        self.action_log = [] # List used to store the actions performed by the drone
         self.flight_log = []  # List to store flight log entries
         self.predictions_log = []  # List to store prediction records
         self.current_prediction_label = ""
@@ -467,58 +467,67 @@ class BrainwavesBackend(QObject):
                     self.flightLogUpdated.emit(self.flight_log)
                     return
 
+                def record_action(name, value=None):
+                    self.action_log.append((name, value))
+
                 if action == 'up':
                     self.tello.move_up(30)
-                    self.drone_position[2] += 30
+                    record_action('up', 30)
                     self.logMessage.emit("Moving up")
                     self.flight_log.insert(0, "Moving up 30cm")
                 elif action == 'down':
                     self.tello.move_down(30)
+                    record_action('down', 30)
                     self.logMessage.emit("Moving down")
-                    self.drone_position[2] -= 30
                     self.flight_log.insert(0, "Moving down 30cm")
                 elif action == 'forward':
                     self.tello.move_forward(30)
-                    self.drone_position[0] += 30
+                    record_action('forward', 30)
                     self.logMessage.emit("Moving forward")
                     self.flight_log.insert(0, "Moving forward 30cm")
                 elif action == 'backward':
                     self.tello.move_back(30)
-                    self.drone_position[0] -= 30
+                    record_action('backward', 30)
                     self.logMessage.emit("Moving backward")
                     self.flight_log.insert(0, "Moving backward 30cm")
                 elif action == 'left':
                     self.tello.move_left(30)
-                    self.drone_position[1] += 30
+                    record_action('left', 30)
                     self.logMessage.emit("Moving left")
                     self.flight_log.insert(0, "Moving left 30cm")
                 elif action == 'right':
                     self.tello.move_right(30)
-                    self.drone_position[1] -= 30
+                    record_action('right', 30)
                     self.logMessage.emit("Moving right")
                     self.flight_log.insert(0, "Moving right 30cm")
                 elif action == 'turn_left':
                     self.tello.rotate_counter_clockwise(45)
+                    record_action('turn_left', 45)
                     self.logMessage.emit("Rotating left")
                     self.flight_log.insert(0, "Rotating left 45°")
                 elif action == 'turn_right':
                     self.tello.rotate_clockwise(45)
+                    record_action('turn_right', 45)
                     self.logMessage.emit("Rotating right")
                     self.flight_log.insert(0, "Rotating right 45°")
                 elif action == 'flip_forward':
                     self.tello.flip_forward()
+                    record_action('flip_forward')
                     self.logMessage.emit("Flipping forward")
                     self.flight_log.insert(0, "Flipping forward")
                 elif action == 'flip_back':
                     self.tello.flip_back()
+                    record_action('flip_back')
                     self.logMessage.emit("Flipping backward")
                     self.flight_log.insert(0, "Flipping backward")
                 elif action == 'flip_left':
                     self.tello.flip_left()
+                    record_action('flip_left')
                     self.logMessage.emit("Flipping left")
                     self.flight_log.insert(0, "Flipping left")
                 elif action == 'flip_right':
                     self.tello.flip_right()
+                    record_action('flip_right')
                     self.logMessage.emit("Flipping right")
                     self.flight_log.insert(0, "Flipping right")
                 elif action == 'takeoff':
@@ -558,35 +567,41 @@ class BrainwavesBackend(QObject):
 
     def go_home(self):
         try:
-            x, y, z = self.drone_position  # current relative position
+            self.logMessage.emit("Returning to home by reversing actions...")
+            self.flight_log.insert(0, "Returning to home by reversing actions")
+            
+            # Replay actions in reverse order
+            for action, value in reversed(self.action_log):
+                if action == "up":
+                    self.tello.move_down(value)
+                elif action == "down":
+                    self.tello.move_up(value)
+                elif action == "forward":
+                    self.tello.move_back(value)
+                elif action == "backward":
+                    self.tello.move_forward(value)
+                elif action == "left":
+                    self.tello.move_right(value)
+                elif action == "right":
+                    self.tello.move_left(value)
+                elif action == "turn_left":
+                    self.tello.rotate_clockwise(value)
+                elif action == "turn_right":
+                    self.tello.rotate_counter_clockwise(value)
+                elif action == "flip_forward":
+                    self.tello.flip_back()
+                elif action == "flip_back":
+                    self.tello.flip_forward()
+                elif action == "flip_left":
+                    self.tello.flip_right()
+                elif action == "flip_right":
+                    self.tello.flip_left()
 
-            # Step 1: Ascend if needed to avoid obstacles
-            if z < 50:  # maintain at least 50cm above ground
-                self.tello.move_up(50 - z)
-                self.flight_log.insert(0, f"Ascending to safe height: {50}cm")
-                z = 50
+            self.tello.land()
+            self.flight_log.insert(0, "Drone landed at home")
+            self.logMessage.emit("Drone landed at home safely.")
 
-            # Step 2: Move in x direction (forward/back)
-            if x > 0:
-                self.tello.move_back(x)
-            elif x < 0:
-                self.tello.move_forward(-x)
-
-            # Step 3: Move in y direction (left/right)
-            if y > 0:
-                self.tello.move_right(y)
-            elif y < 0:
-                self.tello.move_left(-y)
-
-            # Step 4: Land safely
-            if z > 0:
-                self.tello.land()
-                self.flight_log.insert(0, "Drone landed at home")
-
-            # Reset drone position
-            self.drone_position = [0, 0, 0]
-
-            self.logMessage.emit("Drone returned to home position.")
+            self.action_log.clear()
             self.flightLogUpdated.emit(self.flight_log)
 
         except Exception as e:
