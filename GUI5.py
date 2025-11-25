@@ -997,9 +997,8 @@ if __name__ == "__main__":
         backend.root_object.findChild(QObject, "loadConfigButton").clicked.connect(backend.load_config)
         backend.root_object.findChild(QObject, "clearConfigButton").clicked.connect(backend.clear_config)
         backend.root_object.findChild(QObject, "uploadButton").clicked.connect(backend.upload)
-        backend.root_object.findChild(QObject, "privateKeyDirButton").clicked.connect(backend.browse_private_key_dir)
-        backend.root_object.findChild(QObject, "sourceDirButton").clicked.connect(backend.browse_source_dir)
-        backend.root_object.findChild(QObject, "targetDirButton").clicked.connect(backend.browse_target_dir)
+        # File input buttons are now handled by Form_File_Input components in QML
+        # No need to connect these buttons anymore as file dialogs are handled internally
     else:
         print("Error: QML not loaded properly.")
 

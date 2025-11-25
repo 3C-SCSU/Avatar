@@ -4,6 +4,7 @@ import QtQuick 6.5
 import QtQuick.Controls 6.5
 import QtQuick.Layouts 1.15
 import QtQuick.Window 2.15
+import "GUI_Components"
 
 // Transfer Data is renamed to Cloud Computing
 Rectangle {
@@ -29,173 +30,42 @@ Rectangle {
             width: parent.width
             spacing: 10
 
-            Label {
-                text: "Target IP"
-                color: "white"
-                font.bold: true
-            }
-
-            TextField {
+            Form_Input {
                 id: hostInput
+                labelText: "Target IP"
                 objectName: "hostInput"
                 Layout.fillWidth: true
                 text: ""
                 placeholderText: "192.168.1.100"
-                color: "white"
-                font.pixelSize: 14
-                padding: 10
-                
-                background: Rectangle {
-                    color: "#3a4a6a"
-                    border.color: hostInput.activeFocus ? "#4e5e8a" : "#2e3a5c"
-                    border.width: 1
-                    radius: 4
-                    
-                    Behavior on border.color {
-                        ColorAnimation {
-                            duration: 150
-                        }
-                    }
-                }
             }
 
-            Label {
-                text: "Target Username"
-                color: "white"
-                font.bold: true
-            }
-
-            TextField {
+            Form_Input {
                 id: usernameInput
+                labelText: "Target Username"
                 objectName:"usernameInput"
                 Layout.fillWidth: true
                 text: ""
                 placeholderText: "username"
-                color: "white"
-                font.pixelSize: 14
-                padding: 10
-                
-                background: Rectangle {
-                    color: "#3a4a6a"
-                    border.color: usernameInput.activeFocus ? "#4e5e8a" : "#2e3a5c"
-                    border.width: 1
-                    radius: 4
-                    
-                    Behavior on border.color {
-                        ColorAnimation {
-                            duration: 150
-                        }
-                    }
-                }
             }
 
-            Label {
-                text: "Target Password"
-                color: "white"
-                font.bold: true
-            }
-
-            TextField {
+            Form_Input {
                 id: passwordInput
+                labelText: "Target Password"
                 objectName:"passwordInput"
                 Layout.fillWidth: true
                 echoMode: TextInput.Password
                 text: "password"
-                color: "white"
-                font.pixelSize: 14
-                padding: 10
-                
-                background: Rectangle {
-                    color: "#3a4a6a"
-                    border.color: passwordInput.activeFocus ? "#4e5e8a" : "#2e3a5c"
-                    border.width: 1
-                    radius: 4
-                    
-                    Behavior on border.color {
-                        ColorAnimation {
-                            duration: 150
-                        }
-                    }
-                }
             }
 
-            Label {
-                text: "Private Key Directory:"
-                color: "white"
-                font.bold: true
-            }
-
-            RowLayout {
+            Form_File_Input {
+                id: privateKeyDirInput
+                labelText: "Private Key Directory:"
+                dialogTitle: "Select Private Key Directory"
+                selectDirectory: true
+                objectName: "privateKeyDirInput"
                 Layout.fillWidth: true
-
-                TextField {
-                    id: privateKeyDirInput
-                    objectName: "privateKeyDirInput"
-                    Layout.fillWidth: true
-                    text: ""
-                    placeholderText: "/home/{username}/.ssh"
-                    color: "white"
-                    font.pixelSize: 14
-                    padding: 10
-                    
-                    background: Rectangle {
-                        color: "#3a4a6a"
-                        border.color: privateKeyDirInput.activeFocus ? "#4e5e8a" : "#2e3a5c"
-                        border.width: 1
-                        radius: 4
-                        
-                        Behavior on border.color {
-                            ColorAnimation {
-                                duration: 150
-                            }
-                        }
-                    }
-                }
-
-                Button {
-                    id: privateKeyDirButton
-                    objectName: "privateKeyDirButton"
-                    text: "Browse"
-                    font.bold: true
-                    implicitWidth: 120
-                    implicitHeight: 40
-                    
-                    property bool isHovering: false
-                    
-                    HoverHandler {
-                        onHoveredChanged: parent.isHovering = hovered
-                    }
-                    
-                    background: Rectangle {
-                        color: privateKeyDirButton.isHovering ? "#3e4e7a" : "#2e3a5c"
-                        radius: 4
-                        
-                        Behavior on color {
-                            ColorAnimation {
-                                duration: 150
-                            }
-                        }
-                    }
-                    
-                    contentItem: Text {
-                        text: privateKeyDirButton.text
-                        font.pixelSize: 14
-                        font.bold: true
-                        color: "white"
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                    }
-                    
-                    onClicked: console.log("Browse for Private Key Directory")
-                }
-            }
-
-            FileDialog {
-                id: privateKeyFileDialog
-                title: "Select Private Key Directory"
-                onAccepted: {
-                    privateKeyDirInput.text = fileUrl.toLocalFile();
-                }
+                text: ""
+                placeholderText: "/home/{username}/.ssh"
             }
 
             CheckBox {
@@ -212,156 +82,26 @@ Rectangle {
                 }
             }
 
-            Label {
-                text: "Source Directory:"
-                color: "white"
-                font.bold: true
-            }
-
-            RowLayout {
+            Form_File_Input {
+                id: sourceDirInput
+                labelText: "Source Directory:"
+                dialogTitle: "Select Source Directory"
+                selectDirectory: true
+                objectName: "sourceDirInput"
                 Layout.fillWidth: true
-
-                TextField {
-                    id: sourceDirInput
-                    objectName: "sourceDirInput"
-                    text: ""
-                    placeholderText: "/home/{username}/Documents/source"
-                    Layout.fillWidth: true
-                    color: "white"
-                    font.pixelSize: 14
-                    padding: 10
-                    
-                    background: Rectangle {
-                        color: "#3a4a6a"
-                        border.color: sourceDirInput.activeFocus ? "#4e5e8a" : "#2e3a5c"
-                        border.width: 1
-                        radius: 4
-                        
-                        Behavior on border.color {
-                            ColorAnimation {
-                                duration: 150
-                            }
-                        }
-                    }
-                }
-
-                Button {
-                    id: sourceDirButton
-                    objectName: "sourceDirButton"
-                    text: "Browse"
-                    font.bold: true
-                    implicitWidth: 120
-                    implicitHeight: 40
-                    
-                    property bool isHovering: false
-                    
-                    HoverHandler {
-                        onHoveredChanged: parent.isHovering = hovered
-                    }
-                    
-                    background: Rectangle {
-                        color: sourceDirButton.isHovering ? "#3e4e7a" : "#2e3a5c"
-                        radius: 4
-                        
-                        Behavior on color {
-                            ColorAnimation {
-                                duration: 150
-                            }
-                        }
-                    }
-                    
-                    contentItem: Text {
-                        text: sourceDirButton.text
-                        font.pixelSize: 14
-                        font.bold: true
-                        color: "white"
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                    }
-                    
-                    onClicked: console.log("Browse for Source Directory")
-                }
+                text: ""
+                placeholderText: "/home/{username}/Documents/source"
             }
 
-            FileDialog {
-                id: sourceDirFileDialog
-                title: "Select Source Directory"
-                onAccepted: {
-                    sourceDirInput.text = fileUrl.toLocalFile();
-                }
-            }
-
-            Label {
-                text: "Target Directory:"
-                color: "white"
-                font.bold: true
-            }
-            RowLayout {
+            Form_File_Input {
+                id: targetDirInput
+                labelText: "Target Directory:"
+                dialogTitle: "Select Target Directory"
+                selectDirectory: true
+                objectName: "targetDirInput"
                 Layout.fillWidth: true
-                TextField {
-                    id: targetDirInput
-                    objectName: "targetDirInput"
-                    Layout.fillWidth: true
-                    text: "/home/"
-                    placeholderText: "/home/{username}/Documents/target"
-                    color: "white"
-                    font.pixelSize: 14
-                    padding: 10
-                    
-                    background: Rectangle {
-                        color: "#3a4a6a"
-                        border.color: targetDirInput.activeFocus ? "#4e5e8a" : "#2e3a5c"
-                        border.width: 1
-                        radius: 4
-                        
-                        Behavior on border.color {
-                            ColorAnimation {
-                                duration: 150
-                            }
-                        }
-                    }
-                }
-                Button {
-                    id: targetDirButton
-                    objectName: "targetDirButton"
-                    text: "Browse"
-                    font.bold: true
-                    implicitWidth: 120
-                    implicitHeight: 40
-                    
-                    property bool isHovering: false
-                    
-                    HoverHandler {
-                        onHoveredChanged: parent.isHovering = hovered
-                    }
-                    
-                    background: Rectangle {
-                        color: targetDirButton.isHovering ? "#3e4e7a" : "#2e3a5c"
-                        radius: 4
-                        
-                        Behavior on color {
-                            ColorAnimation {
-                                duration: 150
-                            }
-                        }
-                    }
-                    
-                    contentItem: Text {
-                        text: targetDirButton.text
-                        font.pixelSize: 14
-                        font.bold: true
-                        color: "white"
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                    }
-                }
-            }
-            FileDialog {
-                id: targetDirFileDialog
-                title: "Select Target Directory"
-                onAccepted: {
-                    targetDirInput.text = fileUrl.toLocalFile();
-                }
+                text: "/home/"
+                placeholderText: "/home/{username}/Documents/target"
             }
 
             RowLayout {
