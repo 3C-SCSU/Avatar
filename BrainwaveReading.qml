@@ -226,7 +226,10 @@ Rectangle {
                         verticalAlignment: Text.AlignVCenter
                         anchors.fill: parent
                     }
-                    onClicked: backend.keepDroneAlive()
+                    onClicked: {
+								backend.keepDroneAlive(text=manualInput.text),
+								manualInput.text = ""
+								}
                 }
             }
 
