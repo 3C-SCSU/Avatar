@@ -280,6 +280,9 @@ class BrainwavesBackend(QObject):
         # Set current prediction
         self.current_prediction_label = prediction
 
+        #auto mode is desired
+        self.doDroneTAction(prediction)
+
         # Log the prediction
         self.predictions_log.append({
             "count": str(len(self.predictions_log) + 1),
@@ -432,6 +435,9 @@ class BrainwavesBackend(QObject):
             self.flightLogUpdated.emit(self.flight_log)
             self.logMessage.emit(f"Executed action: {self.current_prediction_label}")
 
+            # send it to the drone
+            self.doDroneTAction(self.current_prediction_label)
+            
     @Slot()
     def connectDrone(self):
         # Mock function to simulate drone connection

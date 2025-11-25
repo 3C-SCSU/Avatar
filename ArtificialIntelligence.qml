@@ -25,7 +25,7 @@ Rectangle {
 
     // Mode and model selection
     property string mode: "Deploy"                 // "Deploy" (default) | "Train"
-    property string currentModel: "Random Forest"  // "Random Forest" | "Deep Learning"
+    property string currentModel: "Random Forest"  // "Random Forest" | "GaussianNB" | "Deep Learning"
 
     // Deep Learning params (UI state only for now)
     property real   learningRate: 0.001
@@ -131,6 +131,42 @@ Rectangle {
                                         currentModel = "Random Forest"
                                         backend.selectModel("Random Forest")
                                         logToConsole("Model selected: Random Forest")
+                                    }
+                                }
+                            }
+                            // GaussianNB
+                            Rectangle {
+                                Layout.fillWidth: true
+                                Layout.minimumWidth: root.minControlSize
+                                Layout.minimumHeight: root.minControlSize
+                                Layout.maximumWidth: 260
+                                implicitWidth: Math.max(root.minControlSize,
+                                                        Math.min(root.width * 0.16, 260))
+                                implicitHeight: Math.max(root.minControlSize,
+                                                         Math.min(root.height * 0.08, 90))
+                                radius: 8
+                                color: "#2d7a4a"
+                                border.color: currentModel === "GaussianNB" ? "#439566" : "#2d7a4a"
+                                border.width: currentModel === "GaussianNB" ? 3 : 1
+
+                                Text {
+                                    anchors.centerIn: parent
+                                    text: "GaussianNB"
+                                    color: currentModel === "GaussianNB" ? "yellow" : "white"
+                                    font.bold: true
+                                    font.pixelSize: Math.max(10,
+                                                             Math.min(20, parent.height * 0.35))
+                                    horizontalAlignment: Text.AlignHCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                    wrapMode: Text.NoWrap
+                                }
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        currentModel = "GaussianNB"
+                                        backend.selectModel("GaussianNB")
+                                        logToConsole("Model selected: GaussianNB")
                                     }
                                 }
                             }
