@@ -101,7 +101,7 @@ Rectangle {
                 selectDirectory: true
                 objectName: "targetDirInput"
                 Layout.fillWidth: true
-                text: "/home/"
+                text: ""
                 placeholderText: "/home/{username}/Documents/target"
             }
 
@@ -162,19 +162,27 @@ Rectangle {
             FileDialog {
                 id: configFileDialog
                 title: "Select Configuration File"
+                fileMode: FileDialog.OpenFile
                 onAccepted: {
-                    if (root.isSavingConfig) {
-                        root.saveConfig(
-                            hostInput.text,
-                            usernameInput.text,
-                            privateKeyDirInput.text,
-                            targetDirInput.text,
-                            ignoreHostKeyCheckbox.checked,
-                            sourceDirInput.text,
-                            fileUrl.toLocalFile()
-                        );
-                    } else {
-                        root.loadConfig(fileUrl.toLocalFile());
+                    if (configFileDialog.file) {
+                        // Convert QUrl to local file path
+                        var fileUrl = configFileDialog.file.toString()
+                        var filePath = fileUrl.replace(/^(file:\/{2,3})/, "")
+                        filePath = decodeURIComponent(filePath)
+                        
+                        if (root.isSavingConfig) {
+                            root.saveConfig(
+                                hostInput.text,
+                                usernameInput.text,
+                                privateKeyDirInput.text,
+                                targetDirInput.text,
+                                ignoreHostKeyCheckbox.checked,
+                                sourceDirInput.text,
+                                filePath
+                            );
+                        } else {
+                            root.loadConfig(filePath);
+                        }
                     }
                 }
             }

@@ -1,6 +1,7 @@
 LICENSE
 README.md
 .DS_Store
+**/.DS_Store
 .vscode/
 .qmlls.ini
 .qmlls_cache/

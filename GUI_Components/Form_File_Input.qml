@@ -72,18 +72,48 @@ ColumnLayout {
                 verticalAlignment: Text.AlignVCenter
             }
             
-            onClicked: fileDialog.open()
+            onClicked: {
+                if (formFileInputContainer.selectDirectory) {
+                    folderDialog.open()
+                } else {
+                    fileDialog.open()
+                }
+            }
         }
     }
     
     FileDialog {
         id: fileDialog
         title: formFileInputContainer.dialogTitle
-        fileMode: formFileInputContainer.selectDirectory ? FileDialog.OpenFolder : FileDialog.OpenFile
+        fileMode: FileDialog.OpenFile
         onAccepted: {
-            var filePath = fileUrl.toLocalFile()
-            fileInput.text = filePath
-            formFileInputContainer.fileSelected(filePath)
+            if (fileDialog.file) {
+                // Convert QUrl to local file path
+                var fileUrl = fileDialog.file.toString()
+                // Remove "file://" prefix if present
+                var filePath = fileUrl.replace(/^(file:\/{2,3})/, "")
+                // Decode URL encoding
+                filePath = decodeURIComponent(filePath)
+                fileInput.text = filePath
+                formFileInputContainer.fileSelected(filePath)
+            }
+        }
+    }
+    
+    FolderDialog {
+        id: folderDialog
+        title: formFileInputContainer.dialogTitle
+        onAccepted: {
+            if (folderDialog.folder) {
+                // Convert QUrl to local file path
+                var folderUrl = folderDialog.folder.toString()
+                // Remove "file://" prefix if present
+                var folderPath = folderUrl.replace(/^(file:\/{2,3})/, "")
+                // Decode URL encoding
+                folderPath = decodeURIComponent(folderPath)
+                fileInput.text = folderPath
+                formFileInputContainer.fileSelected(folderPath)
+            }
         }
     }
 }
