@@ -452,73 +452,14 @@ Rectangle {
                                 }
                             }
                         }
-                    }
 
-                    // Console Log
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        spacing: 6
-
-                        Text {
-                            text: "Console Log"
-                            color: "white"
-                            font.bold: true
-                            font.pixelSize: Math.max(10, Math.min(22, root.height * 0.03))
-                        }
-
-                        // Outer frame (now matches Success Rate table)
-                        Rectangle {
-                            id: consoleFrame
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                            Layout.minimumWidth: root.minControlSize
-                            Layout.minimumHeight: root.minControlSize
-                            implicitWidth: Math.max(root.minControlSize,
-                                                    Math.min(root.width * 0.35, 420))
-                            implicitHeight: Math.max(root.minControlSize,
-                                                    Math.min(root.height * 0.25, 220))
-
-                            color: "#5f6b7a"           // SAME as Success Rate box
-                            radius: 6
-                            border.color: "#d0d6df"    // SAME border color
-                            border.width: 1
-
-                            // Inner scrollable area
-                            Rectangle {
-                                anchors.fill: parent
-                                anchors.margins: 8
-                                color: "white"         // White interior like the table cells
-                                radius: 4
-                                border.color: "transparent"
-
-                                ScrollView {
-                                    anchors.fill: parent
-                                    clip: true
-                                    ScrollBar.vertical.policy: ScrollBar.AsNeeded
-
-                                    TextArea {
-                                        id: consoleLog
-                                        readOnly: true
-                                        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                                        text: "Console output here..."
-                                        color: "black"
-                                        background: Rectangle { color: "transparent" }
-                                        font.pixelSize: Math.max(10,
-                                                                Math.min(14, height * 0.12))
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // Vertical buttons column: Deploy / Train
-                    ColumnLayout {
+                         // Horizontal buttons below Success Rate: Deploy / Train
+                    RowLayout {
                         spacing: 16
                         Layout.preferredWidth: 160
                         Layout.minimumWidth: root.minControlSize
                         Layout.fillHeight: true
-                        Layout.alignment: Qt.AlignTop
+                        Layout.alignment: Qt.AlignHCenter
 
                         // DEPLOY
                         Button {
@@ -604,6 +545,67 @@ Rectangle {
                             }
                         }
                     }
+                    }
+
+                    // Console Log
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        spacing: 6
+
+                        Text {
+                            text: "Console Log"
+                            color: "white"
+                            font.bold: true
+                            font.pixelSize: Math.max(10, Math.min(22, root.height * 0.03))
+                        }
+
+                        // Outer frame (now matches Success Rate table)
+                        Rectangle {
+                            id: consoleFrame
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            Layout.minimumWidth: root.minControlSize
+                            Layout.minimumHeight: root.minControlSize
+                            implicitWidth: Math.max(root.minControlSize,
+                                                    Math.min(root.width * 0.35, 420))
+                            implicitHeight: Math.max(root.minControlSize,
+                                                    Math.min(root.height * 0.25, 220))
+
+                            color: "#5f6b7a"           // SAME as Success Rate box
+                            radius: 6
+                            border.color: "#d0d6df"    // SAME border color
+                            border.width: 1
+
+                            // Inner scrollable area
+                            Rectangle {
+                                anchors.fill: parent
+                                anchors.margins: 8
+                                color: "white"         // White interior like the table cells
+                                radius: 4
+                                border.color: "transparent"
+
+                                ScrollView {
+                                    anchors.fill: parent
+                                    clip: true
+                                    ScrollBar.vertical.policy: ScrollBar.AsNeeded
+
+                                    TextArea {
+                                        id: consoleLog
+                                        readOnly: true
+                                        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                                        text: "Console output here..."
+                                        color: "black"
+                                        background: Rectangle { color: "transparent" }
+                                        font.pixelSize: Math.max(10,
+                                                                Math.min(14, height * 0.12))
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                   
                 }
             }
 

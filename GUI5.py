@@ -1,3 +1,44 @@
+# --- Qt DLL path bootstrap (must be FIRST) ---
+import os, sys, ctypes
+
+# Path to site-packages\PySide6 inside your *active venv*
+PYSIDE_ROOT = os.path.join(sys.prefix, "Lib", "site-packages", "PySide6")
+PYSIDE_QML  = os.path.join(PYSIDE_ROOT, "qml")
+PYSIDE_PLUG = os.path.join(PYSIDE_ROOT, "plugins")
+
+# Help the Windows loader see Qt6*.dll, libEGL.dll, d3dcompiler_47.dll, etc.
+if hasattr(os, "add_dll_directory"):
+    os.add_dll_directory(PYSIDE_ROOT)
+    # Some wheels tuck graphics bits under bin; add if present
+    bin_dir = os.path.join(PYSIDE_ROOT, "bin")
+    if os.path.isdir(bin_dir):
+        os.add_dll_directory(bin_dir)
+
+# Tell Qt where to find QML & plugins
+os.environ.setdefault("QML2_IMPORT_PATH", PYSIDE_QML)
+os.environ.setdefault("QT_PLUGIN_PATH", PYSIDE_PLUG)
+
+# Optional: keep your own project root off QT_PLUGIN_PATH confusion
+# (Do NOT set QT_QPA_PLATFORM_PLUGIN_PATH unless you know you need to.)
+
+# --- Preflight: prove the critical DLLs can load (prints helpful hints) ---
+def _must_load(name):
+    try:
+        ctypes.WinDLL(os.path.join(PYSIDE_ROOT, name))
+        print(f"[Qt DLL] OK: {name}")
+    except Exception as e:
+        print(f"[Qt DLL] FAIL: {name} -> {e}")
+
+for dll in (
+    "Qt6Core.dll", "Qt6Gui.dll", "Qt6Qml.dll", "Qt6Quick.dll",
+    "libEGL.dll", "d3dcompiler_47.dll"
+):
+    _must_load(dll)
+# --- end bootstrap ---
+
+
+
+
 import sys
 import os
 import subprocess
