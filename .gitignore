@@ -1,6 +1,16 @@
 LICENSE
 README.md
-
+.DS_Store
+.vscode/
+.qmlls.ini
+.qmlls_cache/
+.qmlls_cache_v2/
+.qmlls_cache_v3/
+.qmlls_cache_v4/
+.qmlls_cache_v5/
+.qmlls_cache_v6/
+.qmlls_cache_v7/
+.qmlls_cache_v8/
 
 # Environments
 .env
