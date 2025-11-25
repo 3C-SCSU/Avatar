@@ -1,7 +1,8 @@
 import QtQuick 6.5
-import QtQuick.Controls 6.4
+import QtQuick.Controls 6.4 as Controls
 
-TabButton {
+
+Controls.TabButton {
     id: root
     
     // Property to specify which stack index this button controls
