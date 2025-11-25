@@ -5,6 +5,7 @@ import QtQuick.Window 2.15
 import QtQuick3D 6.7
 import QtQuick.Dialogs
 import Qt.labs.platform
+import "GUI-Components"
 
 ApplicationWindow {
     visible: true
@@ -16,7 +17,7 @@ ApplicationWindow {
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: 10
+        spacing: 5
 
         // ===== TOP TAB BAR =====
         TabBar {
@@ -25,98 +26,37 @@ ApplicationWindow {
             height: 40
 
             TabButton {
-                // this tab shows page index 0
-                property int targetIndex: 0
-
                 text: "Read Brain"
-                font.bold: true
-                onClicked: stackLayout.currentIndex = targetIndex
-
-                background: Rectangle {
-                    anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
-                }
-                contentItem: Text {
-                    text: parent.text
-                    anchors.centerIn: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "white"
-                    font.bold: true
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    elide: Text.ElideRight
-                }
+                targetIndex: 0
+                currentIndex: stackLayout.currentIndex
+                onTabClicked: (index) => stackLayout.currentIndex = index
             }
 
             TabButton {
-                property int targetIndex: 2
-
                 text: "Manual Drone Control"
-                font.bold: true
-                onClicked: stackLayout.currentIndex = targetIndex
-
-                background: Rectangle {
-                    anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
-                }
-                contentItem: Text {
-                    text: parent.text
-                    anchors.centerIn: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "white"
-                    font.bold: true
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    elide: Text.ElideRight
-                }
+                targetIndex: 2
+                currentIndex: stackLayout.currentIndex
+                onTabClicked: (index) => stackLayout.currentIndex = index
             }
 
             TabButton {
-                property int targetIndex: 3
-
                 text: "Manual NAO Control"
-                font.bold: true
-                onClicked: {
-                    stackLayout.currentIndex = targetIndex
+                targetIndex: 3
+                currentIndex: stackLayout.currentIndex
+                onTabClicked: (index) => {
+                    stackLayout.currentIndex = index
                     console.log("Manual Controller tab clicked")
                     tabController.startNaoViewer()
                 }
-
-                background: Rectangle {
-                    anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
-                }
-                contentItem: Text {
-                    text: parent.text
-                    anchors.centerIn: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "white"
-                    font.bold: true
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    elide: Text.ElideRight
-                }
             }
 
             TabButton {
-                property int targetIndex: 7
-
                 text: "Artificial Intelligence"
-                font.bold: true
-                onClicked: {
-                    stackLayout.currentIndex = targetIndex
+                targetIndex: 7
+                currentIndex: stackLayout.currentIndex
+                onTabClicked: (index) => {
+                    stackLayout.currentIndex = index
                     console.log("Artificial Intelligence tab clicked")
-                }
-
-                background: Rectangle {
-                    anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
-                }
-                contentItem: Text {
-                    text: parent.text
-                    anchors.centerIn: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "white"
-                    font.bold: true
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    elide: Text.ElideRight
                 }
             }
         }
@@ -141,95 +81,34 @@ ApplicationWindow {
         TabBar {
             id: bottomTabBar
             Layout.fillWidth: true
-            height: 40
             position: TabBar.Footer
 
             TabButton {
-                property int targetIndex: 1
-
                 text: "Brainwave Visualization"
-                font.bold: true
-                onClicked: stackLayout.currentIndex = targetIndex
-
-                background: Rectangle {
-                    anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
-                }
-                contentItem: Text {
-                    text: parent.text
-                    anchors.centerIn: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "white"
-                    font.bold: true
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    elide: Text.ElideRight
-                }
+                targetIndex: 1
+                currentIndex: stackLayout.currentIndex
+                onTabClicked: (index) => stackLayout.currentIndex = index
             }
 
             TabButton {
-                property int targetIndex: 4
-
                 text: "File Shuffler"
-                font.bold: true
-                onClicked: stackLayout.currentIndex = targetIndex
-
-                background: Rectangle {
-                    anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
-                }
-                contentItem: Text {
-                    text: parent.text
-                    anchors.centerIn: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "white"
-                    font.bold: true
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    elide: Text.ElideRight
-                }
+                targetIndex: 4
+                currentIndex: stackLayout.currentIndex
+                onTabClicked: (index) => stackLayout.currentIndex = index
             }
 
             TabButton {
-                property int targetIndex: 5
-
                 text: "Cloud Computing" // Renamed Transfer Data to Cloud Computing 
-                font.bold: true
-                onClicked: stackLayout.currentIndex = targetIndex
-
-                background: Rectangle {
-                    anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
-                }
-                contentItem: Text {
-                    text: parent.text
-                    anchors.centerIn: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "white"
-                    font.bold: true
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    elide: Text.ElideRight
-                }
+                targetIndex: 5
+                currentIndex: stackLayout.currentIndex
+                onTabClicked: (index) => stackLayout.currentIndex = index
             }
 
             TabButton {
-                property int targetIndex: 6
-
                 text: "Developers"
-                font.bold: true
-                onClicked: stackLayout.currentIndex = targetIndex
-
-                background: Rectangle {
-                    anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
-                }
-                contentItem: Text {
-                    text: parent.text
-                    anchors.centerIn: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "white"
-                    font.bold: true
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    elide: Text.ElideRight
-                }
+                targetIndex: 6
+                currentIndex: stackLayout.currentIndex
+                onTabClicked: (index) => stackLayout.currentIndex = index
             }
         }
     }
