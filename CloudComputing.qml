@@ -54,7 +54,8 @@ Rectangle {
                 objectName:"passwordInput"
                 Layout.fillWidth: true
                 echoMode: TextInput.Password
-                text: "password"
+                text: ""
+                placeholderText: "Enter Password"
             }
 
             Form_File_Input {
