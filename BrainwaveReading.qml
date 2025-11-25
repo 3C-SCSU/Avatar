@@ -9,7 +9,7 @@ import QtQuick3D 6.7
 // Brainwave Reading view
 Rectangle {
     property string selectedModel: "Random Forest"  // Can be "Random Forest", "GaussianNB", or "Deep Learning"
-    property bool isPyTorchSelected: true
+    property string currentFramework: "PyTorch"  // Can be "PyTorch", "TensorFlow", or "JAX"
     color: "#718399"
     Layout.fillWidth: true
     Layout.fillHeight: true
@@ -313,9 +313,9 @@ Rectangle {
                     Rectangle {
                         width: (parent.width - parent.spacing * 2) / 3
                         height: parent.height
-                        color: "#6eb109"
+                        color: "#2d7a4a"
 			radius: 5
-			border.color: selectedModel === "Random Forest" ? "yellow" : "#5a8c2b"
+			border.color: selectedModel === "Random Forest" ? "yellow" : "#4a9d6f"
    			border.width: selectedModel === "Random Forest" ? 3 : 1
                         Text {
                             text: "Random\nForest"
@@ -338,9 +338,9 @@ Rectangle {
                     Rectangle {
                         width: (parent.width - parent.spacing * 2) / 3
                         height: parent.height
-                        color: "#6eb109"
+                        color: "#2d7a4a"
 			radius: 5
-			border.color: selectedModel === "GaussianNB" ? "yellow" : "#5a8c2b"
+			border.color: selectedModel === "GaussianNB" ? "yellow" : "#4a9d6f"
    	 		border.width: selectedModel === "GaussianNB" ? 3 : 1
 			
 			Text {
@@ -364,9 +364,9 @@ Rectangle {
                     Rectangle {
                         width: (parent.width - parent.spacing * 2) / 3
                         height: parent.height
-                        color: "#6eb109"
+                        color: "#2d7a4a"
 			radius: 5
-			border.color: selectedModel === "Deep Learning" ? "yellow" : "#5a8c2b"
+			border.color: selectedModel === "Deep Learning" ? "yellow" : "#4a9d6f"
     			border.width: selectedModel === "Deep Learning" ? 3 : 1
                         Text {
                             text: "Deep\nLearning"
@@ -429,30 +429,30 @@ Rectangle {
 
                 // PyTorch and TensorFlow Framework Buttons
                 Row {
-                    width: parent.width * 0.5
+                    width: parent.width * 0.7
                     height: parent.height * 0.3
                     spacing: height * 0.1
 
                     //PyTorch Button
                     Rectangle {
-                        width: parent.width * 0.5
+                        width: parent.width * 0.33
                         height: parent.height
-                        color: "#6eb109"
+                        color: "#2d7a4a"
                         radius: 5
-			border.color: isPyTorchSelected ? "yellow" : "#5a8c2b"
-        		border.width: isPyTorchSelected ? 3 : 1
+			border.color: currentFramework === "PyTorch" ? "yellow" : "#4a9d6f"
+        		border.width: currentFramework === "PyTorch" ? 3 : 1
                         Text {
                             text: "PyTorch"
                             font.pixelSize: parent.width * 0.08
                             font.bold: true
-                            color: isPyTorchSelected ? "yellow" : "white"
+                            color: currentFramework === "PyTorch" ? "yellow" : "white"
                             anchors.centerIn: parent
                         }
 
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                isPyTorchSelected = true
+                                currentFramework = "PyTorch"
                                 backend.selectFramework("PyTorch")
                             }
                         }
@@ -460,25 +460,49 @@ Rectangle {
 
                     //TensorFlow Button
                     Rectangle {
-                        width: parent.width * 0.5
+                        width: parent.width * 0.33
                         height: parent.height
-                        color: "#6eb109"
+                        color: "#2d7a4a"
                         radius: 5
-			border.color: !isPyTorchSelected ? "yellow" : "#5a8c2b"
-        		border.width: !isPyTorchSelected ? 3 : 1
+			border.color: currentFramework === "TensorFlow" ? "yellow" : "#4a9d6f"
+        		border.width: currentFramework === "TensorFlow" ? 3 : 1
                         Text {
                             text: "TensorFlow"
                             font.pixelSize: parent.width * 0.08
                             font.bold: true
-                            color: !isPyTorchSelected ? "yellow" : "white"
+                            color: currentFramework === "TensorFlow" ? "yellow" : "white"
                             anchors.centerIn: parent
                         }
 
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                isPyTorchSelected = false
+                                currentFramework = "TensorFlow"
                                 backend.selectFramework("TensorFlow")
+                            }
+                        }
+                      }
+                      //JAX Button
+                    Rectangle {
+                        width: parent.width * 0.33
+                        height: parent.height
+                        color: "#2d7a4a"
+                        radius: 5
+                        border.color: currentFramework === "JAX" ? "yellow" : "#4a9d6f"
+                        border.width: currentFramework === "JAX" ? 3 : 1
+                        Text {
+                            text: "JAX"
+                            font.pixelSize: parent.width * 0.08
+                            font.bold: true
+                            color: currentFramework === "JAX" ? "yellow" : "white"
+                            anchors.centerIn: parent
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                currentFramework = "JAX"
+                                backend.selectFramework("JAX")
                             }
                         }
                     }
