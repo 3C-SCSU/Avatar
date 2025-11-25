@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 # Authors: Brady Theisen
 
 TRUE_PATH="$1"
