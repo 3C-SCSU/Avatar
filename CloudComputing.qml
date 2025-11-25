@@ -135,7 +135,9 @@ Rectangle {
                     objectName: "clearConfigButton"
                     text: "Clear Config"
                     
-                    onClicked: console.log("Clear Config clicked")
+                    onClicked:{
+                         root.clearConfig();
+                    }
                 }
 
                 Button_Primary {
@@ -143,9 +145,20 @@ Rectangle {
                     objectName: "uploadButton"
                     text: "Upload"
                     
-                    onClicked: console.log("Upload clicked")
+                    onClicked: {
+                        root.upload(
+                            hostInput.text,
+                            usernameInput.text,
+                            privateKeyDirInput.text,
+                            passwordInput.text,
+                            ignoreHostKeyCheckbox.checked,
+                            sourceDirInput.text,
+                            targetDirInput.text
+                        );
+                    }
                 }
             }
+
             FileDialog {
                 id: configFileDialog
                 title: "Select Configuration File"
