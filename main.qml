@@ -29,21 +29,21 @@ ApplicationWindow {
                 text: "Read Brain"
                 targetIndex: 0
                 currentIndex: stackLayout.currentIndex
-                onTabClicked: (index) => stackLayout.currentIndex = index
+                onTabClicked: stackLayout.currentIndex = index
             }
 
             TabButton {
                 text: "Manual Drone Control"
                 targetIndex: 2
                 currentIndex: stackLayout.currentIndex
-                onTabClicked: (index) => stackLayout.currentIndex = index
+                onTabClicked: stackLayout.currentIndex = index
             }
 
             TabButton {
                 text: "Manual NAO Control"
                 targetIndex: 3
                 currentIndex: stackLayout.currentIndex
-                onTabClicked: (index) => {
+                onTabClicked: {
                     stackLayout.currentIndex = index
                     console.log("Manual Controller tab clicked")
                     tabController.startNaoViewer()
@@ -54,9 +54,8 @@ ApplicationWindow {
                 text: "Artificial Intelligence"
                 targetIndex: 7
                 currentIndex: stackLayout.currentIndex
-                onTabClicked: (index) => {
+                onTabClicked: {
                     stackLayout.currentIndex = index
-                    console.log("Artificial Intelligence tab clicked")
                 }
             }
         }
@@ -87,28 +86,28 @@ ApplicationWindow {
                 text: "Brainwave Visualization"
                 targetIndex: 1
                 currentIndex: stackLayout.currentIndex
-                onTabClicked: (index) => stackLayout.currentIndex = index
+                onTabClicked: stackLayout.currentIndex = index
             }
 
             TabButton {
                 text: "File Shuffler"
                 targetIndex: 4
                 currentIndex: stackLayout.currentIndex
-                onTabClicked: (index) => stackLayout.currentIndex = index
+                onTabClicked: stackLayout.currentIndex = index
             }
 
             TabButton {
                 text: "Cloud Computing" // Renamed Transfer Data to Cloud Computing 
                 targetIndex: 5
                 currentIndex: stackLayout.currentIndex
-                onTabClicked: (index) => stackLayout.currentIndex = index
+                onTabClicked: stackLayout.currentIndex = index
             }
 
             TabButton {
                 text: "Developers"
                 targetIndex: 6
                 currentIndex: stackLayout.currentIndex
-                onTabClicked: (index) => stackLayout.currentIndex = index
+                onTabClicked: stackLayout.currentIndex = index
             }
         }
     }
