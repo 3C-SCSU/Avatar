@@ -1,4 +1,4 @@
-#program:       InstallModuals
+#program:       InstallModules
 #purpose:       use pip to install modules required to run the aplication
 #progamer:      Madison Arndt 1/24/2024
 
@@ -27,6 +27,7 @@ for i in importlsl:
         print()
     except Exception as e:
         print(f"faild to install {i}\n")
+
 
 
 
