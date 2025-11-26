@@ -146,6 +146,8 @@ Rectangle {
                             anchors.bottom: parent.bottom
                             clip: true
 
+                            background: Rectangle { color: "white" }
+
                             Component.onCompleted: {
                                 backend.flightLogUpdated.connect(function(logList) {
                                     flightLog.text = logList.join("\n")
