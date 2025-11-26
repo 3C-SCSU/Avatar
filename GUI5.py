@@ -451,6 +451,19 @@ class BrainwavesBackend(QObject):
         self.flight_log.insert(0, "Keep alive signal sent.")
         self.flightLogUpdated.emit(self.flight_log)
 
+        #remove null at end and make all lowercase
+        text = text.strip().lower()
+
+        """
+        if text not in ["takeoff","land","right","left","forward","back",
+                        "up","down","flip_forward","flip_back","go_home",
+                        "flip_right","flip_left","turn_right","turn_left",
+                        "connect","stream"]:
+            return"""
+
+        #exicut cmd
+        self.doDroneTAction(text)
+
         
         
 
