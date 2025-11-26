@@ -24,7 +24,7 @@ Rectangle {
         Rectangle {
             width: parent.width
             implicitHeight: contentLayout.implicitHeight + 20
-            color: "transparent"
+            color: "#5a6b7d"
             border.color: "#CCCCCC"
             border.width: 1
             radius: 4
