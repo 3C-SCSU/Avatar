@@ -110,7 +110,7 @@ Rectangle {
                                                          Math.min(root.height * 0.08, 90))
                                 radius: 8
                                 color: "#2d7a4a"
-                                border.color: currentModel === "Random Forest" ? "#439566" : "#2d7a4a"
+                                border.color: currentModel === "Random Forest" ? "yellow" : "#2d7a4a"
                                 border.width: currentModel === "Random Forest" ? 3 : 1
 
                                 Text {
@@ -183,7 +183,7 @@ Rectangle {
                                                          Math.min(root.height * 0.08, 90))
                                 radius: 8
                                 color: "#2d7a4a"
-                                border.color: currentModel === "Deep Learning" ? "#439566" : "#2d7a4a"
+                                border.color: currentModel === "Deep Learning" ? "yellow" : "#2d7a4a"
                                 border.width: currentModel === "Deep Learning" ? 3 : 1
 
                                 Text {
@@ -253,7 +253,7 @@ Rectangle {
                                                          Math.min(root.height * 0.07, 80))
                                 radius: 8
                                 color: "#2d7a4a"
-                                border.color: currentModel === "PyTorch" ? "#439566" : "#2d7a4a"
+                                border.color: currentFramework === "PyTorch" ? "yellow" : "#2d7a4a"
                                 border.width: currentFramework === "PyTorch" ? 3 : 1
 
                                 Text {
@@ -290,7 +290,7 @@ Rectangle {
                                                          Math.min(root.height * 0.07, 80))
                                 radius: 8
                                 color: "#2d7a4a"
-                                border.color: currentModel === "TensorFlow" ? "#439566" : "#2d7a4a"
+                                border.color: currentFramework === "TensorFlow" ? "yellow" : "#2d7a4a"
                                 border.width: currentFramework === "TensorFlow" ? 3 : 1
 
                                 Text {
@@ -327,7 +327,7 @@ Rectangle {
                                                          Math.min(root.height * 0.07, 80))
                                 radius: 8
                                 color: "#2d7a4a"
-                                border.color: currentModel === "JAX" ? "#439566" : "#2d7a4a"
+                                border.color: currentFramework === "JAX" ? "yellow" : "#2d7a4a"
                                 border.width: currentFramework === "JAX" ? 3 : 1
 
                                 Text {
