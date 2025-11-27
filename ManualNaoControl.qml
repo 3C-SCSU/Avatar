@@ -1,20 +1,19 @@
-/*
-    Avatar - Manual NAO Control Interface
-    Author: Youssef Elkhouly
-    Date: October 2025
-
-    Description:
-        This QML file implements the Manual NAO Control tab, providing a user interface
-        for controlling the NAO robot. It includes a 3D viewer of the NAO model and
-        a connection panel with configurable IP and Port settings.
-
-    Features:
-        - 3D NAO robot visualization
-        - Movement controls (Forward, Backward, Left, Right, Takeoff, Land)
-        - Configurable IP address and Port input fields
-        - Console logging for debugging
-        - Real-time animation of robot movements
-*/
+/** File Name: ManualNaoControl.qml
+** { Copyright: © 2025 Avatar BCI -- All rights reserved.
+** ---------------------- [Cloud Computing Club;
+** ---------------------- Brain Computer Interface Lab;
+** ---------------------- CIDS / SCSU.] }
+** Author: For the complete list of contributors, please refer to
+** ---------------------- specific code file in the project's
+** ---------------------- GitHub history and the UI Tab: [Developers] containing the 
+** ---------------------- automatically updated complete list of authors.
+** Description: 
+** This QML file implements the Manual NAO Control tab, providing a user interface
+** for controlling the NAO robot. It includes a 3D viewer of the NAO model  and 
+** a connection panel with configurable IP and Port settings.
+** a connection panel with configurable IP and Port settings.
+** MIT License
+ -----------------------------------------------------*/
 
 import QtQuick.Dialogs
 import Qt.labs.platform
@@ -82,17 +81,20 @@ Rectangle {
                 property bool animationInProgress: false
                 property int modelRotationY: 0
 
+                signal logMessage(string message)
+
                 RowLayout {
                     anchors.fill: parent
-                    spacing: 10
+                    // spacing: 10
+                    spacing: 0
 
                     // ================= LEFT PANEL =================
                     Rectangle {
                         id: leftPanel
-                        Layout.preferredWidth: 500
+                        Layout.preferredWidth: parent.width * 0.30
                         Layout.fillHeight: true
                         color: "#718399"
-                        radius: 6
+                        // radius: 6
 
                         ColumnLayout {
                             anchors.fill: parent
@@ -175,7 +177,6 @@ Rectangle {
                                 title: "Console Log"
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
-                                Layout.preferredHeight: 200
                                 label: Text {
                                     text: qsTr("Console Log"); font.bold: true; color: "white"
                                 }
@@ -189,7 +190,7 @@ Rectangle {
                                         readOnly: true
                                         wrapMode: Text.Wrap
                                         color: "white"
-                                        font.pixelSize: 10
+                                        font.pixelSize: Math.max(10, leftPanel.height * 0.02)
                                         background: Rectangle { color: "black" }
                                     }
                                 }
@@ -197,9 +198,9 @@ Rectangle {
                         }
                     }
 
-                    // ================= RIGHT PANEL (3D Viewer) =================
+                    // ================= CENTER PANEL (3D Viewer) =================
                     Rectangle {
-                        id: rightPanel
+                        id: centerPanel
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         color: "#2f2f2f"
@@ -249,7 +250,7 @@ Rectangle {
                             Rectangle {
                                 anchors.right: parent.right
                                 anchors.bottom: parent.bottom
-                                width: parent.width * 0.25
+                                width: Math.max(parent.width * 0.25, 160)
                                 height: parent.height * 0.25
                                 color: "#242c4d"
                                 radius: 8
@@ -361,6 +362,37 @@ Rectangle {
                             }
                         }
                     }
+
+                    // RIGHT PANEL (Drone Camera View)
+                    Rectangle {
+                        id: rightPanel
+                        Layout.preferredWidth: parent.width * 0.30
+                        Layout.minimumWidth: 300
+                        Layout.fillHeight: true
+                        color: "#111"
+                        radius: 0
+
+                        Loader {
+                            id: droneCameraLoader
+                            anchors.fill: parent
+                            source: "NA06_Manual_Control/camera_view/DroneCameraView.qml"
+                            asynchronous: true
+
+                            onStatusChanged: console.log("DroneCameraLoader.status::: ", status)
+
+                            onLoaded: {
+                                if (droneCameraLoader.item) {
+                                    if (typeof droneCameraController !== "undefined") {
+                                        droneCameraLoader.item.cameraController = droneCameraController
+                                        console.log("DroneCameraController assigned::: ", droneCameraController)
+                                        droneCameraLoader.item.logToParent.connect(rootPanel.appendLog)
+                                    } else {
+                                        console.log("DroneCameraController not defined")
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
                 // ================= Animations =================
@@ -462,7 +494,11 @@ Rectangle {
                     var timestamp = new Date().toLocaleString()
                     consoleLog1.append(msg + " at " + timestamp)
                 }
-            
+
+                // Connect the signal to appendLog
+                onLogMessage: {
+                    appendLog(message)
+                }
             }
         }
     }

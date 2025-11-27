@@ -8,8 +8,8 @@ import QtQuick3D 6.7
 
 // Brainwave Reading view
 Rectangle {
-    property bool isRandomForestSelected: false
-    property bool isPyTorchSelected: true
+    property string selectedModel: "Random Forest"  // Can be "Random Forest", "GaussianNB", or "Deep Learning"
+    property string currentFramework: "PyTorch"  // Can be "PyTorch", "TensorFlow", or "JAX"
     color: "#718399"
     Layout.fillWidth: true
     Layout.fillHeight: true
@@ -179,7 +179,7 @@ Rectangle {
 
                 Button {
                     id: executeBtn
-                    text: "Execute"
+                    text: "Action"
                     font.pixelSize: parent.width * 0.03
                     width: parent.width * 0.5
                     height: parent.height
@@ -219,7 +219,7 @@ Rectangle {
                     }
 
                     contentItem: Text {
-                        text: qsTr("Keep Drone Alive")
+                        text: qsTr("Run")
                         color: "white"
                         font.pixelSize: parent.height * 0.5
                         horizontalAlignment: Text.AlignHCenter
@@ -303,55 +303,83 @@ Rectangle {
                     }
                 }
 
-                // Random Forest and Deep Learning Buttons
+                // Model Selection Buttons: Random Forest, GaussianNB, Deep Learning
                 Row {
                     width: parent.width * 0.5
                     height: parent.height * 0.3
-                    spacing: height * 0.1
-
+                    spacing: height * 0.05
+                    
                     // Random Forest Button
-
                     Rectangle {
-                        width: parent.width * 0.5
+                        width: (parent.width - parent.spacing * 2) / 3
                         height: parent.height
-                        color: "#6eb109"
-                        radius: 5
-
+                        color: "#2d7a4a"
+			radius: 5
+			border.color: selectedModel === "Random Forest" ? "yellow" : "#4a9d6f"
+   			border.width: selectedModel === "Random Forest" ? 3 : 1
                         Text {
-                            text: "Random Forest"
-                            font.pixelSize: parent.width * 0.08
+                            text: "Random\nForest"
+                            font.pixelSize: parent.width * 0.12
                             font.bold: true
-                            color: isRandomForestSelected ? "yellow" : "white"
+                            color: selectedModel === "Random Forest" ? "yellow" : "white"
                             anchors.centerIn: parent
+                            horizontalAlignment: Text.AlignHCenter
                         }
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                isRandomForestSelected = true;
+                                selectedModel = "Random Forest";
                                 backend.selectModel("Random Forest")
                             }
                         }
                     }
-
-                    // Deep Learning Button
+                    
+                    // GaussianNB Button
                     Rectangle {
-                        width: parent.width * 0.5
+                        width: (parent.width - parent.spacing * 2) / 3
                         height: parent.height
-                        color: "#6eb109"
-
-                        radius: 5
-                        Text {
-                            text: "Deep Learning"
-                            font.pixelSize: parent.width * 0.08
+                        color: "#2d7a4a"
+			radius: 5
+			border.color: selectedModel === "GaussianNB" ? "yellow" : "#4a9d6f"
+   	 		border.width: selectedModel === "GaussianNB" ? 3 : 1
+			
+			Text {
+                            text: "GaussianNB"
+                            font.pixelSize: parent.width * 0.12
                             font.bold: true
-                            color: !isRandomForestSelected ? "yellow" : "white"
+                            color: selectedModel === "GaussianNB" ? "yellow" : "white"
                             anchors.centerIn: parent
+                            horizontalAlignment: Text.AlignHCenter
                         }
-
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                isRandomForestSelected = false;
+                                selectedModel = "GaussianNB";
+                                backend.selectModel("GaussianNB")
+                            }
+                        }
+                    }
+                    
+                    // Deep Learning Button
+                    Rectangle {
+                        width: (parent.width - parent.spacing * 2) / 3
+                        height: parent.height
+                        color: "#2d7a4a"
+			radius: 5
+			border.color: selectedModel === "Deep Learning" ? "yellow" : "#4a9d6f"
+    			border.width: selectedModel === "Deep Learning" ? 3 : 1
+                        Text {
+                            text: "Deep\nLearning"
+                            font.pixelSize: parent.width * 0.12
+                            font.bold: true
+                            color: selectedModel === "Deep Learning" ? "yellow" : "white"
+                            anchors.centerIn: parent
+                            horizontalAlignment: Text.AlignHCenter
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                selectedModel = "Deep Learning";
                                 backend.selectModel("Deep Learning")
                             }
                         }
@@ -401,29 +429,30 @@ Rectangle {
 
                 // PyTorch and TensorFlow Framework Buttons
                 Row {
-                    width: parent.width * 0.5
+                    width: parent.width * 0.7
                     height: parent.height * 0.3
                     spacing: height * 0.1
 
                     //PyTorch Button
                     Rectangle {
-                        width: parent.width * 0.5
+                        width: parent.width * 0.33
                         height: parent.height
-                        color: "#6eb109"
+                        color: "#2d7a4a"
                         radius: 5
-
+			border.color: currentFramework === "PyTorch" ? "yellow" : "#4a9d6f"
+        		border.width: currentFramework === "PyTorch" ? 3 : 1
                         Text {
                             text: "PyTorch"
                             font.pixelSize: parent.width * 0.08
                             font.bold: true
-                            color: isPyTorchSelected ? "yellow" : "white"
+                            color: currentFramework === "PyTorch" ? "yellow" : "white"
                             anchors.centerIn: parent
                         }
 
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                isPyTorchSelected = true
+                                currentFramework = "PyTorch"
                                 backend.selectFramework("PyTorch")
                             }
                         }
@@ -431,24 +460,49 @@ Rectangle {
 
                     //TensorFlow Button
                     Rectangle {
-                        width: parent.width * 0.5
+                        width: parent.width * 0.33
                         height: parent.height
-                        color: "#6eb109"
+                        color: "#2d7a4a"
                         radius: 5
-
+			border.color: currentFramework === "TensorFlow" ? "yellow" : "#4a9d6f"
+        		border.width: currentFramework === "TensorFlow" ? 3 : 1
                         Text {
                             text: "TensorFlow"
                             font.pixelSize: parent.width * 0.08
                             font.bold: true
-                            color: !isPyTorchSelected ? "yellow" : "white"
+                            color: currentFramework === "TensorFlow" ? "yellow" : "white"
                             anchors.centerIn: parent
                         }
 
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                isPyTorchSelected = false
+                                currentFramework = "TensorFlow"
                                 backend.selectFramework("TensorFlow")
+                            }
+                        }
+                      }
+                      //JAX Button
+                    Rectangle {
+                        width: parent.width * 0.33
+                        height: parent.height
+                        color: "#2d7a4a"
+                        radius: 5
+                        border.color: currentFramework === "JAX" ? "yellow" : "#4a9d6f"
+                        border.width: currentFramework === "JAX" ? 3 : 1
+                        Text {
+                            text: "JAX"
+                            font.pixelSize: parent.width * 0.08
+                            font.bold: true
+                            color: currentFramework === "JAX" ? "yellow" : "white"
+                            anchors.centerIn: parent
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                currentFramework = "JAX"
+                                backend.selectFramework("JAX")
                             }
                         }
                     }
@@ -558,26 +612,31 @@ Rectangle {
                 }
             }
 
-            // Console Log
             GroupBox {
                 title: "Console Log"
                 width: parent.width * 0.6
                 height: parent.height * 0.3
                 label: Text { 
-                    text: qsTr("Console Log"); font.bold: true; color: "white" 
+                    text: qsTr("Console Log"); 
+                    font.bold: true; 
+                    color: "white" 
                 }
 
-                TextArea {
-                    id: consoleLog
+                ScrollView {
                     anchors.fill: parent
-                    text: "Console output here..."
-                    font.pixelSize: parent.width * 0.03
-                    color: "black"
-                    background: Rectangle { 
-                        color: "white" 
+                    clip: true
+
+                    TextArea {
+                        id: consoleLog
+                        wrapMode: Text.WrapAnywhere
+                        readOnly: true
+                        font.pixelSize: parent.width * 0.03
+                        color: "black"
+                        background: Rectangle { color: "white" }
                     }
                 }
             }
+
         }
     }
 }

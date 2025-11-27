@@ -126,6 +126,7 @@ def devList() -> str:
     return "\n".join(result) if result else "No developers found."
 
 
+
 def ticketsByDev_map() -> Dict[str, List[str]]:
     """
     Returns a mapping author -> sorted list of unique ticket IDs.
@@ -174,8 +175,10 @@ def ticketsByDev_map() -> Dict[str, List[str]]:
     return result
 
 
+
 def ticketsByDev_text() -> str:
     """
+    Return a human-readable text block suitable for TextArea.
     Format: "Author Name <email>: TICKET-1, #23, TICKET-5"
     One author per line, authors sorted by number of tickets (desc).
     """
@@ -244,12 +247,14 @@ def plot_single_tier(rows: list[tuple[str, int, str]], tier: str, outpath: str):
     plt.close()
 
 
+
+
 # ----------------------------
 # Main
 # ----------------------------
 def main():
     parser = argparse.ArgumentParser(description="Generate Gold, Silver, and Bronze contributor charts.")
-    parser.add_argument("--out-dir", type=str, default="../plotsDevelopers", help="Directory to save outputs.")
+    parser.add_argument("--out-dir", type=str, default="../plotDevelopers", help="Directory to save outputs.")
     args = parser.parse_args()
 
     data = run_shortlog_all()

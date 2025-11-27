@@ -1,6 +1,10 @@
 author,commits,tier
 John Knudson <71792574+j-knudson@users.noreply.github.com>,38,Gold
+<<<<<<<< HEAD:plotsDevelopers/top15_contributors_tiers.csv
 Jason D <FatedZenith@outlook.com>,28,Gold
+========
+Jason D <FatedZenith@outlook.com>,29,Gold
+>>>>>>>> origin/main:plotDevelopers/top15_contributors_tiers.csv
 divyapdarsi <divyaprathyushadarsi@gmail.com>,22,Gold
 Cha Vue <chavue09@gmail.com>,20,Gold
 Kingtut 101 <kingtut10101@gmail.com>,19,Gold

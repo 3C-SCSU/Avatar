@@ -148,12 +148,6 @@ Rectangle {
                             anchors.margins: 10
                             fillMode: Image.PreserveAspectFit
                             source: developersBackend.bronzePath
-
-                             onStatusChanged: {
-                                if (status === Image.Error) {
-                                    console.log("Image failed to load:", source)
-                                }
-    }
                         }
 
                         Text {
@@ -191,7 +185,7 @@ Rectangle {
                     spacing: 8
 
                     Text {
-                        text: "Developers List"
+                        text: "List Of Developers"
                         color: "white"
                         font.bold: true
                         font.pixelSize: 22
@@ -212,10 +206,7 @@ Rectangle {
                             wrapMode: TextArea.Wrap
                             font.pixelSize: 12
                             color: "black"
-                            background: Rectangle {
-                                color: "white"; radius: 6
-                            }
-
+                            background: Rectangle { color: "white"; radius: 6 }
                         }
                     }
                 }
@@ -226,7 +217,6 @@ Rectangle {
                     developersBackend.devChart()
                 }
             }
-
 
             // ---------- MEDAL + REFRESH ----------
             Rectangle {
@@ -242,7 +232,7 @@ Rectangle {
 
                     // Medal Image
                     Image {
-                        source: ".../plotsDevelopers/Medal.png"
+                        source: developersBackend.medalPath
                         width: 225
                         height: 325
                         fillMode: Image.PreserveAspectFit
