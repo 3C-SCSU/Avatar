@@ -650,7 +650,7 @@ Rectangle {
                                 anchors.fill: parent
                                 onEntered: parent.color = "white"
                                 onExited: parent.color = "#242c4d"
-                                onClicked: backend.doDroneTAction("takeoff")
+                                onClicked: backend.takeoff()
                             }
                         }
 

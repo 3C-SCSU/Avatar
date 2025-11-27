@@ -4,7 +4,7 @@ import subprocess
 from pathlib import Path
 from PySide6.QtWidgets import QApplication,QFileDialog, QMessageBox
 from PySide6.QtQml import QQmlApplicationEngine
-from PySide6.QtCore import QObject, Signal, Slot, Property, QProcess, QUrl
+from PySide6.QtCore import QObject, Signal, Slot, Property, QProcess, QUrl, QTimer
 from pdf2image import convert_from_path
 from djitellopy import Tello
 import random
@@ -220,6 +220,13 @@ class BrainwavesBackend(QObject):
         self.drone_lock = threading.Lock()
         self.config = configparser.ConfigParser()
         self.config.optionxform = str
+
+        # Timer to send periodic hover signals ()
+        self.hover_timer = QTimer()
+        self.hover_timer.timeout.connect(self.hover_loop)
+
+        self.is_flying = False
+
         try:
             self.tello = Tello()
         except Exception as e:
@@ -241,6 +248,23 @@ class BrainwavesBackend(QObject):
                 self.bcicon = None
         else:
             self.bcicon = None
+
+    @Slot()
+    def takeoff(self):
+        self.tello.takeoff()
+        self.connected = True
+        self.is_flying = True
+        self.hover_timer.start(200)
+        self.logMessage.emit("Hovering")
+    
+    @Slot()
+    def hover(self):
+        self.tello.send_rc_control(0, 0, 0, 0)
+        self.logMessage.emit("Hovering")
+
+    def hover_loop(self):
+        if self.is_flying:
+            self.tello.send_rc_control(0, 0, 0, 0)
 
     @Slot(str)
     def selectModel(self, model_name):
@@ -274,6 +298,7 @@ class BrainwavesBackend(QObject):
         else:  # Deep Learning
             if self.current_framework == "PyTorch":
                 prediction = self.run_deep_learning_pytorch()
+                self.logMessage.emit("Getting prediction from pytorch using the deep learning model.")
             else:
                 prediction = self.run_deep_learning_tensorflow()
         self.logMessage.emit(f"Prediction received: {prediction}")
@@ -467,7 +492,7 @@ class BrainwavesBackend(QObject):
                     self.flight_log.insert(0, f"Drone connected (Battery: {battery}%)")
                     self.flightLogUpdated.emit(self.flight_log)
                     return
-                elif self.connected:
+                elif not self.connected:
                     self.logMessage.emit("Drone not connected. Please connect first.")
                     self.flight_log.insert(0, "Command failed: Drone not connected")
                     self.flightLogUpdated.emit(self.flight_log)
@@ -536,10 +561,6 @@ class BrainwavesBackend(QObject):
                     record_action('flip_right')
                     self.logMessage.emit("Flipping right")
                     self.flight_log.insert(0, "Flipping right")
-                elif action == 'takeoff':
-                    self.tello.takeoff()
-                    self.logMessage.emit("Taking off")
-                    self.flight_log.insert(0, "Taking off")
                 elif action == 'land':
                     self.tello.land()
                     self.logMessage.emit("Landing")
