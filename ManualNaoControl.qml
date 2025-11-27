@@ -117,7 +117,8 @@ Rectangle {
                                 rowSpacing: 20
                                 Layout.alignment: Qt.AlignHCenter
                                 Layout.fillWidth: true
-                                Layout.preferredHeight: 400
+                                Layout.preferredHeight: 500 // Updated the Height to fix Overlap issues
+                                Layout.maximumHeight: 500  // Updated the Height to fix Overlap issues
 
                                 Repeater {
                                     model: [
