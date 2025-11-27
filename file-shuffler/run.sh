@@ -3,7 +3,7 @@
 
 TRUE_PATH="$1"
 
-if [[ -z "$TRUE_PATH" ]]; then
+if [ -z "$TRUE_PATH" ]; then
     echo "ERROR: No directory path argument provided."
     echo "Usage: $0 <directory_path>"
     exit 1
@@ -32,21 +32,25 @@ SELECTED_PY=""
 BEST_VER="0.0.0"
 
 for py in $PYTHON_EXES; do
-    [[ "$py" =~ pythonw\.exe$ ]] && continue
-    [[ ! -x "$py" ]] && continue
+   if echo "$py" | grep -q "pythonw\.exe$"; then
+    continue
+  fi
+    if [ ! -x "$py" ]; then
+    continue
+  fi
     version=$(get_py_version "$py")
     # Skip Microsoft Store aliases by checking version output
     store_check=$("$py" --version 2>&1 | grep -qi "Microsoft Store"; echo $?)
-    [[ "$store_check" -eq 0 ]] && continue
+    [ "$store_check" -eq 0 ] && continue
     # Check required module
     "$py" -c "import $REQUIRED_MODULE" 2>/dev/null || continue
-    if [[ "$version" > "$BEST_VER" ]]; then
+    if [ "$version" > "$BEST_VER" ]; then
         SELECTED_PY="$py"
         BEST_VER="$version"
     fi
 done
 
-if [[ -z "$SELECTED_PY" ]]; then
+if [ -z "$SELECTED_PY" ]; then
     echo "ERROR: No valid Python found with '$REQUIRED_MODULE'. Please install Python 3 and 'pip install pandas'."
     exit 1
 fi

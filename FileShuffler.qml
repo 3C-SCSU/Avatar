@@ -279,7 +279,7 @@ Rectangle {
 
         onAccepted: {
             console.log("Selected folder:", fileShufflerDialog.folder)
-            var output = fileShufflerGui.run_file_shuffler_program(fileShufflerDialog.folder)
+            var output = backend.run_file_shuffler_program(fileShufflerDialog.folder)
             fileShufflerView.runLog += output + "\n"
             fileShufflerView.ranShuffle = true
         }
@@ -296,7 +296,7 @@ Rectangle {
 
         onAccepted: {
             console.log("Selected folder:", unifyThoughtsDialog.folder)
-            var output = fileShufflerGui.unify_thoughts(unifyThoughtsDialog.folder)
+            var output = backend.unify_thoughts(unifyThoughtsDialog.folder)
             fileShufflerView.unifyLog += output + "\nThoughts Unified!\n"
             fileShufflerView.unifiedThoughts = true
         }
