@@ -13,7 +13,6 @@ BASH_SCRIPT="bash.sh"
 TRUE_PATH="$1"  # Argument 1: Directory path for processing
 PY_EXE="$2"     # Argument 2: Python executable path (passed from run_file_shuffler.py)
 
-# Find the directory of the current script (POSIX compliant method)
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 
 # 1. Input Validation
