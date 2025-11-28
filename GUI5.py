@@ -211,6 +211,7 @@ class BrainwavesBackend(QObject):
         self.flight_log = []  # List to store flight log entries
         self.predictions_log = []  # List to store prediction records
         self.current_prediction_label = ""
+        self.current_data_mode = "synthetic"
         self.current_model = "Random Forest"  # Default model
         self.current_framework = "PyTorch"  # Default framework
         self.image_paths = []  # Store converted image paths
