@@ -227,8 +227,8 @@ Rectangle {
                         anchors.fill: parent
                     }
                     onClicked: {
-								backend.keepDroneAlive(text=manualInput.text),
-								manualInput.text = ""
+								backend.keepDroneAlive(text=manualInput.text), // pass text to run command
+								manualInput.text = "" // empty textbox sow command was taken and make ready for another command
 								}
                 }
             }
