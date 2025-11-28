@@ -54,7 +54,7 @@
     <a href="https://github.com/3C-SCSU/Avatar/wiki"><strong>Get help in the Wiki »</strong></a>
     <br />
     <br />
-<a href="https://github.com/3C-SCSU/Avatar/wiki/A-Contributor-BANNED:-%F0%9F%9A%A8-Open-Source-Rules-%F0%9F%92%BB">Code of Ethics</a>
+<a href="https://github.com/3C-SCSU/Avatar/wiki/A-Guide-to-Contributor-Compliance">Code of Ethics</a>
 	  .
 	<a href="https://www.youtube.com/@3CSCSU">View Demo</a>
 	    ·
