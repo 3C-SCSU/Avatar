@@ -25,7 +25,7 @@ Rectangle {
 
     // Mode and model selection
     property string mode: "Deploy"                 // "Deploy" (default) | "Train"
-    property string currentModel: "Random Forest"  // "Random Forest" | "Deep Learning"
+    property string currentModel: "Random Forest"  // "Random Forest" | "GaussianNB" | "Deep Learning"
 
     // Deep Learning params (UI state only for now)
     property real   learningRate: 0.001
@@ -110,7 +110,7 @@ Rectangle {
                                                          Math.min(root.height * 0.08, 90))
                                 radius: 8
                                 color: "#2d7a4a"
-                                border.color: currentModel === "Random Forest" ? "#439566" : "#2d7a4a"
+                                border.color: currentModel === "Random Forest" ? "yellow" : "#2d7a4a"
                                 border.width: currentModel === "Random Forest" ? 3 : 1
 
                                 Text {
@@ -134,6 +134,42 @@ Rectangle {
                                     }
                                 }
                             }
+                            // GaussianNB
+                            Rectangle {
+                                Layout.fillWidth: true
+                                Layout.minimumWidth: root.minControlSize
+                                Layout.minimumHeight: root.minControlSize
+                                Layout.maximumWidth: 260
+                                implicitWidth: Math.max(root.minControlSize,
+                                                        Math.min(root.width * 0.16, 260))
+                                implicitHeight: Math.max(root.minControlSize,
+                                                         Math.min(root.height * 0.08, 90))
+                                radius: 8
+                                color: "#2d7a4a"
+                                border.color: currentModel === "GaussianNB" ? "#439566" : "#2d7a4a"
+                                border.width: currentModel === "GaussianNB" ? 3 : 1
+
+                                Text {
+                                    anchors.centerIn: parent
+                                    text: "GaussianNB"
+                                    color: currentModel === "GaussianNB" ? "yellow" : "white"
+                                    font.bold: true
+                                    font.pixelSize: Math.max(10,
+                                                             Math.min(20, parent.height * 0.35))
+                                    horizontalAlignment: Text.AlignHCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                    wrapMode: Text.NoWrap
+                                }
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        currentModel = "GaussianNB"
+                                        backend.selectModel("GaussianNB")
+                                        logToConsole("Model selected: GaussianNB")
+                                    }
+                                }
+                            }
 
                             // Deep Learning
                             Rectangle {
@@ -147,7 +183,7 @@ Rectangle {
                                                          Math.min(root.height * 0.08, 90))
                                 radius: 8
                                 color: "#2d7a4a"
-                                border.color: currentModel === "Deep Learning" ? "#439566" : "#2d7a4a"
+                                border.color: currentModel === "Deep Learning" ? "yellow" : "#2d7a4a"
                                 border.width: currentModel === "Deep Learning" ? 3 : 1
 
                                 Text {
@@ -217,7 +253,7 @@ Rectangle {
                                                          Math.min(root.height * 0.07, 80))
                                 radius: 8
                                 color: "#2d7a4a"
-                                border.color: currentModel === "PyTorch" ? "#439566" : "#2d7a4a"
+                                border.color: currentFramework === "PyTorch" ? "yellow" : "#2d7a4a"
                                 border.width: currentFramework === "PyTorch" ? 3 : 1
 
                                 Text {
@@ -254,7 +290,7 @@ Rectangle {
                                                          Math.min(root.height * 0.07, 80))
                                 radius: 8
                                 color: "#2d7a4a"
-                                border.color: currentModel === "TensorFlow" ? "#439566" : "#2d7a4a"
+                                border.color: currentFramework === "TensorFlow" ? "yellow" : "#2d7a4a"
                                 border.width: currentFramework === "TensorFlow" ? 3 : 1
 
                                 Text {
@@ -291,7 +327,7 @@ Rectangle {
                                                          Math.min(root.height * 0.07, 80))
                                 radius: 8
                                 color: "#2d7a4a"
-                                border.color: currentModel === "JAX" ? "#439566" : "#2d7a4a"
+                                border.color: currentFramework === "JAX" ? "yellow" : "#2d7a4a"
                                 border.width: currentFramework === "JAX" ? 3 : 1
 
                                 Text {
@@ -452,96 +488,95 @@ Rectangle {
                                 }
                             }
                         }
-
                         // Buttons under Success Rate
-                    RowLayout {
-                            Layout.alignment: Qt.AlignHCenter
-                            spacing: 24
+                        RowLayout {
+                                Layout.alignment: Qt.AlignHCenter
+                                spacing: 24
 
-                        // DEPLOY
-                        Button {
-                            id: deployBtn
-                            property real circleSize: Math.max(root.minControlSize,
-                                                               Math.min(root.height * 0.18,
-                                                                        root.width * 0.10,
-                                                                        130))
-                            checkable: true
-                            checked: mode === "Deploy"
-                            onClicked: {
-                                mode = "Deploy"
-                                logToConsole("Mode changed: Deploy")
-                            }
-                            implicitWidth: circleSize
-                            implicitHeight: circleSize
-                            Layout.minimumWidth: root.minControlSize
-                            Layout.minimumHeight: root.minControlSize
-                            padding: 0
-
-                            background: Rectangle {
-                                radius: Math.min(width, height) / 2
-                                gradient: Gradient {
-                                    GradientStop { position: 0; color: "#6aa5ff" }
-                                    GradientStop { position: 1; color: "#2d53cc" }
+                            // DEPLOY
+                            Button {
+                                id: deployBtn
+                                property real circleSize: Math.max(root.minControlSize,
+                                                                Math.min(root.height * 0.18,
+                                                                            root.width * 0.10,
+                                                                            130))
+                                checkable: true
+                                checked: mode === "Deploy"
+                                onClicked: {
+                                    mode = "Deploy"
+                                    logToConsole("Mode changed: Deploy")
                                 }
-                                border.color: deployBtn.checked ? "yellow" : "#102a6b"
-                                border.width: 2
+                                implicitWidth: circleSize
+                                implicitHeight: circleSize
+                                Layout.minimumWidth: root.minControlSize
+                                Layout.minimumHeight: root.minControlSize
+                                padding: 0
+
+                                background: Rectangle {
+                                    radius: Math.min(width, height) / 2
+                                    gradient: Gradient {
+                                        GradientStop { position: 0; color: "#6aa5ff" }
+                                        GradientStop { position: 1; color: "#2d53cc" }
+                                    }
+                                    border.color: deployBtn.checked ? "yellow" : "#102a6b"
+                                    border.width: 2
+                                }
+
+                                contentItem: Text {
+                                    anchors.centerIn: parent
+                                    text: "Deploy"
+                                    color: "yellow"
+                                    font.bold: true
+                                    font.pixelSize: Math.max(10,
+                                                            Math.min(22, parent.height * 0.25))
+                                    horizontalAlignment: Text.AlignHCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                    wrapMode: Text.NoWrap
+                                }
                             }
 
-                            contentItem: Text {
-                                anchors.centerIn: parent
-                                text: "Deploy"
-                                color: "yellow"
-                                font.bold: true
-                                font.pixelSize: Math.max(10,
-                                                         Math.min(22, parent.height * 0.25))
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                                wrapMode: Text.NoWrap
+                            // TRAIN
+                            Button {
+                                id: trainBtn
+                                property real circleSize: Math.max(root.minControlSize,
+                                                                Math.min(root.height * 0.18,
+                                                                            root.width * 0.10,
+                                                                            130))
+                                checkable: true
+                                checked: mode === "Train"
+                                onClicked: {
+                                    mode = "Train"
+                                    logToConsole("Mode changed: Train")
+                                }
+                                implicitWidth: circleSize
+                                implicitHeight: circleSize
+                                Layout.minimumWidth: root.minControlSize
+                                Layout.minimumHeight: root.minControlSize
+                                padding: 0
+
+                                background: Rectangle {
+                                    radius: Math.min(width, height) / 2
+                                    gradient: Gradient {
+                                        GradientStop { position: 0; color: "#6aa5ff" }
+                                        GradientStop { position: 1; color: "#2d53cc" }
+                                    }
+                                    border.color: trainBtn.checked ? "yellow" : "#102a6b"
+                                    border.width: 2
+                                }
+
+                                contentItem: Text {
+                                    anchors.centerIn: parent
+                                    text: "Train"
+                                    color: "white"
+                                    font.bold: true
+                                    font.pixelSize: Math.max(10,
+                                                            Math.min(22, parent.height * 0.25))
+                                    horizontalAlignment: Text.AlignHCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                    wrapMode: Text.NoWrap
+                                }
                             }
                         }
-
-                        // TRAIN
-                        Button {
-                            id: trainBtn
-                            property real circleSize: Math.max(root.minControlSize,
-                                                               Math.min(root.height * 0.18,
-                                                                        root.width * 0.10,
-                                                                        130))
-                            checkable: true
-                            checked: mode === "Train"
-                            onClicked: {
-                                mode = "Train"
-                                logToConsole("Mode changed: Train")
-                            }
-                            implicitWidth: circleSize
-                            implicitHeight: circleSize
-                            Layout.minimumWidth: root.minControlSize
-                            Layout.minimumHeight: root.minControlSize
-                            padding: 0
-
-                            background: Rectangle {
-                                radius: Math.min(width, height) / 2
-                                gradient: Gradient {
-                                    GradientStop { position: 0; color: "#6aa5ff" }
-                                    GradientStop { position: 1; color: "#2d53cc" }
-                                }
-                                border.color: trainBtn.checked ? "yellow" : "#102a6b"
-                                border.width: 2
-                            }
-
-                            contentItem: Text {
-                                anchors.centerIn: parent
-                                text: "Train"
-                                color: "white"
-                                font.bold: true
-                                font.pixelSize: Math.max(10,
-                                                         Math.min(22, parent.height * 0.25))
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                                wrapMode: Text.NoWrap
-                            }
-                        }
-                    }
                     }
 
                     // Console Log
