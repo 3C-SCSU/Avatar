@@ -1,0 +1,20 @@
+Model selected: Deep Learning at Wednesday, November 26, 2025 8:56:39 PM CST
+Getting prediction from pytorch using the deep learning model. at Wednesday, November 26, 2025 8:56:45 PM CST
+
+---Headset wearer was thinking about "Take Off"
+
+Prediction received: left at Wednesday, November 26, 2025 8:56:45 PM CST
+Drone not connected. Please connect first. at Wednesday, November 26, 2025 8:56:45 PM CST
+Getting prediction from pytorch using the deep learning model. at Wednesday, November 26, 2025 8:57:24 PM CST
+
+---Headset wearer was thinking about "Take Off"
+
+Prediction received: backward at Wednesday, November 26, 2025 8:57:24 PM CST
+Drone not connected. Please connect first. at Wednesday, November 26, 2025 8:57:24 PM CST
+Getting prediction from pytorch using the deep learning model. at Wednesday, November 26, 2025 8:57:43 PM CST
+
+
+---Headset wearer was thinking about "Take Off"
+
+Prediction received: backward at Wednesday, November 26, 2025 8:57:43 PM CST
+Drone not connected. Please connect first. at Wednesday, November 26, 2025 8:57:43 PM CST
