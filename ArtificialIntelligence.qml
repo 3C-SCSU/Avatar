@@ -578,14 +578,14 @@ Rectangle {
                                     GradientStop { position: 0; color: "#6aa5ff" }
                                     GradientStop { position: 1; color: "#2d53cc" }
                                 }
-                                border.color: deployBtn.checked ? "yellow" : "#102a6b"
+                                border.color: mode === "Deploy" ? "yellow" : "#102a6b"
                                 border.width: 2
                             }
 
                             contentItem: Text {
                                 anchors.centerIn: parent
                                 text: "Deploy"
-                                color: "yellow"
+                                color: mode === "Deploy" ? "yellow" : "white"
                                 font.bold: true
                                 font.pixelSize: Math.max(10,
                                                          Math.min(22, parent.height * 0.25))
@@ -620,14 +620,14 @@ Rectangle {
                                     GradientStop { position: 0; color: "#6aa5ff" }
                                     GradientStop { position: 1; color: "#2d53cc" }
                                 }
-                                border.color: trainBtn.checked ? "yellow" : "#102a6b"
+                                border.color: mode === "Train" ? "yellow" : "#102a6b"
                                 border.width: 2
                             }
 
                             contentItem: Text {
                                 anchors.centerIn: parent
                                 text: "Train"
-                                color: "white"
+                                color: mode === "Train" ? "yellow" : "white"
                                 font.bold: true
                                 font.pixelSize: Math.max(10,
                                                          Math.min(22, parent.height * 0.25))
