@@ -471,11 +471,20 @@ class BrainwavesBackend(QObject):
         self.flightLogUpdated.emit(self.flight_log)
         self.logMessage.emit("Drone connected.")
 
-    @Slot()
-    def keepDroneAlive(self):
+    @Slot(str)
+    def keepDroneAlive(self,text):
         # Mock function to simulate sending keep-alive signal
         self.flight_log.insert(0, "Keep alive signal sent.")
         self.flightLogUpdated.emit(self.flight_log)
+
+        #remove null at end and make all lowercase
+        text = text.strip().lower()
+
+        #exicut cmd
+        self.doDroneTAction(text)
+
+        
+        
 
     @Slot(str)
     def doDroneTAction(self, action):
