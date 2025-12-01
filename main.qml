@@ -169,7 +169,7 @@ ApplicationWindow {
             TabButton {
                 property int targetIndex: 4
 
-                text: "Shuffler"
+                text: "File Shuffler"
                 font.bold: true
                 onClicked: stackLayout.currentIndex = targetIndex
 

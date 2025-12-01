@@ -69,10 +69,9 @@ Rectangle {
                         Layout.preferredHeight: 60
 
                         background: Rectangle {
-                            radius: 5
-                            color: "#2d7a4a"
-                            border.color: buttonRow.isActive("unify") ? "yellow" : "#4a9d6f"
-                            border.width: buttonRow.isActive("unify") ? 3 : 1
+                            radius: 6
+                            color: "#7CC000"
+                            border.color: "#E5E500"
                         }
 
                         contentItem: Text {
@@ -100,10 +99,9 @@ Rectangle {
                         Layout.preferredHeight: 60
 
                         background: Rectangle {
-                            radius: 5
-                            color: "#2d7a4a"
-                            border.color: buttonRow.isActive("remove") ? "yellow" : "#4a9d6f"
-                            border.width: buttonRow.isActive("remove") ? 3 : 1
+                            radius: 6
+                            color: "#7CC000"
+                            border.color: "#E5E500"
                         }
 
                         contentItem: Text {
@@ -131,10 +129,9 @@ Rectangle {
                         Layout.preferredHeight: 60
 
                         background: Rectangle {
-                            radius: 5
-                            color: "#2d7a4a"
-                            border.color: buttonRow.isActive("run") ? "yellow" : "#4a9d6f"
-                            border.width: buttonRow.isActive("run") ? 3 : 1
+                            radius: 6
+                            color: "#7CC000"
+                            border.color: "#E5E500"
                         }
 
                         contentItem: Text {
