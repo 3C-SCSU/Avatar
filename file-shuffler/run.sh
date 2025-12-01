@@ -1,62 +1,100 @@
-#!/usr/bin/env bash
-# Authors: Brady Theisen
+#!/bin/sh
 
-TRUE_PATH="$1"
+# Authors: Based on Brady Theisen's original code, updated for POSIX compliance.
+# Purpose: Robustly finds and executes the python.py script across various Unix-like systems.
+# This version prioritizes the Python path passed by run_file_shuffler.py.
 
-if [[ -z "$TRUE_PATH" ]]; then
-    echo "ERROR: No directory path argument provided."
-    echo "Usage: $0 <directory_path>"
-    exit 1
+# --- Configuration ---
+REQUIRED_MODULE="pandas"
+PYTHON_SCRIPT="python.py"
+BASH_SCRIPT="bash.sh"
+# ---------------------
+
+TRUE_PATH="$1"  # Argument 1: Directory path for processing
+PY_EXE="$2"     # Argument 2: Python executable path (passed from run_file_shuffler.py)
+
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+
+# 1. Input Validation
+if [ -z "$TRUE_PATH" ]; then
+  echo "ERROR: No directory path argument provided." >&2
+  echo "Usage: $0 <directory_path> [python_executable]"
+  exit 1
 fi
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-
-echo "Path passed from Python: $TRUE_PATH"
-
-echo "Scanning for valid Python executables..."
-
-# Find all python executables in PATH and standard locations, filter only actual executables
-PYTHON_EXES=$(find "$HOME/AppData/Local/Programs/Python" "/usr/bin" "/usr/local/bin" "/c/Python*" "/c/Users/$(whoami)/AppData/Local/Programs/Python" 2>/dev/null \
-    -type f \( -iname "python.exe" -o -iname "python3.exe" -o -iname "python" -o -iname "python3" \) | sort -u)
-
-# Add python3 and python from PATH
-for exe in python3 python; do
-    p=$(command -v $exe 2>/dev/null)
-    [[ -n "$p" ]] && PYTHON_EXES="$PYTHON_EXES $p"
-done
-
-# Choose highest version Python with required modules
-get_py_version() { "$1" --version 2>&1 | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo "0.0.0"; }
-REQUIRED_MODULE=pandas
-SELECTED_PY=""
-BEST_VER="0.0.0"
-
-for py in $PYTHON_EXES; do
-    [[ "$py" =~ pythonw\.exe$ ]] && continue
-    [[ ! -x "$py" ]] && continue
-    version=$(get_py_version "$py")
-    # Skip Microsoft Store aliases by checking version output
-    store_check=$("$py" --version 2>&1 | grep -qi "Microsoft Store"; echo $?)
-    [[ "$store_check" -eq 0 ]] && continue
-    # Check required module
-    "$py" -c "import $REQUIRED_MODULE" 2>/dev/null || continue
-    if [[ "$version" > "$BEST_VER" ]]; then
-        SELECTED_PY="$py"
-        BEST_VER="$version"
+# 2. Function to Find Python Executable (Fallback only)
+find_python() {
+  echo "Scanning for valid Python executables in PATH (Fallback Mode)..."
+  
+  # Search for python3, then python, prioritizing those in PATH
+  PYTHON_EXES="$(command -v python3 2>/dev/null) $(command -v python 2>/dev/null)"
+  
+  for py in $PYTHON_EXES; do
+    if [ -x "$py" ]; then
+      # Check for required module: 'pandas'
+      "$py" -c "import $REQUIRED_MODULE" 2>/dev/null
+      if [ $? -eq 0 ]; then
+        echo "$py" # Output the selected Python executable path
+        return 0
+      fi
     fi
-done
+  done
+  
+  echo "ERROR: No valid Python found with '$REQUIRED_MODULE' in PATH. Please install Python 3 and 'pip install pandas'." >&2
+  return 1
+}
 
-if [[ -z "$SELECTED_PY" ]]; then
-    echo "ERROR: No valid Python found with '$REQUIRED_MODULE'. Please install Python 3 and 'pip install pandas'."
+# 3. Determine Python Executable
+if [ -n "$PY_EXE" ]; then
+  # PRIORITY: Use the path passed from the QML application (PY_EXE = $2)
+  SELECTED_PY="$PY_EXE"
+  echo "Using Python (from argument): $SELECTED_PY"
+  
+  # Quick validation to ensure the passed executable has 'pandas'
+  # This uses the specific executable provided by run_file_shuffler.py
+  if ! "$SELECTED_PY" -c "import $REQUIRED_MODULE" 2>/dev/null; then
+    echo "ERROR: Python executable '$SELECTED_PY' does not have '$REQUIRED_MODULE'." >&2
     exit 1
+  fi
+  
+else
+  # Fallback: Search PATH if no argument was provided
+  SELECTED_PY=$(find_python)
+  if [ $? -ne 0 ]; then
+    exit 1 # find_python failed and printed an error
+  fi
+  echo "Using found Python: $SELECTED_PY"
 fi
 
-echo "Using Python at $SELECTED_PY (version $BEST_VER)"
-echo "Command to run: $SELECTED_PY $SCRIPT_DIR/python.py $TRUE_PATH"
+# 4. Run Python Script
+FULL_PYTHON_SCRIPT="$SCRIPT_DIR/$PYTHON_SCRIPT"
+echo "Command to run: $SELECTED_PY $FULL_PYTHON_SCRIPT $TRUE_PATH"
 
-"$SELECTED_PY" "$SCRIPT_DIR/python.py" "$TRUE_PATH"
+if [ ! -f "$FULL_PYTHON_SCRIPT" ]; then
+  echo "ERROR: Python script not found at $FULL_PYTHON_SCRIPT" >&2
+  exit 1
+fi
+
+# Execute the python script with the selected interpreter
+"$SELECTED_PY" "$FULL_PYTHON_SCRIPT" "$TRUE_PATH"
+
+if [ $? -ne 0 ]; then
+  echo "WARNING: Python script finished with errors." >&2
+fi
 echo "Finished running python script"
 
-echo "Running bash script"
-bash "$SCRIPT_DIR/bash.sh" "$TRUE_PATH"
-echo "Finished running bash script"
+# 5. Run Bash Script (if it exists)
+FULL_BASH_SCRIPT="$SCRIPT_DIR/$BASH_SCRIPT"
+
+if [ ! -f "$FULL_BASH_SCRIPT" ]; then
+  echo "WARNING: Bash script not found at $FULL_BASH_SCRIPT. Skipping."
+else
+  # Use 'sh' explicitly to run the POSIX-compliant bash.sh file
+  sh "$FULL_BASH_SCRIPT" "$TRUE_PATH"
+  if [ $? -ne 0 ]; then
+    echo "WARNING: Bash script finished with errors." >&2
+  fi
+fi
+
+echo "Finished running shell script execution chain."
+exit 0

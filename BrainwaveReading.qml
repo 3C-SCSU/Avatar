@@ -226,7 +226,10 @@ Rectangle {
                         verticalAlignment: Text.AlignVCenter
                         anchors.fill: parent
                     }
-                    onClicked: backend.keepDroneAlive()
+                    onClicked: {
+								backend.keepDroneAlive(text=manualInput.text), // pass text to run command
+								manualInput.text = "" // empty textbox sow command was taken and make ready for another command
+								}
                 }
             }
 
@@ -612,26 +615,31 @@ Rectangle {
                 }
             }
 
-            // Console Log
             GroupBox {
                 title: "Console Log"
                 width: parent.width * 0.6
                 height: parent.height * 0.3
                 label: Text { 
-                    text: qsTr("Console Log"); font.bold: true; color: "white" 
+                    text: qsTr("Console Log"); 
+                    font.bold: true; 
+                    color: "white" 
                 }
 
-                TextArea {
-                    id: consoleLog
+                ScrollView {
                     anchors.fill: parent
-                    text: "Console output here..."
-                    font.pixelSize: parent.width * 0.03
-                    color: "black"
-                    background: Rectangle { 
-                        color: "white" 
+                    clip: true
+
+                    TextArea {
+                        id: consoleLog
+                        wrapMode: Text.WrapAnywhere
+                        readOnly: true
+                        font.pixelSize: parent.width * 0.03
+                        color: "black"
+                        background: Rectangle { color: "white" }
                     }
                 }
             }
+
         }
     }
 }

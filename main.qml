@@ -90,7 +90,7 @@ ApplicationWindow {
             }
 
             TabButton {
-                text: "File Shuffler"
+                text: "Shuffler"
                 targetIndex: 4
                 currentIndex: stackLayout.currentIndex
                 onTabClicked: stackLayout.currentIndex = index
