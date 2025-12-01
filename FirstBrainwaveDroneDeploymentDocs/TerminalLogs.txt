@@ -1,0 +1,953 @@
+Mode set to synthetic
+Running Deep Learning Model with PyTorch...
+[2025-11-26 20:19:32.048] [board_logger] [info] incoming json: {
+    "file": "",
+    "file_anc": "",
+    "file_aux": "",
+    "ip_address": "",
+    "ip_address_anc": "",
+    "ip_address_aux": "",
+    "ip_port": 0,
+    "ip_port_anc": 0,
+    "ip_port_aux": 0,
+    "ip_protocol": 0,
+    "mac_address": "",
+    "master_board": -100,
+    "other_info": "",
+    "serial_number": "",
+    "serial_port": "",
+    "timeout": 0
+}
+[2025-11-26 20:19:32.048] [board_logger] [trace] Board object created -1
+synethetic data retrieved
+Running Deep Learning Model with PyTorch...
+[2025-11-26 20:19:43.184] [board_logger] [info] incoming json: {
+    "file": "",
+    "file_anc": "",
+    "file_aux": "",
+    "ip_address": "",
+    "ip_address_anc": "",
+    "ip_address_aux": "",
+    "ip_port": 0,
+    "ip_port_anc": 0,
+    "ip_port_aux": 0,
+    "ip_protocol": 0,
+    "mac_address": "",
+    "master_board": -100,
+    "other_info": "",
+    "serial_number": "",
+    "serial_port": "",
+    "timeout": 0
+}
+[2025-11-26 20:19:43.184] [board_logger] [trace] Board object created -1
+synethetic data retrieved
+
+Live headset board initialized.
+Mode set to live
+Running Deep Learning Model with PyTorch...
+LIVE
+[INFO] Auto-detected Cyton serial port: /dev/ttyUSB0
+[2025-11-26 20:20:10.483] [board_logger] [info] incoming json: {
+    "file": "",
+    "file_anc": "",
+    "file_aux": "",
+    "ip_address": "",
+    "ip_address_anc": "",
+    "ip_address_aux": "",
+    "ip_port": 0,
+    "ip_port_anc": 0,
+    "ip_port_aux": 0,
+    "ip_protocol": 0,
+    "mac_address": "",
+    "master_board": -100,
+    "other_info": "",
+    "serial_number": "",
+    "serial_port": "/dev/ttyUSB0",
+    "timeout": 0
+}
+[2025-11-26 20:20:10.483] [board_logger] [trace] Board object created 2
+[2025-11-26 20:20:10.483] [board_logger] [info] opening port /dev/ttyUSB0
+[2025-11-26 20:20:10.483] [board_logger] [trace] port /dev/ttyUSB0 is open
+[2025-11-26 20:20:10.483] [board_logger] [trace] set port settings
+[2025-11-26 20:20:10.483] [board_logger] [debug] sending v to the board
+[2025-11-26 20:20:11.674] [board_logger] [debug] sending d to the board
+[2025-11-26 20:20:12.786] [board_logger] [debug] sending b to the board
+[2025-11-26 20:20:14.814] [board_logger] [debug] sending s to the board
+live Cyton Daisy data retrieved
+Running Deep Learning Model with PyTorch...
+LIVE
+[INFO] Auto-detected Cyton serial port: /dev/ttyUSB0
+[2025-11-26 20:20:21.651] [board_logger] [info] incoming json: {
+    "file": "",
+    "file_anc": "",
+    "file_aux": "",
+    "ip_address": "",
+    "ip_address_anc": "",
+    "ip_address_aux": "",
+    "ip_port": 0,
+    "ip_port_anc": 0,
+    "ip_port_aux": 0,
+    "ip_protocol": 0,
+    "mac_address": "",
+    "master_board": -100,
+    "other_info": "",
+    "serial_number": "",
+    "serial_port": "/dev/ttyUSB0",
+    "timeout": 0
+}
+[2025-11-26 20:20:21.651] [board_logger] [trace] Board object created 2
+[2025-11-26 20:20:21.651] [board_logger] [info] opening port /dev/ttyUSB0
+[2025-11-26 20:20:21.651] [board_logger] [trace] port /dev/ttyUSB0 is open
+[2025-11-26 20:20:21.652] [board_logger] [trace] set port settings
+[2025-11-26 20:20:21.652] [board_logger] [debug] sending v to the board
+[2025-11-26 20:20:22.810] [board_logger] [debug] sending d to the board
+[2025-11-26 20:20:23.922] [board_logger] [debug] sending b to the board
+[2025-11-26 20:20:25.935] [board_logger] [debug] sending s to the board
+live Cyton Daisy data retrieved
+Running Deep Learning Model with PyTorch...
+LIVE
+[INFO] Auto-detected Cyton serial port: /dev/ttyUSB0
+[2025-11-26 20:20:43.942] [board_logger] [info] incoming json: {
+    "file": "",
+    "file_anc": "",
+    "file_aux": "",
+    "ip_address": "",
+    "ip_address_anc": "",
+    "ip_address_aux": "",
+    "ip_port": 0,
+    "ip_port_anc": 0,
+    "ip_port_aux": 0,
+    "ip_protocol": 0,
+    "mac_address": "",
+    "master_board": -100,
+    "other_info": "",
+    "serial_number": "",
+    "serial_port": "/dev/ttyUSB0",
+    "timeout": 0
+}
+[2025-11-26 20:20:43.942] [board_logger] [trace] Board object created 2
+[2025-11-26 20:20:43.942] [board_logger] [info] opening port /dev/ttyUSB0
+[2025-11-26 20:20:43.943] [board_logger] [trace] port /dev/ttyUSB0 is open
+[2025-11-26 20:20:43.943] [board_logger] [trace] set port settings
+[2025-11-26 20:20:43.943] [board_logger] [debug] sending v to the board
+[2025-11-26 20:20:45.124] [board_logger] [debug] sending d to the board
+[2025-11-26 20:20:46.258] [board_logger] [debug] sending b to the board
+[2025-11-26 20:20:48.267] [board_logger] [debug] sending s to the board
+live Cyton Daisy data retrieved
+Running Deep Learning Model with PyTorch...
+LIVE
+[INFO] Auto-detected Cyton serial port: /dev/ttyUSB0
+[2025-11-26 20:20:58.236] [board_logger] [info] incoming json: {
+    "file": "",
+    "file_anc": "",
+    "file_aux": "",
+    "ip_address": "",
+    "ip_address_anc": "",
+    "ip_address_aux": "",
+    "ip_port": 0,
+    "ip_port_anc": 0,
+    "ip_port_aux": 0,
+    "ip_protocol": 0,
+    "mac_address": "",
+    "master_board": -100,
+    "other_info": "",
+    "serial_number": "",
+    "serial_port": "/dev/ttyUSB0",
+    "timeout": 0
+}
+[2025-11-26 20:20:58.236] [board_logger] [trace] Board object created 2
+[2025-11-26 20:20:58.236] [board_logger] [info] opening port /dev/ttyUSB0
+[2025-11-26 20:20:58.237] [board_logger] [trace] port /dev/ttyUSB0 is open
+[2025-11-26 20:20:58.237] [board_logger] [trace] set port settings
+[2025-11-26 20:20:58.237] [board_logger] [debug] sending v to the board
+[2025-11-26 20:20:59.407] [board_logger] [debug] sending d to the board
+[2025-11-26 20:21:00.530] [board_logger] [debug] sending b to the board
+[2025-11-26 20:21:02.545] [board_logger] [debug] sending s to the board
+live Cyton Daisy data retrieved
+Running Deep Learning Model with PyTorch...
+LIVE
+[INFO] Auto-detected Cyton serial port: /dev/ttyUSB0
+[2025-11-26 20:21:07.245] [board_logger] [info] incoming json: {
+    "file": "",
+    "file_anc": "",
+    "file_aux": "",
+    "ip_address": "",
+    "ip_address_anc": "",
+    "ip_address_aux": "",
+    "ip_port": 0,
+    "ip_port_anc": 0,
+    "ip_port_aux": 0,
+    "ip_protocol": 0,
+    "mac_address": "",
+    "master_board": -100,
+    "other_info": "",
+    "serial_number": "",
+    "serial_port": "/dev/ttyUSB0",
+    "timeout": 0
+}
+[2025-11-26 20:21:07.245] [board_logger] [trace] Board object created 2
+[2025-11-26 20:21:07.245] [board_logger] [info] opening port /dev/ttyUSB0
+[2025-11-26 20:21:07.245] [board_logger] [trace] port /dev/ttyUSB0 is open
+[2025-11-26 20:21:07.245] [board_logger] [trace] set port settings
+[2025-11-26 20:21:07.245] [board_logger] [debug] sending v to the board
+[2025-11-26 20:21:08.436] [board_logger] [debug] sending d to the board
+[2025-11-26 20:21:09.554] [board_logger] [debug] sending b to the board
+[2025-11-26 20:21:11.556] [board_logger] [debug] sending s to the board
+live Cyton Daisy data retrieved
+Running Deep Learning Model with PyTorch...
+LIVE
+[INFO] Auto-detected Cyton serial port: /dev/ttyUSB0
+[2025-11-26 20:31:41.170] [board_logger] [info] incoming json: {
+    "file": "",
+    "file_anc": "",
+    "file_aux": "",
+    "ip_address": "",
+    "ip_address_anc": "",
+    "ip_address_aux": "",
+    "ip_port": 0,
+    "ip_port_anc": 0,
+    "ip_port_aux": 0,
+    "ip_protocol": 0,
+    "mac_address": "",
+    "master_board": -100,
+    "other_info": "",
+    "serial_number": "",
+    "serial_port": "/dev/ttyUSB0",
+    "timeout": 0
+}
+[2025-11-26 20:31:41.170] [board_logger] [trace] Board object created 2
+[2025-11-26 20:31:41.170] [board_logger] [info] opening port /dev/ttyUSB0
+[2025-11-26 20:31:41.170] [board_logger] [trace] port /dev/ttyUSB0 is open
+[2025-11-26 20:31:41.170] [board_logger] [trace] set port settings
+[2025-11-26 20:31:41.170] [board_logger] [debug] sending v to the board
+[2025-11-26 20:31:42.342] [board_logger] [debug] sending d to the board
+[2025-11-26 20:31:43.474] [board_logger] [debug] sending b to the board
+[2025-11-26 20:31:45.484] [board_logger] [debug] sending s to the board
+live Cyton Daisy data retrieved
+^CTraceback (most recent call last):
+  File "/home/avatar-server/Avatar/GUI5.py", line 861, in setDataMode
+    @Slot(str)
+KeyboardInterrupt
+file:///home/avatar-server/Avatar/BrainwaveReading.qml:426: Error: <NULL>
+
+Synthetic board initialized.
+Mode set to synthetic
+
+Live headset board initialized.
+Mode set to live
+avatar-server@MXL41739G6:~/Avatar$ ^C
+avatar-server@MXL41739G6:~/Avatar$ python3 GUI5.py
+Warning: BCI connection not available: No module named 'client'
+TabController created
+=============Manual Nao Controller initialized=============
+[INFO] tello.py - 129 - Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+The base directory path is /home/avatar-server/Avatar
+The plots directory path is /home/avatar-server/Avatar/plotDevelopers
+Gold chart path: file:////home/avatar-server/Avatar/plotDevelopers/gold_contributors.png
+Silver chart path: file:////home/avatar-server/Avatar/plotDevelopers/silver_contributors.png
+Bronze chart path: file:////home/avatar-server/Avatar/plotDevelopers/bronze_contributors.png
+Medal path: file:////home/avatar-server/Avatar/plotDevelopers/Medal.png
+Controllers exposed to QML
+file:///home/avatar-server/Avatar/ManualDroneControl.qml:694:9: QML CameraView: Binding loop detected for property "cameraController"
+qml: DroneCameraLoader.status:::  2
+file:///home/avatar-server/Avatar/BrainwaveReading.qml:79:17: QML Button: Binding loop detected for property "implicitWidth"
+Generating charts...
+Generated Gold chart
+Generated Silver chart
+Generated Bronze chart
+The base directory path is /home/avatar-server/Avatar
+The plots directory path is /home/avatar-server/Avatar/plotDevelopers
+Gold chart path: file:////home/avatar-server/Avatar/plotDevelopers/gold_contributors.png
+Silver chart path: file:////home/avatar-server/Avatar/plotDevelopers/silver_contributors.png
+Bronze chart path: file:////home/avatar-server/Avatar/plotDevelopers/bronze_contributors.png
+Medal path: file:////home/avatar-server/Avatar/plotDevelopers/Medal.png
+Charts generated successfully
+
+=== STARTING CONVERT PDFS TO IMAGES FOR REFRESH ===
+
+=== CHECKING IF PLOTS EXIST ===
+Checking PDFs in /home/avatar-server/Avatar/plotscode/plots/rollback...
+Checking PDFs in /home/avatar-server/Avatar/plotscode/plots/refresh...
+Result of check_plots_exist: True
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/takeoff_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/forward_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/right_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/land_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/backward_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/left_plots.png
+Final Image Paths Sent to QML: [{'graphTitle': 'Takeoff', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/takeoff_plots.png'}, {'graphTitle': 'Forward', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/forward_plots.png'}, {'graphTitle': 'Right', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/right_plots.png'}, {'graphTitle': 'Landing', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/land_plots.png'}, {'graphTitle': 'Backward', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/backward_plots.png'}, {'graphTitle': 'Left', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/left_plots.png'}]
+file:///home/avatar-server/Avatar/ManualDroneControl.qml:30:17: QML Row: Cannot specify left, right, horizontalCenter, fill or centerIn anchors for items inside Row. Row will not function.
+file:///home/avatar-server/Avatar/ManualDroneControl.qml:25:13: QML Column: Cannot specify top, bottom, verticalCenter, fill or centerIn anchors for items inside Column. Column will not function.
+file:///home/avatar-server/Avatar/BrainwaveReading.qml:17:5: QML Row: Cannot specify left, right, horizontalCenter, fill or centerIn anchors for items inside Row. Row will not function.
+qml: DroneCameraView loaded; cameraController: null
+qml: DroneCameraLoader.status:::  1
+file:///home/avatar-server/Avatar/NA06_Manual_Control/camera_view/DroneCameraView.qml:19:5: QML Connections: Implicitly defined onFoo properties in Connections are deprecated. Use this syntax instead: function onFoo(<arguments>) { ... }
+qml: DroneCameraController assigned:::  DroneCameraController(0x5b1921f67d60)
+Running Deep Learning Model with PyTorch...
+LIVE
+[INFO] Auto-detected Cyton serial port: /dev/ttyUSB0
+[2025-11-26 20:39:01.276] [board_logger] [info] incoming json: {
+    "file": "",
+    "file_anc": "",
+    "file_aux": "",
+    "ip_address": "",
+    "ip_address_anc": "",
+    "ip_address_aux": "",
+    "ip_port": 0,
+    "ip_port_anc": 0,
+    "ip_port_aux": 0,
+    "ip_protocol": 0,
+    "mac_address": "",
+    "master_board": -100,
+    "other_info": "",
+    "serial_number": "",
+    "serial_port": "/dev/ttyUSB0",
+    "timeout": 0
+}
+[2025-11-26 20:39:01.276] [board_logger] [trace] Board object created 2
+[2025-11-26 20:39:01.276] [board_logger] [info] opening port /dev/ttyUSB0
+[2025-11-26 20:39:01.276] [board_logger] [trace] port /dev/ttyUSB0 is open
+[2025-11-26 20:39:01.276] [board_logger] [trace] set port settings
+[2025-11-26 20:39:01.276] [board_logger] [debug] sending v to the board
+[2025-11-26 20:39:02.471] [board_logger] [debug] sending d to the board
+[2025-11-26 20:39:03.602] [board_logger] [debug] sending b to the board
+[2025-11-26 20:39:05.633] [board_logger] [debug] sending s to the board
+live Cyton Daisy data retrieved
+Running Deep Learning Model with PyTorch...
+LIVE
+[INFO] Auto-detected Cyton serial port: /dev/ttyUSB0
+[2025-11-26 20:39:09.076] [board_logger] [info] incoming json: {
+    "file": "",
+    "file_anc": "",
+    "file_aux": "",
+    "ip_address": "",
+    "ip_address_anc": "",
+    "ip_address_aux": "",
+    "ip_port": 0,
+    "ip_port_anc": 0,
+    "ip_port_aux": 0,
+    "ip_protocol": 0,
+    "mac_address": "",
+    "master_board": -100,
+    "other_info": "",
+    "serial_number": "",
+    "serial_port": "/dev/ttyUSB0",
+    "timeout": 0
+}
+[2025-11-26 20:39:09.076] [board_logger] [trace] Board object created 2
+[2025-11-26 20:39:09.076] [board_logger] [info] opening port /dev/ttyUSB0
+[2025-11-26 20:39:09.076] [board_logger] [trace] port /dev/ttyUSB0 is open
+[2025-11-26 20:39:09.076] [board_logger] [trace] set port settings
+[2025-11-26 20:39:09.076] [board_logger] [debug] sending v to the board
+[2025-11-26 20:39:10.262] [board_logger] [debug] sending d to the board
+[2025-11-26 20:39:11.411] [board_logger] [debug] sending b to the board
+[2025-11-26 20:39:13.437] [board_logger] [debug] sending s to the board
+live Cyton Daisy data retrieved
+avatar-server@MXL41739G6:~/Avatar$ 
+avatar-server@MXL41739G6:~/Avatar$ python3 GUI5.py
+Warning: BCI connection not available: No module named 'client'
+TabController created
+=============Manual Nao Controller initialized=============
+[INFO] tello.py - 129 - Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+The base directory path is /home/avatar-server/Avatar
+The plots directory path is /home/avatar-server/Avatar/plotDevelopers
+Gold chart path: file:////home/avatar-server/Avatar/plotDevelopers/gold_contributors.png
+Silver chart path: file:////home/avatar-server/Avatar/plotDevelopers/silver_contributors.png
+Bronze chart path: file:////home/avatar-server/Avatar/plotDevelopers/bronze_contributors.png
+Medal path: file:////home/avatar-server/Avatar/plotDevelopers/Medal.png
+Controllers exposed to QML
+file:///home/avatar-server/Avatar/ManualDroneControl.qml:694:9: QML CameraView: Binding loop detected for property "cameraController"
+qml: DroneCameraLoader.status:::  2
+file:///home/avatar-server/Avatar/BrainwaveReading.qml:79:17: QML Button: Binding loop detected for property "implicitWidth"
+Generating charts...
+Generated Gold chart
+Generated Silver chart
+Generated Bronze chart
+The base directory path is /home/avatar-server/Avatar
+The plots directory path is /home/avatar-server/Avatar/plotDevelopers
+Gold chart path: file:////home/avatar-server/Avatar/plotDevelopers/gold_contributors.png
+Silver chart path: file:////home/avatar-server/Avatar/plotDevelopers/silver_contributors.png
+Bronze chart path: file:////home/avatar-server/Avatar/plotDevelopers/bronze_contributors.png
+Medal path: file:////home/avatar-server/Avatar/plotDevelopers/Medal.png
+Charts generated successfully
+
+=== STARTING CONVERT PDFS TO IMAGES FOR REFRESH ===
+
+=== CHECKING IF PLOTS EXIST ===
+Checking PDFs in /home/avatar-server/Avatar/plotscode/plots/rollback...
+Checking PDFs in /home/avatar-server/Avatar/plotscode/plots/refresh...
+Result of check_plots_exist: True
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/takeoff_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/forward_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/right_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/land_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/backward_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/left_plots.png
+Final Image Paths Sent to QML: [{'graphTitle': 'Takeoff', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/takeoff_plots.png'}, {'graphTitle': 'Forward', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/forward_plots.png'}, {'graphTitle': 'Right', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/right_plots.png'}, {'graphTitle': 'Landing', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/land_plots.png'}, {'graphTitle': 'Backward', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/backward_plots.png'}, {'graphTitle': 'Left', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/left_plots.png'}]
+file:///home/avatar-server/Avatar/ManualDroneControl.qml:30:17: QML Row: Cannot specify left, right, horizontalCenter, fill or centerIn anchors for items inside Row. Row will not function.
+file:///home/avatar-server/Avatar/ManualDroneControl.qml:25:13: QML Column: Cannot specify top, bottom, verticalCenter, fill or centerIn anchors for items inside Column. Column will not function.
+file:///home/avatar-server/Avatar/BrainwaveReading.qml:17:5: QML Row: Cannot specify left, right, horizontalCenter, fill or centerIn anchors for items inside Row. Row will not function.
+qml: DroneCameraView loaded; cameraController: null
+qml: DroneCameraLoader.status:::  1
+file:///home/avatar-server/Avatar/NA06_Manual_Control/camera_view/DroneCameraView.qml:19:5: QML Connections: Implicitly defined onFoo properties in Connections are deprecated. Use this syntax instead: function onFoo(<arguments>) { ... }
+qml: DroneCameraController assigned:::  DroneCameraController(0x62c836560fc0)
+Running Deep Learning Model with PyTorch...
+LIVE
+[INFO] Auto-detected Cyton serial port: /dev/ttyUSB0
+[2025-11-26 20:42:52.079] [board_logger] [info] incoming json: {
+    "file": "",
+    "file_anc": "",
+    "file_aux": "",
+    "ip_address": "",
+    "ip_address_anc": "",
+    "ip_address_aux": "",
+    "ip_port": 0,
+    "ip_port_anc": 0,
+    "ip_port_aux": 0,
+    "ip_protocol": 0,
+    "mac_address": "",
+    "master_board": -100,
+    "other_info": "",
+    "serial_number": "",
+    "serial_port": "/dev/ttyUSB0",
+    "timeout": 0
+}
+[2025-11-26 20:42:52.080] [board_logger] [trace] Board object created 2
+[2025-11-26 20:42:52.080] [board_logger] [info] opening port /dev/ttyUSB0
+[2025-11-26 20:42:52.080] [board_logger] [trace] port /dev/ttyUSB0 is open
+[2025-11-26 20:42:52.080] [board_logger] [trace] set port settings
+[2025-11-26 20:42:52.080] [board_logger] [debug] sending v to the board
+[2025-11-26 20:42:53.284] [board_logger] [debug] sending d to the board
+[2025-11-26 20:42:54.386] [board_logger] [debug] sending b to the board
+[2025-11-26 20:42:56.414] [board_logger] [debug] sending s to the board
+live Cyton Daisy data retrieved
+Running Deep Learning Model with PyTorch...
+LIVE
+[INFO] Auto-detected Cyton serial port: /dev/ttyUSB0
+[2025-11-26 20:43:01.238] [board_logger] [info] incoming json: {
+    "file": "",
+    "file_anc": "",
+    "file_aux": "",
+    "ip_address": "",
+    "ip_address_anc": "",
+    "ip_address_aux": "",
+    "ip_port": 0,
+    "ip_port_anc": 0,
+    "ip_port_aux": 0,
+    "ip_protocol": 0,
+    "mac_address": "",
+    "master_board": -100,
+    "other_info": "",
+    "serial_number": "",
+    "serial_port": "/dev/ttyUSB0",
+    "timeout": 0
+}
+[2025-11-26 20:43:01.238] [board_logger] [trace] Board object created 2
+[2025-11-26 20:43:01.238] [board_logger] [info] opening port /dev/ttyUSB0
+[2025-11-26 20:43:01.238] [board_logger] [trace] port /dev/ttyUSB0 is open
+[2025-11-26 20:43:01.239] [board_logger] [trace] set port settings
+[2025-11-26 20:43:01.239] [board_logger] [debug] sending v to the board
+[2025-11-26 20:43:02.413] [board_logger] [debug] sending d to the board
+[2025-11-26 20:43:03.538] [board_logger] [debug] sending b to the board
+[2025-11-26 20:43:05.557] [board_logger] [debug] sending s to the board
+live Cyton Daisy data retrieved
+avatar-server@MXL41739G6:~/Avatar$ python3 GUI5.py
+Warning: BCI connection not available: No module named 'client'
+TabController created
+=============Manual Nao Controller initialized=============
+[INFO] tello.py - 129 - Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+The base directory path is /home/avatar-server/Avatar
+The plots directory path is /home/avatar-server/Avatar/plotDevelopers
+Gold chart path: file:////home/avatar-server/Avatar/plotDevelopers/gold_contributors.png
+Silver chart path: file:////home/avatar-server/Avatar/plotDevelopers/silver_contributors.png
+Bronze chart path: file:////home/avatar-server/Avatar/plotDevelopers/bronze_contributors.png
+Medal path: file:////home/avatar-server/Avatar/plotDevelopers/Medal.png
+Controllers exposed to QML
+file:///home/avatar-server/Avatar/ManualDroneControl.qml:694:9: QML CameraView: Binding loop detected for property "cameraController"
+qml: DroneCameraLoader.status:::  2
+file:///home/avatar-server/Avatar/BrainwaveReading.qml:79:17: QML Button: Binding loop detected for property "implicitWidth"
+Generating charts...
+Generated Gold chart
+Generated Silver chart
+Generated Bronze chart
+The base directory path is /home/avatar-server/Avatar
+The plots directory path is /home/avatar-server/Avatar/plotDevelopers
+Gold chart path: file:////home/avatar-server/Avatar/plotDevelopers/gold_contributors.png
+Silver chart path: file:////home/avatar-server/Avatar/plotDevelopers/silver_contributors.png
+Bronze chart path: file:////home/avatar-server/Avatar/plotDevelopers/bronze_contributors.png
+Medal path: file:////home/avatar-server/Avatar/plotDevelopers/Medal.png
+Charts generated successfully
+
+=== STARTING CONVERT PDFS TO IMAGES FOR REFRESH ===
+
+=== CHECKING IF PLOTS EXIST ===
+Checking PDFs in /home/avatar-server/Avatar/plotscode/plots/rollback...
+Checking PDFs in /home/avatar-server/Avatar/plotscode/plots/refresh...
+Result of check_plots_exist: True
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/takeoff_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/forward_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/right_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/land_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/backward_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/left_plots.png
+Final Image Paths Sent to QML: [{'graphTitle': 'Takeoff', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/takeoff_plots.png'}, {'graphTitle': 'Forward', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/forward_plots.png'}, {'graphTitle': 'Right', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/right_plots.png'}, {'graphTitle': 'Landing', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/land_plots.png'}, {'graphTitle': 'Backward', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/backward_plots.png'}, {'graphTitle': 'Left', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/left_plots.png'}]
+file:///home/avatar-server/Avatar/ManualDroneControl.qml:30:17: QML Row: Cannot specify left, right, horizontalCenter, fill or centerIn anchors for items inside Row. Row will not function.
+file:///home/avatar-server/Avatar/ManualDroneControl.qml:25:13: QML Column: Cannot specify top, bottom, verticalCenter, fill or centerIn anchors for items inside Column. Column will not function.
+file:///home/avatar-server/Avatar/BrainwaveReading.qml:17:5: QML Row: Cannot specify left, right, horizontalCenter, fill or centerIn anchors for items inside Row. Row will not function.
+qml: DroneCameraView loaded; cameraController: null
+qml: DroneCameraLoader.status:::  1
+file:///home/avatar-server/Avatar/NA06_Manual_Control/camera_view/DroneCameraView.qml:19:5: QML Connections: Implicitly defined onFoo properties in Connections are deprecated. Use this syntax instead: function onFoo(<arguments>) { ... }
+qml: DroneCameraController assigned:::  DroneCameraController(0x615887bd4da0)
+Running Deep Learning Model with PyTorch...
+LIVE
+[INFO] Auto-detected Cyton serial port: /dev/ttyUSB0
+[2025-11-26 20:43:47.128] [board_logger] [info] incoming json: {
+    "file": "",
+    "file_anc": "",
+    "file_aux": "",
+    "ip_address": "",
+    "ip_address_anc": "",
+    "ip_address_aux": "",
+    "ip_port": 0,
+    "ip_port_anc": 0,
+    "ip_port_aux": 0,
+    "ip_protocol": 0,
+    "mac_address": "",
+    "master_board": -100,
+    "other_info": "",
+    "serial_number": "",
+    "serial_port": "/dev/ttyUSB0",
+    "timeout": 0
+}
+[2025-11-26 20:43:47.128] [board_logger] [trace] Board object created 2
+[2025-11-26 20:43:47.128] [board_logger] [info] opening port /dev/ttyUSB0
+[2025-11-26 20:43:47.128] [board_logger] [trace] port /dev/ttyUSB0 is open
+[2025-11-26 20:43:47.129] [board_logger] [trace] set port settings
+[2025-11-26 20:43:47.129] [board_logger] [debug] sending v to the board
+[2025-11-26 20:43:48.326] [board_logger] [debug] sending d to the board
+[2025-11-26 20:43:49.426] [board_logger] [debug] sending b to the board
+[2025-11-26 20:43:51.457] [board_logger] [debug] sending s to the board
+live Cyton Daisy data retrieved
+Running Deep Learning Model with PyTorch...
+LIVE
+[INFO] Auto-detected Cyton serial port: /dev/ttyUSB0
+[2025-11-26 20:43:54.791] [board_logger] [info] incoming json: {
+    "file": "",
+    "file_anc": "",
+    "file_aux": "",
+    "ip_address": "",
+    "ip_address_anc": "",
+    "ip_address_aux": "",
+    "ip_port": 0,
+    "ip_port_anc": 0,
+    "ip_port_aux": 0,
+    "ip_protocol": 0,
+    "mac_address": "",
+    "master_board": -100,
+    "other_info": "",
+    "serial_number": "",
+    "serial_port": "/dev/ttyUSB0",
+    "timeout": 0
+}
+[2025-11-26 20:43:54.791] [board_logger] [trace] Board object created 2
+[2025-11-26 20:43:54.791] [board_logger] [info] opening port /dev/ttyUSB0
+[2025-11-26 20:43:54.791] [board_logger] [trace] port /dev/ttyUSB0 is open
+[2025-11-26 20:43:54.791] [board_logger] [trace] set port settings
+[2025-11-26 20:43:54.791] [board_logger] [debug] sending v to the board
+[2025-11-26 20:43:55.954] [board_logger] [debug] sending d to the board
+[2025-11-26 20:43:57.106] [board_logger] [debug] sending b to the board
+[2025-11-26 20:43:59.129] [board_logger] [debug] sending s to the board
+live Cyton Daisy data retrieved
+Running Deep Learning Model with PyTorch...
+LIVE
+[INFO] Auto-detected Cyton serial port: /dev/ttyUSB0
+[2025-11-26 20:44:01.759] [board_logger] [info] incoming json: {
+    "file": "",
+    "file_anc": "",
+    "file_aux": "",
+    "ip_address": "",
+    "ip_address_anc": "",
+    "ip_address_aux": "",
+    "ip_port": 0,
+    "ip_port_anc": 0,
+    "ip_port_aux": 0,
+    "ip_protocol": 0,
+    "mac_address": "",
+    "master_board": -100,
+    "other_info": "",
+    "serial_number": "",
+    "serial_port": "/dev/ttyUSB0",
+    "timeout": 0
+}
+[2025-11-26 20:44:01.759] [board_logger] [trace] Board object created 2
+[2025-11-26 20:44:01.759] [board_logger] [info] opening port /dev/ttyUSB0
+[2025-11-26 20:44:01.759] [board_logger] [trace] port /dev/ttyUSB0 is open
+[2025-11-26 20:44:01.759] [board_logger] [trace] set port settings
+[2025-11-26 20:44:01.759] [board_logger] [debug] sending v to the board
+[2025-11-26 20:44:02.961] [board_logger] [debug] sending d to the board
+[2025-11-26 20:44:04.083] [board_logger] [debug] sending b to the board
+[2025-11-26 20:44:06.120] [board_logger] [debug] sending s to the board
+live Cyton Daisy data retrieved
+file:///home/avatar-server/Avatar/BrainwaveReading.qml:17:5: QML Row: Cannot specify left, right, horizontalCenter, fill or centerIn anchors for items inside Row. Row will not function.
+avatar-server@MXL41739G6:~/Avatar$ python3 GUI5.py
+Warning: BCI connection not available: No module named 'client'
+TabController created
+=============Manual Nao Controller initialized=============
+[INFO] tello.py - 129 - Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+The base directory path is /home/avatar-server/Avatar
+The plots directory path is /home/avatar-server/Avatar/plotDevelopers
+Gold chart path: file:////home/avatar-server/Avatar/plotDevelopers/gold_contributors.png
+Silver chart path: file:////home/avatar-server/Avatar/plotDevelopers/silver_contributors.png
+Bronze chart path: file:////home/avatar-server/Avatar/plotDevelopers/bronze_contributors.png
+Medal path: file:////home/avatar-server/Avatar/plotDevelopers/Medal.png
+Controllers exposed to QML
+file:///home/avatar-server/Avatar/ManualDroneControl.qml:694:9: QML CameraView: Binding loop detected for property "cameraController"
+qml: DroneCameraLoader.status:::  2
+file:///home/avatar-server/Avatar/BrainwaveReading.qml:79:17: QML Button: Binding loop detected for property "implicitWidth"
+Generating charts...
+Generated Gold chart
+Generated Silver chart
+Generated Bronze chart
+The base directory path is /home/avatar-server/Avatar
+The plots directory path is /home/avatar-server/Avatar/plotDevelopers
+Gold chart path: file:////home/avatar-server/Avatar/plotDevelopers/gold_contributors.png
+Silver chart path: file:////home/avatar-server/Avatar/plotDevelopers/silver_contributors.png
+Bronze chart path: file:////home/avatar-server/Avatar/plotDevelopers/bronze_contributors.png
+Medal path: file:////home/avatar-server/Avatar/plotDevelopers/Medal.png
+Charts generated successfully
+
+=== STARTING CONVERT PDFS TO IMAGES FOR REFRESH ===
+
+=== CHECKING IF PLOTS EXIST ===
+Checking PDFs in /home/avatar-server/Avatar/plotscode/plots/rollback...
+Checking PDFs in /home/avatar-server/Avatar/plotscode/plots/refresh...
+Result of check_plots_exist: True
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/takeoff_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/forward_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/right_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/land_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/backward_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/left_plots.png
+Final Image Paths Sent to QML: [{'graphTitle': 'Takeoff', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/takeoff_plots.png'}, {'graphTitle': 'Forward', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/forward_plots.png'}, {'graphTitle': 'Right', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/right_plots.png'}, {'graphTitle': 'Landing', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/land_plots.png'}, {'graphTitle': 'Backward', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/backward_plots.png'}, {'graphTitle': 'Left', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/left_plots.png'}]
+file:///home/avatar-server/Avatar/ManualDroneControl.qml:30:17: QML Row: Cannot specify left, right, horizontalCenter, fill or centerIn anchors for items inside Row. Row will not function.
+file:///home/avatar-server/Avatar/ManualDroneControl.qml:25:13: QML Column: Cannot specify top, bottom, verticalCenter, fill or centerIn anchors for items inside Column. Column will not function.
+file:///home/avatar-server/Avatar/BrainwaveReading.qml:17:5: QML Row: Cannot specify left, right, horizontalCenter, fill or centerIn anchors for items inside Row. Row will not function.
+qml: DroneCameraView loaded; cameraController: null
+qml: DroneCameraLoader.status:::  1
+file:///home/avatar-server/Avatar/NA06_Manual_Control/camera_view/DroneCameraView.qml:19:5: QML Connections: Implicitly defined onFoo properties in Connections are deprecated. Use this syntax instead: function onFoo(<arguments>) { ... }
+qml: DroneCameraController assigned:::  DroneCameraController(0x6233c6bc42f0)
+Running Deep Learning Model with PyTorch...
+LIVE
+[INFO] Auto-detected Cyton serial port: /dev/ttyUSB0
+[2025-11-26 20:48:50.682] [board_logger] [info] incoming json: {
+    "file": "",
+    "file_anc": "",
+    "file_aux": "",
+    "ip_address": "",
+    "ip_address_anc": "",
+    "ip_address_aux": "",
+    "ip_port": 0,
+    "ip_port_anc": 0,
+    "ip_port_aux": 0,
+    "ip_protocol": 0,
+    "mac_address": "",
+    "master_board": -100,
+    "other_info": "",
+    "serial_number": "",
+    "serial_port": "/dev/ttyUSB0",
+    "timeout": 0
+}
+[2025-11-26 20:48:50.682] [board_logger] [trace] Board object created 2
+[2025-11-26 20:48:50.682] [board_logger] [info] opening port /dev/ttyUSB0
+[2025-11-26 20:48:50.682] [board_logger] [trace] port /dev/ttyUSB0 is open
+[2025-11-26 20:48:50.682] [board_logger] [trace] set port settings
+[2025-11-26 20:48:50.682] [board_logger] [debug] sending v to the board
+[2025-11-26 20:48:51.880] [board_logger] [debug] sending d to the board
+[2025-11-26 20:48:52.978] [board_logger] [debug] sending b to the board
+[2025-11-26 20:48:54.989] [board_logger] [debug] sending s to the board
+live Cyton Daisy data retrieved
+
+
+
+
+
+
+tensor([[ 1.8925e+03, -9.0469e+02,  1.0306e+03,  1.8982e+03,  5.2916e+02,
+         -1.3222e+03],
+        [ 3.2373e+00,  1.4929e+01,  1.0763e+01,  1.3244e+00, -7.1091e+00,
+         -1.4210e+00],
+        [-2.9680e-01, -1.6318e-01,  2.2471e-02,  1.8235e-01,  3.7158e-01,
+          1.3125e-02],
+        ...,
+        [ 9.0832e+00,  1.7197e+00, -1.6263e+01,  1.0949e+01,  3.2962e+00,
+         -7.7513e-01],
+        [ 5.0194e+00, -1.7020e+00, -7.0769e+00,  9.9219e+00,  6.7330e+00,
+          6.7608e-01],
+        [ 4.3644e+00,  7.3061e+00,  4.0172e+00,  1.1752e+01,  5.7808e+00,
+          8.3444e+00]], device='cuda:0')
+Error with PyTorch Deep Learning: Object of type Tensor is not JSON serializable
+file:///home/avatar-server/Avatar/BrainwaveReading.qml:17:5: QML Row: Cannot specify left, right, horizontalCenter, fill or centerIn anchors for items inside Row. Row will not function.
+avatar-server@MXL41739G6:~/Avatar$ python3 GUI5.py
+Warning: BCI connection not available: No module named 'client'
+TabController created
+=============Manual Nao Controller initialized=============
+[INFO] tello.py - 129 - Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+The base directory path is /home/avatar-server/Avatar
+The plots directory path is /home/avatar-server/Avatar/plotDevelopers
+Gold chart path: file:////home/avatar-server/Avatar/plotDevelopers/gold_contributors.png
+Silver chart path: file:////home/avatar-server/Avatar/plotDevelopers/silver_contributors.png
+Bronze chart path: file:////home/avatar-server/Avatar/plotDevelopers/bronze_contributors.png
+Medal path: file:////home/avatar-server/Avatar/plotDevelopers/Medal.png
+Controllers exposed to QML
+file:///home/avatar-server/Avatar/ManualDroneControl.qml:694:9: QML CameraView: Binding loop detected for property "cameraController"
+qml: DroneCameraLoader.status:::  2
+file:///home/avatar-server/Avatar/BrainwaveReading.qml:79:17: QML Button: Binding loop detected for property "implicitWidth"
+Generating charts...
+Generated Gold chart
+Generated Silver chart
+Generated Bronze chart
+The base directory path is /home/avatar-server/Avatar
+The plots directory path is /home/avatar-server/Avatar/plotDevelopers
+Gold chart path: file:////home/avatar-server/Avatar/plotDevelopers/gold_contributors.png
+Silver chart path: file:////home/avatar-server/Avatar/plotDevelopers/silver_contributors.png
+Bronze chart path: file:////home/avatar-server/Avatar/plotDevelopers/bronze_contributors.png
+Medal path: file:////home/avatar-server/Avatar/plotDevelopers/Medal.png
+Charts generated successfully
+
+=== STARTING CONVERT PDFS TO IMAGES FOR REFRESH ===
+
+=== CHECKING IF PLOTS EXIST ===
+Checking PDFs in /home/avatar-server/Avatar/plotscode/plots/rollback...
+Checking PDFs in /home/avatar-server/Avatar/plotscode/plots/refresh...
+Result of check_plots_exist: True
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/takeoff_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/forward_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/right_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/land_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/backward_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/left_plots.png
+Final Image Paths Sent to QML: [{'graphTitle': 'Takeoff', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/takeoff_plots.png'}, {'graphTitle': 'Forward', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/forward_plots.png'}, {'graphTitle': 'Right', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/right_plots.png'}, {'graphTitle': 'Landing', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/land_plots.png'}, {'graphTitle': 'Backward', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/backward_plots.png'}, {'graphTitle': 'Left', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/left_plots.png'}]
+file:///home/avatar-server/Avatar/ManualDroneControl.qml:30:17: QML Row: Cannot specify left, right, horizontalCenter, fill or centerIn anchors for items inside Row. Row will not function.
+file:///home/avatar-server/Avatar/ManualDroneControl.qml:25:13: QML Column: Cannot specify top, bottom, verticalCenter, fill or centerIn anchors for items inside Column. Column will not function.
+file:///home/avatar-server/Avatar/BrainwaveReading.qml:17:5: QML Row: Cannot specify left, right, horizontalCenter, fill or centerIn anchors for items inside Row. Row will not function.
+qml: DroneCameraView loaded; cameraController: null
+qml: DroneCameraLoader.status:::  1
+file:///home/avatar-server/Avatar/NA06_Manual_Control/camera_view/DroneCameraView.qml:19:5: QML Connections: Implicitly defined onFoo properties in Connections are deprecated. Use this syntax instead: function onFoo(<arguments>) { ... }
+qml: DroneCameraController assigned:::  DroneCameraController(0x5614e3a67f90)
+Running Deep Learning Model with PyTorch...
+LIVE
+[INFO] Auto-detected Cyton serial port: /dev/ttyUSB0
+[2025-11-26 20:55:17.902] [board_logger] [info] incoming json: {
+    "file": "",
+    "file_anc": "",
+    "file_aux": "",
+    "ip_address": "",
+    "ip_address_anc": "",
+    "ip_address_aux": "",
+    "ip_port": 0,
+    "ip_port_anc": 0,
+    "ip_port_aux": 0,
+    "ip_protocol": 0,
+    "mac_address": "",
+    "master_board": -100,
+    "other_info": "",
+    "serial_number": "",
+    "serial_port": "/dev/ttyUSB0",
+    "timeout": 0
+}
+[2025-11-26 20:55:17.902] [board_logger] [trace] Board object created 2
+[2025-11-26 20:55:17.902] [board_logger] [info] opening port /dev/ttyUSB0
+[2025-11-26 20:55:17.902] [board_logger] [trace] port /dev/ttyUSB0 is open
+[2025-11-26 20:55:17.902] [board_logger] [trace] set port settings
+[2025-11-26 20:55:17.902] [board_logger] [debug] sending v to the board
+[2025-11-26 20:55:19.113] [board_logger] [debug] sending d to the board
+[2025-11-26 20:55:20.178] [board_logger] [debug] sending b to the board
+[2025-11-26 20:55:22.190] [board_logger] [debug] sending s to the board
+live Cyton Daisy data retrieved
+======================
+
+
+
+
+
+Error with PyTorch Deep Learning: Object of type Tensor is not JSON serializable
+^CTraceback (most recent call last):
+  File "/home/avatar-server/Avatar/GUI5.py", line 1063, in <module>
+    sys.exit(app.exec())
+KeyboardInterrupt
+
+avatar-server@MXL41739G6:~/Avatar$ python3 GUI5.py
+Warning: BCI connection not available: No module named 'client'
+TabController created
+=============Manual Nao Controller initialized=============
+[INFO] tello.py - 129 - Tello instance was initialized. Host: '192.168.10.1'. Port: '8889'.
+The base directory path is /home/avatar-server/Avatar
+The plots directory path is /home/avatar-server/Avatar/plotDevelopers
+Gold chart path: file:////home/avatar-server/Avatar/plotDevelopers/gold_contributors.png
+Silver chart path: file:////home/avatar-server/Avatar/plotDevelopers/silver_contributors.png
+Bronze chart path: file:////home/avatar-server/Avatar/plotDevelopers/bronze_contributors.png
+Medal path: file:////home/avatar-server/Avatar/plotDevelopers/Medal.png
+Controllers exposed to QML
+file:///home/avatar-server/Avatar/ManualDroneControl.qml:694:9: QML CameraView: Binding loop detected for property "cameraController"
+qml: DroneCameraLoader.status:::  2
+file:///home/avatar-server/Avatar/BrainwaveReading.qml:79:17: QML Button: Binding loop detected for property "implicitWidth"
+Generating charts...
+Generated Gold chart
+Generated Silver chart
+Generated Bronze chart
+The base directory path is /home/avatar-server/Avatar
+The plots directory path is /home/avatar-server/Avatar/plotDevelopers
+Gold chart path: file:////home/avatar-server/Avatar/plotDevelopers/gold_contributors.png
+Silver chart path: file:////home/avatar-server/Avatar/plotDevelopers/silver_contributors.png
+Bronze chart path: file:////home/avatar-server/Avatar/plotDevelopers/bronze_contributors.png
+Medal path: file:////home/avatar-server/Avatar/plotDevelopers/Medal.png
+Charts generated successfully
+
+=== STARTING CONVERT PDFS TO IMAGES FOR REFRESH ===
+
+=== CHECKING IF PLOTS EXIST ===
+Checking PDFs in /home/avatar-server/Avatar/plotscode/plots/rollback...
+Checking PDFs in /home/avatar-server/Avatar/plotscode/plots/refresh...
+Result of check_plots_exist: True
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/takeoff_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/forward_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/right_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/land_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/backward_plots.png
+Generated image: /home/avatar-server/Avatar/plotscode/plots/refresh/left_plots.png
+Final Image Paths Sent to QML: [{'graphTitle': 'Takeoff', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/takeoff_plots.png'}, {'graphTitle': 'Forward', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/forward_plots.png'}, {'graphTitle': 'Right', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/right_plots.png'}, {'graphTitle': 'Landing', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/land_plots.png'}, {'graphTitle': 'Backward', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/backward_plots.png'}, {'graphTitle': 'Left', 'imagePath': 'file:///home/avatar-server/Avatar/plotscode/plots/refresh/left_plots.png'}]
+file:///home/avatar-server/Avatar/ManualDroneControl.qml:30:17: QML Row: Cannot specify left, right, horizontalCenter, fill or centerIn anchors for items inside Row. Row will not function.
+file:///home/avatar-server/Avatar/ManualDroneControl.qml:25:13: QML Column: Cannot specify top, bottom, verticalCenter, fill or centerIn anchors for items inside Column. Column will not function.
+file:///home/avatar-server/Avatar/BrainwaveReading.qml:17:5: QML Row: Cannot specify left, right, horizontalCenter, fill or centerIn anchors for items inside Row. Row will not function.
+qml: DroneCameraView loaded; cameraController: null
+qml: DroneCameraLoader.status:::  1
+file:///home/avatar-server/Avatar/NA06_Manual_Control/camera_view/DroneCameraView.qml:19:5: QML Connections: Implicitly defined onFoo properties in Connections are deprecated. Use this syntax instead: function onFoo(<arguments>) { ... }
+qml: DroneCameraController assigned:::  DroneCameraController(0x55ae78526ea0)
+Running Deep Learning Model with PyTorch...
+LIVE
+[INFO] Auto-detected Cyton serial port: /dev/ttyUSB0
+[2025-11-26 20:56:40.991] [board_logger] [info] incoming json: {
+    "file": "",
+    "file_anc": "",
+    "file_aux": "",
+    "ip_address": "",
+    "ip_address_anc": "",
+    "ip_address_aux": "",
+    "ip_port": 0,
+    "ip_port_anc": 0,
+    "ip_port_aux": 0,
+    "ip_protocol": 0,
+    "mac_address": "",
+    "master_board": -100,
+    "other_info": "",
+    "serial_number": "",
+    "serial_port": "/dev/ttyUSB0",
+    "timeout": 0
+}
+[2025-11-26 20:56:40.991] [board_logger] [trace] Board object created 2
+[2025-11-26 20:56:40.991] [board_logger] [info] opening port /dev/ttyUSB0
+[2025-11-26 20:56:40.991] [board_logger] [trace] port /dev/ttyUSB0 is open
+[2025-11-26 20:56:40.991] [board_logger] [trace] set port settings
+[2025-11-26 20:56:40.991] [board_logger] [debug] sending v to the board
+[2025-11-26 20:56:42.199] [board_logger] [debug] sending d to the board
+[2025-11-26 20:56:43.315] [board_logger] [debug] sending b to the board
+[2025-11-26 20:56:45.368] [board_logger] [debug] sending s to the board
+live Cyton Daisy data retrieved
+======================
+
+
+
+
+
+[3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 3, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 5, 5, 5, 5, 5, 5, 5, 1, 5, 1, 1, 1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 3, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1, 1, 5, 1, 5, 5, 5, 5, 3, 5, 5, 1, 1, 1, 5, 5, 5, 5, 5, 3, 3, 1, 5, 1, 3, 5, 5, 1, 3, 3, 5, 5, 3, 5, 3, 5, 5, 5, 5, 5, 5, 3, 4, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 3, 3]
+========================
+
+
+
+
+
+Running Deep Learning Model with PyTorch...
+LIVE
+[INFO] Auto-detected Cyton serial port: /dev/ttyUSB0
+[2025-11-26 20:57:20.143] [board_logger] [info] incoming json: {
+    "file": "",
+    "file_anc": "",
+    "file_aux": "",
+    "ip_address": "",
+    "ip_address_anc": "",
+    "ip_address_aux": "",
+    "ip_port": 0,
+    "ip_port_anc": 0,
+    "ip_port_aux": 0,
+    "ip_protocol": 0,
+    "mac_address": "",
+    "master_board": -100,
+    "other_info": "",
+    "serial_number": "",
+    "serial_port": "/dev/ttyUSB0",
+    "timeout": 0
+}
+[2025-11-26 20:57:20.143] [board_logger] [trace] Board object created 2
+[2025-11-26 20:57:20.143] [board_logger] [info] opening port /dev/ttyUSB0
+[2025-11-26 20:57:20.143] [board_logger] [trace] port /dev/ttyUSB0 is open
+[2025-11-26 20:57:20.143] [board_logger] [trace] set port settings
+[2025-11-26 20:57:20.143] [board_logger] [debug] sending v to the board
+[2025-11-26 20:57:21.355] [board_logger] [debug] sending d to the board
+[2025-11-26 20:57:22.482] [board_logger] [debug] sending b to the board
+[2025-11-26 20:57:24.521] [board_logger] [debug] sending s to the board
+live Cyton Daisy data retrieved
+======================
+
+
+
+
+
+[0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 5, 5, 5, 5, 5, 5, 3, 5, 5, 5, 5, 5, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+========================
+
+
+
+
+
+Running Deep Learning Model with PyTorch...
+LIVE
+[INFO] Auto-detected Cyton serial port: /dev/ttyUSB0
+[2025-11-26 20:57:39.159] [board_logger] [info] incoming json: {
+    "file": "",
+    "file_anc": "",
+    "file_aux": "",
+    "ip_address": "",
+    "ip_address_anc": "",
+    "ip_address_aux": "",
+    "ip_port": 0,
+    "ip_port_anc": 0,
+    "ip_port_aux": 0,
+    "ip_protocol": 0,
+    "mac_address": "",
+    "master_board": -100,
+    "other_info": "",
+    "serial_number": "",
+    "serial_port": "/dev/ttyUSB0",
+    "timeout": 0
+}
+[2025-11-26 20:57:39.159] [board_logger] [trace] Board object created 2
+[2025-11-26 20:57:39.159] [board_logger] [info] opening port /dev/ttyUSB0
+[2025-11-26 20:57:39.159] [board_logger] [trace] port /dev/ttyUSB0 is open
+[2025-11-26 20:57:39.159] [board_logger] [trace] set port settings
+[2025-11-26 20:57:39.159] [board_logger] [debug] sending v to the board
+[2025-11-26 20:57:40.349] [board_logger] [debug] sending d to the board
+[2025-11-26 20:57:41.490] [board_logger] [debug] sending b to the board
+[2025-11-26 20:57:43.496] [board_logger] [debug] sending s to the board
+live Cyton Daisy data retrieved
+======================
+
+
+
+
+
+[0, 5, 5, 3, 5, 5, 5, 5, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 3, 5, 5, 5, 5, 5, 5, 3, 5, 5, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+========================
+
+
+
+

@@ -226,7 +226,10 @@ Rectangle {
                         verticalAlignment: Text.AlignVCenter
                         anchors.fill: parent
                     }
-                    onClicked: backend.keepDroneAlive()
+                    onClicked: {
+								backend.keepDroneAlive(text=manualInput.text), // pass text to run command
+								manualInput.text = "" // empty textbox sow command was taken and make ready for another command
+								}
                 }
             }
 
