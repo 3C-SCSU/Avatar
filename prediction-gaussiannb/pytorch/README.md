@@ -1,151 +1,67 @@
-# GaussianNB Naive Bayes - PyTorch Implementation
+## Brainwaves Dataset Augmentation Tool
+This Python script automates data augmentation for a Brain-Computer Interface (BCI) dataset located in the `brainwaves/` directory. It increases the dataset size by 60% through controlled file replication across 6 specific thought categories: forward, backward, land, takeoff, right, and left. The tool ensures balanced augmentation, anonymization via shuffling, and detailed reporting.
 
-## Overview
+## Features
 
-This folder contains a Gaussian Naive Bayes (GaussianNB) classifier implementation using PyTorch for brain wave (EEG) data classification to predict drone commands. This is a custom PyTorch implementation that uses the Gaussian Probability Density Function and Bayes' theorem for classification.
-
-### Files
-
-- **gaussiannb_model.py**: Contains the `GaussianNB` class - a custom `torch.nn.Module` implementation
-- **gaussiannb_train.ipynb**: Jupyter notebook for training the model with EEG data
-- **gaussiannb_trained.pth**: Trained model file (generated after training)
-- **README.md**: This documentation file
-
-## How It Works
-
-### Gaussian Naive Bayes Algorithm
-
-GaussianNB is a probabilistic classifier based on Bayes' theorem with the assumption that features follow a Gaussian (normal) distribution and are independent.
-
-**Key Steps:**
-
-1. **Training (fit method)**:
-   - Calculate mean (μ) and variance (σ²) for each feature within each class
-   - Calculate class priors P(y) = count(class) / total_samples
-   - Store these as non-trainable buffers (no backpropagation needed)
-
-2. **Prediction (forward method)**:
-   - For each class, calculate the Gaussian Probability Density Function:
-```
-     P(x|y) = (1/√(2πσ²)) * exp(-(x-μ)²/(2σ²))
-```
-   - Apply Bayes' theorem:
-```
-     P(y|x) ∝ P(x|y) * P(y)
-```
-   - Use log probabilities for numerical stability
-   - Return class with highest posterior probability
-
-### PyTorch Implementation Details
-
-- **Custom nn.Module**: Does not use traditional gradient descent or backpropagation
-- **Buffers**: Stores μ, σ², and priors as registered buffers (persist with model state)
-- **Tensor Operations**: Uses PyTorch operations (torch.mean, torch.var, torch.log) for GPU acceleration
-- **Numerical Stability**: Uses log-probabilities to avoid numerical underflow
-
-## Key Features
-
-- Pure PyTorch implementation with no scikit-learn dependencies for inference
-- GPU-compatible (can move model to CUDA for faster prediction on large batches)
-- Stores learned parameters (means, variances, priors) in model state
-- Can save/load trained models using `torch.save()` and `torch.load()`
-- Includes `predict_proba()` method for probability estimates
+- **Data Sanitization**: Renames all CSV files to sequential numbers (1.csv, 2.csv, etc.) across categories for anonymization.
+- **Balanced Replication**: Randomly replicates files evenly, 50 at a time per category, tracking usage to avoid duplicates until originals are exhausted.
+- **Size Monitoring**: Tracks copied files until a 60% increase in total dataset size is achieved.
+- **File Organization**: Uses temporary directories for staging, then integrates copies into original category folders.
+- **Final Shuffling**: Renames all files to `renamed_1.csv`, `renamed_2.csv`, etc., and shuffles order for additional anonymization.
+- **Reporting**: Outputs final dataset size (in GB), replicated files per category, and total file count.
 
 ## Usage
 
-### Training
+1. Place the script (`opendata.py`) in `Avatar/file-opendata/`.
+2. Ensure the `brainwaves/` directory contains subdirectories like `brainwave_rawdata_spring2024/` with category folders (forward, backward, etc.) holding `.csv` files.
+3. Run: `python opendata.py`
+4. Review console output for completion stats.
 
-1. **Update data path** in `gaussiannb_train.ipynb`:
-```python
-   directory_path = "/path/to/your/brainwave_readings/"
+The script processes ~4000 original files (~2.2GB compressed) to reach ~3GB total.
+
+## Directory Structure
+
+```
+Avatar/file-opendata/
+├── opendata.py          # This script
+└── brainwaves/          # Input/output directory
+    └── brainwave_rawdata_*  # Year/semester dirs
+        ├── forward/
+        ├── backward/
+        ├── land/
+        ├── takeoff/
+        ├── right/
+        └── left/
 ```
 
-2. **Run the notebook** to:
-   - Load brain wave .txt files
-   - Extract labels from filenames (backward, forward, landing, left, right, takeoff)
-   - Train the GaussianNB model
-   - Evaluate accuracy on test set
-   - Save trained model
+Temporary `tmp_raw_data/` is created and cleaned up automatically.
 
-3. **Brain wave data format**:
-   - `.txt` files with CSV format (skip first 4 header lines)
-   - Filenames must contain command labels
-   - Default: 32 EEG feature columns
+## Key Logic
 
-### Inference
-```python
-import torch
-from gaussiannb_model import GaussianNB
+- Scans and renames originals to numeric format.
+- Replicates until 60% size increase: copies unique files randomly, resetting trackers when needed.
+- Moves copies to originals, shuffles/renames everything.
+- Handles multiple years of data evenly.
 
-# Load trained model
-checkpoint = torch.load('gaussiannb_trained.pth')
-model = GaussianNB(
-    num_features=checkpoint['num_features'],
-    num_classes=checkpoint['num_classes']
-)
-model.load_state_dict(checkpoint['model_state_dict'])
+## Important Notes
 
-# Make predictions
-X_new = torch.FloatTensor(your_new_data)  # Shape: (n_samples, n_features)
-predictions = model(X_new)  # Returns class indices
+- **Privacy**: Brainwave data requires authorization before sharing. Do not upload raw files to GitHub.
+- **Cleanup for Repo**: After processing, remove `brainwaves/` contents and add `access_data.txt`:
+  ```
+  GITHUB DOES NOT ALLOW UPLOADING LARGE FILES. 
+  TO ACCESS OUR OPEN DATABUCKET THROUGH DELTA LAKE, PLEASE CONTACT US. 
+  SOURCE: GitHub Free and Pro: Up to 2 GB
+  ```
+- **Donation**: This code is contributed to the Avatar Open Source project via pull request.
+- **Dependencies**: Standard library only (`os`, `pathlib`, `random`, `shutil`, `re`). No external installs needed.
 
-# Get probabilities
-probabilities = model.predict_proba(X_new)  # Shape: (n_samples, n_classes)
+## Output Example
+
 ```
-
-## Mathematical Background
-
-### Bayes' Theorem
+----- Data Generation Complete! -----
+Total size of the new dataset: 3.12 GB
+Number of replicated files per category:
+  - ('brainwave_rawdata_spring2024', 'forward'): 50
+  ...
+Total number of files in the new dataset: 6400
 ```
-P(y|X) = [P(X|y) * P(y)] / P(X)
-```
-
-Where:
-- `P(y|X)`: Posterior probability of class y given features X
-- `P(X|y)`: Likelihood of features X given class y (Gaussian PDF)
-- `P(y)`: Prior probability of class y
-- `P(X)`: Evidence (constant for all classes, can be ignored for classification)
-
-### Naive Assumption
-
-Features are conditionally independent given the class:
-```
-P(X|y) = P(x₁|y) * P(x₂|y) * ... * P(xₙ|y)
-```
-
-### Gaussian PDF
-
-For continuous features:
-```
-P(xᵢ|y) = (1/√(2πσᵢ²)) * exp(-(xᵢ - μᵢ)²/(2σᵢ²))
-```
-
-## Performance Notes
-
-- **Advantages**:
-  - Fast training (just calculate statistics, no iterative optimization)
-  - Fast inference
-  - Works well with small datasets
-  - Probabilistic predictions
-  - No hyperparameters to tune
-
-- **Limitations**:
-  - Assumes features are independent (rarely true for EEG data)
-  - Assumes Gaussian distribution for features
-  - May underperform compared to deep learning on complex patterns
-
-## Integration with Avatar GUI
-
-This model can be integrated into GUI5.py alongside Random Forest and Deep Learning models. See the Avatar wiki page "Inserting a new model" for integration instructions.
-
-## Author
-
-**Muhammad Arsalan** - PyTorch GaussianNB Implementation for Issue #505
-
-## References
-
-- Murphy, K. P. (2012). *Machine Learning: A Probabilistic Perspective*. MIT Press.
-- PyTorch Documentation: https://pytorch.org/docs/
-- Naive Bayes Classifier: https://en.wikipedia.org/wiki/Naive_Bayes_classifier
-- Gaussian Distribution: https://en.wikipedia.org/wiki/Normal_distribution
-- Scikit-learn GaussianNB: https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html
