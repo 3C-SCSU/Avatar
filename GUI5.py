@@ -516,77 +516,98 @@ class BrainwavesBackend(QObject):
                     record_action('up', 30)
                     self.logMessage.emit("Moving up")
                     self.flight_log.insert(0, "Moving up 30cm")
+					
                 elif action == 'down':
                     self.tello.move_down(30)
                     record_action('down', 30)
                     self.logMessage.emit("Moving down")
                     self.flight_log.insert(0, "Moving down 30cm")
+					
                 elif action == 'forward':
                     self.tello.move_forward(30)
                     record_action('forward', 30)
                     self.logMessage.emit("Moving forward")
                     self.flight_log.insert(0, "Moving forward 30cm")
+					
                 elif action == 'backward':
                     self.tello.move_back(30)
                     record_action('backward', 30)
                     self.logMessage.emit("Moving backward")
                     self.flight_log.insert(0, "Moving backward 30cm")
+					
                 elif action == 'left':
                     self.tello.move_left(30)
                     record_action('left', 30)
                     self.logMessage.emit("Moving left")
                     self.flight_log.insert(0, "Moving left 30cm")
+					
                 elif action == 'right':
                     self.tello.move_right(30)
                     record_action('right', 30)
                     self.logMessage.emit("Moving right")
                     self.flight_log.insert(0, "Moving right 30cm")
+					
                 elif action == 'turn_left':
                     self.tello.rotate_counter_clockwise(45)
                     record_action('turn_left', 45)
                     self.logMessage.emit("Rotating left")
                     self.flight_log.insert(0, "Rotating left 45°")
+					
                 elif action == 'turn_right':
                     self.tello.rotate_clockwise(45)
                     record_action('turn_right', 45)
                     self.logMessage.emit("Rotating right")
                     self.flight_log.insert(0, "Rotating right 45°")
+					
                 elif action == 'flip_forward':
                     self.tello.flip_forward()
                     record_action('flip_forward')
                     self.logMessage.emit("Flipping forward")
                     self.flight_log.insert(0, "Flipping forward")
+					
                 elif action == 'flip_back':
                     self.tello.flip_back()
                     record_action('flip_back')
                     self.logMessage.emit("Flipping backward")
                     self.flight_log.insert(0, "Flipping backward")
+					
                 elif action == 'flip_left':
                     self.tello.flip_left()
                     record_action('flip_left')
                     self.logMessage.emit("Flipping left")
                     self.flight_log.insert(0, "Flipping left")
+					
                 elif action == 'flip_right':
                     self.tello.flip_right()
                     record_action('flip_right')
                     self.logMessage.emit("Flipping right")
                     self.flight_log.insert(0, "Flipping right")
+
+                elif action == 'takeoff':
+                    self.tello.takeoff()
+                    self.logMessage.emit("Taking off")
+                    self.flight_log.insert(0, "Taking off")
+				
                 elif action == 'land':
                     self.tello.land()
                     self.logMessage.emit("Landing")
                     self.flight_log.insert(0, "Landing")
+					
                 elif action == 'go_home':
                     self.go_home()
                     self.logMessage.emit("Going home")
                     self.flight_log.insert(0, "Going home")
+					
                 elif action == 'stream':
                     if hasattr(self, 'camera_controller'):
                         self.camera_controller.start_camera_stream()
                         self.logMessage.emit("Starting camera stream")
                         self.flight_log.insert(0, "Starting camera stream")
+						
                     else:
                         self.logMessage.emit("Camera controller not available")
                         self.flight_log.insert(0, "Camera controller not available")
+						
                 else:
                     self.logMessage.emit("Unknown action")
                     self.flight_log.insert(0, "Unknown action")
