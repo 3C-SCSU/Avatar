@@ -1,4 +1,5 @@
 import os
+import math
 import torch
 from prediction_deep_learning.pytorch.deep_learning_pytorch import FlexibleCNNClassifier
 
@@ -51,10 +52,27 @@ class DeeplearningPytorchPredictor:
             logits = self.model(X)
             y_pred_probs = torch.softmax(logits, dim=1)
             predicted_classes = torch.argmax(y_pred_probs, dim=1)
-            pred_labels = [self.class_map[int(p)] for p in predicted_classes]
+
+        
+        #predicted_classes_txt = [self.class_map[int(p)] for p in predicted_classes]
+        #print("All predicted labels:", predicted_classes_txt)
+
+        # Convert to take an average
+        predicted_ints = [int(p) for p in predicted_classes]
+        print("All predicted classes:", predicted_ints)
+        predicted_ints = predicted_ints[0:50]
+        print("Predicted classes for average:", predicted_ints)
+       
+        # Average - round up
+        avg_class = math.ceil(sum(predicted_ints) / len(predicted_ints))
+        print("Average class:", avg_class)
+
+        # Convert to text label
+        pred_label = self.class_map[avg_class]
+        print("Average class label:", pred_label)
 
         # Return the first label
-        return pred_labels[0]
+        return pred_label
     
     if __name__ == "__main__":
         DeeplearningPyTorchPredictor()
