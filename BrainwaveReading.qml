@@ -620,7 +620,7 @@ Rectangle {
         spacing: width * 0.02
         anchors.left: parent.left
         anchors.bottom: parent.bottom
-        anchors.leftMargin: parent.width * 0.1
+        anchors.leftMargin: parent.width * 0.14
         anchors.bottomMargin: parent.height * 0.03
 
         RadioButton {
