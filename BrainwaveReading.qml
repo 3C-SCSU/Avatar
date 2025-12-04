@@ -401,6 +401,12 @@ Rectangle {
                 }
             }
 
+            // Spacer to push Model Selection buttons down
+            Item {
+                width: parent.width
+                height: parent.height * 0.02
+            }
+
             // Model Selection Buttons in dark box
             Rectangle {
                 width: parent.width * 0.9
