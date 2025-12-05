@@ -11,18 +11,26 @@ import "cameraview"
 Rectangle {
     color: "#718399"
 
-    Row {
+    readonly property color buttonBg: "#242c4d"
+    readonly property color buttonBorder: "#3a4a62"
+    readonly property int  buttonRadius: 10
+
+    RowLayout {
         anchors.fill: parent
         anchors.margins: 10
-        spacing: 20
 
-        // Left side - Drone Controls
+        // ====================================
+        // ==== Left side - Drone Controls ====
+        // ====================================
         Rectangle {
-            width: parent.width * 0.65
-            height: parent.height
+            id: controlsPanel
+            Layout.fillWidth: false
+            Layout.preferredWidth: parent.width * 0.7
+            Layout.fillHeight: true
             color: "transparent"
 
-            Column {
+            // control row container
+            ColumnLayout {
                 anchors.fill: parent
                 spacing: 5
 
@@ -159,241 +167,160 @@ Rectangle {
 
                 // Forward Button
                 Rectangle {
-                    width: parent.width
-                    height: parent.height * 0.19
-                    anchors.top: parent.top
-                    anchors.topMargin: parent.height * 0.20
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: parent.height * 0.19
                     color: "transparent"
 
-                    Rectangle {
-                        width: parent.width
-                        height: parent.height
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        color: "#242c4d"
-                        border.color: "black"
+                    RowLayout {
+                        anchors.fill: parent
 
-                        Image {
-                            source: "GUI_Pics/forward.png"
-                            width: 150
-                            height: 150
-                            anchors.centerIn: parent
-                        }
-
-                        Text {
-                            text: "Forward"
-                            font.bold: true
-                            color: "white"
-                            font.pixelSize: parent.width * 0.01
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 10
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onEntered: parent.color = "white"
-                            onExited: parent.color = "#242c4d"
-                            onClicked: backend.doDroneTAction("forward")
-                        }
-                    }
-                }
-
-                // Directional Buttons (Turn Left, Left, Stream, Right, Turn Right)
-                Row {
-                    width: parent.width
-                    height: parent.height * 0.18
-                    anchors.top: parent.top
-                    anchors.topMargin: parent.height * 0.4
-                    spacing: width * 0.065
-
-                    // Turn Left Button
-                    Rectangle {
-                        width: parent.width * 0.15
-                        height: parent.height
-                        color: "#242c4d"
-                        border.color: "black"
-
-                        Image {
-                            source: "GUI_Pics/turnLeft.png"
-                            width: 150
-                            height: 150
-                            anchors.centerIn: parent
-                        }
-
-                        Text {
-                            text: "Turn Left"
-                            font.bold: true
-                            color: "white"
-                            font.pixelSize: Math.max(12, width * 0.2)
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 10
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onEntered: parent.color = "white"
-                            onExited: parent.color = "#242c4d"
-                            onClicked: backend.doDroneTAction("turn_left")
-                        }
-                    }
-
-                    // Left Button
-                    Rectangle {
-                        width: parent.width * 0.15
-                        height: parent.height
-                        color: "#242c4d"
-                        border.color: "black"
-
-                        Image {
-                            source: "GUI_Pics/left.png"
-                            width: 150
-                            height: 150
-                            anchors.centerIn: parent
-                        }
-
-                        Text {
-                            text: "Left"
-                            font.bold: true
-                            color: "white"
-                            font.pixelSize: Math.max(12, width * 0.2)
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 10
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onEntered: parent.color = "white"
-                            onExited: parent.color = "#242c4d"
-                            onClicked: backend.doDroneTAction("left")
-                        }
-                    }
-
-                    // Stream Button
-                    Rectangle {
-                        width: parent.width * 0.15
-                        height: parent.height
-                        color: "#242c4d"
-                        border.color: "black"
-
-                        Image {
-                            source: "GUI_Pics/stream.png"
-                            width: 150
-                            height: 150
-                            anchors.centerIn: parent
-                        }
-
-                        Text {
-                            text: "Stream"
-                            font.bold: true
-                            color: "white"
-                            font.pixelSize: Math.max(12, width * 0.2)
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 10
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onEntered: parent.color = "white"
-                            onExited: parent.color = "#242c4d"
-                            onClicked: backend.doDroneTAction("stream")
-                        }
-                    }
-
-                    // Right Button
-                    Rectangle {
-                        width: parent.width * 0.15
-                        height: parent.height
-                        color: "#242c4d"
-                        border.color: "black"
-
-                        Image {
-                            source: "GUI_Pics/right.png"
-                            width: 150
-                            height: 150
-                            anchors.centerIn: parent
-                        }
-
-                        Text {
-                            text: "Right"
-                            font.bold: true
-                            color: "white"
-                            font.pixelSize: Math.max(12, width * 0.2)
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 10
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onEntered: parent.color = "white"
-                            onExited: parent.color = "#242c4d"
-                            onClicked: backend.doDroneTAction("right")
-                        }
-                    }
-
-                    // Turn Right Button
-                    Rectangle {
-                        width: parent.width * 0.15
-                        height: parent.height
-                        color: "#242c4d"
-                        border.color: "black"
-
-                        Image {
-                            source: "GUI_Pics/turnRight.png"
-                            width: 150
-                            height: 150
-                            anchors.centerIn: parent
-                        }
-
-                        Text {
-                            text: "Turn Right"
-                            font.bold: true
-                            color: "white"
-                            font.pixelSize: Math.max(12, width * 0.2)
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 10
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onEntered: parent.color = "white"
-                            onExited: parent.color = "#242c4d"
-                            onClicked: backend.doDroneTAction("turn_right")
-                        }
-                    }
-                }
-                // Back Button Row with Flip Buttons
-                Rectangle {
-                    width: parent.width
-                    height: parent.height * 0.18
-                    anchors.top: parent.top
-                    anchors.topMargin: parent.height * 0.6
-                    color: "transparent"
-                    
-                    Row {
-                        width: parent.width
-                        height: parent.height
-                        spacing: parent.width * 0.0165
-                // Flip Forward Button
+                        // Home Button
                         Rectangle {
-                            width: (parent.width - parent.spacing * 4) / 5
-                            height: parent.height
-                            color: "#242c4d"
-                            border.color: "black"
-                            
+                            Layout.preferredWidth: 0.195 * parent.width
+                            Layout.fillHeight: true
+                            radius: buttonRadius
+                            color: buttonBg
+                            border.color: buttonBorder
+                            border.width: 1
+
+                            Image {
+                                source: "GUI_Pics/home.png"
+                                anchors.centerIn: parent
+                                fillMode: Image.PreserveAspectFit
+                                width: parent.width * 0.6
+                                height: parent.height * 0.6
+                            }
+
+                            Text {
+                                text: "Home"
+                                font.bold: true
+                                color: "white"
+                                font.pixelSize: Math.max(12, parent.height * 0.18)
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.bottom: parent.bottom
+                                anchors.bottomMargin: 8
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: backend.doDroneTAction("go_home")
+                            }
+                        }
+
+                        // Up Button
+                        Rectangle {
+                            Layout.preferredWidth: 0.595 * parent.width
+                            Layout.fillHeight: true
+                            radius: buttonRadius
+                            color: buttonBg
+                            border.color: buttonBorder
+                            border.width: 1
+
+                            Image {
+                                source: "GUI_Pics/up.png"
+                                anchors.centerIn: parent
+                                fillMode: Image.PreserveAspectFit
+                                width: parent.width * 0.4
+                                height: parent.height * 0.7
+                            }
+
+                            Text {
+                                text: "Up"
+                                font.bold: true
+                                color: "white"
+                                font.pixelSize: Math.max(12, parent.height * 0.18)
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.bottom: parent.bottom
+                                anchors.bottomMargin: 8
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: backend.doDroneTAction("up")
+                            }
+                        }
+
+                        // Flight Log
+                        Rectangle {
+                            Layout.preferredWidth: 0.19 * parent.width
+                            Layout.fillHeight: true
+                            radius: buttonRadius
+                            color: "#ffffff"
+                            border.color: "#2E4053"
+                            border.width: 1
+
+                            Text {
+                                text: "Flight Log"
+                                font.bold: true
+                                font.letterSpacing: 0.5
+                                font.pixelSize: Math.max(10, parent.height * 0.045)
+                                color: "black"
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.top: parent.top
+                                anchors.topMargin: 10
+                            }
+
+                            TextArea {
+                                id: flightLog
+                                readOnly: true
+                                wrapMode: TextArea.Wrap
+                                font.pixelSize: Math.max(10, parent.height * 0.045)
+                                color: "black"
+                                anchors.top: parent.top
+                                anchors.topMargin: 40
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.bottom: parent.bottom
+                                clip: true
+
+                                Component.onCompleted: {
+                                    backend.flightLogUpdated.connect(function (logList) {
+                                        flightLog.text = logList.join("\n")
+                                    })
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // *******************************************
+                // >>        2nd Row - Forward Button       <<
+                // *******************************************
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: parent.height * 0.19
+                    color: "transparent"
+
+                    RowLayout {
+                        anchors.fill: parent
+
+                        // empty space - required by design
+                        Rectangle {
+                            Layout.preferredWidth: 0.195 * parent.width
+                            Layout.fillHeight: true
+                            color: "transparent"
+                        }
+
+                        // Flip Forward Button
+                        Rectangle {
+                            Layout.preferredWidth: 0.195 * parent.width
+                            Layout.fillHeight: true
+                            radius: buttonRadius
+                            color: buttonBg
+                            border.color: buttonBorder
+                            border.width: 1
+
                             Text {
                                 text: "↻"
                                 font.bold: true
                                 color: "#76ff03"
-                                font.pixelSize: 80
+                                font.pixelSize: parent.height * 0.55
                                 anchors.centerIn: parent
                                 anchors.verticalCenterOffset: -15
                             }
-                            
+
                             Text {
                                 text: "Flip Forward"
                                 font.bold: true
@@ -403,128 +330,66 @@ Rectangle {
                                 anchors.bottom: parent.bottom
                                 anchors.bottomMargin: 5
                             }
-                            
+
                             MouseArea {
                                 anchors.fill: parent
-                                onEntered: parent.color = "white"
-                                onExited: parent.color = "#242c4d"
+                                cursorShape: Qt.PointingHandCursor
                                 onClicked: backend.doDroneTAction("flip_forward")
                             }
                         }
-                        
-                        // Flip Back Button
+
+                        // forward
                         Rectangle {
-                            width: (parent.width - parent.spacing * 4) / 5
-                            height: parent.height
-                            color: "#242c4d"
-                            border.color: "black"
-                            
-                            Text {
-                                text: "↺"
-                                font.bold: true
-                                color: "#76ff03"
-                                font.pixelSize: 80
-                                anchors.centerIn: parent
-                                anchors.verticalCenterOffset: -15
-                            }
-                            
-                            Text {
-                                text: "Flip Back"
-                                font.bold: true
-                                color: "white"
-                                font.pixelSize: 11
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                anchors.bottom: parent.bottom
-                                anchors.bottomMargin: 5
-                            }
-                            
-                            MouseArea {
-                                anchors.fill: parent
-                                onEntered: parent.color = "white"
-                                onExited: parent.color = "#242c4d"
-                                onClicked: backend.doDroneTAction("flip_back")
-                            }
-                        }
-                        
-                        // Back Button (Center)
-                        Rectangle {
-                            width: (parent.width - parent.spacing * 4) / 5
-                            height: parent.height
-                            color: "#242c4d"
-                            border.color: "black"
+                            Layout.preferredWidth: 0.195 * parent.width
+                            Layout.fillHeight: true
+                            radius: buttonRadius
+                            color: buttonBg
+                            border.color: buttonBorder
+                            border.width: 1
+
                             Image {
-                                source: "GUI_Pics/back.png"
-                                width: 100
-                                height: 100
+                                source: "GUI_Pics/forward.png"
                                 anchors.centerIn: parent
+                                fillMode: Image.PreserveAspectFit
+                                width: parent.width * 0.25
+                                height: parent.height * 0.8
                             }
+
                             Text {
-                                text: "Back"
+                                text: "Forward"
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: 11
+                                font.pixelSize: parent.height * 0.18
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
-                                anchors.bottomMargin: 5
+                                anchors.bottomMargin: 8
                             }
+
                             MouseArea {
                                 anchors.fill: parent
-                                onEntered: parent.color = "white"
-                                onExited: parent.color = "#242c4d"
-                                onClicked: backend.doDroneTAction("backward")
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: backend.doDroneTAction("forward")
                             }
                         }
-                        
-                        // Flip Left Button
+
+                        // flip right
                         Rectangle {
-                            width: (parent.width - parent.spacing * 4) / 5
-                            height: parent.height
-                            color: "#242c4d"
-                            border.color: "black"
-                            
-                            Text {
-                                text: "⟲"
-                                font.bold: true
-                                color: "#76ff03"
-                                font.pixelSize: 150
-                                anchors.centerIn: parent
-                                anchors.verticalCenterOffset: -15
-                            }
-                            
-                            Text {
-                                text: "Flip Left"
-                                font.bold: true
-                                color: "white"
-                                font.pixelSize: 11
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                anchors.bottom: parent.bottom
-                                anchors.bottomMargin: 5
-                            }
-                            
-                            MouseArea {
-                                anchors.fill: parent
-                                onEntered: parent.color = "white"
-                                onExited: parent.color = "#242c4d"
-                                onClicked: backend.doDroneTAction("flip_left")
-                            }
-                        }
-                        
-                        // Flip Right Button
-                        Rectangle {
-                            width: (parent.width - parent.spacing * 4) / 5
-                            height: parent.height
-                            color: "#242c4d"
-                            border.color: "black"
-                            
+                            Layout.preferredWidth: 0.195 * parent.width
+                            Layout.fillHeight: true
+                            radius: buttonRadius
+                            color: buttonBg
+                            border.color: buttonBorder
+                            border.width: 1
+
                             Text {
                                 text: "⟳"
                                 font.bold: true
                                 color: "#76ff03"
-                                font.pixelSize: 150
+                                font.pixelSize: parent.height * 0.7
                                 anchors.centerIn: parent
                                 anchors.verticalCenterOffset: -15
                             }
-                            
+
                             Text {
                                 text: "Flip Right"
                                 font.bold: true
@@ -534,116 +399,440 @@ Rectangle {
                                 anchors.bottom: parent.bottom
                                 anchors.bottomMargin: 5
                             }
-                            
+
                             MouseArea {
                                 anchors.fill: parent
-                                onEntered: parent.color = "white"
-                                onExited: parent.color = "#242c4d"
+                                cursorShape: Qt.PointingHandCursor
                                 onClicked: backend.doDroneTAction("flip_right")
+                            }
+                        }
+
+                        // empty space - required by design
+                        Rectangle {
+                            Layout.preferredWidth: 0.195 * parent.width
+                            Layout.fillHeight: true
+                            color: "transparent"
+                        }
+                    }
+                }
+
+                // **************************************************************************************
+                // >> 3rd Row - Directional Buttons (Turn Left, Left, Stream, Right, Turn Right)       <<
+                // **************************************************************************************
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: parent.height * 0.19
+                    color: "transparent"
+
+                    RowLayout {
+                        anchors.fill: parent
+
+                        // Turn Left Button
+                        Rectangle {
+                            Layout.preferredWidth: 0.195 * parent.width
+                            Layout.fillHeight: true
+                            radius: buttonRadius
+                            color: buttonBg
+                            border.color: buttonBorder
+                            border.width: 1
+
+                            Image {
+                                source: "GUI_Pics/turnLeft.png"
+                                anchors.centerIn: parent
+                                fillMode: Image.PreserveAspectFit
+                                width: parent.width * 0.6
+                                height: parent.height * 0.6
+                            }
+
+                            Text {
+                                text: "Turn Left"
+                                font.bold: true
+                                color: "white"
+                                font.pixelSize: Math.max(12, height * 0.25)
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.bottom: parent.bottom
+                                anchors.bottomMargin: 8
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: backend.doDroneTAction("turn_left")
+                            }
+                        }
+
+                        // Left Button
+                        Rectangle {
+                            Layout.preferredWidth: 0.195 * parent.width
+                            Layout.fillHeight: true
+                            radius: buttonRadius
+                            color: buttonBg
+                            border.color: buttonBorder
+                            border.width: 1
+
+                            Image {
+                                source: "GUI_Pics/left.png"
+                                anchors.centerIn: parent
+                                fillMode: Image.PreserveAspectFit
+                                width: parent.width * 0.6
+                                height: parent.height * 0.6
+                            }
+
+                            Text {
+                                text: "Left"
+                                font.bold: true
+                                color: "white"
+                                font.pixelSize: Math.max(12, height * 0.25)
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.bottom: parent.bottom
+                                anchors.bottomMargin: 8
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: backend.doDroneTAction("left")
+                            }
+                        }
+
+                        // Stream Button
+                        Rectangle {
+                            Layout.preferredWidth: 0.195 * parent.width
+                            Layout.fillHeight: true
+                            radius: buttonRadius
+                            color: buttonBg
+                            border.color: buttonBorder
+                            border.width: 1
+
+                            Image {
+                                source: "GUI_Pics/stream.png"
+                                anchors.centerIn: parent
+                                fillMode: Image.PreserveAspectFit
+                                width: parent.width * 0.6
+                                height: parent.height * 0.6
+                            }
+
+                            Text {
+                                text: "Stream"
+                                font.bold: true
+                                color: "white"
+                                font.pixelSize: Math.max(12, height * 0.25)
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.bottom: parent.bottom
+                                anchors.bottomMargin: 8
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: backend.doDroneTAction("stream")
+                            }
+                        }
+
+                        // Right Button
+                        Rectangle {
+                            Layout.preferredWidth: 0.195 * parent.width
+                            Layout.fillHeight: true
+                            radius: buttonRadius
+                            color: buttonBg
+                            border.color: buttonBorder
+                            border.width: 1
+
+                            Image {
+                                source: "GUI_Pics/right.png"
+                                anchors.centerIn: parent
+                                fillMode: Image.PreserveAspectFit
+                                width: parent.width * 0.6
+                                height: parent.height * 0.6
+                            }
+
+                            Text {
+                                text: "Right"
+                                font.bold: true
+                                color: "white"
+                                font.pixelSize: Math.max(12, height * 0.25)
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.bottom: parent.bottom
+                                anchors.bottomMargin: 8
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: backend.doDroneTAction("right")
+                            }
+                        }
+
+                        // Turn Right Button
+                        Rectangle {
+                            Layout.preferredWidth: 0.195 * parent.width
+                            Layout.fillHeight: true
+                            radius: buttonRadius
+                            color: buttonBg
+                            border.color: buttonBorder
+                            border.width: 1
+
+                            Image {
+                                source: "GUI_Pics/turnRight.png"
+                                anchors.centerIn: parent
+                                fillMode: Image.PreserveAspectFit
+                                width: parent.width * 0.6
+                                height: parent.height * 0.6
+                            }
+
+                            Text {
+                                text: "Turn Right"
+                                font.bold: true
+                                color: "white"
+                                font.pixelSize: Math.max(12, height * 0.25)
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.bottom: parent.bottom
+                                anchors.bottomMargin: 8
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: backend.doDroneTAction("turn_right")
                             }
                         }
                     }
                 }
 
-                // Connect, Down, Takeoff, Land Buttons
+                // *******************************************************
+                // >> 4th Row - Back Button Row with Flip Buttons       <<
+                // *******************************************************
                 Rectangle {
-                    width: parent.width
-                    height: parent.height * 0.20
-                    anchors.top: parent.top
-                    anchors.topMargin: parent.height * 0.8
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: parent.height * 0.19
                     color: "transparent"
 
-                    Row {
-                        width: parent.width
-                        height: parent.height
-                        spacing: parent.width * 0.0165
+                    RowLayout {
+                        anchors.fill: parent
+
+                        // empty space - required by design
+                        Rectangle {
+                            Layout.preferredWidth: 0.195 * parent.width
+                            Layout.fillHeight: true
+                            color: "transparent"
+                        }
+
+                        // Flip Back Button
+                        Rectangle {
+                            Layout.preferredWidth: 0.195 * parent.width
+                            Layout.fillHeight: true
+                            radius: buttonRadius
+                            color: buttonBg
+                            border.color: buttonBorder
+                            border.width: 1
+
+                            Text {
+                                text: "↺"
+                                font.bold: true
+                                color: "#76ff03"
+                                font.pixelSize: parent.height * 0.55
+                                anchors.centerIn: parent
+                                anchors.verticalCenterOffset: -15
+                            }
+
+                            Text {
+                                text: "Flip Back"
+                                font.bold: true
+                                color: "white"
+                                font.pixelSize: 11
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.bottom: parent.bottom
+                                anchors.bottomMargin: 5
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: backend.doDroneTAction("flip_back")
+                            }
+                        }
+
+                        // Back Button (Center)
+                        Rectangle {
+                            Layout.preferredWidth: 0.195 * parent.width
+                            Layout.fillHeight: true
+                            radius: buttonRadius
+                            color: buttonBg
+                            border.color: buttonBorder
+                            border.width: 1
+
+                            Image {
+                                source: "GUI_Pics/back.png"
+                                anchors.centerIn: parent
+                                fillMode: Image.PreserveAspectFit
+                                width: parent.width * 0.35
+                                height: parent.height * 0.65
+                            }
+
+                            Text {
+                                text: "Back"
+                                font.bold: true
+                                color: "white"
+                                font.pixelSize: 11
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.bottom: parent.bottom
+                                anchors.bottomMargin: 5
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: backend.doDroneTAction("backward")
+                            }
+                        }
+
+                        // Flip Left Button
+                        Rectangle {
+                            Layout.preferredWidth: 0.195 * parent.width
+                            Layout.fillHeight: true
+                            radius: buttonRadius
+                            color: buttonBg
+                            border.color: buttonBorder
+                            border.width: 1
+
+                            Text {
+                                text: "⟲"
+                                font.bold: true
+                                color: "#76ff03"
+                                font.pixelSize: parent.height * 0.7
+                                anchors.centerIn: parent
+                                anchors.verticalCenterOffset: -15
+                            }
+
+                            Text {
+                                text: "Flip Left"
+                                font.bold: true
+                                color: "white"
+                                font.pixelSize: 11
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.bottom: parent.bottom
+                                anchors.bottomMargin: 5
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: backend.doDroneTAction("flip_left")
+                            }
+                        }
+
+                        // empty space - required by design
+                        Rectangle {
+                            Layout.preferredWidth: 0.195 * parent.width
+                            Layout.fillHeight: true
+                            color: "transparent"
+                        }
+                    }
+                }
+                // *******************************************************
+                // >> 5th Row - Connect, Down, Takeoff, Land Buttons    <<
+                // *******************************************************
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: parent.height * 0.19
+                    color: "transparent"
+
+                    RowLayout {
+                        anchors.fill: parent
 
                         // Connect Button
                         Rectangle {
-                            width: parent.width * 0.15
-                            height: parent.height
-                            color: "#242c4d"
-                            border.color: "black"
+                            Layout.preferredWidth: 0.195 * parent.width
+                            Layout.fillHeight: true
+                            radius: buttonRadius
+                            color: buttonBg
+                            border.color: buttonBorder
+                            border.width: 1
 
                             Image {
                                 source: "GUI_Pics/connect.png"
-                                width: 150
-                                height: 150
                                 anchors.centerIn: parent
+                                fillMode: Image.PreserveAspectFit
+                                width: parent.width * 0.6
+                                height: parent.height * 0.7
                             }
 
                             Text {
                                 text: "Connect"
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: Math.max(12, parent.width * 0.05)
+                                font.pixelSize: Math.max(12, parent.height * 0.18)
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
-                                anchors.bottomMargin: 10
+                                anchors.bottomMargin: 8
                             }
 
                             MouseArea {
                                 anchors.fill: parent
-                                onEntered: parent.color = "white"
-                                onExited: parent.color = "#242c4d"
+                                cursorShape: Qt.PointingHandCursor
                                 onClicked: backend.doDroneTAction("connect")
                             }
                         }
 
                         // Down Button
                         Rectangle {
-                            width: parent.width * 0.5
-                            height: parent.height
-                            color: "#242c4d"
-                            border.color: "black"
+                            Layout.preferredWidth: 0.39 * parent.width
+                            Layout.fillHeight: true
+                            radius: buttonRadius
+                            color: buttonBg
+                            border.color: buttonBorder
+                            border.width: 1
 
                             Image {
                                 source: "GUI_Pics/down.png"
-                                width: 150
-                                height: 150
                                 anchors.centerIn: parent
+                                fillMode: Image.PreserveAspectFit
+                                width: parent.width * 0.25
+                                height: parent.height * 0.8
                             }
 
                             Text {
                                 text: "Down"
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: Math.max(12, parent.width * 0.01)
+                                font.pixelSize: Math.max(12, parent.height * 0.18)
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
-                                anchors.bottomMargin: 10
+                                anchors.bottomMargin: 8
                             }
 
                             MouseArea {
                                 anchors.fill: parent
-                                onEntered: parent.color = "white"
-                                onExited: parent.color = "#242c4d"
+                                cursorShape: Qt.PointingHandCursor
                                 onClicked: backend.doDroneTAction("down")
                             }
                         }
 
                         // Takeoff Button
                         Rectangle {
-                            width: parent.width * 0.15
-                            height: parent.height
-                            color: "#242c4d"
-                            border.color: "black"
+                            Layout.preferredWidth: 0.195 * parent.width
+                            Layout.fillHeight: true
+                            radius: buttonRadius
+                            color: buttonBg
+                            border.color: buttonBorder
+                            border.width: 1
 
                             Image {
                                 source: "GUI_Pics/takeoff.png"
-                                width: 150
-                                height: 150
                                 anchors.centerIn: parent
+                                fillMode: Image.PreserveAspectFit
+                                width: parent.width * 0.6
+                                height: parent.height * 0.7
                             }
 
                             Text {
                                 text: "Takeoff"
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: Math.max(12, parent.width * 0.05)
+                                font.pixelSize: Math.max(12, parent.height * 0.18)
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
-                                anchors.bottomMargin: 10
+                                anchors.bottomMargin: 8
                             }
 
                             MouseArea {
@@ -651,37 +840,40 @@ Rectangle {
                                 onEntered: parent.color = "white"
                                 onExited: parent.color = "#242c4d"
                                 onClicked: backend.takeoff()
+                                cursorShape: Qt.PointingHandCursor
                             }
                         }
 
                         // Land Button
                         Rectangle {
-                            width: parent.width * 0.15
-                            height: parent.height
-                            color: "#242c4d"
-                            border.color: "black"
+                            Layout.preferredWidth: 0.195 * parent.width
+                            Layout.fillHeight: true
+                            radius: buttonRadius
+                            color: buttonBg
+                            border.color: buttonBorder
+                            border.width: 1
 
                             Image {
                                 source: "GUI_Pics/land.png"
-                                width: 150
-                                height: 150
                                 anchors.centerIn: parent
+                                fillMode: Image.PreserveAspectFit
+                                width: parent.width * 0.6
+                                height: parent.height * 0.7
                             }
 
                             Text {
                                 text: "Land"
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: Math.max(12, parent.width * 0.05)
+                                font.pixelSize: Math.max(12, parent.height * 0.18)
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
-                                anchors.bottomMargin: 10
+                                anchors.bottomMargin: 8
                             }
 
                             MouseArea {
                                 anchors.fill: parent
-                                onEntered: parent.color = "white"
-                                onExited: parent.color = "#242c4d"
+                                cursorShape: Qt.PointingHandCursor
                                 onClicked: backend.doDroneTAction("land")
                             }
                         }
@@ -690,10 +882,17 @@ Rectangle {
             }
         }
 
-        // Right side of Camera View
+        // ====================================
+        // ==== Right side of Camera View =====
+        // ====================================
+
         CameraView {
-            width: parent.width * 0.3
-            height: parent.height
+            id: cameraPanel
+            Layout.preferredWidth: parent.width * 0.3
+            Layout.minimumWidth: 300
+            Layout.fillHeight: true
+            // width: parent.width * 0.3
+            // height: parent.height
             cameraController: cameraController
         }
     }
