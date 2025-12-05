@@ -12,6 +12,7 @@ Rectangle {
     color: "#718399"
 
     readonly property color buttonBg: "#242c4d"
+    readonly property color buttonBgInAction: '#191f35'
     readonly property color buttonBorder: "#3a4a62"
     readonly property int  buttonRadius: 10
 
@@ -84,6 +85,10 @@ Rectangle {
                             MouseArea {
                                 anchors.fill: parent
                                 cursorShape: Qt.PointingHandCursor
+                                onPressed: parent.color = buttonBgInAction
+                                onReleased: parent.color = buttonBg
+                                onEntered: parent.color = buttonBgInAction
+                                onExited: parent.color = buttonBg
                                 onClicked: backend.doDroneTAction("go_home")
                             }
                         }
@@ -134,6 +139,10 @@ Rectangle {
                             MouseArea {
                                 anchors.fill: parent
                                 cursorShape: Qt.PointingHandCursor
+                                onPressed: parent.color = buttonBgInAction
+                                onReleased: parent.color = buttonBg
+                                onEntered: parent.color = buttonBgInAction
+                                onExited: parent.color = buttonBg
                                 onClicked: backend.doDroneTAction("up")
                             }
                         }
@@ -256,6 +265,10 @@ Rectangle {
                             MouseArea {
                                 anchors.fill: parent
                                 cursorShape: Qt.PointingHandCursor
+                                onPressed: parent.color = buttonBgInAction
+                                onReleased: parent.color = buttonBg
+                                onEntered: parent.color = buttonBgInAction
+                                onExited: parent.color = buttonBg
                                 onClicked: backend.doDroneTAction("flip_forward")
                             }
                         }
@@ -300,6 +313,10 @@ Rectangle {
                             MouseArea {
                                 anchors.fill: parent
                                 cursorShape: Qt.PointingHandCursor
+                                onPressed: parent.color = buttonBgInAction
+                                onReleased: parent.color = buttonBg
+                                onEntered: parent.color = buttonBgInAction
+                                onExited: parent.color = buttonBg
                                 onClicked: backend.doDroneTAction("forward")
                             }
                         }
@@ -347,6 +364,10 @@ Rectangle {
                             MouseArea {
                                 anchors.fill: parent
                                 cursorShape: Qt.PointingHandCursor
+                                onPressed: parent.color = buttonBgInAction
+                                onReleased: parent.color = buttonBg
+                                onEntered: parent.color = buttonBgInAction
+                                onExited: parent.color = buttonBg
                                 onClicked: backend.doDroneTAction("flip_right")
                             }
                         }
@@ -410,6 +431,10 @@ Rectangle {
                             MouseArea {
                                 anchors.fill: parent
                                 cursorShape: Qt.PointingHandCursor
+                                onPressed: parent.color = buttonBgInAction
+                                onReleased: parent.color = buttonBg
+                                onEntered: parent.color = buttonBgInAction
+                                onExited: parent.color = buttonBg
                                 onClicked: backend.doDroneTAction("turn_left")
                             }
                         }
@@ -453,6 +478,10 @@ Rectangle {
                             MouseArea {
                                 anchors.fill: parent
                                 cursorShape: Qt.PointingHandCursor
+                                onPressed: parent.color = buttonBgInAction
+                                onReleased: parent.color = buttonBg
+                                onEntered: parent.color = buttonBgInAction
+                                onExited: parent.color = buttonBg
                                 onClicked: backend.doDroneTAction("left")
                             }
                         }
@@ -496,6 +525,10 @@ Rectangle {
                             MouseArea {
                                 anchors.fill: parent
                                 cursorShape: Qt.PointingHandCursor
+                                onPressed: parent.color = buttonBgInAction
+                                onReleased: parent.color = buttonBg
+                                onEntered: parent.color = buttonBgInAction
+                                onExited: parent.color = buttonBg
                                 onClicked: backend.doDroneTAction("stream")
                             }
                         }
@@ -539,6 +572,10 @@ Rectangle {
                             MouseArea {
                                 anchors.fill: parent
                                 cursorShape: Qt.PointingHandCursor
+                                onPressed: parent.color = buttonBgInAction
+                                onReleased: parent.color = buttonBg
+                                onEntered: parent.color = buttonBgInAction
+                                onExited: parent.color = buttonBg
                                 onClicked: backend.doDroneTAction("right")
                             }
                         }
@@ -582,6 +619,10 @@ Rectangle {
                             MouseArea {
                                 anchors.fill: parent
                                 cursorShape: Qt.PointingHandCursor
+                                onPressed: parent.color = buttonBgInAction
+                                onReleased: parent.color = buttonBg
+                                onEntered: parent.color = buttonBgInAction
+                                onExited: parent.color = buttonBg
                                 onClicked: backend.doDroneTAction("turn_right")
                             }
                         }
@@ -647,6 +688,10 @@ Rectangle {
                             MouseArea {
                                 anchors.fill: parent
                                 cursorShape: Qt.PointingHandCursor
+                                onPressed: parent.color = buttonBgInAction
+                                onReleased: parent.color = buttonBg
+                                onEntered: parent.color = buttonBgInAction
+                                onExited: parent.color = buttonBg
                                 onClicked: backend.doDroneTAction("flip_back")
                             }
                         }
@@ -691,6 +736,10 @@ Rectangle {
                             MouseArea {
                                 anchors.fill: parent
                                 cursorShape: Qt.PointingHandCursor
+                                onPressed: parent.color = buttonBgInAction
+                                onReleased: parent.color = buttonBg
+                                onEntered: parent.color = buttonBgInAction
+                                onExited: parent.color = buttonBg
                                 onClicked: backend.doDroneTAction("backward")
                             }
                         }
@@ -736,6 +785,10 @@ Rectangle {
                             MouseArea {
                                 anchors.fill: parent
                                 cursorShape: Qt.PointingHandCursor
+                                onPressed: parent.color = buttonBgInAction
+                                onReleased: parent.color = buttonBg
+                                onEntered: parent.color = buttonBgInAction
+                                onExited: parent.color = buttonBg
                                 onClicked: backend.doDroneTAction("flip_left")
                             }
                         }
@@ -798,6 +851,10 @@ Rectangle {
                             MouseArea {
                                 anchors.fill: parent
                                 cursorShape: Qt.PointingHandCursor
+                                onPressed: parent.color = buttonBgInAction
+                                onReleased: parent.color = buttonBg
+                                onEntered: parent.color = buttonBgInAction
+                                onExited: parent.color = buttonBg
                                 onClicked: backend.doDroneTAction("connect")
                             }
                         }
@@ -848,6 +905,10 @@ Rectangle {
                             MouseArea {
                                 anchors.fill: parent
                                 cursorShape: Qt.PointingHandCursor
+                                onPressed: parent.color = buttonBgInAction
+                                onReleased: parent.color = buttonBg
+                                onEntered: parent.color = buttonBgInAction
+                                onExited: parent.color = buttonBg
                                 onClicked: backend.doDroneTAction("down")
                             }
                         }
@@ -897,8 +958,10 @@ Rectangle {
 
                             MouseArea {
                                 anchors.fill: parent
-                                onEntered: parent.color = "white"
-                                onExited: parent.color = "#242c4d"
+                                onPressed: parent.color = buttonBgInAction
+                                onReleased: parent.color = buttonBg
+                                onEntered: parent.color = buttonBgInAction
+                                onExited: parent.color = buttonBg
                                 onClicked: backend.takeoff()
                                 cursorShape: Qt.PointingHandCursor
                             }
@@ -944,12 +1007,10 @@ Rectangle {
                                 anchors.fill: parent
                                 cursorShape: Qt.PointingHandCursor
                                 onClicked: backend.doDroneTAction("land")
-
-                                hoverEnabled: true
-                                onEntered:  root.state = "hovered"
-                                onExited:   root.state = "normal"
-                                onPressed:  scaleTr.xScale = scaleTr.yScale = 0.97
-                                onReleased: root.state = "hovered"
+                                onPressed: parent.color = buttonBgInAction
+                                onReleased: parent.color = buttonBg
+                                onEntered: parent.color = buttonBgInAction
+                                onExited: parent.color = buttonBg
                             }
                         }
                     }
