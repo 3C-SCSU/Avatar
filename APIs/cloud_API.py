@@ -1,10 +1,35 @@
+from PySide6.QtWidgets import QFileDialog, QMessageBox
+from PySide6.QtCore import QObject, Slot
 import configparser
 from sftp import fileTransfer	
 
-
+class CloudAPI(QObject):
     def __init__(self):
+        super().__init__()
         self.config = configparser.ConfigParser()
         self.config.optionxform = str
+        self.root_object = None
+
+    def set_root_object(self, root_object):
+        self.root_object = root_object
+
+    def connect_buttons(self):
+        if self.root_object is None:
+            print("Error: root_object not set in CloudAPI")
+            return
+
+        try:
+            self.root_object.findChild(QObject, "saveConfigButton").clicked.connect(self.save_config)
+            self.root_object.findChild(QObject, "loadConfigButton").clicked.connect(self.load_config)
+            self.root_object.findChild(QObject, "clearConfigButton").clicked.connect(self.clear_config)
+            self.root_object.findChild(QObject, "uploadButton").clicked.connect(self.upload)
+            self.root_object.findChild(QObject, "privateKeyDirButton").clicked.connect(self.browse_private_key_dir)
+            self.root_object.findChild(QObject, "sourceDirButton").clicked.connect(self.browse_source_dir)
+            self.root_object.findChild(QObject, "targetDirButton").clicked.connect(self.browse_target_dir)
+            
+            print("Cloud API buttons connected successfully")
+        except Exception as e:
+            print(f"Error connecting cloud API buttons: {e}")
 
     # Start of change : Added Cloud Computing (Transfer Data) functionality 
     @Slot()
