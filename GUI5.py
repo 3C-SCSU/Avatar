@@ -47,6 +47,8 @@ import unifyTXT
 import run_file_shuffler
 import remove8channel
 
+from APIs.cloud_API import CloudAPI
+
 
 class TabController(QObject):
     def __init__(self):
@@ -921,11 +923,13 @@ if __name__ == "__main__":
     drone_camera_controller = DroneCameraController()
 
     # Initialize backend before loading QML
+    cloud_api = CloudAPI()
     backend = BrainwavesBackend()
     developers = developersBackend()
     engine.rootContext().setContextProperty("tabController", tab_controller)
     engine.rootContext().setContextProperty("backend", backend)
     engine.rootContext().setContextProperty("developersBackend", developers)
+    engine.rootContext().setContextProperty("cloudAPI", cloud_api)
     engine.rootContext().setContextProperty("imageModel", [])  # Initialize empty model
     engine.rootContext().setContextProperty("fileShufflerGui", backend)  # For file shuffler
     engine.rootContext().setContextProperty("cameraController", backend.camera_controller)
@@ -942,16 +946,8 @@ if __name__ == "__main__":
     # Start of change : Added Cloud Computing (Transfer Data) functionality 
 
     if engine.rootObjects():
-        backend.root_object = engine.rootObjects()[0]
-
-        # ✅ connect QML button clicks to backend slots
-        backend.root_object.findChild(QObject, "saveConfigButton").clicked.connect(backend.save_config)
-        backend.root_object.findChild(QObject, "loadConfigButton").clicked.connect(backend.load_config)
-        backend.root_object.findChild(QObject, "clearConfigButton").clicked.connect(backend.clear_config)
-        backend.root_object.findChild(QObject, "uploadButton").clicked.connect(backend.upload)
-        backend.root_object.findChild(QObject, "privateKeyDirButton").clicked.connect(backend.browse_private_key_dir)
-        backend.root_object.findChild(QObject, "sourceDirButton").clicked.connect(backend.browse_source_dir)
-        backend.root_object.findChild(QObject, "targetDirButton").clicked.connect(backend.browse_target_dir)
+        cloud_api.set_root_object(engine.rootObjects()[0])
+        cloud_api.connect_buttons()
     else:
         print("Error: QML not loaded properly.")
 
