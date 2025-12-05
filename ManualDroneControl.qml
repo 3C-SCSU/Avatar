@@ -183,19 +183,28 @@ Rectangle {
                             border.color: buttonBorder
                             border.width: 1
 
-                            Image {
-                                source: "GUI_Pics/home.png"
-                                anchors.centerIn: parent
-                                fillMode: Image.PreserveAspectFit
+                            Item {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.top: parent.top
+                                anchors.topMargin: parent.height * 0.10
                                 width: parent.width * 0.6
-                                height: parent.height * 0.6
+                                height: parent.height * 0.55
+
+                                Image {
+                                    visible: true
+                                    anchors.fill: parent
+                                    fillMode: Image.PreserveAspectFit
+                                    source: "GUI_Pics/home.png"
+                                }
+
+                                Text { visible: false }
                             }
 
                             Text {
                                 text: "Home"
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: Math.max(12, parent.height * 0.18)
+                                font.pixelSize: parent.height * 0.1
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
                                 anchors.bottomMargin: 8
@@ -208,28 +217,44 @@ Rectangle {
                             }
                         }
 
+                        // empty space - required by design
+                        Rectangle {
+                            Layout.preferredWidth: 0.095 * parent.width
+                            Layout.fillHeight: true
+                            color: "transparent"
+                        }
+
                         // Up Button
                         Rectangle {
-                            Layout.preferredWidth: 0.595 * parent.width
+                            Layout.preferredWidth: 0.405 * parent.width
                             Layout.fillHeight: true
                             radius: buttonRadius
                             color: buttonBg
                             border.color: buttonBorder
                             border.width: 1
 
-                            Image {
-                                source: "GUI_Pics/up.png"
-                                anchors.centerIn: parent
-                                fillMode: Image.PreserveAspectFit
-                                width: parent.width * 0.4
-                                height: parent.height * 0.7
+                            Item {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.top: parent.top
+                                anchors.topMargin: parent.height * 0.10
+                                width: parent.width * 0.6
+                                height: parent.height * 0.55
+
+                                Image {
+                                    visible: true
+                                    anchors.fill: parent
+                                    fillMode: Image.PreserveAspectFit
+                                    source: "GUI_Pics/up.png"
+                                }
+
+                                Text { visible: false }
                             }
 
                             Text {
                                 text: "Up"
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: Math.max(12, parent.height * 0.18)
+                                font.pixelSize: parent.height * 0.1
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
                                 anchors.bottomMargin: 8
@@ -242,9 +267,16 @@ Rectangle {
                             }
                         }
 
+                        // empty space - required by design
+                        Rectangle {
+                            Layout.preferredWidth: 0.09 * parent.width//.02
+                            Layout.fillHeight: true
+                            color: "transparent"
+                        }
+
                         // Flight Log
                         Rectangle {
-                            Layout.preferredWidth: 0.19 * parent.width
+                            Layout.preferredWidth: 0.19 * parent.width//.26
                             Layout.fillHeight: true
                             radius: buttonRadius
                             color: "#ffffff"
@@ -312,23 +344,33 @@ Rectangle {
                             border.color: buttonBorder
                             border.width: 1
 
-                            Text {
-                                text: "↻"
-                                font.bold: true
-                                color: "#76ff03"
-                                font.pixelSize: parent.height * 0.55
-                                anchors.centerIn: parent
-                                anchors.verticalCenterOffset: -15
+                            Item {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.top: parent.top
+                                anchors.topMargin: parent.height * 0.10
+                                width: parent.width * 0.6
+                                height: parent.height * 0.55
+
+                                Image {visible: false}
+
+                                Text {
+                                    visible: true
+                                    text: "↻"
+                                    font.bold: true
+                                    color: "#76ff03"
+                                    font.pixelSize: parent.height * 0.8//0.55
+                                    anchors.centerIn: parent
+                                }
                             }
 
                             Text {
                                 text: "Flip Forward"
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: 11
+                                font.pixelSize: parent.height * 0.1
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
-                                anchors.bottomMargin: 5
+                                anchors.bottomMargin: 8
                             }
 
                             MouseArea {
@@ -347,19 +389,29 @@ Rectangle {
                             border.color: buttonBorder
                             border.width: 1
 
-                            Image {
-                                source: "GUI_Pics/forward.png"
-                                anchors.centerIn: parent
-                                fillMode: Image.PreserveAspectFit
-                                width: parent.width * 0.25
-                                height: parent.height * 0.8
+                            Item {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.top: parent.top
+                                anchors.topMargin: parent.height * 0.10
+                                width: parent.width * 0.6
+                                height: parent.height * 0.55
+
+                                Image {
+                                    visible: true
+                                    anchors.fill: parent
+                                    fillMode: Image.PreserveAspectFit
+                                    source: "GUI_Pics/forward.png"
+                                }
+
+                                Text { visible: false }
+
                             }
 
                             Text {
                                 text: "Forward"
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: parent.height * 0.18
+                                font.pixelSize: parent.height * 0.1
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
                                 anchors.bottomMargin: 8
@@ -381,23 +433,37 @@ Rectangle {
                             border.color: buttonBorder
                             border.width: 1
 
-                            Text {
-                                text: "⟳"
-                                font.bold: true
-                                color: "#76ff03"
-                                font.pixelSize: parent.height * 0.7
-                                anchors.centerIn: parent
-                                anchors.verticalCenterOffset: -15
+                            Item {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.top: parent.top
+                                anchors.topMargin: parent.height * 0.10
+                                width: parent.width * 0.6
+                                height: parent.height * 0.55
+
+                                Image {
+                                    visible: false
+                                }
+
+                                Text {
+                                    visible: true
+                                    text: "⟳"
+                                    font.bold: true
+                                    color: "#76ff03"
+                                    anchors.centerIn: parent
+                                    font.pixelSize: parent.height * 0.8
+                                }
                             }
 
                             Text {
                                 text: "Flip Right"
+
+                                //copy this part to every button label
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: 11
+                                font.pixelSize: parent.height * 0.1
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
-                                anchors.bottomMargin: 5
+                                anchors.bottomMargin: 8
                             }
 
                             MouseArea {
@@ -436,19 +502,28 @@ Rectangle {
                             border.color: buttonBorder
                             border.width: 1
 
-                            Image {
-                                source: "GUI_Pics/turnLeft.png"
-                                anchors.centerIn: parent
-                                fillMode: Image.PreserveAspectFit
+                            Item {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.top: parent.top
+                                anchors.topMargin: parent.height * 0.10
                                 width: parent.width * 0.6
-                                height: parent.height * 0.6
+                                height: parent.height * 0.55
+
+                                Image {
+                                    visible: true
+                                    anchors.fill: parent
+                                    fillMode: Image.PreserveAspectFit
+                                    source: "GUI_Pics/turnLeft.png"
+                                }
+
+                                Text { visible: false }
                             }
 
                             Text {
                                 text: "Turn Left"
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: Math.max(12, height * 0.25)
+                                font.pixelSize: parent.height * 0.1
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
                                 anchors.bottomMargin: 8
@@ -470,19 +545,28 @@ Rectangle {
                             border.color: buttonBorder
                             border.width: 1
 
-                            Image {
-                                source: "GUI_Pics/left.png"
-                                anchors.centerIn: parent
-                                fillMode: Image.PreserveAspectFit
+                            Item {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.top: parent.top
+                                anchors.topMargin: parent.height * 0.10
                                 width: parent.width * 0.6
-                                height: parent.height * 0.6
+                                height: parent.height * 0.55
+
+                                Image {
+                                    visible: true
+                                    anchors.fill: parent
+                                    fillMode: Image.PreserveAspectFit
+                                    source: "GUI_Pics/left.png"
+                                }
+
+                                Text { visible: false }
                             }
 
                             Text {
                                 text: "Left"
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: Math.max(12, height * 0.25)
+                                font.pixelSize: parent.height * 0.1
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
                                 anchors.bottomMargin: 8
@@ -504,19 +588,28 @@ Rectangle {
                             border.color: buttonBorder
                             border.width: 1
 
-                            Image {
-                                source: "GUI_Pics/stream.png"
-                                anchors.centerIn: parent
-                                fillMode: Image.PreserveAspectFit
+                            Item {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.top: parent.top
+                                anchors.topMargin: parent.height * 0.10
                                 width: parent.width * 0.6
-                                height: parent.height * 0.6
+                                height: parent.height * 0.55
+
+                                Image {
+                                    visible: true
+                                    anchors.fill: parent
+                                    fillMode: Image.PreserveAspectFit
+                                    source: "GUI_Pics/stream.png"
+                                }
+
+                                Text { visible: false }
                             }
 
                             Text {
                                 text: "Stream"
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: Math.max(12, height * 0.25)
+                                font.pixelSize: parent.height * 0.1
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
                                 anchors.bottomMargin: 8
@@ -538,19 +631,28 @@ Rectangle {
                             border.color: buttonBorder
                             border.width: 1
 
-                            Image {
-                                source: "GUI_Pics/right.png"
-                                anchors.centerIn: parent
-                                fillMode: Image.PreserveAspectFit
+                            Item {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.top: parent.top
+                                anchors.topMargin: parent.height * 0.10
                                 width: parent.width * 0.6
-                                height: parent.height * 0.6
+                                height: parent.height * 0.55
+
+                                Image {
+                                    visible: true
+                                    anchors.fill: parent
+                                    fillMode: Image.PreserveAspectFit
+                                    source: "GUI_Pics/right.png"
+                                }
+
+                                Text { visible: false }
                             }
 
                             Text {
                                 text: "Right"
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: Math.max(12, height * 0.25)
+                                font.pixelSize: parent.height * 0.1
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
                                 anchors.bottomMargin: 8
@@ -572,19 +674,28 @@ Rectangle {
                             border.color: buttonBorder
                             border.width: 1
 
-                            Image {
-                                source: "GUI_Pics/turnRight.png"
-                                anchors.centerIn: parent
-                                fillMode: Image.PreserveAspectFit
+                            Item {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.top: parent.top
+                                anchors.topMargin: parent.height * 0.10
                                 width: parent.width * 0.6
-                                height: parent.height * 0.6
+                                height: parent.height * 0.55
+
+                                Image {
+                                    visible: true
+                                    anchors.fill: parent
+                                    fillMode: Image.PreserveAspectFit
+                                    source: "GUI_Pics/turnRight.png"
+                                }
+
+                                Text { visible: false }
                             }
 
                             Text {
                                 text: "Turn Right"
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: Math.max(12, height * 0.25)
+                                font.pixelSize: parent.height * 0.1
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
                                 anchors.bottomMargin: 8
@@ -600,7 +711,7 @@ Rectangle {
                 }
 
                 // *******************************************************
-                // >> 4th Row - Back Button Row with Flip Buttons       <<
+                // >> 4th Row - Back Button Row with Flip Buttons       << DONE
                 // *******************************************************
                 Rectangle {
                     Layout.fillWidth: true
@@ -626,23 +737,33 @@ Rectangle {
                             border.color: buttonBorder
                             border.width: 1
 
-                            Text {
-                                text: "↺"
-                                font.bold: true
-                                color: "#76ff03"
-                                font.pixelSize: parent.height * 0.55
-                                anchors.centerIn: parent
-                                anchors.verticalCenterOffset: -15
+                            Item {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.top: parent.top
+                                anchors.topMargin: parent.height * 0.10
+                                width: parent.width * 0.6
+                                height: parent.height * 0.55
+
+                                Image {visible: false}
+
+                                Text {
+                                    visible: true
+                                    text: "↺"
+                                    font.bold: true
+                                    color: "#76ff03"
+                                    font.pixelSize: parent.height * 0.8//0.55
+                                    anchors.centerIn: parent
+                                }
                             }
 
                             Text {
                                 text: "Flip Back"
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: 11
+                                font.pixelSize: parent.height * 0.1
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
-                                anchors.bottomMargin: 5
+                                anchors.bottomMargin: 8
                             }
 
                             MouseArea {
@@ -661,22 +782,32 @@ Rectangle {
                             border.color: buttonBorder
                             border.width: 1
 
-                            Image {
-                                source: "GUI_Pics/back.png"
-                                anchors.centerIn: parent
-                                fillMode: Image.PreserveAspectFit
-                                width: parent.width * 0.35
-                                height: parent.height * 0.65
+                            Item {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.top: parent.top
+                                anchors.topMargin: parent.height * 0.10
+                                width: parent.width * 0.6
+                                height: parent.height * 0.55
+
+                                Image {
+                                    visible: true
+                                    anchors.fill: parent
+                                    fillMode: Image.PreserveAspectFit
+                                    source: "GUI_Pics/back.png"
+                                }
+
+                                Text { visible: false }
+
                             }
 
                             Text {
                                 text: "Back"
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: 11
+                                font.pixelSize: parent.height * 0.1
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
-                                anchors.bottomMargin: 5
+                                anchors.bottomMargin: 8
                             }
 
                             MouseArea {
@@ -695,23 +826,33 @@ Rectangle {
                             border.color: buttonBorder
                             border.width: 1
 
-                            Text {
-                                text: "⟲"
-                                font.bold: true
-                                color: "#76ff03"
-                                font.pixelSize: parent.height * 0.7
-                                anchors.centerIn: parent
-                                anchors.verticalCenterOffset: -15
+                            Item {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.top: parent.top
+                                anchors.topMargin: parent.height * 0.10
+                                width: parent.width * 0.6
+                                height: parent.height * 0.55
+
+                                Image {visible: false}
+
+                                Text {
+                                    visible: true
+                                    text: "⟲"
+                                    font.bold: true
+                                    color: "#76ff03"
+                                    font.pixelSize: parent.height * 0.8//0.55
+                                    anchors.centerIn: parent
+                                }
                             }
 
                             Text {
                                 text: "Flip Left"
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: 11
+                                font.pixelSize: parent.height * 0.1
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
-                                anchors.bottomMargin: 5
+                                anchors.bottomMargin: 8
                             }
 
                             MouseArea {
@@ -749,19 +890,28 @@ Rectangle {
                             border.color: buttonBorder
                             border.width: 1
 
-                            Image {
-                                source: "GUI_Pics/connect.png"
-                                anchors.centerIn: parent
-                                fillMode: Image.PreserveAspectFit
+                            Item {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.top: parent.top
+                                anchors.topMargin: parent.height * 0.10
                                 width: parent.width * 0.6
-                                height: parent.height * 0.7
+                                height: parent.height * 0.55
+
+                                Image {
+                                    visible: true
+                                    anchors.fill: parent
+                                    fillMode: Image.PreserveAspectFit
+                                    source: "GUI_Pics/connect.png"
+                                }
+
+                                Text { visible: false }
                             }
 
                             Text {
                                 text: "Connect"
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: Math.max(12, parent.height * 0.18)
+                                font.pixelSize: parent.height * 0.1
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
                                 anchors.bottomMargin: 8
@@ -774,28 +924,44 @@ Rectangle {
                             }
                         }
 
+                        // empty space - required by design
+                        Rectangle {
+                            Layout.preferredWidth: 0.09 * parent.width
+                            Layout.fillHeight: true
+                            color: "transparent"
+                        }
+
                         // Down Button
                         Rectangle {
-                            Layout.preferredWidth: 0.39 * parent.width
+                            Layout.preferredWidth: 0.405 * parent.width
                             Layout.fillHeight: true
                             radius: buttonRadius
                             color: buttonBg
                             border.color: buttonBorder
                             border.width: 1
 
-                            Image {
-                                source: "GUI_Pics/down.png"
-                                anchors.centerIn: parent
-                                fillMode: Image.PreserveAspectFit
-                                width: parent.width * 0.25
-                                height: parent.height * 0.8
+                            Item {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.top: parent.top
+                                anchors.topMargin: parent.height * 0.10
+                                width: parent.width * 0.6
+                                height: parent.height * 0.55
+
+                                Image {
+                                    visible: true
+                                    anchors.fill: parent
+                                    fillMode: Image.PreserveAspectFit
+                                    source: "GUI_Pics/down.png"
+                                }
+
+                                Text { visible: false }
                             }
 
                             Text {
                                 text: "Down"
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: Math.max(12, parent.height * 0.18)
+                                font.pixelSize: parent.height * 0.1
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
                                 anchors.bottomMargin: 8
@@ -808,28 +974,46 @@ Rectangle {
                             }
                         }
 
+
+
+                        // empty space - required by design
+                        Rectangle {
+                            Layout.preferredWidth: 0.085 * parent.width
+                            Layout.fillHeight: true
+                            color: "transparent"
+                        }
+
                         // Takeoff Button
                         Rectangle {
-                            Layout.preferredWidth: 0.195 * parent.width
+                            Layout.preferredWidth: 0.0975 * parent.width
                             Layout.fillHeight: true
                             radius: buttonRadius
                             color: buttonBg
                             border.color: buttonBorder
                             border.width: 1
 
-                            Image {
-                                source: "GUI_Pics/takeoff.png"
-                                anchors.centerIn: parent
-                                fillMode: Image.PreserveAspectFit
+                            Item {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.top: parent.top
+                                anchors.topMargin: parent.height * 0.10
                                 width: parent.width * 0.6
-                                height: parent.height * 0.7
+                                height: parent.height * 0.55
+
+                                Image {
+                                    visible: true
+                                    anchors.fill: parent
+                                    fillMode: Image.PreserveAspectFit
+                                    source: "GUI_Pics/takeoff.png"
+                                }
+
+                                Text { visible: false }
                             }
 
                             Text {
                                 text: "Takeoff"
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: Math.max(12, parent.height * 0.18)
+                                font.pixelSize: parent.height * 0.1
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
                                 anchors.bottomMargin: 8
@@ -846,26 +1030,35 @@ Rectangle {
 
                         // Land Button
                         Rectangle {
-                            Layout.preferredWidth: 0.195 * parent.width
+                            Layout.preferredWidth: 0.0975 * parent.width
                             Layout.fillHeight: true
                             radius: buttonRadius
                             color: buttonBg
                             border.color: buttonBorder
                             border.width: 1
 
-                            Image {
-                                source: "GUI_Pics/land.png"
-                                anchors.centerIn: parent
-                                fillMode: Image.PreserveAspectFit
+                            Item {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.top: parent.top
+                                anchors.topMargin: parent.height * 0.10
                                 width: parent.width * 0.6
-                                height: parent.height * 0.7
+                                height: parent.height * 0.55
+
+                                Image {
+                                    visible: true
+                                    anchors.fill: parent
+                                    fillMode: Image.PreserveAspectFit
+                                    source: "GUI_Pics/land.png"
+                                }
+
+                                Text { visible: false }
                             }
 
                             Text {
                                 text: "Land"
                                 font.bold: true
                                 color: "white"
-                                font.pixelSize: Math.max(12, parent.height * 0.18)
+                                font.pixelSize: parent.height * 0.1
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
                                 anchors.bottomMargin: 8
@@ -875,6 +1068,12 @@ Rectangle {
                                 anchors.fill: parent
                                 cursorShape: Qt.PointingHandCursor
                                 onClicked: backend.doDroneTAction("land")
+
+                                hoverEnabled: true
+                                onEntered:  root.state = "hovered"
+                                onExited:   root.state = "normal"
+                                onPressed:  scaleTr.xScale = scaleTr.yScale = 0.97
+                                onReleased: root.state = "hovered"
                             }
                         }
                     }
