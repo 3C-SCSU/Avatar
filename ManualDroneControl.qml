@@ -34,138 +34,9 @@ Rectangle {
                 anchors.fill: parent
                 spacing: 5
 
-                // Top Row - Home, Up, Flight Log
-                Row {
-                    width: parent.width
-                    height: parent.height * 0.19
-                    anchors.top: parent.top
-                    anchors.topMargin: parent.height * 0.0
-                    spacing: parent.width * 0.1
-                    // Home Button
-                    Rectangle {
-                        width: parent.width * 0.15
-                        height: parent.height
-                        anchors.left: parent.left
-                        color: "#242c4d"
-                        border.color: "black"
-
-                        Image {
-                            source: "GUI_Pics/home.png"
-                            width: 150
-                            height: 150
-                            anchors.centerIn: parent
-                        }
-
-                        Text {
-                            text: "Home"
-                            font.bold: true
-                            color: "white"
-                            font.pixelSize: Math.max(12, parent.width * 0.05)
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 10
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onEntered: {
-                                buttonBackground.color = "white";
-                                buttonText.color = "black";
-                            }
-                            onExited: {
-                                buttonBackground.color = "#242c4d";
-                                buttonText.color = "white";
-                            }
-                            onClicked: {
-                                backend.doDroneTAction("go_home");
-                            }
-                        }
-                    }
-
-                    // Up Button
-                    Rectangle {
-                        width: parent.width * 0.6
-                        height: parent.height
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        color: "#242c4d"
-                        border.color: "black"
-
-                        Image {
-                            source: "GUI_Pics/up.png"
-                            width: 150
-                            height: 150
-                            anchors.centerIn: parent
-                        }
-
-                        Text {
-                            text: "Up"
-                            font.bold: true
-                            color: "white"
-                            font.pixelSize: Math.max(12, parent.width * 0.01)
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 10
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onEntered: {
-                                upButtonBackground.color = "white";
-                                upButtonText.color = "black";
-                            }
-                            onExited: {
-                                upButtonBackground.color = "#242c4d";
-                                upButtonText.color = "white";
-                            }
-                            onClicked: {
-                                backend.doDroneTAction("up");
-                            }
-                        }
-                    }
-
-                    // Flight Log
-                    Rectangle {
-                        width: parent.width * 0.2
-                        height: parent.height
-                        anchors.right: parent.right
-                        color: "#ffffff"
-                        border.color: "#2E4053"
-
-                        Text {
-                            text: "Flight Log"
-                            font.bold: true
-                            font.pixelSize: Math.max(10, parent.width * 0.045) // slightly smaller
-                            color: "black"
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.top: parent.top
-                            anchors.topMargin: 10
-                        }
-
-                        TextArea {
-                            id: flightLog
-                            readOnly: true
-                            wrapMode: TextArea.Wrap
-                            font.pixelSize: Math.max(10, parent.width * 0.04)
-                            color: "black"
-                            anchors.top: parent.top
-                            anchors.topMargin: 40
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            anchors.bottom: parent.bottom
-                            clip: true
-
-                            background: Rectangle { color: "white" }
-
-                            Component.onCompleted: {
-                                backend.flightLogUpdated.connect(function(logList) {
-                                    flightLog.text = logList.join("\n")
-                                })
-                            }
-                        }
-                    }
-                }
-
-                // Forward Button
+                // ************************************
+                // >> Top Row - Home, Up, Flight Log <<
+                // ************************************
                 Rectangle {
                     Layout.fillWidth: true
                     Layout.preferredHeight: parent.height * 0.19
@@ -310,6 +181,8 @@ Rectangle {
                                         wrapMode: TextArea.Wrap
                                         font.pixelSize: Math.max(10, controlsPanel.height * 0.015)
                                         color: "black"
+
+                                        background: Rectangle { color: "white" }
 
                                         Component.onCompleted: {
                                             backend.flightLogUpdated.connect(function (logList) {
