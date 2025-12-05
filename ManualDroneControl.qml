@@ -269,48 +269,55 @@ Rectangle {
 
                         // empty space - required by design
                         Rectangle {
-                            Layout.preferredWidth: 0.09 * parent.width//.02
+                            Layout.preferredWidth: 0.09 * parent.width
                             Layout.fillHeight: true
                             color: "transparent"
                         }
 
                         // Flight Log
                         Rectangle {
-                            Layout.preferredWidth: 0.19 * parent.width//.26
+                            id: flightLogContainer
+                            Layout.preferredWidth: 0.19 * parent.width
                             Layout.fillHeight: true
                             radius: buttonRadius
                             color: "#ffffff"
                             border.color: "#2E4053"
                             border.width: 1
 
-                            Text {
-                                text: "Flight Log"
-                                font.bold: true
-                                font.letterSpacing: 0.5
-                                font.pixelSize: Math.max(10, parent.height * 0.045)
-                                color: "black"
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                anchors.top: parent.top
-                                anchors.topMargin: 10
-                            }
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 3
+                                anchors.topMargin: 5
+                                spacing: 4
 
-                            TextArea {
-                                id: flightLog
-                                readOnly: true
-                                wrapMode: TextArea.Wrap
-                                font.pixelSize: Math.max(10, parent.height * 0.045)
-                                color: "black"
-                                anchors.top: parent.top
-                                anchors.topMargin: 40
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                anchors.bottom: parent.bottom
-                                clip: true
+                                Text {
+                                    text: "FLIGHT LOG"
+                                    font.weight: 700
+                                    color: "black"
+                                    font.pixelSize: 12
+                                    Layout.alignment: Qt.AlignHCenter
+                                    font.letterSpacing: 1.1
+                                }
 
-                                Component.onCompleted: {
-                                    backend.flightLogUpdated.connect(function (logList) {
-                                        flightLog.text = logList.join("\n")
-                                    })
+                                ScrollView {
+                                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+                                    clip: false
+
+                                    TextArea {
+                                        id: flightLog
+                                        readOnly: true
+                                        wrapMode: TextArea.Wrap
+                                        font.pixelSize: Math.max(10, controlsPanel.height * 0.015)
+                                        color: "black"
+
+                                        Component.onCompleted: {
+                                            backend.flightLogUpdated.connect(function (logList) {
+                                                flightLog.text = logList.join("\n")
+                                                flightLog.moveCursorSelection(TextArea.End)  // auto-scroll to bottom
+                                            })
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -358,7 +365,7 @@ Rectangle {
                                     text: "↻"
                                     font.bold: true
                                     color: "#76ff03"
-                                    font.pixelSize: parent.height * 0.8//0.55
+                                    font.pixelSize: parent.height * 0.8
                                     anchors.centerIn: parent
                                 }
                             }
@@ -456,8 +463,6 @@ Rectangle {
 
                             Text {
                                 text: "Flip Right"
-
-                                //copy this part to every button label
                                 font.bold: true
                                 color: "white"
                                 font.pixelSize: parent.height * 0.1
@@ -751,7 +756,7 @@ Rectangle {
                                     text: "↺"
                                     font.bold: true
                                     color: "#76ff03"
-                                    font.pixelSize: parent.height * 0.8//0.55
+                                    font.pixelSize: parent.height * 0.8
                                     anchors.centerIn: parent
                                 }
                             }
@@ -840,7 +845,7 @@ Rectangle {
                                     text: "⟲"
                                     font.bold: true
                                     color: "#76ff03"
-                                    font.pixelSize: parent.height * 0.8//0.55
+                                    font.pixelSize: parent.height * 0.8
                                     anchors.centerIn: parent
                                 }
                             }
@@ -973,8 +978,6 @@ Rectangle {
                                 onClicked: backend.doDroneTAction("down")
                             }
                         }
-
-
 
                         // empty space - required by design
                         Rectangle {
