@@ -47,22 +47,6 @@ Rectangle {
     ColumnLayout {
         anchors.fill: parent
         spacing: 10
-
-        // Tab bar
-        TabBar {
-            id: tabBar
-            Layout.fillWidth: true
-            height: 40
-            TabButton {
-                font.bold: true
-                onClicked: {
-                    stackLayout.currentIndex = 3
-                    console.log("Manual Controller tab clicked")
-                    tabController.startNaoViewer()
-                }
-            }
-        }
-
         // Stack layout for different views
         StackLayout {
             id: stackLayout
