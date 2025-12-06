@@ -8,11 +8,11 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'brainwave-prediction-app')))
 from client.brainflow1 import DataMode, bciConnection
 
-class BrainwaveReading_Tab(QWidget):
+class ReadBrainTab(QWidget):
     button_pressed = pyqtSignal(str)
     
     def __init__(self, get_drone_action, use_brainflow):
-        super(BrainwaveReading_Tab, self).__init__()
+        super(ReadBrainTab, self).__init__()
         self.get_drone_action = get_drone_action
         self.use_brainflow = use_brainflow
         self.predictions_log = []

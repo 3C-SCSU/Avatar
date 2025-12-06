@@ -71,7 +71,7 @@ class Brainwaves:
 
         ]
 
-        tab = sg.Tab('Brainwave Reading', brainwave_prediction_layout, key='Brainwave Reading')
+        tab = sg.Tab('Read Brain', brainwave_prediction_layout, key='Read Brain')
         return tab
 
         #brainwave_prediction_window = sg.Window("Brainwave Prediction", brainwave_prediction_layout, size=(
