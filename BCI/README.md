@@ -67,14 +67,17 @@ The bleeding-edge intersection of neuro-haptics, brain-computer interface (BCI) 
 
 ---
 
-### Autonomous Systems Laboratory
+### Brain-Computer Interface Lab
 
-The Autonomous Systems Laboratory (ISELF205) is a pioneering research hub that provides students with cutting-edge tools to develop innovative projects in Brain-Computer Interfaces (BCI), Artificial Intelligence (AI), and Cloud Computing. The lab's impressive setup includes five BCI headsets, eight workstations comprising six Linux-powered Chromebooks and two Linux PCs, as well as two Linux servers and a dedicated NVIDIA GPU server for high-performance computing. Students also have access to four tablets, four smartphones, four VR headsets, and four drones, creating a versatile platform for immersive and autonomous systems research. A large monitor and smart TV serve as central display units, complemented by a Nao6 humanoid robot that facilitates hands-on experimentation. By integrating software, hardware, and human biology with brain-computer interfaces, this advanced infrastructure empowers students and researchers to push the boundaries of autonomous systems technology and explore innovative frontiers.
+The Brain-Computer Interface Lab (ISELF205) is a pioneering research environment that provides students with the cutting-edge tools necessary to develop innovative projects in Brain-Computer Interfaces (BCI), Artificial Intelligence (AI), and Cloud Computing. This is a field experiencing rapid growth and significant investment from industry leaders such as Google, Meta (formerly Facebook), Amazon AWS, Blackrock Neurotech, Neuralink (Tesla), and Microsoft.
 
-<p align="center">
-<img width="900" alt="image" src="https://github.com/user-attachments/assets/56d4efd1-3f7c-4063-a156-0e28d225b713" />
-</p>
+The lab's impressive setup includes seven BCI headsets, nine workstations (comprising six Linux-powered Chromebooks and two Linux PCs), complemented by a high-performance computing solution consisting of two Linux servers and a dedicated NVIDIA GPU server running as a Kubernetes cluster.
 
+Students also have access to four tablets, four smartphones, four VR headsets, and ten drones, creating a versatile platform for immersive and BCI systems research, including telekinesis avatar control. For centralized display and collaboration, the lab features a large 86-inch Dell monitor and a 51-inch Hisense smart TV, along with a NAO humanoid robot that facilitates hands-on experimentation.
+
+By integrating software, hardware, and human biology, this advanced infrastructure empowers students and researchers to push the boundaries of neurohaptics technology to explore the bleeding edge of Human-Computer Interaction.
+
+<img width="912" height="506" alt="image" src="https://github.com/user-attachments/assets/b359a4ec-fcaf-416c-9a98-eaf98044547c" />
 
 
 
