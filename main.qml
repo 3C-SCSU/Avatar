@@ -34,7 +34,10 @@ ApplicationWindow {
 
                 background: Rectangle {
                     anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
+                    color: {
+                        if (stackLayout.currentIndex === parent.targetIndex) return "green"
+                        return parent.hovered ? "#1e5f3a" : '#2e3a5c'
+                    }
                 }
                 contentItem: Text {
                     text: parent.text
@@ -56,7 +59,10 @@ ApplicationWindow {
 
                 background: Rectangle {
                     anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
+                    color: {
+                        if (stackLayout.currentIndex === parent.targetIndex) return "green"
+                        return parent.hovered ? "#1e5f3a" : "#2e3a5c"
+                    }
                 }
                 contentItem: Text {
                     text: parent.text
@@ -82,7 +88,10 @@ ApplicationWindow {
 
                 background: Rectangle {
                     anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
+                    color: {
+                        if (stackLayout.currentIndex === parent.targetIndex) return "green"
+                        return parent.hovered ? "#1e5f3a" : "#2e3a5c"
+                    }
                 }
                 contentItem: Text {
                     text: parent.text
@@ -107,7 +116,10 @@ ApplicationWindow {
 
                 background: Rectangle {
                     anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
+                    color: {
+                        if (stackLayout.currentIndex === parent.targetIndex) return "green"
+                        return parent.hovered ? "#1e5f3a" : "#2e3a5c"
+                    }
                 }
                 contentItem: Text {
                     text: parent.text
@@ -153,7 +165,10 @@ ApplicationWindow {
 
                 background: Rectangle {
                     anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
+                    color: {
+                        if (stackLayout.currentIndex === parent.targetIndex) return "green"
+                        return parent.hovered ? "#1e5f3a" : "#2e3a5c"
+                    }
                 }
                 contentItem: Text {
                     text: parent.text
@@ -175,7 +190,10 @@ ApplicationWindow {
 
                 background: Rectangle {
                     anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
+                    color: {
+                        if (stackLayout.currentIndex === parent.targetIndex) return "green"
+                        return parent.hovered ? "#1e5f3a" : "#2e3a5c"
+                    }
                 }
                 contentItem: Text {
                     text: parent.text
@@ -197,7 +215,10 @@ ApplicationWindow {
 
                 background: Rectangle {
                     anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
+                    color: {
+                        if (stackLayout.currentIndex === parent.targetIndex) return "green"
+                        return parent.hovered ? "#1e5f3a" : "#2e3a5c"
+                    }
                 }
                 contentItem: Text {
                     text: parent.text
@@ -219,7 +240,10 @@ ApplicationWindow {
 
                 background: Rectangle {
                     anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
+                    color: {
+                        if (stackLayout.currentIndex === parent.targetIndex) return "green"
+                        return parent.hovered ? "#1e5f3a" : "#2e3a5c"
+                    }
                 }
                 contentItem: Text {
                     text: parent.text
