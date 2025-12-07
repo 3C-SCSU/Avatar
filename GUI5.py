@@ -39,6 +39,7 @@ except ImportError as e:
 
 from cloud_api import CloudAPI
 
+from APIs.shuffler_api import ShufflerAPI
 
 class TabController(QObject):
     def __init__(self):
@@ -763,15 +764,15 @@ if __name__ == "__main__":
     cloud_api = CloudAPI()
     backend = BrainwavesBackend()
     developers = DevelopersAPI()
+    shuffler_api = ShufflerAPI()
     engine.rootContext().setContextProperty("tabController", tab_controller)
     engine.rootContext().setContextProperty("backend", backend)
     engine.rootContext().setContextProperty("developersBackend", developers)
     engine.rootContext().setContextProperty("cloudAPI", cloud_api)
     engine.rootContext().setContextProperty("imageModel", [])  # Initialize empty model
-    engine.rootContext().setContextProperty("fileShufflerGui", backend)  # For file shuffler
     engine.rootContext().setContextProperty("cameraController", backend.camera_controller)
     print("Controllers exposed to QML")
-    engine.rootContext().setContextProperty("fileShufflerGui", backend)  # For file shuffler
+    engine.rootContext().setContextProperty("fileShufflerGui", shuffler_api)  # For file shuffler
     engine.rootContext().setContextProperty("manualNaoController", manual_nao_controller)
     engine.rootContext().setContextProperty("droneCameraController", drone_camera_controller)
 
