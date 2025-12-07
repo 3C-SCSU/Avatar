@@ -39,6 +39,11 @@ ApplicationWindow {
                         return parent.hovered ? "#1e5f3a" : '#2e3a5c'
                     }
                 }
+
+                HoverHandler {
+                    cursorShape: Qt.PointingHandCursor
+                }
+
                 contentItem: Text {
                     text: parent.text
                     anchors.centerIn: parent
@@ -64,6 +69,11 @@ ApplicationWindow {
                         return parent.hovered ? "#1e5f3a" : "#2e3a5c"
                     }
                 }
+
+                HoverHandler {
+                    cursorShape: Qt.PointingHandCursor
+                }
+
                 contentItem: Text {
                     text: parent.text
                     anchors.centerIn: parent
@@ -93,6 +103,11 @@ ApplicationWindow {
                         return parent.hovered ? "#1e5f3a" : "#2e3a5c"
                     }
                 }
+
+                HoverHandler {
+                    cursorShape: Qt.PointingHandCursor
+                }
+
                 contentItem: Text {
                     text: parent.text
                     anchors.centerIn: parent
@@ -121,6 +136,11 @@ ApplicationWindow {
                         return parent.hovered ? "#1e5f3a" : "#2e3a5c"
                     }
                 }
+
+                HoverHandler {
+                    cursorShape: Qt.PointingHandCursor
+                }
+
                 contentItem: Text {
                     text: parent.text
                     anchors.centerIn: parent
@@ -170,6 +190,11 @@ ApplicationWindow {
                         return parent.hovered ? "#1e5f3a" : "#2e3a5c"
                     }
                 }
+
+                HoverHandler {
+                    cursorShape: Qt.PointingHandCursor
+                }
+
                 contentItem: Text {
                     text: parent.text
                     anchors.centerIn: parent
@@ -195,6 +220,11 @@ ApplicationWindow {
                         return parent.hovered ? "#1e5f3a" : "#2e3a5c"
                     }
                 }
+
+                HoverHandler {
+                    cursorShape: Qt.PointingHandCursor
+                }
+
                 contentItem: Text {
                     text: parent.text
                     anchors.centerIn: parent
@@ -220,6 +250,11 @@ ApplicationWindow {
                         return parent.hovered ? "#1e5f3a" : "#2e3a5c"
                     }
                 }
+
+                HoverHandler {
+                    cursorShape: Qt.PointingHandCursor
+                }
+
                 contentItem: Text {
                     text: parent.text
                     anchors.centerIn: parent
@@ -245,6 +280,11 @@ ApplicationWindow {
                         return parent.hovered ? "#1e5f3a" : "#2e3a5c"
                     }
                 }
+
+                HoverHandler {
+                    cursorShape: Qt.PointingHandCursor
+                }
+
                 contentItem: Text {
                     text: parent.text
                     anchors.centerIn: parent
