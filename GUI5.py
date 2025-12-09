@@ -39,7 +39,7 @@ except ImportError as e:
 
 from cloud_api import CloudAPI
 
-from APIs.shuffler_api import ShufflerAPI
+from shuffler_api import ShufflerAPI
 
 class TabController(QObject):
     def __init__(self):

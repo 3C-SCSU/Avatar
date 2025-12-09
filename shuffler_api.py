@@ -8,9 +8,9 @@ import urllib.parse
 import contextlib
 
 # Add the parent directory to the Python path for file-shuffler
-sys.path.append(str(Path(__file__).resolve().parent.parent / "file-shuffler"))
-sys.path.append(str(Path(__file__).resolve().parent.parent / "file-unify-labels"))
-sys.path.append(str(Path(__file__).resolve().parent.parent / "file-remove8channel"))
+sys.path.append(str(Path(__file__).resolve().parent / "file-shuffler"))
+sys.path.append(str(Path(__file__).resolve().parent / "file-unify-labels"))
+sys.path.append(str(Path(__file__).resolve().parent / "file-remove8channel"))
 import unifyTXT
 import run_file_shuffler
 import remove8channel
@@ -22,7 +22,7 @@ class ShufflerAPI(QObject):
     @Slot()
     def launch_file_shuffler_gui(self):
         # Launch the file shuffler GUI program
-        file_shuffler_path = Path(__file__).resolve().parent.parent / "file-shuffler/file-shuffler-gui.py"
+        file_shuffler_path = Path(__file__).resolve().parent / "file-shuffler/file-shuffler-gui.py"
         subprocess.Popen(["python", str(file_shuffler_path)])
 
     @Slot(str, result=str)
