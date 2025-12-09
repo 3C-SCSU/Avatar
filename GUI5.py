@@ -24,7 +24,7 @@ from cameraview.camera_controller import CameraController
 from NAO6.nao_connection import send_command
 # from Developers.hofCharts import main as hofCharts, ticketsByDev_text NA
 
-from APIs.developers_API import DevelopersAPI
+from developers_api import DevelopersAPI
 
 								
 from NA06_Manual_Control import ManualNaoController
