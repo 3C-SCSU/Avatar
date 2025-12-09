@@ -8,8 +8,8 @@ import QtQuick3D 6.7
 
 // Brainwave Reading view
 Rectangle {
-    property string selectedModel: "Random Forest"  // Can be "Random Forest", "GaussianNB", or "Deep Learning"
-    property string currentFramework: "PyTorch"  // Can be "PyTorch", "TensorFlow", or "JAX"
+    property string selectedModel: "Random Forest"
+    property string currentFramework: "PyTorch"
     color: "#718399"
     Layout.fillWidth: true
     Layout.fillHeight: true
@@ -30,7 +30,6 @@ Rectangle {
                 width: parent.width * 0.4
                 spacing: parent.width * 0.02
                 anchors.horizontalCenter: parent.horizontalCenter
-                Layout.alignment: Qt.AlignJustify // Ensures space between items
 
                 RadioButton {
                     id: manualControl
@@ -102,7 +101,7 @@ Rectangle {
                 width: parent.width * 0.4
                 height: parent.height * 0.15
                 anchors.horizontalCenter: parent.horizontalCenter
-                // Header with white background
+
                 Row {
                     width: parent.width
                     height: parent.height * 0.28
@@ -161,7 +160,7 @@ Rectangle {
                     id: notThinking
                     text: "Not what I was thinking..."
                     font.pixelSize: parent.width * 0.03
-                    width: parent.width * 0.5
+                    width: (parent.width - parent.spacing) * 0.5
                     height: parent.height
                     background: Rectangle { 
                         color: "#242c4d" 
@@ -181,7 +180,7 @@ Rectangle {
                     id: executeBtn
                     text: "Action"
                     font.pixelSize: parent.width * 0.03
-                    width: parent.width * 0.5
+                    width: (parent.width - parent.spacing) * 0.5
                     height: parent.height
                     background: Rectangle { 
                         color: "#242c4d" 
@@ -227,9 +226,9 @@ Rectangle {
                         anchors.fill: parent
                     }
                     onClicked: {
-								backend.keepDroneAlive(text=manualInput.text), // pass text to run command
-								manualInput.text = "" // empty textbox sow command was taken and make ready for another command
-								}
+                        backend.keepDroneAlive(text=manualInput.text)
+                        manualInput.text = ""
+                    }
                 }
             }
 
@@ -255,13 +254,14 @@ Rectangle {
                             text: log
                             font.pixelSize: parent.width * 0.03
                             font.bold: true
-                            color: "white"
+                            color: "black"
                         }
                     }
                 }
             }
+
             Connections {
-                target: backend  // Now properly defined through context property        function onImagesReady(imageData) {
+                target: backend
                 function onImagesReady(imageData) {
                     imageModel.clear();
                     for (let item of imageData) {
@@ -273,258 +273,20 @@ Rectangle {
                     consoleLog.append(message + " at " + timestamp)
                 }
             }
-
-            // Connect Image with Transparent Button
-            Row {
-                width: parent.width
-                height: parent.height * 0.3
-                spacing: width * 0.02
-                anchors.horizontalCenter: parent.horizontalCenter
-                // Connect Button with Image
-                Rectangle {
-                    width: parent.width * 0.2
-                    height: parent.height * 0.5
-                    color: "#242c4d"
-
-                    Image {
-                        source: "GUI_Pics/connect.png"
-                        anchors.fill: parent
-                        fillMode: Image.PreserveAspectFit
-                    }
-
-                    Button {
-                        anchors.fill: parent
-                        background: Item {
-                        }
-                        contentItem: Text {
-                            text: "Connect"
-                            font.pixelSize: parent.width * 0.1
-                            color: "white"
-                            anchors.centerIn: parent
-                        }
-                        onClicked: backend.connectDrone()
-                    }
-                }
-
-                // Model Selection Buttons: Random Forest, GaussianNB, Deep Learning
-                Row {
-                    width: parent.width * 0.5
-                    height: parent.height * 0.3
-                    spacing: height * 0.05
-                    
-                    // Random Forest Button
-                    Rectangle {
-                        width: (parent.width - parent.spacing * 2) / 3
-                        height: parent.height
-                        color: "#2d7a4a"
-			radius: 5
-			border.color: selectedModel === "Random Forest" ? "yellow" : "#4a9d6f"
-   			border.width: selectedModel === "Random Forest" ? 3 : 1
-                        Text {
-                            text: "Random\nForest"
-                            font.pixelSize: parent.width * 0.12
-                            font.bold: true
-                            color: selectedModel === "Random Forest" ? "yellow" : "white"
-                            anchors.centerIn: parent
-                            horizontalAlignment: Text.AlignHCenter
-                        }
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                selectedModel = "Random Forest";
-                                backend.selectModel("Random Forest")
-                            }
-                        }
-                    }
-                    
-                    // GaussianNB Button
-                    Rectangle {
-                        width: (parent.width - parent.spacing * 2) / 3
-                        height: parent.height
-                        color: "#2d7a4a"
-			radius: 5
-			border.color: selectedModel === "GaussianNB" ? "yellow" : "#4a9d6f"
-   	 		border.width: selectedModel === "GaussianNB" ? 3 : 1
-			
-			Text {
-                            text: "GaussianNB"
-                            font.pixelSize: parent.width * 0.12
-                            font.bold: true
-                            color: selectedModel === "GaussianNB" ? "yellow" : "white"
-                            anchors.centerIn: parent
-                            horizontalAlignment: Text.AlignHCenter
-                        }
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                selectedModel = "GaussianNB";
-                                backend.selectModel("GaussianNB")
-                            }
-                        }
-                    }
-                    
-                    // Deep Learning Button
-                    Rectangle {
-                        width: (parent.width - parent.spacing * 2) / 3
-                        height: parent.height
-                        color: "#2d7a4a"
-			radius: 5
-			border.color: selectedModel === "Deep Learning" ? "yellow" : "#4a9d6f"
-    			border.width: selectedModel === "Deep Learning" ? 3 : 1
-                        Text {
-                            text: "Deep\nLearning"
-                            font.pixelSize: parent.width * 0.12
-                            font.bold: true
-                            color: selectedModel === "Deep Learning" ? "yellow" : "white"
-                            anchors.centerIn: parent
-                            horizontalAlignment: Text.AlignHCenter
-                        }
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                selectedModel = "Deep Learning";
-                                backend.selectModel("Deep Learning")
-                            }
-                        }
-                    }
-                }
-
-                // Synthetic Data and Live Data Radio Buttons
-                Column {
-                    width: parent.width * 0.2
-                    height: parent.height
-                    spacing: height * 0.01
-
-                    RadioButton {
-                        id: syntheticRadio
-                        text: "Synthetic Data"
-                        font.pixelSize: parent.width * 0.1
-                        font.bold: true
-                        checked: false
-                        contentItem: Text {
-                            text: syntheticRadio.text
-                            color: "white"
-                            font.pixelSize: syntheticRadio.font.pixelSize
-                            font.bold: syntheticRadio.font.bold
-                            verticalAlignment: Text.AlignVCenter
-                            leftPadding: syntheticRadio.indicator.width + syntheticRadio.spacing
-                        }
-                        onClicked: backend.setDataMode("synthetic")
-                    }
-
-                    RadioButton {
-                        id: liveRadio
-                        text: "Live Data"
-                        font.pixelSize: parent.width * 0.1
-                        font.bold: true
-                        checked: true
-                        contentItem: Text {
-                            text: liveRadio.text
-                            color: "white"
-                            font.pixelSize: liveRadio.font.pixelSize
-                            font.bold: liveRadio.font.bold
-                            verticalAlignment: Text.AlignVCenter
-                            leftPadding: liveRadio.indicator.width + liveRadio.spacing
-                        }
-                        onClicked: backend.setDataMode("live")
-                    }
-                }
-
-                // PyTorch and TensorFlow Framework Buttons
-                Row {
-                    width: parent.width * 0.7
-                    height: parent.height * 0.3
-                    spacing: height * 0.1
-
-                    //PyTorch Button
-                    Rectangle {
-                        width: parent.width * 0.33
-                        height: parent.height
-                        color: "#2d7a4a"
-                        radius: 5
-			border.color: currentFramework === "PyTorch" ? "yellow" : "#4a9d6f"
-        		border.width: currentFramework === "PyTorch" ? 3 : 1
-                        Text {
-                            text: "PyTorch"
-                            font.pixelSize: parent.width * 0.08
-                            font.bold: true
-                            color: currentFramework === "PyTorch" ? "yellow" : "white"
-                            anchors.centerIn: parent
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                currentFramework = "PyTorch"
-                                backend.selectFramework("PyTorch")
-                            }
-                        }
-                    }
-
-                    //TensorFlow Button
-                    Rectangle {
-                        width: parent.width * 0.33
-                        height: parent.height
-                        color: "#2d7a4a"
-                        radius: 5
-			border.color: currentFramework === "TensorFlow" ? "yellow" : "#4a9d6f"
-        		border.width: currentFramework === "TensorFlow" ? 3 : 1
-                        Text {
-                            text: "TensorFlow"
-                            font.pixelSize: parent.width * 0.08
-                            font.bold: true
-                            color: currentFramework === "TensorFlow" ? "yellow" : "white"
-                            anchors.centerIn: parent
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                currentFramework = "TensorFlow"
-                                backend.selectFramework("TensorFlow")
-                            }
-                        }
-                      }
-                      //JAX Button
-                    Rectangle {
-                        width: parent.width * 0.33
-                        height: parent.height
-                        color: "#2d7a4a"
-                        radius: 5
-                        border.color: currentFramework === "JAX" ? "yellow" : "#4a9d6f"
-                        border.width: currentFramework === "JAX" ? 3 : 1
-                        Text {
-                            text: "JAX"
-                            font.pixelSize: parent.width * 0.08
-                            font.bold: true
-                            color: currentFramework === "JAX" ? "yellow" : "white"
-                            anchors.centerIn: parent
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                currentFramework = "JAX"
-                                backend.selectFramework("JAX")
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         // Right Column (Prediction Table and Console Log)
         Column {
             width: parent.width * 0.45
             height: parent.height
-            spacing: parent.height * 0.01
+            spacing: parent.height * 0.02
             anchors.right: parent.right
 
             // Predictions Table
             GroupBox {
                 title: "Predictions Table"
-                width: parent.width * 0.8
-                height: parent.height * 0.4
+                width: parent.width * 0.9
+                height: parent.height * 0.35
 
                 label: Text {
                     text: qsTr("Predictions Table")
@@ -536,8 +298,6 @@ Rectangle {
                     anchors.top: parent.top
                     anchors.topMargin: 5
                 }
-                
-                // Header with white background
 
                 Row {
                     width: parent.width
@@ -615,10 +375,11 @@ Rectangle {
                 }
             }
 
+            // Console Log
             GroupBox {
                 title: "Console Log"
-                width: parent.width * 0.6
-                height: parent.height * 0.3
+                width: parent.width * 0.9
+                height: parent.height * 0.25
                 label: Text { 
                     text: qsTr("Console Log"); 
                     font.bold: true; 
@@ -633,13 +394,273 @@ Rectangle {
                         id: consoleLog
                         wrapMode: Text.WrapAnywhere
                         readOnly: true
-                        font.pixelSize: parent.width * 0.03
+                        font.pixelSize: parent.width * 0.025
                         color: "black"
                         background: Rectangle { color: "white" }
                     }
                 }
             }
 
+            // Spacer to push Model Selection buttons down
+            Item {
+                width: parent.width
+                height: parent.height * 0.02
+            }
+
+            // Model Selection Buttons in dark box
+            Rectangle {
+                width: parent.width * 0.9
+                height: parent.height * 0.18
+                color: "#2c3e50"
+                
+                Column {
+                    anchors.fill: parent
+                    anchors.margins: parent.height * 0.05
+                    spacing: parent.height * 0.1
+                    
+                    // Model Selection Row
+                    Row {
+                        width: parent.width
+                        height: (parent.height - parent.spacing) * 0.5
+                        spacing: parent.width * 0.02
+                        
+                        Rectangle {
+                            width: (parent.width - parent.spacing * 2) / 3
+                            height: parent.height
+                            color: "#2d7a4a"
+                            radius: 5
+                            border.color: selectedModel === "Random Forest" ? "yellow" : "#4a9d6f"
+                            border.width: selectedModel === "Random Forest" ? 3 : 1
+                            
+                            Text {
+                                text: "Random Forest"
+                                font.pixelSize: parent.height * 0.25
+                                font.bold: true
+                                color: selectedModel === "Random Forest" ? "yellow" : "white"
+                                anchors.centerIn: parent
+                                horizontalAlignment: Text.AlignHCenter
+                            }
+                            
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    selectedModel = "Random Forest"
+                                    backend.selectModel("Random Forest")
+                                }
+                            }
+                        }
+                        
+                        Rectangle {
+                            width: (parent.width - parent.spacing * 2) / 3
+                            height: parent.height
+                            color: "#2d7a4a"
+                            radius: 5
+                            border.color: selectedModel === "GaussianNB" ? "yellow" : "#4a9d6f"
+                            border.width: selectedModel === "GaussianNB" ? 3 : 1
+                            
+                            Text {
+                                text: "GaussianNB"
+                                font.pixelSize: parent.height * 0.25
+                                font.bold: true
+                                color: selectedModel === "GaussianNB" ? "yellow" : "white"
+                                anchors.centerIn: parent
+                                horizontalAlignment: Text.AlignHCenter
+                            }
+                            
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    selectedModel = "GaussianNB"
+                                    backend.selectModel("GaussianNB")
+                                }
+                            }
+                        }
+                        
+                        Rectangle {
+                            width: (parent.width - parent.spacing * 2) / 3
+                            height: parent.height
+                            color: "#2d7a4a"
+                            radius: 5
+                            border.color: selectedModel === "Deep Learning" ? "yellow" : "#4a9d6f"
+                            border.width: selectedModel === "Deep Learning" ? 3 : 1
+                            
+                            Text {
+                                text: "Deep Learning"
+                                font.pixelSize: parent.height * 0.25
+                                font.bold: true
+                                color: selectedModel === "Deep Learning" ? "yellow" : "white"
+                                anchors.centerIn: parent
+                                horizontalAlignment: Text.AlignHCenter
+                            }
+                            
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    selectedModel = "Deep Learning"
+                                    backend.selectModel("Deep Learning")
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Framework Selection Row
+                    Row {
+                        width: parent.width
+                        height: (parent.height - parent.spacing) * 0.5
+                        spacing: parent.width * 0.02
+                        
+                        Rectangle {
+                            width: (parent.width - parent.spacing * 2) / 3
+                            height: parent.height
+                            color: "#2d7a4a"
+                            radius: 5
+                            border.color: currentFramework === "PyTorch" ? "yellow" : "#4a9d6f"
+                            border.width: currentFramework === "PyTorch" ? 3 : 1
+                            
+                            Text {
+                                text: "PyTorch"
+                                font.pixelSize: parent.height * 0.3
+                                font.bold: true
+                                color: currentFramework === "PyTorch" ? "yellow" : "white"
+                                anchors.centerIn: parent
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    currentFramework = "PyTorch"
+                                    backend.selectFramework("PyTorch")
+                                }
+                            }
+                        }
+
+                        Rectangle {
+                            width: (parent.width - parent.spacing * 2) / 3
+                            height: parent.height
+                            color: "#2d7a4a"
+                            radius: 5
+                            border.color: currentFramework === "TensorFlow" ? "yellow" : "#4a9d6f"
+                            border.width: currentFramework === "TensorFlow" ? 3 : 1
+                            
+                            Text {
+                                text: "TensorFlow"
+                                font.pixelSize: parent.height * 0.3
+                                font.bold: true
+                                color: currentFramework === "TensorFlow" ? "yellow" : "white"
+                                anchors.centerIn: parent
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    currentFramework = "TensorFlow"
+                                    backend.selectFramework("TensorFlow")
+                                }
+                            }
+                        }
+                        
+                        Rectangle {
+                            width: (parent.width - parent.spacing * 2) / 3
+                            height: parent.height
+                            color: "#2d7a4a"
+                            radius: 5
+                            border.color: currentFramework === "JAX" ? "yellow" : "#4a9d6f"
+                            border.width: currentFramework === "JAX" ? 3 : 1
+                            
+                            Text {
+                                text: "JAX"
+                                font.pixelSize: parent.height * 0.3
+                                font.bold: true
+                                color: currentFramework === "JAX" ? "yellow" : "white"
+                                anchors.centerIn: parent
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    currentFramework = "JAX"
+                                    backend.selectFramework("JAX")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Connect Button - Fixed to bottom left
+    Rectangle {
+        width: parent.width * 0.08
+        height: parent.height * 0.12
+        color: "#242c4d"
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: parent.width * 0.01
+        anchors.bottomMargin: parent.height * 0.01
+
+        Image {
+            source: "GUI_Pics/connect.png"
+            anchors.fill: parent
+            fillMode: Image.PreserveAspectFit
+        }
+
+        Button {
+            anchors.fill: parent
+            background: Item {
+            }
+            contentItem: Text {
+                text: "Connect"
+                font.pixelSize: parent.width * 0.15
+                color: "white"
+                anchors.centerIn: parent
+            }
+            onClicked: backend.connectDrone()
+        }
+    }
+
+    // Radio Buttons - Fixed to bottom left, next to connect
+    Row {
+        width: parent.width * 0.25
+        height: parent.height * 0.06
+        spacing: width * 0.02
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: parent.width * 0.14
+        anchors.bottomMargin: parent.height * 0.03
+
+        RadioButton {
+            id: liveRadio
+            text: "Live Data"
+            font.pixelSize: parent.width * 0.04
+            font.bold: true
+            checked: true
+            contentItem: Text {
+                text: liveRadio.text
+                color: "white"
+                font.pixelSize: liveRadio.font.pixelSize
+                font.bold: liveRadio.font.bold
+                verticalAlignment: Text.AlignVCenter
+                leftPadding: liveRadio.indicator.width + liveRadio.spacing
+            }
+            onClicked: backend.setDataMode("live")
+        }
+
+        RadioButton {
+            id: syntheticRadio
+            text: "Synthetic Data"
+            font.pixelSize: parent.width * 0.04
+            font.bold: true
+            checked: false
+            contentItem: Text {
+                text: syntheticRadio.text
+                color: "white"
+                font.pixelSize: syntheticRadio.font.pixelSize
+                font.bold: syntheticRadio.font.bold
+                verticalAlignment: Text.AlignVCenter
+                leftPadding: syntheticRadio.indicator.width + syntheticRadio.spacing
+            }
+            onClicked: backend.setDataMode("synthetic")
         }
     }
 }
