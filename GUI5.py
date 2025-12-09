@@ -47,7 +47,7 @@ import unifyTXT
 import run_file_shuffler
 import remove8channel
 
-from APIs.cloud_API import CloudAPI
+from cloud_api import CloudAPI
 
 
 class TabController(QObject):
