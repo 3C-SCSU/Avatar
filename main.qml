@@ -135,7 +135,7 @@ ApplicationWindow {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            BrainwaveReading { Layout.fillWidth: true; Layout.fillHeight: true }
+            ReadBrain { Layout.fillWidth: true; Layout.fillHeight: true }
             BrainwaveVisualization { Layout.fillWidth: true; Layout.fillHeight: true }
             ManualDroneControl { Layout.fillWidth: true; Layout.fillHeight: true }
             ManualNaoControl { Layout.fillWidth: true; Layout.fillHeight: true }
