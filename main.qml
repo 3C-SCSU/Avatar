@@ -33,8 +33,10 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = targetIndex
 
                 background: Rectangle {
-                    anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
+                  anchors.fill: parent
+                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
+                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
+                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
                 }
                 contentItem: Text {
                     text: parent.text
@@ -55,8 +57,10 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = targetIndex
 
                 background: Rectangle {
-                    anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
+                  anchors.fill: parent
+                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
+                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
+                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
                 }
                 contentItem: Text {
                     text: parent.text
@@ -81,8 +85,10 @@ ApplicationWindow {
                 }
 
                 background: Rectangle {
-                    anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
+                  anchors.fill: parent
+                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
+                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
+                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
                 }
                 contentItem: Text {
                     text: parent.text
@@ -106,8 +112,10 @@ ApplicationWindow {
                 }
 
                 background: Rectangle {
-                    anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
+                  anchors.fill: parent
+                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
+                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
+                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
                 }
                 contentItem: Text {
                     text: parent.text
@@ -152,8 +160,10 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = targetIndex
 
                 background: Rectangle {
-                    anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
+                  anchors.fill: parent
+                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
+                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
+                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
                 }
                 contentItem: Text {
                     text: parent.text
@@ -174,8 +184,10 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = targetIndex
 
                 background: Rectangle {
-                    anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
+                  anchors.fill: parent
+                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
+                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
+                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
                 }
                 contentItem: Text {
                     text: parent.text
@@ -196,8 +208,10 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = targetIndex
 
                 background: Rectangle {
-                    anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
+                  anchors.fill: parent
+                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
+                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
+                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
                 }
                 contentItem: Text {
                     text: parent.text
@@ -218,8 +232,10 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = targetIndex
 
                 background: Rectangle {
-                    anchors.fill: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#444444"
+                  anchors.fill: parent
+                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
+                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
+                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
                 }
                 contentItem: Text {
                     text: parent.text
@@ -234,3 +250,4 @@ ApplicationWindow {
         }
     }
 }
+
