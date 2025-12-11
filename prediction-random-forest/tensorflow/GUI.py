@@ -174,7 +174,7 @@ while True:
     try:
         if event1 == sg.WIN_CLOSED:
             break
-        elif activeTab == 'Brainwave Reading':
+        elif activeTab == 'Read Brain':
             brainwaveObj.buttonLoop(window1, event1, values1, get_drone_action, use_brainflow)
         elif activeTab == 'Transfer Data':
             transferDataObj.buttonLoop (window1, event1, values1)

@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.15
 import QtQuick.Window 2.15
 import QtQuick3D 6.7
 
-// Brainwave Reading view
+// Read Brain view
 Rectangle {
     property string selectedModel: "Random Forest"
     property string currentFramework: "PyTorch"

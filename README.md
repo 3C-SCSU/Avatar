@@ -273,7 +273,7 @@ After these steps, your forked repository should be updated with the latest chan
 	   ```sh
 	  pip3 install <module name>
 	  ```
-4.  In the GUI select Brainwave Reading
+4.  In the GUI select Read Brain
     
 5.  Future implementations - select between Manual Control or AutoPilot
     

@@ -13,9 +13,6 @@ import re
 import pandas as pd
 import torch
 import time
-import io
-import urllib.parse
-import contextlib
 from collections import defaultdict
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
 from predictions_local.brainflowprocessor import BrainFlowDataProcessor
@@ -24,14 +21,11 @@ from cameraview.camera_controller import CameraController
 from NAO6.nao_connection import send_command
 # from Developers.hofCharts import main as hofCharts, ticketsByDev_text NA
 
-from Developers import devCharts
+from developers_api import DevelopersAPI
 
 								
 from NA06_Manual_Control import ManualNaoController
 from NA06_Manual_Control.camera_view import DroneCameraController
-
-import configparser
-from sftp import fileTransfer	
 
 # Import BCI connection for brainwave prediction
 try:
@@ -42,14 +36,10 @@ except ImportError as e:
     print(f"Warning: BCI connection not available: {e}")
     BCI_AVAILABLE = False
 
-# Add the parent directory to the Python path for file-shuffler
-sys.path.append(str(Path(__file__).resolve().parent / "file-shuffler"))
-sys.path.append(str(Path(__file__).resolve().parent / "file-unify-labels"))
-sys.path.append(str(Path(__file__).resolve().parent / "file-remove8channel"))
-import unifyTXT
-import run_file_shuffler
-import remove8channel
 
+from cloud_api import CloudAPI
+
+from shuffler_api import ShufflerAPI
 
 class TabController(QObject):
     def __init__(self):
@@ -57,97 +47,6 @@ class TabController(QObject):
         self.nao_process = None
 
 
-class developersBackend(QObject):
-
-    def __init__(self):
-        super().__init__()
-        self._gold_path = ""
-        self._silver_path = ""
-        self._bronze_path = ""
-        self._medal_path = ""
-        self.devImagePath()
-
-    @Slot(result=str)
-    def getDevList(self):
-        return devCharts.devList()
-
-    @Slot(result=str)
-    def getTicketsByDev(self) -> str:
-
-        return devCharts.ticketsByDev_text()
-
-    @Slot()
-    def devChart(self):
-        print("Generating charts...")
-        try:
-            # Get the data
-            data = devCharts.run_shortlog_all()
-            if not data:
-                print("No contributors found")
-                return
-
-            exclude = ["3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>"]
-            data = [(n, c) for (n, c) in data if n not in exclude]
-
-            # Assign tiers
-            tiered = devCharts.assign_fixed_tiers(data)
-
-            # Generate charts for each tier
-            base_dir = os.path.dirname(os.path.abspath(__file__))
-            plots_dir = os.path.join(base_dir, "plotDevelopers")
-            os.makedirs(plots_dir, exist_ok=True)
-
-            for tier in ["Gold", "Silver", "Bronze"]:
-                chart_path = os.path.join(plots_dir, f"{tier.lower()}_contributors.png")
-                devCharts.plot_single_tier(tiered, tier, chart_path)
-                print(f"Generated {tier} chart")
-
-            # Update paths after generating
-            self.devImagePath()
-            print("Charts generated successfully")
-
-        except Exception as e:
-            print(f"Error generating charts: {e}")
-
-
-    def devImagePath(self):
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        print(f"The base directory path is {base_dir}")
-        plots_dir = os.path.join(base_dir, "plotDevelopers")
-        print(f"The plots directory path is {plots_dir}")
-        gold_path = os.path.abspath(os.path.join(plots_dir, "gold_contributors.png"))
-        silver_path = os.path.abspath(os.path.join(plots_dir, "silver_contributors.png"))
-        bronze_path = os.path.abspath(os.path.join(plots_dir, "bronze_contributors.png"))
-        medal_path =  os.path.abspath(os.path.join(plots_dir, "Medal.png"))
-
-        self._gold_path = "file:///" + gold_path.replace("\\", "/")
-        self._silver_path = "file:///" + silver_path.replace("\\", "/")
-        self._bronze_path = "file:///" + bronze_path.replace("\\", "/")
-        self._medal_path = "file:///" + medal_path.replace("\\", "/")
-
-
-        print(f"Gold chart path: {self._gold_path}")
-        print(f"Silver chart path: {self._silver_path}")
-        print(f"Bronze chart path: {self._bronze_path}")
-        print(f"Medal path: {self._medal_path}")
-
-        return gold_path, silver_path, bronze_path
-
-    @Property(str, constant = True)
-    def goldPath(self):
-        return self._gold_path
-
-    @Property(str, constant = True)
-    def silverPath(self):
-        return self._silver_path
-
-    @Property(str, constant = True)
-    def bronzePath(self):
-        return self._bronze_path
-
-    @Property(str, constant = True)
-    def medalPath(self):
-        return self._medal_path
 
 
 class BrainwavesBackend(QObject):
@@ -219,8 +118,6 @@ class BrainwavesBackend(QObject):
         self.current_dataset = "refresh"  # Default dataset to display
         self.connected = False
         self.drone_lock = threading.Lock()
-        self.config = configparser.ConfigParser()
-        self.config.optionxform = str
 
         # Timer to send periodic hover signals ()
         self.hover_timer = QTimer()
@@ -820,68 +717,6 @@ class BrainwavesBackend(QObject):
 
         self.imagesReady.emit(self.image_paths)  # Send data to QML
 
-    @Slot()
-    def launch_file_shuffler_gui(self):
-        # Launch the file shuffler GUI program
-        file_shuffler_path = Path(__file__).resolve().parent / "file-shuffler/file-shuffler-gui.py"
-        subprocess.Popen(["python", str(file_shuffler_path)])
-
-    @Slot(str, result=str)
-    def run_file_shuffler_program(self, path):
-        # Need to parse the path as the FolderDialog appends file:// in front of the selection
-        path = path.replace("file://", "")
-        if path.startswith("/C:"):
-            path = 'C' + path[2:]
-
-        response = run_file_shuffler.main(path)
-        return response
-
-        # Adding Synthetic Data and Live Data Logic (Row 327 to 355) as part of Ticket 186
-
-    @Slot(str, result=str)
-    def unify_thoughts(self, base_dir):
-        """
-        Called from QML when the user picks a directory.
-        """
-        # strip file:/// if necessary
-        path = base_dir.replace("file://", "")
-
-        if base_dir.startswith("file:///"):
-            base_dir = urllib.parse.unquote(base_dir.replace("file://", ""))
-            if os.name == 'nt' and base_dir.startswith("/"):
-                base_dir = base_dir[1:]
-        print("Unify Thoughts on directory:", base_dir)
-        output = io.StringIO()
-
-        try:
-            with contextlib.redirect_stdout(output), contextlib.redirect_stderr(output):
-                unifyTXT.move_any_txt_files(base_dir)
-                print("Unify complete.")
-
-        except Exception as e:
-            print("Error during unify:", e)
-
-        return output.getvalue()
-
-    @Slot(str, result=str)
-    def remove_8_channel(self, base_dir):
-        """
-        Called from QML when the user picks a directory to remove 8 channel data.
-        """
-        # Decode URL path
-        if base_dir.startswith("file:///"):
-            base_dir = urllib.parse.unquote(base_dir.replace("file://", ""))
-            if os.name == 'nt' and base_dir.startswith("/"):
-                base_dir = base_dir[1:]
-        print("Removing 8 Channel data form:", base_dir)
-        output = io.StringIO()
-        try:
-            with contextlib.redirect_stdout(output), contextlib.redirect_stderr(output):
-                remove8channel.file_remover(base_dir)
-                print("8 Channel Data Removal complete.")
-        except Exception as e:
-            print("Error during cleanup: ", e)
-
     @Slot(str)
     def setDataMode(self, mode):
         """
@@ -912,116 +747,6 @@ class BrainwavesBackend(QObject):
         self.board = BoardShim(BoardIds.CYTON_DAISY_BOARD.value, params)
         print("\nLive headset board initialized.")
 
-    # Start of change : Added Cloud Computing (Transfer Data) functionality 
-    @Slot()
-    def browse_private_key_dir(self):
-        file_dialog = QFileDialog()
-        file_dialog.setFileMode(QFileDialog.FileMode.Directory)
-        file_dialog.setViewMode(QFileDialog.ViewMode.List)
-        if file_dialog.exec():
-            file_paths = file_dialog.selectedFiles()
-            if file_paths:
-                self.root_object.findChild(QObject, "privateKeyDirInput").setProperty("text", file_paths[0])
-
-    @Slot()
-    def browse_source_dir(self):
-        file_dialog = QFileDialog()
-        file_dialog.setFileMode(QFileDialog.FileMode.Directory)
-        file_dialog.setViewMode(QFileDialog.ViewMode.List)
-        if file_dialog.exec():
-            file_paths = file_dialog.selectedFiles()
-            if file_paths:
-                self.root_object.findChild(QObject, "sourceDirInput").setProperty("text", file_paths[0])
-
-    @Slot()
-    def browse_target_dir(self):
-        file_dialog = QFileDialog()
-        file_dialog.setFileMode(QFileDialog.FileMode.Directory)
-        file_dialog.setViewMode(QFileDialog.ViewMode.List)
-        if file_dialog.exec():
-            file_paths = file_dialog.selectedFiles()
-            if file_paths:
-                self.root_object.findChild(QObject, "targetDirInput").setProperty("text", file_paths[0])
-
-    @Slot()
-    def save_config(self):
-        selected_file, _ = QFileDialog.getSaveFileName(
-            None,
-            "Save config file",
-            "",
-            "INI Files (*.ini)"
-        )
-
-        if selected_file:
-            if not selected_file.endswith(".ini"):
-                selected_file += ".ini"
-
-            with open(selected_file, 'w') as configfile:
-                self.config['data'] = {
-                    "-HOST-": self.root_object.findChild(QObject, "hostInput").property("text"),
-                    "-USERNAME-": self.root_object.findChild(QObject, "usernameInput").property("text"),
-                    "-PRIVATE_KEY-": self.root_object.findChild(QObject, "privateKeyDirInput").property("text"),
-                    "-IGNORE_HOST_KEY-": self.root_object.findChild(QObject, "ignoreHostKeyCheckbox").property("checked"),
-                    "-SOURCE-": self.root_object.findChild(QObject, "sourceDirInput").property("text"),
-                    "-TARGET-": self.root_object.findChild(QObject, "targetDirInput").property("text"),
-                }
-                self.config.write(configfile)
-
-    @Slot()
-    def load_config(self):
-        selected_file, _ = QFileDialog.getOpenFileName(
-            None,
-            "Load config file",
-            "",
-            "INI Files (*.ini)"
-        )
-
-        try:
-            if selected_file:
-                self.config.read(selected_file)
-
-                self.root_object.findChild(QObject, "hostInput").setProperty("text", self.config["data"]["-HOST-"])
-                self.root_object.findChild(QObject, "usernameInput").setProperty("text", self.config["data"]["-USERNAME-"])
-                self.root_object.findChild(QObject, "privateKeyDirInput").setProperty("text", self.config["data"]["-PRIVATE_KEY-"])
-                self.root_object.findChild(QObject, "ignoreHostKeyCheckbox").setProperty("checked", self.config["data"]["-IGNORE_HOST_KEY-"].lower() in ("true"))
-                self.root_object.findChild(QObject, "sourceDirInput").setProperty("text", self.config["data"]["-SOURCE-"])
-                self.root_object.findChild(QObject, "targetDirInput").setProperty("text", self.config["data"]["-TARGET-"])
-
-        except Exception as e:
-            QMessageBox.critical(None, "Loading failed", "Error: " + str(e))
-
-    @Slot()
-    def clear_config(self):
-        self.root_object.findChild(QObject, "hostInput").setProperty("text", "")
-        self.root_object.findChild(QObject, "usernameInput").setProperty("text", "")
-        self.root_object.findChild(QObject, "privateKeyDirInput").setProperty("text", "")
-        self.root_object.findChild(QObject, "ignoreHostKeyCheckbox").setProperty("checked", True)  # Reset checkbox to checked
-        self.root_object.findChild(QObject, "sourceDirInput").setProperty("text", "")
-        self.root_object.findChild(QObject, "targetDirInput").setProperty("text", "/home/")  # Reset to default
-
-    @Slot()
-    def upload(self):
-        try:
-            svrcon = fileTransfer(
-                self.root_object.findChild(QObject, "hostInput").property("text"),
-                self.root_object.findChild(QObject, "usernameInput").property("text"),
-                self.root_object.findChild(QObject, "privateKeyDirInput").property("text"),
-                self.root_object.findChild(QObject, "passwordInput").property("text"),
-                self.root_object.findChild(QObject, "ignoreHostKeyCheckbox").property("checked")
-            )
-            source_dir = self.root_object.findChild(QObject, "sourceDirInput").property("text")
-            target_dir = self.root_object.findChild(QObject, "targetDirInput").property("text")
-
-            if source_dir and target_dir:
-                svrcon.transfer(source_dir, target_dir)
-                QMessageBox.information(None, "Upload complete")
-            else:
-                QMessageBox.critical(None, "Upload failed", "Please ensure that all fields have been filled!")
-
-        except Exception as e:
-            QMessageBox.critical(None, "Upload failed", "Please ensure that your inputs are correct and that the server is running\n\nERROR:\n" + str(e))
-
-    # End of change : Added Cloud Computing (Transfer Data) functionality 
 
 
 if __name__ == "__main__":
@@ -1036,16 +761,18 @@ if __name__ == "__main__":
     drone_camera_controller = DroneCameraController()
 
     # Initialize backend before loading QML
+    cloud_api = CloudAPI()
     backend = BrainwavesBackend()
-    developers = developersBackend()
+    developers = DevelopersAPI()
+    shuffler_api = ShufflerAPI()
     engine.rootContext().setContextProperty("tabController", tab_controller)
     engine.rootContext().setContextProperty("backend", backend)
     engine.rootContext().setContextProperty("developersBackend", developers)
+    engine.rootContext().setContextProperty("cloudAPI", cloud_api)
     engine.rootContext().setContextProperty("imageModel", [])  # Initialize empty model
-    engine.rootContext().setContextProperty("fileShufflerGui", backend)  # For file shuffler
     engine.rootContext().setContextProperty("cameraController", backend.camera_controller)
     print("Controllers exposed to QML")
-    engine.rootContext().setContextProperty("fileShufflerGui", backend)  # For file shuffler
+    engine.rootContext().setContextProperty("fileShufflerGui", shuffler_api)  # For file shuffler
     engine.rootContext().setContextProperty("manualNaoController", manual_nao_controller)
     engine.rootContext().setContextProperty("droneCameraController", drone_camera_controller)
 
@@ -1057,16 +784,8 @@ if __name__ == "__main__":
     # Start of change : Added Cloud Computing (Transfer Data) functionality 
 
     if engine.rootObjects():
-        backend.root_object = engine.rootObjects()[0]
-
-        # ✅ connect QML button clicks to backend slots
-        backend.root_object.findChild(QObject, "saveConfigButton").clicked.connect(backend.save_config)
-        backend.root_object.findChild(QObject, "loadConfigButton").clicked.connect(backend.load_config)
-        backend.root_object.findChild(QObject, "clearConfigButton").clicked.connect(backend.clear_config)
-        backend.root_object.findChild(QObject, "uploadButton").clicked.connect(backend.upload)
-        backend.root_object.findChild(QObject, "privateKeyDirButton").clicked.connect(backend.browse_private_key_dir)
-        backend.root_object.findChild(QObject, "sourceDirButton").clicked.connect(backend.browse_source_dir)
-        backend.root_object.findChild(QObject, "targetDirButton").clicked.connect(backend.browse_target_dir)
+        cloud_api.set_root_object(engine.rootObjects()[0])
+        cloud_api.connect_buttons()
     else:
         print("Error: QML not loaded properly.")
 
