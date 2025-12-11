@@ -177,8 +177,8 @@ Rectangle {
             Layout.preferredHeight: fileShufflerView.height * 0.6
             radius: 4
             border.width: 1
-            border.color: "#D0D0D0"
-            color: "transparent"
+            border.color: "#d0d6df"
+            color: "#5f6b7a"
 
             RowLayout {
                 anchors.fill: parent

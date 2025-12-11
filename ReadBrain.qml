@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.15
 import QtQuick.Window 2.15
 import QtQuick3D 6.7
 
-// Brainwave Reading view
+// Read Brain view
 Rectangle {
     property string selectedModel: "Random Forest"
     property string currentFramework: "PyTorch"
@@ -232,32 +232,45 @@ Rectangle {
                 }
             }
 
+            Text { 
+              anchors.horizontalCenter: parent.horizontalCenter
+              text: "Flight Log"
+              color: "white"
+              font.bold: true
+              font.pixelSize: 15
+              horizontalAlignment: Text.AlignHCenter
+              Layout.alignment: Qt.AlignHCenter
+            }
             // Flight Log
-            GroupBox {
-                title: "Flight Log"
-                width: parent.width * 0.5
-                height: parent.height * 0.2
-                anchors.horizontalCenter: parent.horizontalCenter
-                label: Text { 
-                    text: qsTr("Flight Log"); font.bold: true; color: "white" 
-                }
+            GroupBox { 
+              width: parent.width * 0.7
+              height: parent.height * 0.2
+              anchors.horizontalCenter: parent.horizontalCenter              
+              background: Rectangle {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.minimumHeight: root.minControlSize
+                Layout.minimumWidth: root.minControlSize
+                implicitWidth: Math.max(root.minControlSize, Math.min(root.width * 0.35, 420))
+                implicitHeight: Math.max(root.minControlSize,Math.min(root.height * 0.25, 220))
+                color:"#5f6b7a"
+                radius: 6 
+                border.color:"#d0d6df"
+                border.width: 1 
+              }
+              ScrollView {
+                anchors.fill: parent
+                clip: true
 
-                Rectangle {
-                    anchors.fill: parent
-                    color: "white"
-                    ListView {
-                        id: flightLogView
-                        anchors.fill: parent
-                        model: ListModel {
-                        }
-                        delegate: Text {
-                            text: log
-                            font.pixelSize: parent.width * 0.03
-                            font.bold: true
-                            color: "black"
-                        }
-                    }
+                TextArea {
+                  id: flightLog
+                  wrapMode: Text.WrapAnywhere
+                  readOnly: true
+                  font.pixelSize: parent.width * 0.025
+                  color: "black"
+                  background: Rectangle { color: "white" }
                 }
+              }
             }
 
             Connections {
@@ -375,16 +388,31 @@ Rectangle {
                 }
             }
 
+        Text {
+            text: "Console Log"
+            color: "white"
+            font.bold: true
+            font.pixelSize: 15
+            horizontalAlignment: Text.AlignHCenter
+            Layout.alignment: Qt.AlignHCenter
+        }
             // Console Log
             GroupBox {
-                title: "Console Log"
-                width: parent.width * 0.9
-                height: parent.height * 0.25
-                label: Text { 
-                    text: qsTr("Console Log"); 
-                    font.bold: true; 
-                    color: "white" 
-                }
+              width: parent.width * 0.9
+              height: parent.height * 0.25 
+              background: Rectangle {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.minimumHeight: root.minControlSize
+                Layout.minimumWidth: root.minControlSize
+                implicitWidth: Math.max(root.minControlSize, Math.min(root.width * 0.35, 420))
+                implicitHeight: Math.max(root.minControlSize,Math.min(root.height * 0.25, 220))
+                color:"#5f6b7a"
+                radius: 6 
+                border.color:"#d0d6df"
+                border.width: 1 
+              }
+
 
                 ScrollView {
                     anchors.fill: parent
@@ -591,8 +619,8 @@ Rectangle {
 
     // Connect Button - Fixed to bottom left
     Rectangle {
-        width: parent.width * 0.08
-        height: parent.height * 0.12
+        width: parent.width * 0.06
+        height: parent.height * 0.10
         color: "#242c4d"
         anchors.left: parent.left
         anchors.bottom: parent.bottom
@@ -620,15 +648,14 @@ Rectangle {
     }
 
     // Radio Buttons - Fixed to bottom left, next to connect
-    Row {
+   Row {
         width: parent.width * 0.25
         height: parent.height * 0.06
         spacing: width * 0.02
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.leftMargin: parent.width * 0.14
-        anchors.bottomMargin: parent.height * 0.03
-
+        anchors.bottomMargin: parent.height * 0.03      
         RadioButton {
             id: liveRadio
             text: "Live Data"
