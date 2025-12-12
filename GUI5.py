@@ -19,6 +19,7 @@ from predictions_local.brainflowprocessor import BrainFlowDataProcessor
 from predictions_local.deeplearningpytorchpredictor import DeeplearningPytorchPredictor
 from cameraview.camera_controller import CameraController
 from NAO6.nao_connection import send_command
+import asyncio
 # from Developers.hofCharts import main as hofCharts, ticketsByDev_text NA
 
 from developers_api import DevelopersAPI
@@ -117,13 +118,27 @@ class BrainwavesBackend(QObject):
         self.plots_dir = os.path.abspath("plotscode/plots")  # Base plots directory
         self.current_dataset = "refresh"  # Default dataset to display
         self.connected = False
-        self.drone_lock = threading.Lock()
+        self.drone_lock = threading.RLock()  # <-- reentrant lock avoids deadlock
 
         # Timer to send periodic hover signals ()
         self.hover_timer = QTimer()
         self.hover_timer.timeout.connect(self.hover_loop)
 
         self.is_flying = False
+
+
+        #Movement clumping
+        self.step_cm = 30                     # each "move" command = 30 cm
+        self.clump_dir = None                 # current direction being clumped
+        self.clump_count = 0                  # how many commands in this batch
+        self.clump_window_ms = 1000           # 1 second clump window
+
+        self.clump_timer = QTimer()
+        self.clump_timer.setSingleShot(True)
+        self.clump_timer.timeout.connect(self._flush_clumped_move)
+
+        # optional override for movement distance (used by clumper)
+        self._movement_distance_override = None
 
         try:
             self.tello = Tello(retry_count=1)
@@ -162,7 +177,8 @@ class BrainwavesBackend(QObject):
 
     def hover_loop(self):
         if self.is_flying:
-            self.tello.send_rc_control(0, 0, 0, 0)
+            pass
+            #self.tello.send_rc_control(0, 0, 0, 0)
 
     @Slot(str)
     def selectModel(self, model_name):
@@ -363,7 +379,7 @@ class BrainwavesBackend(QObject):
             
     @Slot()
     def connectDrone(self):
-        # Mock function to simulate drone connection
+        self.doDroneTAction('connect')
         self.flight_log.insert(0, "Drone connected.")
         self.flightLogUpdated.emit(self.flight_log)
         self.logMessage.emit("Drone connected.")
@@ -385,7 +401,102 @@ class BrainwavesBackend(QObject):
 
     @Slot(str)
     def doDroneTAction(self, action):
-        threading.Thread(target=self.getDroneAction, args=(action,), daemon=True).start()
+        # Basic movement actions are clumped (time-based) with implied distance.
+        if action in ('up', 'down', 'forward', 'backward', 'left', 'right'):
+            self._enqueue_move(action)
+        else:
+            # All other actions (takeoff, land, flips, stream, etc.)
+            # go through the existing handler.
+            threading.Thread(
+                target=self.getDroneAction,
+                args=(action,),
+                daemon=True,
+            ).start()
+
+
+    def _enqueue_move(self, direction: str):
+        """
+        Queue a single movement command with time-based clumping.
+        Each call means "move self.step_cm in this direction".
+
+        If more commands with the same direction arrive within 1s,
+        they get clumped into a single larger move.
+        """
+        with self.drone_lock:
+            if self.clump_dir is None:
+                # start new batch
+                self.clump_dir = direction
+                self.clump_count = 1
+            elif self.clump_dir == direction:
+                # same direction → just increase count
+                self.clump_count += 1
+            else:
+                # different direction → flush existing batch immediately
+                d = self.clump_dir
+                c = self.clump_count
+                self.clump_dir = direction
+                self.clump_count = 1
+                threading.Thread(
+                    target=self._execute_clumped_move,
+                    args=(d, c),
+                    daemon=True,
+                ).start()
+
+            # (re)start 1s timer
+            self.clump_timer.stop()
+            self.clump_timer.start(self.clump_window_ms)
+
+    def _flush_clumped_move(self):
+        """
+        Called by QTimer after 1s of no new movement commands.
+        Flushes the current batch in a background thread.
+        """
+        with self.drone_lock:
+            if self.clump_dir is None or self.clump_count == 0:
+                return
+            direction = self.clump_dir
+            count = self.clump_count
+            self.clump_dir = None
+            self.clump_count = 0
+
+        threading.Thread(
+            target=self._execute_clumped_move,
+            args=(direction, count),
+            daemon=True,
+        ).start()
+
+    def _execute_clumped_move(self, direction: str, count: int):
+        """
+        Runs in a background thread.
+        Executes one aggregated move by calling getDroneAction once
+        with an overridden distance: count * self.step_cm.
+        """
+        distance = count * self.step_cm
+        try:
+            if not self.connected:
+                self.logMessage.emit("Drone not connected. Please connect first.")
+                self.flight_log.insert(0, "Command failed: Drone not connected")
+                self.flightLogUpdated.emit(self.flight_log)
+                return
+
+            with self.drone_lock:
+                # tell getDroneAction to use this distance instead of 30cm
+                old = self._movement_distance_override
+                self._movement_distance_override = distance
+                try:
+                    # NOTE: this will hit the normal movement branches
+                    # in getDroneAction (up/forward/etc.)
+                    self.getDroneAction(direction)
+                finally:
+                    self._movement_distance_override = old
+
+        except Exception as e:
+            error_msg = f"Error during clumped move {direction}: {str(e)}"
+            self.logMessage.emit(error_msg)
+            self.flight_log.insert(0, error_msg)
+            self.flightLogUpdated.emit(self.flight_log)
+            if "Tello" in str(e) or "timeout" in str(e).lower():
+                self.connected = False
 
     @Slot(str)
     def getDroneAction(self, action):
@@ -408,41 +519,50 @@ class BrainwavesBackend(QObject):
                 def record_action(name, value=None):
                     self.action_log.append((name, value))
 
+                # movement actions: distance is normally 30cm,
+                # but can be overridden by the clumper
                 if action == 'up':
-                    self.tello.move_up(30)
-                    record_action('up', 30)
+                    dist = self._movement_distance_override or 30
+                    self.tello.move_up(dist)
+                    record_action('up', dist)
                     self.logMessage.emit("Moving up")
-                    self.flight_log.insert(0, "Moving up 30cm")
-					
+                    self.flight_log.insert(0, f"Moving up {dist}cm")
+
                 elif action == 'down':
-                    self.tello.move_down(30)
-                    record_action('down', 30)
+                    dist = self._movement_distance_override or 30
+                    self.tello.move_down(dist)
+                    record_action('down', dist)
                     self.logMessage.emit("Moving down")
-                    self.flight_log.insert(0, "Moving down 30cm")
-					
+                    self.flight_log.insert(0, f"Moving down {dist}cm")
+
                 elif action == 'forward':
-                    self.tello.move_forward(30)
-                    record_action('forward', 30)
+                    dist = self._movement_distance_override or 30
+                    self.tello.move_forward(dist)
+                    record_action('forward', dist)
                     self.logMessage.emit("Moving forward")
-                    self.flight_log.insert(0, "Moving forward 30cm")
-					
+                    self.flight_log.insert(0, f"Moving forward {dist}cm")
+
                 elif action == 'backward':
-                    self.tello.move_back(30)
-                    record_action('backward', 30)
+                    dist = self._movement_distance_override or 30
+                    self.tello.move_back(dist)
+                    record_action('backward', dist)
                     self.logMessage.emit("Moving backward")
-                    self.flight_log.insert(0, "Moving backward 30cm")
-					
+                    self.flight_log.insert(0, f"Moving backward {dist}cm")
+
                 elif action == 'left':
-                    self.tello.move_left(30)
-                    record_action('left', 30)
+                    dist = self._movement_distance_override or 30
+                    self.tello.move_left(dist)
+                    record_action('left', dist)
                     self.logMessage.emit("Moving left")
-                    self.flight_log.insert(0, "Moving left 30cm")
-					
+                    self.flight_log.insert(0, f"Moving left {dist}cm")
+
                 elif action == 'right':
-                    self.tello.move_right(30)
-                    record_action('right', 30)
+                    dist = self._movement_distance_override or 30
+                    self.tello.move_right(dist)
+                    record_action('right', dist)
                     self.logMessage.emit("Moving right")
-                    self.flight_log.insert(0, "Moving right 30cm")
+                    self.flight_log.insert(0, f"Moving right {dist}cm")
+
 					
                 elif action == 'turn_left':
                     self.tello.rotate_counter_clockwise(45)
@@ -761,6 +881,7 @@ if __name__ == "__main__":
     drone_camera_controller = DroneCameraController()
 
     # Initialize backend before loading QML
+    # Queue holds just directions now: e.g. "forward", "left", etc.
     cloud_api = CloudAPI()
     backend = BrainwavesBackend()
     developers = DevelopersAPI()
