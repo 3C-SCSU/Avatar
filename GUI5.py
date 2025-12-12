@@ -20,6 +20,8 @@ from predictions_local.deeplearningpytorchpredictor import DeeplearningPytorchPr
 from cameraview.camera_controller import CameraController
 from NAO6.nao_connection import send_command
 import asyncio
+import copy
+import queue
 # from Developers.hofCharts import main as hofCharts, ticketsByDev_text NA
 
 from developers_api import DevelopersAPI
@@ -58,6 +60,7 @@ class BrainwavesBackend(QObject):
     logMessage = Signal(str)
     naoStarted = Signal()
     naoEnded = Signal()
+    enqueueMoveRequested = Signal(str)
 
     @Slot()
     def startNaoManual(self):
@@ -136,9 +139,18 @@ class BrainwavesBackend(QObject):
         self.clump_timer = QTimer()
         self.clump_timer.setSingleShot(True)
         self.clump_timer.timeout.connect(self._flush_clumped_move)
+        self.enqueueMoveRequested.connect(self._enqueue_move)
 
         # optional override for movement distance (used by clumper)
         self._movement_distance_override = None
+
+        #Tello command queue 
+        self.cmd_queue = queue.Queue()
+        self._drone_worker = threading.Thread(
+            target=self._drone_loop,
+            daemon=True,
+        )
+        self._drone_worker.start()
 
         try:
             self.tello = Tello(retry_count=1)
@@ -161,6 +173,38 @@ class BrainwavesBackend(QObject):
                 self.bcicon = None
         else:
             self.bcicon = None
+
+    # Command queue helpers
+    def _queue_action(self, action: str, dist: int | None = None):
+        """
+        Put a command into the Tello queue.
+        dist is an optional distance override (cm) for movement commands.
+        """
+        self.cmd_queue.put((action, dist))
+
+    def _drone_loop(self):
+        """
+        Single worker thread that owns the Tello.
+        It pulls commands from the queue and executes them in FIFO order.
+        """
+        while True:
+            action, dist = self.cmd_queue.get()
+            try:
+                # Set distance override if provided
+                old = self._movement_distance_override
+                if dist is not None:
+                    self._movement_distance_override = dist
+                try:
+                    # All low-level execution is here
+                    self.getDroneAction(action)
+                finally:
+                    self._movement_distance_override = old
+            except Exception as e:
+                error_msg = f"Worker error during {action}: {e}"
+                print(error_msg)
+                self.logMessage.emit(error_msg)
+            finally:
+                self.cmd_queue.task_done()
 
     @Slot()
     def takeoff(self):
@@ -401,27 +445,16 @@ class BrainwavesBackend(QObject):
 
     @Slot(str)
     def doDroneTAction(self, action):
-        # Basic movement actions are clumped (time-based) with implied distance.
         if action in ('up', 'down', 'forward', 'backward', 'left', 'right'):
-            self._enqueue_move(action)
+            # Clumped in main thread; clumper will enqueue final chunks.
+            self.enqueueMoveRequested.emit(action)
         else:
-            # All other actions (takeoff, land, flips, stream, etc.)
-            # go through the existing handler.
-            threading.Thread(
-                target=self.getDroneAction,
-                args=(action,),
-                daemon=True,
-            ).start()
+            # Non-movement actions go straight into the queue.
+            self._queue_action(action)
+
 
 
     def _enqueue_move(self, direction: str):
-        """
-        Queue a single movement command with time-based clumping.
-        Each call means "move self.step_cm in this direction".
-
-        If more commands with the same direction arrive within 1s,
-        they get clumped into a single larger move.
-        """
         with self.drone_lock:
             if self.clump_dir is None:
                 # start new batch
@@ -436,21 +469,15 @@ class BrainwavesBackend(QObject):
                 c = self.clump_count
                 self.clump_dir = direction
                 self.clump_count = 1
-                threading.Thread(
-                    target=self._execute_clumped_move,
-                    args=(d, c),
-                    daemon=True,
-                ).start()
+                # flush previous batch (this only enqueues work)
+                self._execute_clumped_move(d, c)
 
-            # (re)start 1s timer
+            # (re)start 1s timer (Qt main thread)
             self.clump_timer.stop()
             self.clump_timer.start(self.clump_window_ms)
 
+
     def _flush_clumped_move(self):
-        """
-        Called by QTimer after 1s of no new movement commands.
-        Flushes the current batch in a background thread.
-        """
         with self.drone_lock:
             if self.clump_dir is None or self.clump_count == 0:
                 return
@@ -459,44 +486,31 @@ class BrainwavesBackend(QObject):
             self.clump_dir = None
             self.clump_count = 0
 
-        threading.Thread(
-            target=self._execute_clumped_move,
-            args=(direction, count),
-            daemon=True,
-        ).start()
+        # Just enqueue the appropriate chunks; execution is in worker thread
+        self._execute_clumped_move(direction, count)
+
+
+    def _split_distance(self, total, max_step=500):
+        """
+        Split a total distance into chunks of at most max_step.
+        Example: 1100 -> [500, 500, 100]
+        """
+        chunks = []
+        remaining = total
+        while remaining > 0:
+            step = min(remaining, max_step)
+            chunks.append(step)
+            remaining -= step
+        return chunks
 
     def _execute_clumped_move(self, direction: str, count: int):
-        """
-        Runs in a background thread.
-        Executes one aggregated move by calling getDroneAction once
-        with an overridden distance: count * self.step_cm.
-        """
-        distance = count * self.step_cm
-        try:
-            if not self.connected:
-                self.logMessage.emit("Drone not connected. Please connect first.")
-                self.flight_log.insert(0, "Command failed: Drone not connected")
-                self.flightLogUpdated.emit(self.flight_log)
-                return
+        total_distance = count * self.step_cm
+        chunks = self._split_distance(total_distance, max_step=500)
 
-            with self.drone_lock:
-                # tell getDroneAction to use this distance instead of 30cm
-                old = self._movement_distance_override
-                self._movement_distance_override = distance
-                try:
-                    # NOTE: this will hit the normal movement branches
-                    # in getDroneAction (up/forward/etc.)
-                    self.getDroneAction(direction)
-                finally:
-                    self._movement_distance_override = old
+        for dist in chunks:
+            self._queue_action(direction, dist)
 
-        except Exception as e:
-            error_msg = f"Error during clumped move {direction}: {str(e)}"
-            self.logMessage.emit(error_msg)
-            self.flight_log.insert(0, error_msg)
-            self.flightLogUpdated.emit(self.flight_log)
-            if "Tello" in str(e) or "timeout" in str(e).lower():
-                self.connected = False
+
 
     @Slot(str)
     def getDroneAction(self, action):
@@ -604,11 +618,13 @@ class BrainwavesBackend(QObject):
                     self.tello.takeoff()
                     self.logMessage.emit("Taking off")
                     self.flight_log.insert(0, "Taking off")
+                    self.action_log.clear()
 				
                 elif action == 'land':
                     self.tello.land()
                     self.logMessage.emit("Landing")
                     self.flight_log.insert(0, "Landing")
+                    self.action_log.clear()
 					
                 elif action == 'go_home':
                     self.go_home()
@@ -644,40 +660,82 @@ class BrainwavesBackend(QObject):
         try:
             self.logMessage.emit("Returning to home by reversing actions...")
             self.flight_log.insert(0, "Returning to home by reversing actions")
-            
-            # Replay actions in reverse order
-            for action, value in reversed(self.action_log):
+
+            # Take a snapshot so we don't race with new actions
+            history = list(self.action_log)  # list of (name, value)
+
+            current_dir = None
+            current_total = 0
+
+            def flush_segment():
+                nonlocal current_dir, current_total
+                if current_dir is None or current_total <= 0:
+                    return
+                # Use the same 500cm safety limit
+                for dist in self._split_distance(current_total, max_step=500):
+                    # Queue a single clumped command (direction + distance)
+                    self._queue_action(current_dir, dist)
+                current_dir = None
+                current_total = 0
+
+            # Walk the history in reverse order
+            for action, value in reversed(history):
+                opp = None
+
+                # Map movement actions to their opposites
                 if action == "up":
-                    self.tello.move_down(value)
+                    opp = "down"
                 elif action == "down":
-                    self.tello.move_up(value)
+                    opp = "up"
                 elif action == "forward":
-                    self.tello.move_back(value)
+                    opp = "backward"
                 elif action == "backward":
-                    self.tello.move_forward(value)
+                    opp = "forward"
                 elif action == "left":
-                    self.tello.move_right(value)
+                    opp = "right"
                 elif action == "right":
-                    self.tello.move_left(value)
-                elif action == "turn_left":
-                    self.tello.rotate_clockwise(value)
-                elif action == "turn_right":
-                    self.tello.rotate_counter_clockwise(value)
-                elif action == "flip_forward":
-                    self.tello.flip_back()
-                elif action == "flip_back":
-                    self.tello.flip_forward()
-                elif action == "flip_left":
-                    self.tello.flip_right()
-                elif action == "flip_right":
-                    self.tello.flip_left()
+                    opp = "left"
 
-            self.tello.land()
-            self.flight_log.insert(0, "Drone landed at home")
-            self.logMessage.emit("Drone landed at home safely.")
+                if opp is not None:
+                    # Use recorded distance if available, otherwise default step size
+                    dist = value if (value is not None) else self.step_cm
 
-            self.action_log.clear()
+                    # If same direction as current segment, accumulate; otherwise flush + start new
+                    if current_dir == opp:
+                        current_total += dist
+                    else:
+                        flush_segment()
+                        current_dir = opp
+                        current_total = dist
+                else:
+                    # For non-movement actions, flush the current segment and enqueue them individually
+                    flush_segment()
+                    if action == "turn_left":
+                        self._queue_action("turn_right")
+                    elif action == "turn_right":
+                        self._queue_action("turn_left")
+                    elif action == "flip_forward":
+                        self._queue_action("flip_back")
+                    elif action == "flip_back":
+                        self._queue_action("flip_forward")
+                    elif action == "flip_left":
+                        self._queue_action("flip_right")
+                    elif action == "flip_right":
+                        self._queue_action("flip_left")
+                    # ignore 'takeoff', 'land', 'go_home' themselves, etc.
+
+            # Flush any remaining movement in the last segment
+            flush_segment()
+
+            # Finally, land when we get "home"
+            self._queue_action("land")
+
+            self.flight_log.insert(0, "Go-home path queued")
+            self.logMessage.emit("Go-home path queued.")
             self.flightLogUpdated.emit(self.flight_log)
+
+            # Reset action log for the next flight
+            self.action_log.clear()
 
         except Exception as e:
             error_msg = f"Error during go_home: {str(e)}"
