@@ -111,30 +111,33 @@ for category in $categories; do
     randomize_success_count=0
     
     temp_file_list_temp=$(mktemp)
-    find "$category_path" -maxdepth 1 -type f -name 'temp*.*' -print > "$temp_file_list_temp"
+    find "$category_path" -maxdepth 1 -type f -name 'temp*.*' -print | sort > "$temp_file_list_temp"
+
+    #count files
+    file_count=$(wc -l < "$temp_file_list_temp" | tr -d '[:space:]')
+    
+    #generate 1 to file_count and shuffle
+    seq_list=$(seq 1 "$file_count")
+    shuffled=$(printf "%s\n" $seq_list | awk 'BEGIN{srand()} {print rand(), $0}' | sort -k1,1n | awk '{print $2}')
+    i=1
 
     while IFS= read -r file; do
-        random_number=$(awk 'BEGIN{srand(); print int(rand()*1000000)}')
-        
         filename=$(basename "$file")
         ext="${filename##*.}"
         dir=$(dirname "$file")
-        target_name="$dir/$category-$random_number.$ext"
-        
-        i=0
-        while [ -f "$target_name" ]; do
-            random_number=$(awk 'BEGIN{srand(); print int(rand()*1000000)}')
-            target_name="$dir/$category-$random_number-$i.$ext"
-            i=$((i + 1))
-        done
-        
+
+        num=$(printf "%s\n" "$shuffled" | sed -n "${i}p")
+        target_name="$dir/$num.$ext"
+
         if mv "$file" "$target_name"; then
             randomize_success_count=$((randomize_success_count + 1))
         else
-            echo "ERROR: Failed to randomize filename for \"$file\"" >&2
+            echo "ERROR: Failed to rename \"$file\" to \"$target_name\"" >&2
             categories_with_issues="$categories_with_issues $category"
             categories_with_issues_count=$((categories_with_issues_count + 1))
         fi
+
+        i=$((i + 1))
     done < "$temp_file_list_temp"
     
     rm -f "$temp_file_list_temp"
@@ -144,7 +147,7 @@ for category in $categories; do
     timestamp_success_count=0
     
     temp_file_list_final=$(mktemp)
-    find "$category_path" -maxdepth 1 -type f -name "$category-*.*" -print > "$temp_file_list_final"
+    find "$category_path" -maxdepth 1 -type f -name '*.*' -print > "$temp_file_list_final"
 
     while IFS= read -r file; do
         if [ "$OS" = "Darwin" ]; then
