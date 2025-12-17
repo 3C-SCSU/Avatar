@@ -153,7 +153,7 @@ class BrainwavesBackend(QObject):
         self._drone_worker.start()
 
         try:
-            self.tello = Tello(retry_count=1)
+            self.tello = Tello()
         except Exception as e:
             print(f"Warning: Failed to initialize Tello drone: {e}")
             self.logMessage.emit(f"Warning: Failed to initialize Tello drone: {e}")
@@ -517,7 +517,7 @@ class BrainwavesBackend(QObject):
         with self.drone_lock:
             try:
                 if action == 'connect':
-                    self.tello.connect(wait_for_state=False)
+                    self.tello.connect()
                     battery = self.tello.get_battery()
                     self.connected = True
                     self.logMessage.emit(f"Connected to Tello Drone (Battery: {battery}%)")
