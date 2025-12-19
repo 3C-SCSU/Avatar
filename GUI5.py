@@ -123,9 +123,9 @@ class BrainwavesBackend(QObject):
         self.connected = False
         self.drone_lock = threading.RLock()  # <-- reentrant lock avoids deadlock
 
-        # Timer to send periodic hover signals ()
+        # This timer instance will fire off the parameterized method each timer fire
         self.hover_timer = QTimer()
-        self.hover_timer.timeout.connect(self.hover_loop)
+        self.hover_timer.timeout.connect(self.hover_callback)
 
         self.is_flying = False
 
@@ -211,18 +211,12 @@ class BrainwavesBackend(QObject):
         self.tello.takeoff()
         self.connected = True
         self.is_flying = True
-        self.hover_timer.start(200)
-        self.logMessage.emit("Hovering")
-    
-    @Slot()
-    def hover(self):
-        self.tello.send_rc_control(0, 0, 0, 0)
+        self.hover_timer.start(200) #every 200 ms, the hover callback will be invoked
         self.logMessage.emit("Hovering")
 
-    def hover_loop(self):
+    def hover_callback(self):
         if self.is_flying:
-            pass
-            #self.tello.send_rc_control(0, 0, 0, 0)
+            self.tello.send_rc_control(0, 0, 0, 0)
 
     @Slot(str)
     def selectModel(self, model_name):
