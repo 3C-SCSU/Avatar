@@ -1,4 +1,4 @@
-## Title: Attack on Open-Source: Hijacking your Neurons
+## Attack on Open-Source: Hijacking your Neurons
 
 Our open-source project implemented a neural A.I. classification to bridge Quantum computing to a biomimetic practical nanotechnology integration into the up coming telekinesis systems, that uses your brain connectivity. The dataset has a 96.11% accuracy to control devices with your thoughts, opening the gates to a both ways of brain entanglement or activation using solfeggio binaural beats and Trifecta Perfect Geometry to decode the matrix.
 
@@ -28,6 +28,8 @@ House Of Flying Daggers
 https://www.youtube.com/watch?v=Tk9tqFd5sGI
 Edge of Tomorrow
 https://www.youtube.com/watch?v=yUmSVcttXnI
+
+- Signed: Cloud Computing Club
 
 ---
 
