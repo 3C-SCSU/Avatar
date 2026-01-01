@@ -29,7 +29,7 @@ https://www.youtube.com/watch?v=Tk9tqFd5sGI
 Edge of Tomorrow
 https://www.youtube.com/watch?v=yUmSVcttXnI
 
-- Signed: Adriano Cavalcanti, Yash J. Patel, John Knudson, and Wei-Ying Hsaio
+- Signed: Adriano Cavalcanti, Yash J. Patel, John Knudson, and Wei-Ying Hsaio, Cloud Computing Club (54 Contributors)
 
 ---
 
