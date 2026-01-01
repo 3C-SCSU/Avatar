@@ -2,7 +2,7 @@
 
 Our open-source project implemented a neural A.I. classification to bridge Quantum computing to a biomimetic practical nanotechnology integration into the up coming telekinesis systems, that uses your brain connectivity. The dataset has a 96.11% accuracy to control devices with your thoughts, opening the gates to a both ways of brain entanglement or activation using solfeggio binaural beats and Trifecta Perfect Geometry to decode the matrix.
 
-We released 10,000 .txt brainwave files with the code base on Python/Rust/QML using our cloud based human system architecture and EEG biology direct and reverse communication concepts.
+We were ready also to release 10,000 .txt brainwave files with the code base on Python/Rust/QML using our cloud based human system architecture and EEG biology direct and reverse communication concepts.
 
 Despite the overwhelming amount of data and a large code-base available on GitHub as an open-source initiative, the peer review process started playing malicious attack against our organization, as it can be checked in our full disclosure of the events available in the free access on Wasabi S3 Data bucket and GitHub.
 
