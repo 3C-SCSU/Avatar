@@ -19,17 +19,14 @@ BCI Cybersecurity for Neurohaptics Telekinesis Avatars, Biomimetics, MDPI, pg 1-
 You can also join us to fight for your brain sovereignty:
 https://github.com/3C-SCSU/Avatar
 
-Ref. - Sci-Fi becoming reality:
-The Force: Empire Strikes Back
-https://www.youtube.com/watch?v=fxCR2bFWHxM
-Avengers: Endgame
-https://www.youtube.com/watch?v=3Qf3UgVPxiA
-House Of Flying Daggers
-https://www.youtube.com/watch?v=Tk9tqFd5sGI
-Edge of Tomorrow
-https://www.youtube.com/watch?v=yUmSVcttXnI
+- **Ref. – Sci-Fi becoming reality:**
 
-- Signed: Adriano Cavalcanti, Yash J. Patel, John Knudson, and Wei-Ying Hsaio, Cloud Computing Club (54 Contributors)
+  - [The Force: Empire Strikes Back ](https://www.youtube.com/watch?v=fxCR2bFWHxM)
+  - [Avengers: Endgame](https://www.youtube.com/watch?v=3Qf3UgVPxiA)
+  - [House Of Flying Daggers](https://www.youtube.com/watch?v=Tk9tqFd5sGI)
+  - [Edge of Tomorrow](https://www.youtube.com/watch?v=yUmSVcttXnI)
+
+- Signed: Adriano Cavalcanti, Yash J. Patel, John Knudson, and Wei-Ying Hsaio, Cloud Computing Club (54 Contributors) - December 31, 2025
 
 ---
 
