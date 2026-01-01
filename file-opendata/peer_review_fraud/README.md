@@ -19,8 +19,9 @@ BCI Cybersecurity for Neurohaptics Telekinesis Avatars, Biomimetics, MDPI, pg 1-
 You can also join us to fight for your brain sovereignty:
 https://github.com/3C-SCSU/Avatar
 
-- **Ref. – Sci-Fi becoming reality:**
+- **Reference:**
 
+  - [Hijacking your Neurons - mind control](https://stackoverflow.com/questions/79858463/hijacking-your-neurons-mind-control)
   - [The Force: Empire Strikes Back ](https://www.youtube.com/watch?v=fxCR2bFWHxM)
   - [Avengers: Endgame](https://www.youtube.com/watch?v=3Qf3UgVPxiA)
   - [House Of Flying Daggers](https://www.youtube.com/watch?v=Tk9tqFd5sGI)
