@@ -29,7 +29,7 @@ TabButton {
             id: inactiveGradient
             orientation: Gradient.Horizontal
             GradientStop { position: 0.0; color: '#242c4d' }
-            GradientStop { position: 1.0; color: '#344072' }
+            GradientStop { position: 1.0; color: '#5f70b4' }//#3b4e97
         }
 
         // gradient has higher precedence than color, color is fallback
