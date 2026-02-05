@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 # Author: Jason D, 10/06/2025
+# Updated by: Shariq, 01/19.2026 - switched to use GitHub /stats/contributors API
 
 import subprocess
 import os
 import csv
 import argparse
 import re
+import json
+import urllib.request
 from typing import Dict, List
 from collections import defaultdict
 
@@ -14,10 +17,69 @@ try:
 except ImportError:
     raise SystemExit("matplotlib is required. Install with: pip install matplotlib")
 
+# ----------------------------
+# Read contributors from GitHub stats API
+# ----------------------------
+
+def fetch_contributors_from_github(owner: str = "3C-SCSU", repo: str = "Avatar") -> list[tuple[str, int]]:
+    """
+    Fetch contributors from GitHub /stats/contributors API for the given repo.
+    Returns a list of (author, commits) tuples, similar to run_shortlog_all().
+    """
+    url = f"https://api.github.com/repos/{owner}/{repo}/stats/contributors"
+    req = urllib.request.Request(
+        url,
+        headers={
+            "Accept": "application/vnd.github+json",
+            "User-Agent": "Avatar-devCharts-script",
+        },
+    )
+
+    with urllib.request.urlopen(req) as resp:
+        data = json.loads(resp.read().decode("utf-8"))
+
+    rows: list[tuple[str, int]] = []
+    for item in data:
+        # Each item has: "total": <int>, "author": { "login": "...", ... }
+        author_info = item.get("author") or {}
+        login = author_info.get("login", "anonymous")
+        total_commits = item.get("total", 0)
+        rows.append((login, int(total_commits)))
+
+    # Sort descending by commit count
+    rows.sort(key=lambda x: x[1], reverse=True)
+    return rows
+
+
+def get_contributors_from_github_with_adjustments() -> list[tuple[str, int]]:
+    """
+    Wrapper that applies the same adjustments as run_shortlog_all:
+    - Add 15 commits for any contributor whose name/login matches John Knudson.
+    - (Optional) skip the club account if desired.
+    """
+    data = fetch_contributors_from_github()
+
+    adjusted: list[tuple[str, int]] = []
+    for author, commits in data:
+        # It is to make up for all the work that John Knudson did and did not get credit for.
+        # DO NOT CHANGE
+        if "john knudson" in author.lower():
+            commits += 15
+
+        # Optional: skip club account if you know the login
+        # if "3c-scsu" in author.lower():
+        #     continue
+
+        adjusted.append((author, commits))
+
+    adjusted.sort(key=lambda x: x[1], reverse=True)
+    return adjusted
 
 # ----------------------------
-# Read git commit data
+# Legacy: Read git commit data from local repo
+# (kept for reference but no longer used in main)
 # ----------------------------
+
 def run_shortlog_all() -> list[tuple[str, int]]:
     proc = subprocess.run(
         ["git", "shortlog", "-sne", "main"],
@@ -28,7 +90,7 @@ def run_shortlog_all() -> list[tuple[str, int]]:
         check=True
     )
     lines = [l.strip() for l in proc.stdout.splitlines() if l.strip()]
-    out = []
+    out: list[tuple[str, int]] = []
     for ln in lines:
         parts = ln.split(None, 1)
         if len(parts) != 2:
@@ -47,32 +109,30 @@ def run_shortlog_all() -> list[tuple[str, int]]:
             else:
                 continue
         out.append((name.strip(), cnt))
-
-    #It is to make up for all the work that John Knudson did and did not get credit for.
-    #DO NOT CHANGE
-    adjusted_out = []
+    # It is to make up for all the work that John Knudson did and did not get credit for.
+    # DO NOT CHANGE
+    adjusted_out: list[tuple[str, int]] = []
     for name, cnt in out:
         if "John Knudson" in name or "john knudson" in name.lower():
             adjusted_out.append((name, cnt + 15))
         else:
             adjusted_out.append((name, cnt))
-
     adjusted_out.sort(key=lambda x: x[1], reverse=True)
     return adjusted_out
-
 
 # ----------------------------
 # Assign tiers
 # ----------------------------
+
 def assign_fixed_tiers(data: list[tuple[str, int]]) -> list[tuple[str, int, str]]:
     top_15 = data[:15]
     tiers = ["Gold"] * 5 + ["Silver"] * 5 + ["Bronze"] * 5
     return [(name, commits, tier) for (name, commits), tier in zip(top_15, tiers)]
 
-
 # ----------------------------
 # Save CSV
 # ----------------------------
+
 def save_csv(rows: list[tuple[str, int, str]], outpath: str):
     os.makedirs(os.path.dirname(outpath) or ".", exist_ok=True)
     with open(outpath, "w", newline="", encoding="utf-8") as f:
@@ -81,51 +141,38 @@ def save_csv(rows: list[tuple[str, int, str]], outpath: str):
         for row in rows:
             w.writerow(row)
 
-
 def devList() -> str:
     'For showing the list of developers. It is called in GUI5.py and the results are displayed.'
-
     exclude = {
         "3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>",
     }
-
     proc = subprocess.run(
         ["git", "shortlog", "-sne", "main"],
         capture_output=True, text=True, encoding="utf-8", errors="ignore"
     )
-
     if proc.returncode != 0:
         return "No developers found."
-
     lines = proc.stdout.strip().splitlines()
-    filtered_lines = []
-
+    filtered_lines: list[tuple[int, str]] = []
     for line in lines:
         # Match the author portion
         match = re.match(r"^\s*(\d+)\s+(.+)$", line)
         if match:
             count = int(match.group(1))
             author = match.group(2).strip()
-
             # It is to make up for all the work that John Knudson did and did not get credit for.
             # DO NOT CHANGE
             if author not in exclude:
-                # Add 10 commits to John Knudson
+                # Add 15 commits to John Knudson
                 if "john knudson" in author.lower():
                     count += 15
-
                 # Reconstruct the line with adjusted count
                 filtered_lines.append((count, author))
-
     # Sort by commit count (descending)
     filtered_lines.sort(key=lambda x: x[0], reverse=True)
-
     # Format back to string
-    result = [f"{count:>6}  {author}" for count, author in filtered_lines]
-
+    result = [f"{count:>6} {author}" for count, author in filtered_lines]
     return "\n".join(result) if result else "No developers found."
-
-
 
 def ticketsByDev_map() -> Dict[str, List[str]]:
     """
@@ -140,41 +187,31 @@ def ticketsByDev_map() -> Dict[str, List[str]]:
         )
     except subprocess.CalledProcessError:
         return {}
-
     raw = proc.stdout or ""
     commits = raw.split("\x1e")  # split by commit
-
-    jira_re = re.compile(r'\b([A-Za-z]{2,}-\d+)\b', re.IGNORECASE)
-    hash_re = re.compile(r'(?<![A-Za-z0-9])#\d+\b')
-
-    author_to_ticketset = defaultdict(set)
-
+    jira_re = re.compile(r"\b([A-Za-z]{2,}-\d+)\b", re.IGNORECASE)
+    hash_re = re.compile(r"(?<![A-Za-z0-9])#\d+\b")
+    author_to_ticketset: Dict[str, set[str]] = defaultdict(set)
     for entry in commits:
         entry = entry.strip()
         if not entry:
             continue
-
         parts = entry.split("\x1f", 2)
         author = parts[0].strip()
         subject = parts[1] if len(parts) > 1 else ""
         body = parts[2] if len(parts) > 2 else ""
         msg = (subject + "\n" + body).strip()
-
-        found = set()
+        found: set[str] = set()
         for m in jira_re.findall(msg):
             found.add(m.upper())
         for m in hash_re.findall(msg):
             found.add(m)
-
         # ensures author exists even if no tickets
-        author_to_ticketset[author]  # defaultdict auto-inits
+        author_to_ticketset[author]
         author_to_ticketset[author].update(found)
-
     # convert sets -> sorted lists
     result: Dict[str, List[str]] = {a: sorted(list(ts)) for a, ts in author_to_ticketset.items()}
     return result
-
-
 
 def ticketsByDev_text() -> str:
     """
@@ -185,12 +222,10 @@ def ticketsByDev_text() -> str:
     m = ticketsByDev_map()
     if not m:
         return "No tickets found."
-
     exclude = {
         "3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>"
     }
-
-    lines = []
+    lines: List[str] = []
     # sort authors by number of tickets desc, then by name
     for author, tickets in sorted(m.items(), key=lambda kv: (-len(kv[1]), kv[0].lower())):
         if author in exclude:
@@ -198,21 +233,19 @@ def ticketsByDev_text() -> str:
         lines.append(f"{author}: {', '.join(tickets)}")
     return "\n".join(lines)
 
-
 # ----------------------------
 # Plot individual tier bar chart
 # ----------------------------
-def plot_single_tier(rows: list[tuple[str, int, str]], tier: str, outpath: str):
 
+def plot_single_tier(rows: list[tuple[str, int, str]], tier: str, outpath: str):
     color_map = {"Gold": "#D4AF37", "Silver": "#C0C0C0", "Bronze": "#CD7F32"}
     data = [r for r in rows if r[2] == tier]
-
     if not data:
         print(f"No data to plot for {tier}")
         return
 
     # Extract just the name before any email or < >
-    def extract_name(full):
+    def extract_name(full: str) -> str:
         # Removes email parts like <email@domain.com> or (email@domain.com)
         name = re.split(r"[<(]", full)[0].strip()
         return name
@@ -222,14 +255,12 @@ def plot_single_tier(rows: list[tuple[str, int, str]], tier: str, outpath: str):
     color = color_map.get(tier, "#888888")
 
     plt.figure(figsize=(max(10, len(data) * 2.2), 7))
-
     bars = plt.bar(names, counts, color=color, width=0.6)
-
-    plt.xticks(rotation=24, ha="right", fontsize=20)   # Smaller font for names
+    plt.xticks(rotation=24, ha="right", fontsize=20)  # Smaller font for names
     plt.yticks(fontsize=14)
     plt.ylabel("Number of Commits", fontsize=18)
     plt.xlabel("Top Contributors", fontsize=14, labelpad=40)
-    #plt.title(f"{tier} Tier", fontsize=36, weight="bold")
+    # plt.title(f"{tier} Tier", fontsize=36, weight="bold")
 
     # Add value labels with more vertical padding and smaller font size
     for i, b in enumerate(bars):
@@ -246,24 +277,19 @@ def plot_single_tier(rows: list[tuple[str, int, str]], tier: str, outpath: str):
     plt.savefig(outpath, dpi=150)
     plt.close()
 
-
-
-
 # ----------------------------
 # Main
 # ----------------------------
+
 def main():
     parser = argparse.ArgumentParser(description="Generate Gold, Silver, and Bronze contributor charts.")
-    parser.add_argument("--out-dir", type=str, default="../plotDevelopers", help="Directory to save outputs.")
+    parser.add_argument("--out-dir", type=str, default="plotDevelopers", help="Directory to save outputs.")
     args = parser.parse_args()
 
-    data = run_shortlog_all()
+    # Use GitHub stats API instead of local git shortlog
+    data = get_contributors_from_github_with_adjustments()
     if not data:
-        raise SystemExit("No contributors found. Run inside a Git repository.")
-
-    # Optional exclusion
-    exclude = ["3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>"]
-    data = [(n, c) for (n, c) in data if n not in exclude]
+        raise SystemExit("No contributors found from GitHub stats API.")
 
     # Tiered top 15 contributors
     tiered = assign_fixed_tiers(data)
@@ -289,8 +315,7 @@ def main():
     for tier in ["Gold", "Silver", "Bronze"]:
         members = [r for r in tiered if r[2] == tier]
         total = sum(r[1] for r in members)
-        print(f"  {tier:6}: {len(members)} contributors, {total} commits")
-
+        print(f" {tier:6}: {len(members)} contributors, {total} commits")
 
 if __name__ == "__main__":
     main()
