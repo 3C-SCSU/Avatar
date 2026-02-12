@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Author: Jason D, 10/06/2025
-# Updated by: Shariq, 01/19.2026 - switched to use GitHub /stats/contributors API
+# Updated by: Shariq, 01/19/2026 - switched to use GitHub /stats/contributors API
 
 import subprocess
 import os
@@ -17,6 +17,7 @@ try:
 except ImportError:
     raise SystemExit("matplotlib is required. Install with: pip install matplotlib")
 
+
 # ----------------------------
 # Read contributors from GitHub stats API
 # ----------------------------
@@ -24,7 +25,7 @@ except ImportError:
 def fetch_contributors_from_github(owner: str = "3C-SCSU", repo: str = "Avatar") -> list[tuple[str, int]]:
     """
     Fetch contributors from GitHub /stats/contributors API for the given repo.
-    Returns a list of (author, commits) tuples, similar to run_shortlog_all().
+    Returns a list of (author, commits) tuples, sorted descending by commits.
     """
     url = f"https://api.github.com/repos/{owner}/{repo}/stats/contributors"
     req = urllib.request.Request(
@@ -50,30 +51,6 @@ def fetch_contributors_from_github(owner: str = "3C-SCSU", repo: str = "Avatar")
     rows.sort(key=lambda x: x[1], reverse=True)
     return rows
 
-
-def get_contributors_from_github_with_adjustments() -> list[tuple[str, int]]:
-    """
-    Wrapper that applies the same adjustments as run_shortlog_all:
-    - Add 15 commits for any contributor whose name/login matches John Knudson.
-    - (Optional) skip the club account if desired.
-    """
-    data = fetch_contributors_from_github()
-
-    adjusted: list[tuple[str, int]] = []
-    for author, commits in data:
-        # It is to make up for all the work that John Knudson did and did not get credit for.
-        # DO NOT CHANGE
-        if "john knudson" in author.lower():
-            commits += 15
-
-        # Optional: skip club account if you know the login
-        # if "3c-scsu" in author.lower():
-        #     continue
-
-        adjusted.append((author, commits))
-
-    adjusted.sort(key=lambda x: x[1], reverse=True)
-    return adjusted
 
 # ----------------------------
 # Legacy: Read git commit data from local repo
@@ -109,16 +86,13 @@ def run_shortlog_all() -> list[tuple[str, int]]:
             else:
                 continue
         out.append((name.strip(), cnt))
-    # It is to make up for all the work that John Knudson did and did not get credit for.
-    # DO NOT CHANGE
-    adjusted_out: list[tuple[str, int]] = []
-    for name, cnt in out:
-        if "John Knudson" in name or "john knudson" in name.lower():
-            adjusted_out.append((name, cnt + 15))
-        else:
-            adjusted_out.append((name, cnt))
-    adjusted_out.sort(key=lambda x: x[1], reverse=True)
-    return adjusted_out
+
+    # NOTE: legacy John Knudson adjustment removed from active use.
+    # This function is no longer used in main(), kept only for historical reference.
+
+    out.sort(key=lambda x: x[1], reverse=True)
+    return out
+
 
 # ----------------------------
 # Assign tiers
@@ -128,6 +102,7 @@ def assign_fixed_tiers(data: list[tuple[str, int]]) -> list[tuple[str, int, str]
     top_15 = data[:15]
     tiers = ["Gold"] * 5 + ["Silver"] * 5 + ["Bronze"] * 5
     return [(name, commits, tier) for (name, commits), tier in zip(top_15, tiers)]
+
 
 # ----------------------------
 # Save CSV
@@ -141,38 +116,21 @@ def save_csv(rows: list[tuple[str, int, str]], outpath: str):
         for row in rows:
             w.writerow(row)
 
+
 def devList() -> str:
-    'For showing the list of developers. It is called in GUI5.py and the results are displayed.'
-    exclude = {
-        "3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>",
-    }
-    proc = subprocess.run(
-        ["git", "shortlog", "-sne", "main"],
-        capture_output=True, text=True, encoding="utf-8", errors="ignore"
-    )
-    if proc.returncode != 0:
+    """
+    For showing the list of developers in the GUI.
+    Now uses the GitHub /stats/contributors API via fetch_contributors_from_github(),
+    with no adjustments.
+    """
+    data = fetch_contributors_from_github()
+    if not data:
         return "No developers found."
-    lines = proc.stdout.strip().splitlines()
-    filtered_lines: list[tuple[int, str]] = []
-    for line in lines:
-        # Match the author portion
-        match = re.match(r"^\s*(\d+)\s+(.+)$", line)
-        if match:
-            count = int(match.group(1))
-            author = match.group(2).strip()
-            # It is to make up for all the work that John Knudson did and did not get credit for.
-            # DO NOT CHANGE
-            if author not in exclude:
-                # Add 15 commits to John Knudson
-                if "john knudson" in author.lower():
-                    count += 15
-                # Reconstruct the line with adjusted count
-                filtered_lines.append((count, author))
-    # Sort by commit count (descending)
-    filtered_lines.sort(key=lambda x: x[0], reverse=True)
-    # Format back to string
-    result = [f"{count:>6} {author}" for count, author in filtered_lines]
-    return "\n".join(result) if result else "No developers found."
+
+    # data is [(login, commits)] already sorted descending
+    lines = [f"{commits:>6} {login}" for login, commits in data]
+    return "\n".join(lines)
+
 
 def ticketsByDev_map() -> Dict[str, List[str]]:
     """
@@ -213,6 +171,7 @@ def ticketsByDev_map() -> Dict[str, List[str]]:
     result: Dict[str, List[str]] = {a: sorted(list(ts)) for a, ts in author_to_ticketset.items()}
     return result
 
+
 def ticketsByDev_text() -> str:
     """
     Return a human-readable text block suitable for TextArea.
@@ -222,16 +181,13 @@ def ticketsByDev_text() -> str:
     m = ticketsByDev_map()
     if not m:
         return "No tickets found."
-    exclude = {
-        "3C Cloud Computing Club <114175379+3C-SCSU@users.noreply.github.com>"
-    }
+
     lines: List[str] = []
     # sort authors by number of tickets desc, then by name
     for author, tickets in sorted(m.items(), key=lambda kv: (-len(kv[1]), kv[0].lower())):
-        if author in exclude:
-            continue  # skip this author
         lines.append(f"{author}: {', '.join(tickets)}")
     return "\n".join(lines)
+
 
 # ----------------------------
 # Plot individual tier bar chart
@@ -277,21 +233,25 @@ def plot_single_tier(rows: list[tuple[str, int, str]], tier: str, outpath: str):
     plt.savefig(outpath, dpi=150)
     plt.close()
 
+
 # ----------------------------
 # Main
 # ----------------------------
 
 def main():
     parser = argparse.ArgumentParser(description="Generate Gold, Silver, and Bronze contributor charts.")
-    
+
     # Anchor path to the directory containing this script (Developers folder)
     script_dir = os.path.dirname(os.path.abspath(__file__))
     default_plot_path = os.path.join(script_dir, "plotDevelopers")
-    
+
     parser.add_argument("--out-dir", type=str, default=default_plot_path, help="Directory to save outputs.")
+    parser.add_argument("--owner", type=str, default="3C-SCSU", help="GitHub repo owner (org or user).")
+    parser.add_argument("--repo", type=str, default="Avatar", help="GitHub repository name.")
     args = parser.parse_args()
 
-    data = get_contributors_from_github_with_adjustments()
+    # Use GitHub stats API instead of local git shortlog, with NO adjustments
+    data = fetch_contributors_from_github(owner=args.owner, repo=args.repo)
     if not data:
         raise SystemExit("No contributors found from GitHub stats API.")
 
@@ -306,6 +266,17 @@ def main():
         chart_path = os.path.join(args.out_dir, f"{tier.lower()}_contributors.png")
         plot_single_tier(tiered, tier, chart_path)
 
+    # Summary
+    print(f"\nWrote CSV -> {csv_path}")
+    for tier in ["Gold", "Silver", "Bronze"]:
+        chart_file = os.path.join(args.out_dir, f"{tier.lower()}_contributors.png")
+        print(f"Wrote {tier} chart -> {chart_file}")
+
+    print("\nSummary:")
+    for tier in ["Gold", "Silver", "Bronze"]:
+        members = [r for r in tiered if r[2] == tier]
+        total = sum(r[1] for r in members)
+        print(f" {tier:6}: {len(members)} contributors, {total} commits")
 
 
 if __name__ == "__main__":
