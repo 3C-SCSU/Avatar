@@ -283,39 +283,30 @@ def plot_single_tier(rows: list[tuple[str, int, str]], tier: str, outpath: str):
 
 def main():
     parser = argparse.ArgumentParser(description="Generate Gold, Silver, and Bronze contributor charts.")
-    parser.add_argument("--out-dir", type=str, default="plotDevelopers", help="Directory to save outputs.")
+    
+    # Anchor path to the directory containing this script (Developers folder)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    default_plot_path = os.path.join(script_dir, "plotDevelopers")
+    
+    parser.add_argument("--out-dir", type=str, default=default_plot_path, help="Directory to save outputs.")
     args = parser.parse_args()
 
-    # Use GitHub stats API instead of local git shortlog
     data = get_contributors_from_github_with_adjustments()
     if not data:
         raise SystemExit("No contributors found from GitHub stats API.")
 
-    # Tiered top 15 contributors
     tiered = assign_fixed_tiers(data)
-
     os.makedirs(args.out_dir, exist_ok=True)
 
-    # Save CSV
+    # Save CSV and Plots using args.out_dir
     csv_path = os.path.join(args.out_dir, "top15_contributors_tiers.csv")
     save_csv(tiered, csv_path)
 
-    # Save tier-specific bar charts
     for tier in ["Gold", "Silver", "Bronze"]:
         chart_path = os.path.join(args.out_dir, f"{tier.lower()}_contributors.png")
         plot_single_tier(tiered, tier, chart_path)
 
-    # Summary
-    print(f"\nWrote CSV -> {csv_path}")
-    for tier in ["Gold", "Silver", "Bronze"]:
-        chart_file = os.path.join(args.out_dir, f"{tier.lower()}_contributors.png")
-        print(f"Wrote {tier} chart -> {chart_file}")
 
-    print("\nSummary:")
-    for tier in ["Gold", "Silver", "Bronze"]:
-        members = [r for r in tiered if r[2] == tier]
-        total = sum(r[1] for r in members)
-        print(f" {tier:6}: {len(members)} contributors, {total} commits")
 
 if __name__ == "__main__":
     main()
