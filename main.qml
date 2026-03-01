@@ -25,6 +25,7 @@ ApplicationWindow {
             height: 40
 
             TabButton {
+                id: readBrainTab
                 // this tab shows page index 0
                 property int targetIndex: 0
 
@@ -34,14 +35,24 @@ ApplicationWindow {
 
                 background: Rectangle {
                   anchors.fill: parent
-                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
-                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
-                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
+                  gradient: Gradient {
+                    GradientStop {
+                      position: 0.0
+                      color: stackLayout.currentIndex === readBrainTab.targetIndex ? "#00cc44" : "#2a3456"
+                    }
+                    GradientStop {
+                      position: 1.0
+                      color: stackLayout.currentIndex === readBrainTab.targetIndex ? "#008833" : "#1a2440"
+                    }
+                  }
+                  border.color: stackLayout.currentIndex === readBrainTab.targetIndex ? "yellow" : "transparent"
+                  border.width: stackLayout.currentIndex === readBrainTab.targetIndex ? 3 : 1
+                  radius: 5
                 }
                 contentItem: Text {
                     text: parent.text
                     anchors.centerIn: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "white"
+                    color: stackLayout.currentIndex === readBrainTab.targetIndex ? "yellow" : "white"
                     font.bold: true
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -50,6 +61,7 @@ ApplicationWindow {
             }
 
             TabButton {
+                id: manualDroneTab
                 property int targetIndex: 2
 
                 text: "Manual Drone Control"
@@ -58,14 +70,24 @@ ApplicationWindow {
 
                 background: Rectangle {
                   anchors.fill: parent
-                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
-                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
-                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
+                  gradient: Gradient {
+                    GradientStop {
+                      position: 0.0
+                      color: stackLayout.currentIndex === manualDroneTab.targetIndex ? "#00cc44" : "#2a3456"
+                    }
+                    GradientStop {
+                      position: 1.0
+                      color: stackLayout.currentIndex === manualDroneTab.targetIndex ? "#008833" : "#1a2440"
+                    }
+                  }
+                  border.color: stackLayout.currentIndex === manualDroneTab.targetIndex ? "yellow" : "transparent"
+                  border.width: stackLayout.currentIndex === manualDroneTab.targetIndex ? 3 : 1
+                  radius: 5
                 }
                 contentItem: Text {
                     text: parent.text
                     anchors.centerIn: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "white"
+                    color: stackLayout.currentIndex === manualDroneTab.targetIndex ? "yellow" : "white"
                     font.bold: true
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -74,6 +96,7 @@ ApplicationWindow {
             }
 
             TabButton {
+                id: manualNaoTab
                 property int targetIndex: 3
 
                 text: "Manual NAO Control"
@@ -86,14 +109,24 @@ ApplicationWindow {
 
                 background: Rectangle {
                   anchors.fill: parent
-                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
-                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
-                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
+                  gradient: Gradient {
+                    GradientStop {
+                      position: 0.0
+                      color: stackLayout.currentIndex === manualNaoTab.targetIndex ? "#00cc44" : "#2a3456"
+                    }
+                    GradientStop {
+                      position: 1.0
+                      color: stackLayout.currentIndex === manualNaoTab.targetIndex ? "#008833" : "#1a2440"
+                    }
+                  }
+                  border.color: stackLayout.currentIndex === manualNaoTab.targetIndex ? "yellow" : "transparent"
+                  border.width: stackLayout.currentIndex === manualNaoTab.targetIndex ? 3 : 1
+                  radius: 5
                 }
                 contentItem: Text {
                     text: parent.text
                     anchors.centerIn: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "white"
+                    color: stackLayout.currentIndex === manualNaoTab.targetIndex ? "yellow" : "white"
                     font.bold: true
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -102,6 +135,7 @@ ApplicationWindow {
             }
 
             TabButton {
+                id: aiTab
                 property int targetIndex: 7
 
                 text: "Artificial Intelligence"
@@ -113,14 +147,24 @@ ApplicationWindow {
 
                 background: Rectangle {
                   anchors.fill: parent
-                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
-                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
-                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
+                  gradient: Gradient {
+                    GradientStop {
+                      position: 0.0
+                      color: stackLayout.currentIndex === aiTab.targetIndex ? "#00cc44" : "#2a3456"
+                    }
+                    GradientStop {
+                      position: 1.0
+                      color: stackLayout.currentIndex === aiTab.targetIndex ? "#008833" : "#1a2440"
+                    }
+                  }
+                  border.color: stackLayout.currentIndex === aiTab.targetIndex ? "yellow" : "transparent"
+                  border.width: stackLayout.currentIndex === aiTab.targetIndex ? 3 : 1
+                  radius: 5
                 }
                 contentItem: Text {
                     text: parent.text
                     anchors.centerIn: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "white"
+                    color: stackLayout.currentIndex === aiTab.targetIndex ? "yellow" : "white"
                     font.bold: true
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -153,6 +197,7 @@ ApplicationWindow {
             position: TabBar.Footer
 
             TabButton {
+                id: brainwaveVizTab
                 property int targetIndex: 1
 
                 text: "Brainwave Visualization"
@@ -161,14 +206,24 @@ ApplicationWindow {
 
                 background: Rectangle {
                   anchors.fill: parent
-                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
-                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
-                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
+                  gradient: Gradient {
+                    GradientStop {
+                      position: 0.0
+                      color: stackLayout.currentIndex === brainwaveVizTab.targetIndex ? "#00cc44" : "#2a3456"
+                    }
+                    GradientStop {
+                      position: 1.0
+                      color: stackLayout.currentIndex === brainwaveVizTab.targetIndex ? "#008833" : "#1a2440"
+                    }
+                  }
+                  border.color: stackLayout.currentIndex === brainwaveVizTab.targetIndex ? "yellow" : "transparent"
+                  border.width: stackLayout.currentIndex === brainwaveVizTab.targetIndex ? 3 : 1
+                  radius: 5
                 }
                 contentItem: Text {
                     text: parent.text
                     anchors.centerIn: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "white"
+                    color: stackLayout.currentIndex === brainwaveVizTab.targetIndex ? "yellow" : "white"
                     font.bold: true
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -177,6 +232,7 @@ ApplicationWindow {
             }
 
             TabButton {
+                id: shufflerTab
                 property int targetIndex: 4
 
                 text: "Shuffler"
@@ -185,14 +241,24 @@ ApplicationWindow {
 
                 background: Rectangle {
                   anchors.fill: parent
-                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
-                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
-                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
+                  gradient: Gradient {
+                    GradientStop {
+                      position: 0.0
+                      color: stackLayout.currentIndex === shufflerTab.targetIndex ? "#00cc44" : "#2a3456"
+                    }
+                    GradientStop {
+                      position: 1.0
+                      color: stackLayout.currentIndex === shufflerTab.targetIndex ? "#008833" : "#1a2440"
+                    }
+                  }
+                  border.color: stackLayout.currentIndex === shufflerTab.targetIndex ? "yellow" : "transparent"
+                  border.width: stackLayout.currentIndex === shufflerTab.targetIndex ? 3 : 1
+                  radius: 5
                 }
                 contentItem: Text {
                     text: parent.text
                     anchors.centerIn: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "white"
+                    color: stackLayout.currentIndex === shufflerTab.targetIndex ? "yellow" : "white"
                     font.bold: true
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -201,6 +267,7 @@ ApplicationWindow {
             }
 
             TabButton {
+                id: cloudTab
                 property int targetIndex: 5
 
                 text: "Cloud Computing" // Renamed Transfer Data to Cloud Computing 
@@ -209,14 +276,24 @@ ApplicationWindow {
 
                 background: Rectangle {
                   anchors.fill: parent
-                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
-                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
-                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
+                  gradient: Gradient {
+                    GradientStop {
+                      position: 0.0
+                      color: stackLayout.currentIndex === cloudTab.targetIndex ? "#00cc44" : "#2a3456"
+                    }
+                    GradientStop {
+                      position: 1.0
+                      color: stackLayout.currentIndex === cloudTab.targetIndex ? "#008833" : "#1a2440"
+                    }
+                  }
+                  border.color: stackLayout.currentIndex === cloudTab.targetIndex ? "yellow" : "transparent"
+                  border.width: stackLayout.currentIndex === cloudTab.targetIndex ? 3 : 1
+                  radius: 5
                 }
                 contentItem: Text {
                     text: parent.text
                     anchors.centerIn: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "white"
+                    color: stackLayout.currentIndex === cloudTab.targetIndex ? "yellow" : "white"
                     font.bold: true
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -225,6 +302,7 @@ ApplicationWindow {
             }
 
             TabButton {
+                id: developersTab
                 property int targetIndex: 6
 
                 text: "Developers"
@@ -233,14 +311,24 @@ ApplicationWindow {
 
                 background: Rectangle {
                   anchors.fill: parent
-                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
-                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
-                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
+                  gradient: Gradient {
+                    GradientStop {
+                      position: 0.0
+                      color: stackLayout.currentIndex === developersTab.targetIndex ? "#00cc44" : "#2a3456"
+                    }
+                    GradientStop {
+                      position: 1.0
+                      color: stackLayout.currentIndex === developersTab.targetIndex ? "#008833" : "#1a2440"
+                    }
+                  }
+                  border.color: stackLayout.currentIndex === developersTab.targetIndex ? "yellow" : "transparent"
+                  border.width: stackLayout.currentIndex === developersTab.targetIndex ? 3 : 1
+                  radius: 5
                 }
                 contentItem: Text {
                     text: parent.text
                     anchors.centerIn: parent
-                    color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "white"
+                    color: stackLayout.currentIndex === developersTab.targetIndex ? "yellow" : "white"
                     font.bold: true
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
