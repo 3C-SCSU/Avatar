@@ -146,7 +146,7 @@ Rectangle {
                                                          Math.min(root.height * 0.08, 90))
                                 radius: 8
                                 color: "#2d7a4a"
-                                border.color: currentModel === "GaussianNB" ? "#439566" : "#2d7a4a"
+                                border.color: currentModel === "GaussianNB" ? "yellow" : "#2d7a4a"
                                 border.width: currentModel === "GaussianNB" ? 3 : 1
 
                                 Text {
