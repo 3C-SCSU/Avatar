@@ -25,8 +25,9 @@ import queue
 # from Developers.hofCharts import main as hofCharts, ticketsByDev_text NA
 
 from developers_api import DevelopersAPI
+from opendata_api import OpenDataAPI
 
-								
+
 from NA06_Manual_Control import ManualNaoController
 from NA06_Manual_Control.camera_view import DroneCameraController
 
@@ -938,6 +939,7 @@ if __name__ == "__main__":
     backend = BrainwavesBackend()
     developers = DevelopersAPI()
     shuffler_api = ShufflerAPI()
+    opendata_api = OpenDataAPI()
     engine.rootContext().setContextProperty("tabController", tab_controller)
     engine.rootContext().setContextProperty("backend", backend)
     engine.rootContext().setContextProperty("developersBackend", developers)
@@ -946,6 +948,7 @@ if __name__ == "__main__":
     engine.rootContext().setContextProperty("cameraController", backend.camera_controller)
     print("Controllers exposed to QML")
     engine.rootContext().setContextProperty("fileShufflerGui", shuffler_api)  # For file shuffler
+    engine.rootContext().setContextProperty("openDataAPI", opendata_api)  # For open data augmentation
     engine.rootContext().setContextProperty("manualNaoController", manual_nao_controller)
     engine.rootContext().setContextProperty("droneCameraController", drone_camera_controller)
 
