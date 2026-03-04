@@ -45,6 +45,10 @@ Rectangle {
     property string rfMaxFeatures: "auto"     // auto|sqrt|log2
     property string rfCriterion: "gini"       // gini|entropy
 
+    // GaussianNB params (UI state only for now)
+    property string gnbVarSmoothing: "1e-9"   // portion of largest variance added for stability
+    property string gnbPriors: ""             // empty means uniform (None)
+
     // Derived
     property bool paramsEnabled: mode === "Train"
 
@@ -146,7 +150,7 @@ Rectangle {
                                                          Math.min(root.height * 0.08, 90))
                                 radius: 8
                                 color: "#2d7a4a"
-                                border.color: currentModel === "GaussianNB" ? "#439566" : "#2d7a4a"
+                                border.color: currentModel === "GaussianNB" ? "yellow" : "#2d7a4a"
                                 border.width: currentModel === "GaussianNB" ? 3 : 1
 
                                 Text {
@@ -990,6 +994,49 @@ Rectangle {
                                     text = Number(momentum).toFixed(2)
                                 }
                                 Layout.preferredWidth: 80
+                            }
+                        }
+                    }
+
+                    // GAUSSIAN NAIVE BAYES PARAMS ----------------------------------
+                    ColumnLayout {
+                        visible: currentModel === "GaussianNB"
+                        spacing: 6
+                        Layout.fillWidth: true
+
+                        RowLayout {
+                            Layout.fillWidth: true; spacing: 4
+                            Text {
+                                text: "var_smoothing:"
+                                color: "white"
+                                Layout.preferredWidth: 120
+                                font.pixelSize: Math.max(10, Math.min(16, root.height * 0.02))
+                            }
+                            TextField {
+                                text: gnbVarSmoothing
+                                placeholderText: "e.g. 1e-9"
+                                onEditingFinished: {
+                                    var v = parseFloat(text)
+                                    gnbVarSmoothing = (!isNaN(v) && v > 0) ? text : gnbVarSmoothing
+                                    text = gnbVarSmoothing
+                                }
+                                Layout.fillWidth: true
+                            }
+                        }
+
+                        RowLayout {
+                            Layout.fillWidth: true; spacing: 4
+                            Text {
+                                text: "priors:"
+                                color: "white"
+                                Layout.preferredWidth: 120
+                                font.pixelSize: Math.max(10, Math.min(16, root.height * 0.02))
+                            }
+                            TextField {
+                                text: gnbPriors
+                                placeholderText: "e.g. 0.3,0.7 (blank = uniform)"
+                                onEditingFinished: { gnbPriors = text }
+                                Layout.fillWidth: true
                             }
                         }
                     }
