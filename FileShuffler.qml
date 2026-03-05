@@ -282,9 +282,9 @@ Rectangle {
 
         onAccepted: {
             console.log("Selected folder:", fileShufflerDialog.folder)
-            var output = fileShufflerGui.run_file_shuffler_program(fileShufflerDialog.folder)
-            fileShufflerView.runLog += output + "\n"
-            fileShufflerView.ranShuffle = true
+            fileShufflerView.runLog += "Starting file shuffler...\n"
+            fileShufflerView.ranShuffle = false
+            fileShufflerGui.run_file_shuffler_program(fileShufflerDialog.folder)
         }
 
         onRejected: {
@@ -324,6 +324,20 @@ Rectangle {
 
         onRejected: {
             console.log("Folder dialog canceled")
+        }
+    }
+    
+    Connections {
+        target: fileShufflerGui
+
+        function onFileShufflerFinished(output) {
+            fileShufflerView.runLog += output + "\n"
+            fileShufflerView.ranShuffle = true
+        }
+
+        function onFileShufflerError(message) {
+            fileShufflerView.runLog += message + "\n"
+            fileShufflerView.ranShuffle = false
         }
     }
 }

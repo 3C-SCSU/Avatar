@@ -2,7 +2,7 @@ import sys
 import os
 import subprocess
 from pathlib import Path
-from PySide6.QtCore import QObject, Signal, Slot, Property, QProcess, QUrl, QTimer
+from PySide6.QtCore import QObject, Signal, Slot, QThread
 import io
 import urllib.parse
 import contextlib
@@ -15,9 +15,32 @@ import unifyTXT
 import run_file_shuffler
 import remove8channel
 
+class FileShufflerWorker(QObject):
+    finished = Signal(str)
+    error = Signal(str)
+
+    def __init__(self, path):
+        super().__init__()
+        self.path = path
+
+    @Slot()
+    def run(self):
+        try:
+            response = run_file_shuffler.main(self.path)
+            if response is None:
+                response = "File shuffler finished."
+            self.finished.emit(str(response))
+        except Exception as e:
+            self.error.emit(f"Error during file shuffling: {e}")
+
 class ShufflerAPI(QObject):
+    fileShufflerFinished = Signal(str)
+    fileShufflerError = Signal(str)
+
     def __init__(self):
         super().__init__()
+        self._thread = None
+        self._worker = None
 
     @Slot()
     def launch_file_shuffler_gui(self):
@@ -25,15 +48,30 @@ class ShufflerAPI(QObject):
         file_shuffler_path = Path(__file__).resolve().parent / "file-shuffler/file-shuffler-gui.py"
         subprocess.Popen(["python", str(file_shuffler_path)])
 
-    @Slot(str, result=str)
+    @Slot(str)
     def run_file_shuffler_program(self, path):
         # Need to parse the path as the FolderDialog appends file:// in front of the selection
-        path = path.replace("file://", "")
-        if path.startswith("/C:"):
-            path = 'C' + path[2:]
+        path = urllib.parse.unquote(path.replace("file://", ""))
+        
+        if os.name == "nt" and path.startswith("/"):
+            path = path[1:]
 
-        response = run_file_shuffler.main(path)
-        return response
+        self._thread = QThread()
+        self._worker = FileShufflerWorker(path)
+        self._worker.moveToThread(self._thread)
+
+        self._thread.started.connect(self._worker.run)
+        self._worker.finished.connect(self.fileShufflerFinished)
+        self._worker.error.connect(self.fileShufflerError)
+
+        self._worker.finished.connect(self._thread.quit)
+        self._worker.error.connect(self._thread.quit)
+
+        self._worker.finished.connect(self._worker.deleteLater)
+        self._worker.error.connect(self._worker.deleteLater)
+        self._thread.finished.connect(self._thread.deleteLater)
+
+        self._thread.start()
 
         # Adding Synthetic Data and Live Data Logic (Row 327 to 355) as part of Ticket 186
 
