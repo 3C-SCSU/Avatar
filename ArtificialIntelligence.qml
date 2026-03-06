@@ -27,6 +27,9 @@ Rectangle {
     property string mode: "Deploy"                 // "Deploy" (default) | "Train"
     property string currentModel: "Random Forest"  // "Random Forest" | "GaussianNB" | "Deep Learning"
 
+    // Gaussian Naive Bayes params
+    property real gnbVarSmoothing: 1e-9 
+
     // Deep Learning params (UI state only for now)
     property real   learningRate: 0.001
     property int    batchSize: 64
@@ -146,7 +149,7 @@ Rectangle {
                                                          Math.min(root.height * 0.08, 90))
                                 radius: 8
                                 color: "#2d7a4a"
-                                border.color: currentModel === "GaussianNB" ? "#439566" : "#2d7a4a"
+                                border.color: currentModel === "GaussianNB" ? "yellow" : "#2d7a4a"
                                 border.width: currentModel === "GaussianNB" ? 3 : 1
 
                                 Text {
@@ -691,7 +694,35 @@ Rectangle {
                         font.bold: true
                         font.pixelSize: Math.max(10, Math.min(26, root.height * 0.04))
                     }
+                    // GAUSSIAN NB PARAMS ----------------------------------
+                    ColumnLayout {
+                      visible: currentModel === "GaussianNB"
+                      spacing: 6
+                      Layout.fillWidth: true
 
+                      RowLayout {
+                        Layout.fillWidth: true
+                        spacing: 4
+
+                        Text {
+                          text: "var_smoothing:"
+                          color: "white"
+                          Layout.preferredWidth: 120 
+                          font.pixelSize: Math.max(10, Math.min(16, root.height * 0.02))
+
+                        }
+                        TextField {
+                          text: gnbVarSmoothing.toString()
+                          onEditingFinished: {
+                            var v = parseFloat(text)
+                            if (!isNaN(v) && v < 0)
+                              gnbVarSmoothing = v 
+                            text = gnbVarSmoothing.toString()
+                          }
+                          Layout.fillWidth: true
+                        }
+                      }
+                    }
                     // RANDOM FOREST PARAMS ----------------------------------
                     ColumnLayout {
                         visible: currentModel === "Random Forest"
