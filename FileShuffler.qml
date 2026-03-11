@@ -38,6 +38,13 @@ Rectangle {
             radius: 10
             color: "#202846"    // dark blue header
 
+            Connections { 
+                target: fileShufflerGui
+                    function onShuffleComplete(output) {
+                        fileShufflerView.runLog += output + "\n"
+                        fileShufflerView.ranShuffle = true
+                    }
+            }
             ColumnLayout {
                 anchors.fill: parent
                 anchors.margins: 14
@@ -282,9 +289,8 @@ Rectangle {
 
         onAccepted: {
             console.log("Selected folder:", fileShufflerDialog.folder)
-            var output = fileShufflerGui.run_file_shuffler_program(fileShufflerDialog.folder)
-            fileShufflerView.runLog += output + "\n"
-            fileShufflerView.ranShuffle = true
+            fileShufflerView.runLog = "Running File Shuffler...\n"
+            fileShufflerGui.run_file_shuffler_program(fileShufflerDialog.folder)
         }
 
         onRejected: {

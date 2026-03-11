@@ -14,16 +14,19 @@ sys.path.append(str(Path(__file__).resolve().parent / "file-remove8channel"))
 import unifyTXT
 import run_file_shuffler
 import remove8channel
+from concurrent.futures import ThreadPoolExecutor
 
 class ShufflerAPI(QObject):
     def __init__(self):
         super().__init__()
+        self.executor = ThreadPoolExecutor(max_workers=2)
 
     @Slot()
     def launch_file_shuffler_gui(self):
         # Launch the file shuffler GUI program
         file_shuffler_path = Path(__file__).resolve().parent / "file-shuffler/file-shuffler-gui.py"
         subprocess.Popen(["python", str(file_shuffler_path)])
+    shuffleComplete = Signal(str)
 
     @Slot(str, result=str)
     def run_file_shuffler_program(self, path):
@@ -31,9 +34,17 @@ class ShufflerAPI(QObject):
         path = path.replace("file://", "")
         if path.startswith("/C:"):
             path = 'C' + path[2:]
-
-        response = run_file_shuffler.main(path)
-        return response
+            
+        future = self.executor.submit(run_file_shuffler.main, path)
+        future.add_done_callback(self.handle_result)
+       
+        return "Shuffling started..."
+    def handle_result(self, future):
+        try:
+            response = future.result()
+            self.shuffleComplete.emit(response)
+        except Exception as e:
+            self.shuffleComplete.emit(f"Error: {e}")
 
         # Adding Synthetic Data and Live Data Logic (Row 327 to 355) as part of Ticket 186
 
