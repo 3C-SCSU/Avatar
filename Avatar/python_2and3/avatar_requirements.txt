@@ -1,0 +1,31 @@
+# Avatar Program Requirements (Python 3)
+# Core GUI Framework
+PySide6==6.5.0
+
+# Data Processing
+numpy==1.24.3
+pandas==2.0.3
+
+# Machine Learning
+torch==2.0.1
+torchvision==0.15.2
+scikit-learn==1.3.0
+
+# Computer Vision
+opencv-python==4.8.0.76
+Pillow==10.0.0
+
+# Visualization
+matplotlib==3.7.2
+seaborn==0.12.2
+
+# Drone Control
+djitellopy==2.4.0
+
+# Network & Communication
+requests==2.31.0
+paramiko==3.2.0
+
+# Utilities
+python-dateutil==2.8.2
+pyyaml==6.0.1
