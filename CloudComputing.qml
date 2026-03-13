@@ -29,11 +29,17 @@ Rectangle {
             border.width: 1
             radius: 4
 
-            ColumnLayout {
+            RowLayout {
                 id: contentLayout
                 anchors.fill: parent
                 anchors.margins: 10
-                spacing: 10
+                spacing: 20
+
+                // Left Column - Configuration/Upload
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    Layout.preferredWidth: parent.width * 0.5
+                    spacing: 10
 
                 Label {
                     text: "Target IP"
@@ -351,26 +357,126 @@ Rectangle {
                         }
                     }
                 }
+                } // End of Left Column
 
-                FileDialog {
-                    id: configFileDialog
-                    title: "Select Configuration File"
-                    onAccepted: {
-                        if (saveConfigButton.down) {
-                            saveConfig(
-                                hostInput.text,
-                                usernameInput.text,
-                                privateKeyDirInput.text,
-                                targetDirInput.text,
-                                ignoreHostKeyCheckbox.checked,
-                                sourceDirInput.text,
-                                fileUrl.toLocalFile()
-                            );
-                        } else {
-                            loadConfig(fileUrl.toLocalFile());
+                // Right Column - Open Data and Console Log
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    Layout.preferredWidth: parent.width * 0.5
+                    spacing: 20
+
+                    // Open Data Button
+                    Rectangle {
+                        Layout.alignment: Qt.AlignHCenter
+                        Layout.preferredHeight: 120
+                        Layout.preferredWidth: 120
+                        color: "#2C3E50"
+                        radius: 60
+                        border.color: "#CCCCCC"
+                        border.width: 2
+
+                        Button {
+                            id: openDataButton
+                            objectName: "openDataButton"
+                            anchors.fill: parent
+                            text: "Open Data"
+                            font.bold: true
+                            font.pixelSize: 16
+                            onClicked: console.log("Open Data clicked")
+
+                            contentItem: Text {
+                                text: parent.text
+                                color: "white"
+                                font.bold: true
+                                font.pixelSize: 16
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                            }
+
+                            background: Rectangle {
+                                id: openDataButtonBackground
+                                color: "#2C3E50"
+                                radius: 60
+                            }
                         }
                     }
+
+                    // Console Log Section
+                    Label {
+                        text: "Console Log"
+                        color: "white"
+                        font.bold: true
+                        font.pixelSize: 14
+                    }
+
+                    ScrollView {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        Layout.preferredMinHeight: 300
+                        clip: true
+
+                        Rectangle {
+                            width: parent.width
+                            height: consoleLogArea.implicitHeight + 10
+                            color: "#FFFFFF"
+                            border.color: "#CCCCCC"
+                            border.width: 1
+                            radius: 4
+
+                            TextArea {
+                                id: consoleLogArea
+                                objectName: "consoleLogArea"
+                                anchors.fill: parent
+                                anchors.margins: 5
+                                text: ""
+                                color: "#000000"
+                                font.family: "monospace"
+                                font.pixelSize: 12
+                                readOnly: true
+                                wrapMode: TextArea.Wrap
+                                placeholderText: "Console output will appear here..."
+                            }
+                        }
+                    }
+
+                    // Hidden processed directory input for backend
+                    TextField {
+                        id: processedDirInput
+                        objectName: "processedDirInput"
+                        visible: false
+                        text: ""
+                    }
+                } // End of Right Column
+            } // End of RowLayout
+
+            // File Dialogs (outside the layout)
+            FileDialog {
+                id: processedDirFileDialog
+                title: "Select Processed Directory"
+                onAccepted: {
+                    processedDirInput.text = fileUrl.toLocalFile();
                 }
+            }
+
+            FileDialog {
+                id: configFileDialog
+                title: "Select Configuration File"
+                onAccepted: {
+                    if (saveConfigButton.down) {
+                        saveConfig(
+                            hostInput.text,
+                            usernameInput.text,
+                            privateKeyDirInput.text,
+                            targetDirInput.text,
+                            ignoreHostKeyCheckbox.checked,
+                            sourceDirInput.text,
+                            fileUrl.toLocalFile()
+                        );
+                    } else {
+                        loadConfig(fileUrl.toLocalFile());
+                    }
+                }
+            }
             }
         }
     }
