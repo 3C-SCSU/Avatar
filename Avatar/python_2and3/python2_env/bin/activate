@@ -1,0 +1,6 @@
+#!/bin/bash
+# Python 2 Environment Simulation
+export PATH="python2_env/bin:$PATH"
+export PYTHONPATH="python2_env/lib/python2.7/site-packages:$PYTHONPATH"
+export PS1="(python2) $PS1"
+echo "✅ Python 2 environment activated (simulated)"

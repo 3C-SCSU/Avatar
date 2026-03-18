@@ -61,6 +61,7 @@ class BrainwavesBackend(QObject):
     naoStarted = Signal()
     naoEnded = Signal()
     enqueueMoveRequested = Signal(str)
+    droneConnectionStateChanged = Signal(bool)  # True = connected, False = disconnected
 
     @Slot()
     def startNaoManual(self):
@@ -504,19 +505,98 @@ class BrainwavesBackend(QObject):
         for dist in chunks:
             self._queue_action(direction, dist)
 
+    def _connect_drone_with_retry(self, max_attempts=3):
+        """Connect to drone with retry logic and proper error handling"""
+        for attempt in range(max_attempts):
+            try:
+                self.logMessage.emit(f"Connecting to drone... Attempt {attempt + 1}/{max_attempts}")
+                self.flight_log.insert(0, f"Connecting... Attempt {attempt + 1}/{max_attempts}")
+                self.flightLogUpdated.emit(self.flight_log)
+                
+                # Attempt connection with timeout
+                self.tello.connect(wait_for_state=False)
+                
+                # Test connection by getting battery
+                battery = self.tello.get_battery()
+                
+                # If we get here, connection was successful
+                self.connected = True
+                self.droneConnectionStateChanged.emit(True)
+                self.logMessage.emit(f"✅ Connected to Tello Drone (Battery: {battery}%)")
+                self.flight_log.insert(0, f"✅ Drone connected (Battery: {battery}%)")
+                self.flightLogUpdated.emit(self.flight_log)
+                return True
+                
+            except Exception as e:
+                error_msg = f"Connection attempt {attempt + 1} failed: {str(e)}"
+                self.logMessage.emit(error_msg)
+                self.flight_log.insert(0, error_msg)
+                self.flightLogUpdated.emit(self.flight_log)
+                
+                # If this is the last attempt, give up
+                if attempt == max_attempts - 1:
+                    self.connected = False
+                    self.droneConnectionStateChanged.emit(False)
+                    self.logMessage.emit("❌ Failed to connect to drone after all attempts")
+                    self.flight_log.insert(0, "❌ Connection failed - drone not available")
+                    self.flightLogUpdated.emit(self.flight_log)
+                    return False
+                
+                # Wait before retry
+                import time
+                time.sleep(2)
+        
+        return False
 
+    def _execute_drone_command(self, command_method, *args):
+        """Execute drone command with timeout and error handling"""
+        import threading
+        import time
+        
+        def execute_with_timeout():
+            try:
+                # Execute the drone command
+                method = getattr(self.tello, command_method)
+                method(*args)
+                
+                # Record the action if it has parameters
+                if args:
+                    record_action(self.action_log[-1][0] if self.action_log else command_method, args[0])
+                
+                self.logMessage.emit(f"✅ Command executed: {command_method}")
+                self.flight_log.insert(0, f"✅ {command_method} executed successfully")
+                
+            except Exception as e:
+                error_msg = f"❌ Command failed: {command_method} - {str(e)}"
+                self.logMessage.emit(error_msg)
+                self.flight_log.insert(0, error_msg)
+                
+                # Mark as disconnected if it's a connection error
+                if "Tello" in str(e) or "timeout" in str(e).lower() or "not connected" in str(e).lower():
+                    self.connected = False
+                    self.droneConnectionStateChanged.emit(False)
+                    self.logMessage.emit("⚠️ Drone disconnected due to error")
+                    self.flight_log.insert(0, "⚠️ Drone disconnected")
+        
+        # Execute command in thread with timeout
+        thread = threading.Thread(target=execute_with_timeout)
+        thread.daemon = True
+        thread.start()
+        
+        # Wait for completion with timeout (10 seconds max)
+        thread.join(timeout=10)
+        
+        if thread.is_alive():
+            self.logMessage.emit(f"⏰ Command timeout: {command_method}")
+            self.flight_log.insert(0, f"⏰ {command_method} timed out")
+            self.flightLogUpdated.emit(self.flight_log)
 
     @Slot(str)
     def getDroneAction(self, action):
         with self.drone_lock:
             try:
                 if action == 'connect':
-                    self.tello.connect(wait_for_state=False)
-                    battery = self.tello.get_battery()
-                    self.connected = True
-                    self.logMessage.emit(f"Connected to Tello Drone (Battery: {battery}%)")
-                    self.flight_log.insert(0, f"Drone connected (Battery: {battery}%)")
-                    self.flightLogUpdated.emit(self.flight_log)
+                    self._connect_drone_with_retry()
                     return
                 elif not self.connected:
                     self.logMessage.emit("Drone not connected. Please connect first.")
@@ -531,45 +611,27 @@ class BrainwavesBackend(QObject):
                 # but can be overridden by the clumper
                 if action == 'up':
                     dist = self._movement_distance_override or 30
-                    self.tello.move_up(dist)
-                    record_action('up', dist)
-                    self.logMessage.emit("Moving up")
-                    self.flight_log.insert(0, f"Moving up {dist}cm")
+                    self._execute_drone_command("move_up", dist, "up", f"Moving up {dist}cm")
 
                 elif action == 'down':
                     dist = self._movement_distance_override or 30
-                    self.tello.move_down(dist)
-                    record_action('down', dist)
-                    self.logMessage.emit("Moving down")
-                    self.flight_log.insert(0, f"Moving down {dist}cm")
+                    self._execute_drone_command("move_down", dist, "down", f"Moving down {dist}cm")
 
                 elif action == 'forward':
                     dist = self._movement_distance_override or 30
-                    self.tello.move_forward(dist)
-                    record_action('forward', dist)
-                    self.logMessage.emit("Moving forward")
-                    self.flight_log.insert(0, f"Moving forward {dist}cm")
+                    self._execute_drone_command("move_forward", dist, "forward", f"Moving forward {dist}cm")
 
                 elif action == 'backward':
                     dist = self._movement_distance_override or 30
-                    self.tello.move_back(dist)
-                    record_action('backward', dist)
-                    self.logMessage.emit("Moving backward")
-                    self.flight_log.insert(0, f"Moving backward {dist}cm")
+                    self._execute_drone_command("move_back", dist, "backward", f"Moving backward {dist}cm")
 
                 elif action == 'left':
                     dist = self._movement_distance_override or 30
-                    self.tello.move_left(dist)
-                    record_action('left', dist)
-                    self.logMessage.emit("Moving left")
-                    self.flight_log.insert(0, f"Moving left {dist}cm")
+                    self._execute_drone_command("move_left", dist, "left", f"Moving left {dist}cm")
 
                 elif action == 'right':
                     dist = self._movement_distance_override or 30
-                    self.tello.move_right(dist)
-                    record_action('right', dist)
-                    self.logMessage.emit("Moving right")
-                    self.flight_log.insert(0, f"Moving right {dist}cm")
+                    self._execute_drone_command("move_right", dist, "right", f"Moving right {dist}cm")
 
 					
                 elif action == 'turn_left':
@@ -649,6 +711,7 @@ class BrainwavesBackend(QObject):
                 # If critical error, mark as disconnected
                 if "Tello" in str(e) or "timeout" in str(e).lower():
                     self.connected = False
+                    self.droneConnectionStateChanged.emit(False)
 
     def go_home(self):
         try:

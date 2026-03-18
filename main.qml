@@ -33,10 +33,32 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = targetIndex
 
                 background: Rectangle {
+                  id: tabRect
                   anchors.fill: parent
-                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
-                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
-                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
+                  radius: 4
+                  border.color: stackLayout.currentIndex === parent.targetIndex ? "#1E90FF" : "#898989"
+                  border.width: 1
+
+                  // Defines diagonal gradient (Darker Upper-Left -> Lighter Lower-Right)
+                  gradient: Gradient {
+                      // Gradient starts at the upper-left corner
+                      start: Qt.point(0, 0)
+                      // Gradient ends at the lower-right corner
+                      end: Qt.point(tabRect.width, tabRect.height)
+
+                      // Gradient Stop 1 (Upper-Left - position 0.0)
+                      GradientStop {
+                          position: 0.0
+                          // Darker color on the start corner
+                          color: stackLayout.currentIndex === parent.targetIndex ? "#4682B4" : "#F0F8FF" 
+                      }
+                      // Gradient Stop 2 (Lower-Right - position 1.0)
+                      GradientStop {
+                          position: 1.0
+                          // Lighter color on the end corner
+                          color: stackLayout.currentIndex === parent.targetIndex ? "#6699CC" : "#F8F8FF" 
+                      }
+                  }
                 }
                 contentItem: Text {
                     text: parent.text
@@ -57,10 +79,32 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = targetIndex
 
                 background: Rectangle {
+                  id: tabRect
                   anchors.fill: parent
-                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
-                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
-                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
+                  radius: 4
+                  border.color: stackLayout.currentIndex === parent.targetIndex ? "#1E90FF" : "#898989"
+                  border.width: 1
+
+                  // Defines diagonal gradient (Darker Upper-Left -> Lighter Lower-Right)
+                  gradient: Gradient {
+                      // Gradient starts at the upper-left corner
+                      start: Qt.point(0, 0)
+                      // Gradient ends at the lower-right corner
+                      end: Qt.point(tabRect.width, tabRect.height)
+
+                      // Gradient Stop 1 (Upper-Left - position 0.0)
+                      GradientStop {
+                          position: 0.0
+                          // Darker color on the start corner
+                          color: stackLayout.currentIndex === parent.targetIndex ? "#4682B4" : "#F0F8FF" 
+                      }
+                      // Gradient Stop 2 (Lower-Right - position 1.0)
+                      GradientStop {
+                          position: 1.0
+                          // Lighter color on the end corner
+                          color: stackLayout.currentIndex === parent.targetIndex ? "#6699CC" : "#F8F8FF" 
+                      }
+                  }
                 }
                 contentItem: Text {
                     text: parent.text
@@ -85,10 +129,32 @@ ApplicationWindow {
                 }
 
                 background: Rectangle {
+                  id: tabRect
                   anchors.fill: parent
-                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
-                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
-                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
+                  radius: 4
+                  border.color: stackLayout.currentIndex === parent.targetIndex ? "#1E90FF" : "#898989"
+                  border.width: 1
+
+                  // Defines diagonal gradient (Darker Upper-Left -> Lighter Lower-Right)
+                  gradient: Gradient {
+                      // Gradient starts at the upper-left corner
+                      start: Qt.point(0, 0)
+                      // Gradient ends at the lower-right corner
+                      end: Qt.point(tabRect.width, tabRect.height)
+
+                      // Gradient Stop 1 (Upper-Left - position 0.0)
+                      GradientStop {
+                          position: 0.0
+                          // Darker color on the start corner
+                          color: stackLayout.currentIndex === parent.targetIndex ? "#4682B4" : "#F0F8FF" 
+                      }
+                      // Gradient Stop 2 (Lower-Right - position 1.0)
+                      GradientStop {
+                          position: 1.0
+                          // Lighter color on the end corner
+                          color: stackLayout.currentIndex === parent.targetIndex ? "#6699CC" : "#F8F8FF" 
+                      }
+                  }
                 }
                 contentItem: Text {
                     text: parent.text
@@ -112,10 +178,32 @@ ApplicationWindow {
                 }
 
                 background: Rectangle {
+                  id: tabRect
                   anchors.fill: parent
-                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
-                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
-                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
+                  radius: 4
+                  border.color: stackLayout.currentIndex === parent.targetIndex ? "#1E90FF" : "#898989"
+                  border.width: 1
+
+                  // Defines diagonal gradient (Darker Upper-Left -> Lighter Lower-Right)
+                  gradient: Gradient {
+                      // Gradient starts at the upper-left corner
+                      start: Qt.point(0, 0)
+                      // Gradient ends at the lower-right corner
+                      end: Qt.point(tabRect.width, tabRect.height)
+
+                      // Gradient Stop 1 (Upper-Left - position 0.0)
+                      GradientStop {
+                          position: 0.0
+                          // Darker color on the start corner
+                          color: stackLayout.currentIndex === parent.targetIndex ? "#4682B4" : "#F0F8FF" 
+                      }
+                      // Gradient Stop 2 (Lower-Right - position 1.0)
+                      GradientStop {
+                          position: 1.0
+                          // Lighter color on the end corner
+                          color: stackLayout.currentIndex === parent.targetIndex ? "#6699CC" : "#F8F8FF" 
+                      }
+                  }
                 }
                 contentItem: Text {
                     text: parent.text
@@ -160,10 +248,32 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = targetIndex
 
                 background: Rectangle {
+                  id: tabRect
                   anchors.fill: parent
-                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
-                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
-                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
+                  radius: 4
+                  border.color: stackLayout.currentIndex === parent.targetIndex ? "#1E90FF" : "#898989"
+                  border.width: 1
+
+                  // Defines diagonal gradient (Darker Upper-Left -> Lighter Lower-Right)
+                  gradient: Gradient {
+                      // Gradient starts at the upper-left corner
+                      start: Qt.point(0, 0)
+                      // Gradient ends at the lower-right corner
+                      end: Qt.point(tabRect.width, tabRect.height)
+
+                      // Gradient Stop 1 (Upper-Left - position 0.0)
+                      GradientStop {
+                          position: 0.0
+                          // Darker color on the start corner
+                          color: stackLayout.currentIndex === parent.targetIndex ? "#4682B4" : "#F0F8FF" 
+                      }
+                      // Gradient Stop 2 (Lower-Right - position 1.0)
+                      GradientStop {
+                          position: 1.0
+                          // Lighter color on the end corner
+                          color: stackLayout.currentIndex === parent.targetIndex ? "#6699CC" : "#F8F8FF" 
+                      }
+                  }
                 }
                 contentItem: Text {
                     text: parent.text
@@ -184,10 +294,32 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = targetIndex
 
                 background: Rectangle {
+                  id: tabRect
                   anchors.fill: parent
-                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
-                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
-                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
+                  radius: 4
+                  border.color: stackLayout.currentIndex === parent.targetIndex ? "#1E90FF" : "#898989"
+                  border.width: 1
+
+                  // Defines diagonal gradient (Darker Upper-Left -> Lighter Lower-Right)
+                  gradient: Gradient {
+                      // Gradient starts at the upper-left corner
+                      start: Qt.point(0, 0)
+                      // Gradient ends at the lower-right corner
+                      end: Qt.point(tabRect.width, tabRect.height)
+
+                      // Gradient Stop 1 (Upper-Left - position 0.0)
+                      GradientStop {
+                          position: 0.0
+                          // Darker color on the start corner
+                          color: stackLayout.currentIndex === parent.targetIndex ? "#4682B4" : "#F0F8FF" 
+                      }
+                      // Gradient Stop 2 (Lower-Right - position 1.0)
+                      GradientStop {
+                          position: 1.0
+                          // Lighter color on the end corner
+                          color: stackLayout.currentIndex === parent.targetIndex ? "#6699CC" : "#F8F8FF" 
+                      }
+                  }
                 }
                 contentItem: Text {
                     text: parent.text
@@ -208,10 +340,32 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = targetIndex
 
                 background: Rectangle {
+                  id: cloudTabRect
                   anchors.fill: parent
-                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
-                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
-                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
+                  radius: 4
+                  border.color: stackLayout.currentIndex === parent.targetIndex ? "#1E90FF" : "#898989"
+                  border.width: 1
+
+                  // Defines diagonal gradient (Darker Upper-Left -> Lighter Lower-Right)
+                  gradient: Gradient {
+                      // Gradient starts at the upper-left corner
+                      start: Qt.point(0, 0)
+                      // Gradient ends at the lower-right corner
+                      end: Qt.point(cloudTabRect.width, cloudTabRect.height)
+
+                      // Gradient Stop 1 (Upper-Left - position 0.0)
+                      GradientStop {
+                          position: 0.0
+                          // Darker color on the start corner
+                          color: stackLayout.currentIndex === parent.targetIndex ? "#4682B4" : "#F0F8FF" 
+                      }
+                      // Gradient Stop 2 (Lower-Right - position 1.0)
+                      GradientStop {
+                          position: 1.0
+                          // Lighter color on the end corner
+                          color: stackLayout.currentIndex === parent.targetIndex ? "#6699CC" : "#F8F8FF" 
+                      }
+                  }
                 }
                 contentItem: Text {
                     text: parent.text
@@ -232,10 +386,32 @@ ApplicationWindow {
                 onClicked: stackLayout.currentIndex = targetIndex
 
                 background: Rectangle {
+                  id: tabRect
                   anchors.fill: parent
-                  color: stackLayout.currentIndex === parent.targetIndex ? "green" : "#242c4d"
-                  border.color: stackLayout.currentIndex === parent.targetIndex ? "yellow" : "transparent"
-                  border.width: stackLayout.currentIndex === parent.targetIndex ? 3 : 1
+                  radius: 4
+                  border.color: stackLayout.currentIndex === parent.targetIndex ? "#1E90FF" : "#898989"
+                  border.width: 1
+
+                  // Defines diagonal gradient (Darker Upper-Left -> Lighter Lower-Right)
+                  gradient: Gradient {
+                      // Gradient starts at the upper-left corner
+                      start: Qt.point(0, 0)
+                      // Gradient ends at the lower-right corner
+                      end: Qt.point(tabRect.width, tabRect.height)
+
+                      // Gradient Stop 1 (Upper-Left - position 0.0)
+                      GradientStop {
+                          position: 0.0
+                          // Darker color on the start corner
+                          color: stackLayout.currentIndex === parent.targetIndex ? "#4682B4" : "#F0F8FF" 
+                      }
+                      // Gradient Stop 2 (Lower-Right - position 1.0)
+                      GradientStop {
+                          position: 1.0
+                          // Lighter color on the end corner
+                          color: stackLayout.currentIndex === parent.targetIndex ? "#6699CC" : "#F8F8FF" 
+                      }
+                  }
                 }
                 contentItem: Text {
                     text: parent.text

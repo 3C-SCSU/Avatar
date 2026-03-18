@@ -224,8 +224,8 @@ Rectangle {
                                 brightness: 800
                             }
 
-                            // Load NAO model
-                            Nao {
+                            // Load Animated NAO model
+                            NaoAnimated {
                                 id: naoModel
                                 scale: Qt.vector3d(100, 100, 100)
                                 position: Qt.vector3d(0, -100, 0)
@@ -386,7 +386,11 @@ Rectangle {
                     target: naoModel
                     property: "position"
                     duration: 1000
-                    onStopped: rootPanel.animationInProgress = false
+                    onStopped: {
+                        rootPanel.animationInProgress = false
+                        // Stop NAO animations when movement completes
+                        naoModel.stopAllAnimations()
+                    }
                 }
 
                 PropertyAnimation {
@@ -394,7 +398,11 @@ Rectangle {
                     target: naoModel
                     property: "eulerRotation"
                     duration: 800
-                    onStopped: rootPanel.animationInProgress = false
+                    onStopped: {
+                        rootPanel.animationInProgress = false
+                        // Stop NAO animations when rotation completes
+                        naoModel.stopAllAnimations()
+                    }
                 }
 
                 // ================= Movement functions =================
@@ -411,6 +419,9 @@ Rectangle {
 					moveAnim.from = start
 					moveAnim.to = end
 					moveAnim.start()
+					
+					// Start walking animation
+					naoModel.startWalking()
 				}
 
 				function moveBackward() {
@@ -426,6 +437,9 @@ Rectangle {
 					moveAnim.from = start
 					moveAnim.to = end
 					moveAnim.start()
+					
+					// Start walking animation
+					naoModel.startWalking()
 				}
 
 
@@ -438,6 +452,9 @@ Rectangle {
 					rotateAnim.from = start
 					rotateAnim.to = end
 					rotateAnim.start()
+					
+					// Start head turning animation
+					naoModel.startHeadTurning()
 				}
 
 				function turnRight() {
@@ -449,6 +466,9 @@ Rectangle {
 					rotateAnim.from = start
 					rotateAnim.to = end
 					rotateAnim.start()
+					
+					// Start head turning animation
+					naoModel.startHeadTurning()
 				}
 
 
@@ -461,6 +481,9 @@ Rectangle {
                     moveAnim.to = end
                     moveAnim.start()
                     verticalState++
+                    
+                    // Start arm movement animation
+                    naoModel.startArmMovement()
                 }
 
                 function moveDown() {
@@ -472,6 +495,9 @@ Rectangle {
                     moveAnim.to = end
                     moveAnim.start()
                     verticalState--
+                    
+                    // Start arm movement animation
+                    naoModel.startArmMovement()
                 }
 
                 // ================= Console Logger =================

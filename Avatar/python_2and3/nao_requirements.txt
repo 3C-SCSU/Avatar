@@ -1,0 +1,21 @@
+# NAO6 Robot Requirements (Python 2.7)
+# NAOqi Framework
+qi==2.5.0
+
+# Data Processing
+numpy==1.16.6
+
+# Computer Vision
+opencv-python==4.2.0.34
+Pillow==6.2.2
+
+# Machine Learning (Python 2 compatible)
+scikit-learn==0.24.2
+
+# Utilities
+python-dateutil==2.8.0
+pyyaml==5.4.1
+
+# Communication
+requests==2.25.1
+paramiko==2.9.2
