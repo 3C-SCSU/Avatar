@@ -26,14 +26,15 @@ import queue
 
 from developers_api import DevelopersAPI
 
+
 								
 from NA06_Manual_Control import ManualNaoController
 from NA06_Manual_Control.camera_view import DroneCameraController
 
 # Import BCI connection for brainwave prediction
 try:
-    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'random-forest-prediction')))
-    from client.brainflow1 import bciConnection, DataMode
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'prediction-random-forest', 'tensorflow', 'client')))
+    from brainflow1 import bciConnection, DataMode
     BCI_AVAILABLE = True
 except ImportError as e:
     print(f"Warning: BCI connection not available: {e}")
@@ -889,6 +890,20 @@ class BrainwavesBackend(QObject):
 
         self.imagesReady.emit(self.image_paths)  # Send data to QML
 
+    #Allows the user to switch between the OpenBCI or Neurosity Crown headsets
+    @Slot(str)
+    def setBCISource(self, source):
+        self.logMessage.emit(f"Switching BCI source to: {source}")
+
+        if source == "neurosity":
+            self.current_bci_source = "neurosity"
+
+        elif source == "openbci":
+            self.current_bci_source = "openbci"
+
+        else:
+            self.logMessage.emit("Unknown BCI source selected")
+            
     @Slot(str)
     def setDataMode(self, mode):
         """
@@ -975,6 +990,3 @@ if __name__ == "__main__":
     backend.imagesReady.connect(lambda images: engine.rootContext().setContextProperty("imageModel", images))
 
     sys.exit(app.exec())
-
-
-

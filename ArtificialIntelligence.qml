@@ -51,6 +51,9 @@ Rectangle {
     // Framework selection state
     property string currentFramework: "PyTorch"
 
+    //Headset slection state
+    property string currentHeadset: "OpenBCI"
+
     // TOP-LEVEL LAYOUT
     ColumnLayout {
         anchors.fill: parent
@@ -994,9 +997,123 @@ Rectangle {
                         }
                     }
 
-                    Item { Layout.fillHeight: true } // spacer
+                    
+                    // Buttons to choose the source headset------------
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: false
+                        Layout.preferredHeight: Math.min(root.height * 0.25, 220)
+                        Layout.minimumHeight: root.minControlSize  
+                        color: "#1f2740"
+                        radius: 8
+                        border.color: "#1a2035"
+
+                        ColumnLayout {
+                            anchors.fill: parent
+                            anchors.margins: 16
+                            spacing: 12
+
+                            // Title
+                            Text {
+                                text: "Choose Headset"
+                                color: "white"
+                                font.bold: true
+                                font.pixelSize: Math.max(10, Math.min(32, root.height * 0.05))
+                                horizontalAlignment: Text.AlignHCenter
+                                Layout.alignment: Qt.AlignHCenter
+                            }
+
+                           
+                            Item {
+                                Layout.fillHeight: true
+                            }
+
+                            // Select headset buttons
+                            RowLayout {
+                                Layout.fillWidth: true
+                                Layout.alignment: Qt.AlignHCenter
+                                spacing: 16
+
+                                // OpenBCI
+                                Rectangle {
+                                    Layout.fillWidth: true
+                                    Layout.minimumWidth: root.minControlSize
+                                    Layout.minimumHeight: root.minControlSize
+                                    Layout.maximumWidth: 260
+                                    implicitWidth: Math.max(root.minControlSize,
+                                                            Math.min(root.width * 0.12, 220))
+                                    implicitHeight: Math.max(root.minControlSize,
+                                                            Math.min(root.height * 0.07, 80))
+                                    radius: 8
+                                    color: "#2d7a4a"
+                                    border.color: currentHeadset === "OpenBCI" ? "yellow" : "#2d7a4a"
+                                    border.width: currentHeadset === "OpenBCI" ? 3 : 1
+
+                                    Text {
+                                        anchors.centerIn: parent
+                                        text: "OpenBCI"
+                                        color: currentHeadset === "OpenBCI" ? "yellow" : "white"
+                                        font.bold: true
+                                        font.pixelSize: Math.max(10,
+                                                                Math.min(18, parent.height * 0.35))
+                                        horizontalAlignment: Text.AlignHCenter
+                                        verticalAlignment: Text.AlignVCenter
+                                        wrapMode: Text.NoWrap
+                                    }
+
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: {
+                                            currentHeadset = "OpenBCI"
+                                            backend.setBCISource("openbci")
+                                            logToConsole("Changed headset to OpenBCI")
+                                           
+                                        }
+                                    }
+                                }
+
+                                // Neurosity
+                                Rectangle {
+                                    Layout.fillWidth: true
+                                    Layout.minimumWidth: root.minControlSize
+                                    Layout.minimumHeight: root.minControlSize
+                                    Layout.maximumWidth: 260
+                                    implicitWidth: Math.max(root.minControlSize,
+                                                            Math.min(root.width * 0.12, 220))
+                                    implicitHeight: Math.max(root.minControlSize,
+                                                            Math.min(root.height * 0.07, 80))
+                                    radius: 8
+                                    color: "#2d7a4a"
+                                    border.color: currentHeadset === "Neurosity" ? "yellow" : "#2d7a4a"
+                                    border.width: currentHeadset === "Neurosity" ? 3 : 1
+
+                                    Text {
+                                        anchors.centerIn: parent
+                                        text: "Neurosity"
+                                        color: currentHeadset === "Neurosity" ? "yellow" : "white"
+                                        font.bold: true
+                                        font.pixelSize: Math.max(10,
+                                                                Math.min(18, parent.height * 0.35))
+                                        horizontalAlignment: Text.AlignHCenter
+                                        verticalAlignment: Text.AlignVCenter
+                                        wrapMode: Text.NoWrap
+                                    }
+
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: {
+                                            currentHeadset = "Neurosity"
+                                            backend.setBCISource("neurosity")
+                                            logToConsole("Changed headset to Neurosity")
+                                           
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    }
                 }
             }
         }
     }
-}
