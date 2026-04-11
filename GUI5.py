@@ -156,6 +156,7 @@ class BrainwavesBackend(QObject):
             self.tello = Tello(retry_count=1)
         except Exception as e:
             print(f"Warning: Failed to initialize Tello drone: {e}")
+            self.tello = None
             self.logMessage.emit(f"Warning: Failed to initialize Tello drone: {e}")
         
         # Initialize camera controller with tello instance
@@ -206,13 +207,18 @@ class BrainwavesBackend(QObject):
             finally:
                 self.cmd_queue.task_done()
 
-    @Slot()
-    def takeoff(self):
-        self.tello.takeoff()
-        self.connected = True
-        self.is_flying = True
-        self.hover_timer.start(200) #every 200 ms, the hover callback will be invoked
-        self.logMessage.emit("Hovering")
+   @Slot()
+def takeoff(self):
+    if not self.connected or self.tello is None:
+        self.logMessage.emit("Drone not connected. Please connect first.")
+        self.flight_log.insert(0, "Takeoff failed: Drone not connected")
+        self.flightLogUpdated.emit(self.flight_log)
+        return
+    self.tello.takeoff()
+    self.connected = True
+    self.is_flying = True
+    self.hover_timer.start(200) #every 200 ms, the hover callback will be invoked
+    self.logMessage.emit("Hovering")
 
     def hover_callback(self):
         if self.is_flying:
