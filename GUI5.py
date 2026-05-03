@@ -1,6 +1,7 @@
 import sys
 import os
 import subprocess
+import threading
 from pathlib import Path
 from PySide6.QtWidgets import QApplication,QFileDialog, QMessageBox
 from PySide6.QtQml import QQmlApplicationEngine
