@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # Author: Jason D, 10/06/2025
 # Updated by: Shariq, 01/19/2026 - switched to use GitHub /stats/contributors API
+# Updated by: Ben M 05/03/2026 for #414: added fetch_ticket_linked_pr_scores() for dynamic PR-based scoring
 
 import subprocess
 import os
@@ -73,6 +74,78 @@ def fetch_contributors_from_github(
     rows.sort(key=lambda x: x[1], reverse=True)
     return rows
 
+
+# ----------------------------
+# NEW for #414: Fetch ticket-linked PR scores from GitHub API
+# ----------------------------
+
+def fetch_ticket_linked_pr_scores(
+    owner: str = "3C-SCSU",
+    repo: str = "Avatar",
+) -> list[tuple[str, int]]:
+    """
+    Fetch all merged PRs from GitHub and count only those that reference
+    a ticket number (#123) in their title or body.
+    Returns a list of (login, ticket_pr_count) sorted descending.
+    """
+    ticket_re = re.compile(r"#\d+")
+    scores: Dict[str, int] = defaultdict(int)
+    page = 1
+
+    while True:
+        url = (
+            f"https://api.github.com/repos/{owner}/{repo}/pulls"
+            f"?state=closed&per_page=100&page={page}"
+        )
+        req = urllib.request.Request(
+            url,
+            headers={
+                "Accept": "application/vnd.github+json",
+                "User-Agent": "Avatar-devCharts-script",
+            },
+        )
+        try:
+            with urllib.request.urlopen(req) as resp:
+                prs = json.loads(resp.read().decode("utf-8"))
+        except urllib.error.URLError as e:
+            print(f"GitHub API error fetching PRs: {e}")
+            break
+
+        if not prs:
+            break
+
+        for pr in prs:
+            # Only count merged PRs (closed but not merged have merged_at = None)
+            if not pr.get("merged_at"):
+                continue
+            title = pr.get("title") or ""
+            body = pr.get("body") or ""
+            combined = title + " " + body
+            # Only count if there's a ticket reference
+            if ticket_re.search(combined):
+                login = pr.get("user", {}).get("login", "unknown")
+                scores[login] += 1
+
+        if len(prs) < 100:
+            break
+        page += 1
+
+    result = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+    return result  # [(login, count), ...]
+
+
+def ticket_pr_scores_text(owner: str = "3C-SCSU", repo: str = "Avatar") -> str:
+    """
+    Return a human-readable text block of ticket-linked PR scores.
+    Suitable for display in a QML TextArea.
+    """
+    scores = fetch_ticket_linked_pr_scores(owner=owner, repo=repo)
+    if not scores:
+        return "No ticket-linked PRs found."
+    lines = [f"{count:>4}  {login}" for login, count in scores]
+    return "\n".join(lines)
+
+
 # ----------------------------
 # Legacy: Read git commit data from local repo
 # (kept for reference but no longer used in main)
@@ -107,9 +180,6 @@ def run_shortlog_all() -> list[tuple[str, int]]:
             else:
                 continue
         out.append((name.strip(), cnt))
-
-    # NOTE: legacy John Knudson adjustment removed from active use.
-    # This function is no longer used in main(), kept only for historical reference.
 
     out.sort(key=lambda x: x[1], reverse=True)
     return out
@@ -148,7 +218,6 @@ def devList(owner: str = "3C-SCSU", repo: str = "Avatar") -> str:
     if not data:
         return "No developers found."
 
-    # data is [(login, commits)] already sorted descending
     lines = [f"{commits:>6} {login}" for login, commits in data]
     return "\n".join(lines)
 
@@ -167,7 +236,7 @@ def ticketsByDev_map() -> Dict[str, List[str]]:
     except subprocess.CalledProcessError:
         return {}
     raw = proc.stdout or ""
-    commits = raw.split("\x1e")  # split by commit
+    commits = raw.split("\x1e")
     jira_re = re.compile(r"\b([A-Za-z]{2,}-\d+)\b", re.IGNORECASE)
     hash_re = re.compile(r"(?<![A-Za-z0-9])#\d+\b")
     author_to_ticketset: Dict[str, set[str]] = defaultdict(set)
@@ -185,10 +254,8 @@ def ticketsByDev_map() -> Dict[str, List[str]]:
             found.add(m.upper())
         for m in hash_re.findall(msg):
             found.add(m)
-        # ensures author exists even if no tickets
         author_to_ticketset[author]
         author_to_ticketset[author].update(found)
-    # convert sets -> sorted lists
     result: Dict[str, List[str]] = {a: sorted(list(ts)) for a, ts in author_to_ticketset.items()}
     return result
 
@@ -197,14 +264,12 @@ def ticketsByDev_text() -> str:
     """
     Return a human-readable text block suitable for TextArea.
     Format: "Author Name <email>: TICKET-1, #23, TICKET-5"
-    One author per line, authors sorted by number of tickets (desc).
     """
     m = ticketsByDev_map()
     if not m:
         return "No tickets found."
 
     lines: List[str] = []
-    # sort authors by number of tickets desc, then by name
     for author, tickets in sorted(m.items(), key=lambda kv: (-len(kv[1]), kv[0].lower())):
         lines.append(f"{author}: {', '.join(tickets)}")
     return "\n".join(lines)
@@ -221,9 +286,7 @@ def plot_single_tier(rows: list[tuple[str, int, str]], tier: str, outpath: str):
         print(f"No data to plot for {tier}")
         return
 
-    # Extract just the name before any email or < >
     def extract_name(full: str) -> str:
-        # Removes email parts like <email@domain.com> or (email@domain.com)
         name = re.split(r"[<(]", full)[0].strip()
         return name
 
@@ -233,24 +296,22 @@ def plot_single_tier(rows: list[tuple[str, int, str]], tier: str, outpath: str):
 
     plt.figure(figsize=(max(10, len(data) * 2.2), 7))
     bars = plt.bar(names, counts, color=color, width=0.6)
-    plt.xticks(rotation=24, ha="right", fontsize=20)  # Smaller font for names
+    plt.xticks(rotation=24, ha="right", fontsize=20)
     plt.yticks(fontsize=14)
     plt.ylabel("Number of Commits", fontsize=18)
     plt.xlabel("Top Contributors", fontsize=14, labelpad=40)
-    # plt.title(f"{tier} Tier", fontsize=36, weight="bold")
 
-    # Add value labels with more vertical padding and smaller font size
     for i, b in enumerate(bars):
         h = b.get_height()
         plt.text(
             b.get_x() + b.get_width() / 2,
-            h - 0.05 * h,  # slightly below the top
+            h - 0.05 * h,
             str(counts[i]),
             ha="center", va="top",
             fontsize=16, weight="bold", color="white"
         )
 
-    plt.tight_layout(pad=2.0)  # Add padding to avoid clipping
+    plt.tight_layout(pad=2.0)
     plt.savefig(outpath, dpi=150)
     plt.close()
 
@@ -262,7 +323,6 @@ def plot_single_tier(rows: list[tuple[str, int, str]], tier: str, outpath: str):
 def main():
     parser = argparse.ArgumentParser(description="Generate Gold, Silver, and Bronze contributor charts.")
 
-    # Anchor path to the directory containing this script (Developers folder)
     script_dir = os.path.dirname(os.path.abspath(__file__))
     default_plot_path = os.path.join(script_dir, "plotDevelopers")
 
@@ -271,7 +331,6 @@ def main():
     parser.add_argument("--repo", type=str, default="Avatar", help="GitHub repository name.")
     args = parser.parse_args()
 
-    # Use GitHub stats API instead of local git shortlog, with NO adjustments
     data = fetch_contributors_from_github(owner=args.owner, repo=args.repo)
     if not data:
         print("Warning: No contributors found from GitHub stats API; skipping chart generation.")
@@ -280,7 +339,6 @@ def main():
     tiered = assign_fixed_tiers(data)
     os.makedirs(args.out_dir, exist_ok=True)
 
-    # Save CSV and Plots using args.out_dir
     csv_path = os.path.join(args.out_dir, "top15_contributors_tiers.csv")
     save_csv(tiered, csv_path)
 
@@ -288,7 +346,6 @@ def main():
         chart_path = os.path.join(args.out_dir, f"{tier.lower()}_contributors.png")
         plot_single_tier(tiered, tier, chart_path)
 
-    # Summary
     print(f"\nWrote CSV -> {csv_path}")
     for tier in ["Gold", "Silver", "Bronze"]:
         chart_file = os.path.join(args.out_dir, f"{tier.lower()}_contributors.png")
