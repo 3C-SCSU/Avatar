@@ -1,0 +1,108 @@
+name: contributor Provenance & PR Audit
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    
+jobs:
+  audit_provenance:
+    name: Audit contribution Provenance & Execution Environment
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+        
+      - name: Extract Contribution & Execution Provenance
+        run: |
+          echo "=== PULL REQUEST AUDIT MANIFEST===" > pr_audit.txt
+          echo "" >> pr_audit.txt
+
+          echo "--- Event Information ---" >> pr_audit.txt
+          echo "Event Name: ${{ github.event_name }}" >> pr_audit.txt
+          echo "Event Action: ${{ github.event.action }}" >> pr_audit.txt
+          echo "" >> pr_audit.txt
+
+          echo "--- PR Information ---" >> pr_audit.txt
+          echo "PR Number: ${{ github.event.pull_request.number }}" >> pr_audit.txt
+          echo "PR Title: ${{ github.event.pull_request.title }}" >> pr_audit.txt
+          echo "PR State: ${{ github.event.pull_request.state }}" >> pr_audit.txt
+          echo "Contributor Login: ${{ github.event.pull_request.user.login }}" >> pr_audit.txt
+          echo "Head Commit SHA: ${{ github.event.pull_request.head.sha }}" >> pr_audit.txt
+          echo "" >> pr_audit.txt
+          
+          echo "--- Repository Information ---" >> pr_audit.txt
+          echo "Source Repository: ${{ github.event.pull_request.head.repo.full_name }}" >> pr_audit.txt
+          echo "Source Branch: ${{ github.event.pull_request.head.ref }}" >> pr_audit.txt
+          echo "" >> pr_audit.txt
+          echo "Target Repository: ${{ github.event.pull_request.base.repo.full_name }}" >> pr_audit.txt
+          echo "Target Branch: ${{ github.event.pull_request.base.ref }}" >> pr_audit.txt
+          echo "" >> pr_audit.txt
+
+          echo "--- Timestamp Information ---" >> pr_audit.txt
+          echo "PR Created: ${{ github.event.pull_request.created_at }}" >> pr_audit.txt
+          echo "PR Updated: ${{ github.event.pull_request.updated_at }}" >> pr_audit.txt
+          echo "" >> pr_audit.txt
+
+          echo "--- CI Runner Node Execution Environment ---" >> pr_audit.txt
+          echo "Runner OS: ${{ runner.os }}" >> pr_audit.txt
+          echo "Runner Architecture: ${{ runner.arch }}" >> pr_audit.txt
+          uname -a >> pr_audit.txt
+          echo "" >> pr_audit.txt
+          
+          echo "=== COMMIT METADATA ===" >> pr_audit.txt
+          echo "Audited PR Head SHA: ${{ github.event.pull_request.head.sha }}" >> pr_audit.txt
+
+          git show -s --format="
+          Commit SHA: %H
+          Author: %an <%ae>
+          Committer: %cn <%ce>
+          Author Date: %aI
+          Committer Date: %cI
+          " "${{ github.event.pull_request.head.sha }}" >> pr_audit.txt
+          
+          echo "=== COMMIT SIGNATURE ===" >> pr_audit.txt
+
+          if git cat-file commit "${{ github.event.pull_request.head.sha }}" | grep -q "^gpgsig "; then
+            echo "Signature Present: YES" >> pr_audit.txt
+
+            if git cat-file commit "${{ github.event.pull_request.head.sha }}" | grep -q "^gpgsig -----BEGIN SSH SIGNATURE-----"; then
+              echo "Signature Type: SSH" >> pr_audit.txt
+            elif git cat-file commit "${{ github.event.pull_request.head.sha }}" | grep -q "^gpgsig -----BEGIN PGP SIGNATURE-----"; then
+              echo "Signature Type: OpenPGP/GPG" >> pr_audit.txt
+            else
+              echo "Signature Type: UNKNOWN" >> pr_audit.txt
+            fi
+
+            echo "" >> pr_audit.txt
+
+            echo "--- Raw Signature ---" >> pr_audit.txt
+            git cat-file commit "${{ github.event.pull_request.head.sha }}" | \
+              sed -n '/^gpgsig /,/^$/p' >> pr_audit.txt
+
+          else
+            echo "Signature Present: NO" >> pr_audit.txt
+            echo "Signature Type: NONE" >> pr_audit.txt
+            echo "Verification: NOT PERFORMED" >> pr_audit.txt
+          fi
+          
+          echo "--- Workflow Information ---" >> pr_audit.txt
+          echo "Repository: ${{ github.repository }}" >> pr_audit.txt
+          echo "Workflow: ${{ github.workflow }}" >> pr_audit.txt
+          echo "Run ID: ${{ github.run_id }}" >> pr_audit.txt
+          echo "Run Number: ${{ github.run_number }}" >> pr_audit.txt
+          echo "" >> pr_audit.txt
+
+      - name: Generate Audit Integrity Hash
+        run: |
+          sha256sum pr_audit.txt > pr_audit.sha256
+          mkdir -p ./audit_artifacts/
+          mv pr_audit.txt pr_audit.sha256 ./audit_artifacts/
+
+      - name: Upload Provenance Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-${{ github.event.pull_request.number }}-provenance
+          path: ./audit_artifacts/
